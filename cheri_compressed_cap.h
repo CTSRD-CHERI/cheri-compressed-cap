@@ -80,7 +80,6 @@ typedef struct cap_register cap_register_t;
  * is invisibly keeps null 0 whatever we choose it to be */
 #define CC128_NULL_XOR_MASK 0x200001000005
 
-
 /* Avoid pulling in code that uses cr_pesbt when building QEMU256 */
 #ifndef CHERI_COMPRESSED_CONSTANTS_ONLY
 
