@@ -502,7 +502,7 @@ static inline void compress_256cap(inmemory_chericap256* buffer, const cap_regis
     buffer->u64s[0] = csp->cr_sealed |
         ((csp->cr_perms & CC256_PERMS_ALL_BITS) << CC256_PERMS_MEM_SHFT) |
         ((csp->cr_uperms & CC256_UPERMS_ALL_BITS) << CC256_UPERMS_MEM_SHFT) |
-        ((csp->cr_otype & CC256_OTYPE_ALL_BITS) << CC256_OTYPE_MEM_SHFT);
+        ((uint64_t)(csp->cr_otype & CC256_OTYPE_ALL_BITS) << CC256_OTYPE_MEM_SHFT);
     buffer->u64s[1] = csp->cr_base + csp->cr_offset;
     buffer->u64s[2] = csp->cr_base;
     buffer->u64s[3] = csp->cr_length ^ 0xffffffffffffffff;
