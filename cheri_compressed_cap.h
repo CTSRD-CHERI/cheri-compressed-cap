@@ -203,7 +203,7 @@ _Static_assert(CC128_NULL_XOR_MASK == CC128_NULL_PESBT, "");
 
 /* For CHERI256 all permissions are shifted by one since the sealed bit comes first */
 #define CC256_PERMS_COUNT          (12)
-#define CC256_UPERMS_COUNT         (20)
+#define CC256_UPERMS_COUNT         (19)
 #define CC256_PERMS_MEM_SHFT       (1)  /* sealed bit comes first */
 #define CC256_UPERMS_MEM_SHFT      (CC256_PERMS_MEM_SHFT + CC256_PERMS_COUNT)
 #define CC256_PERMS_ALL_BITS       ((1 << CC256_PERMS_COUNT) - 1) /* 12 bits */
