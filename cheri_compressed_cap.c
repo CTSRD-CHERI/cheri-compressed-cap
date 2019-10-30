@@ -38,5 +38,5 @@ uint64_t test(void) {
     cap_register_t result;
     decompress_128cap(pesbt, cursor, &result);
     uint64_t new_pesbt = compress_128cap(&result);
-    return cc128_is_representable(true, result.cr_base, result._cr_top - result.cr_base, result._cr_cursor, 0x123) + new_pesbt;
+    return cc128_is_representable_cap_exact(&result) + new_pesbt;
 }

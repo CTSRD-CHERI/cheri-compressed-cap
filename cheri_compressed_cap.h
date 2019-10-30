@@ -89,6 +89,15 @@ struct cap_register {
         const cc128_length_t l = length();
         return l > UINT64_MAX ? UINT64_MAX : (uint64_t)l;
     }
+    inline uint32_t software_permissions() const {
+       return cr_uperms;
+    }
+    inline uint32_t permissions() const {
+       return cr_perms;
+    }
+    inline uint32_t type() const {
+       return cr_otype;
+    }
 #endif
 };
 typedef struct cap_register cap_register_t;
