@@ -30,13 +30,5 @@ add_test(NAME simple-test COMMAND simple_test)
 add_executable(setbounds_test test/setbounds_test.cpp)
 add_test(NAME setbounds-test COMMAND setbounds_test)
 
-add_executable(setbounds_test_old_format test/setbounds_test.cpp)
-target_compile_definitions(setbounds_test_old_format PRIVATE -DCC128_OLD_FORMAT)
-add_test(NAME setbounds-test-old-format COMMAND setbounds_test_old_format)
-
-add_executable(simple_test_old_format test/simple_test.cpp)
-target_compile_definitions(simple_test_old_format PRIVATE -DCC128_OLD_FORMAT)
-add_test(NAME simple-test-old-format COMMAND simple_test_old_format)
-
 add_executable(random_inputs_test test/random_inputs_test.cpp)
 add_test(NAME random-input-test COMMAND random_inputs_test)
