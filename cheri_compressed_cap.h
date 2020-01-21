@@ -2,12 +2,17 @@
  * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2018 Lawrence Esswood
- * Copyright (c) 2018 Alex Richardson
+ * Copyright (c) 2018-2020 Alex Richardson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
  * ("CTSRD"), as part of the DARPA CRASH research programme.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory (Department of Computer Science and
+ * Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+ * DARPA SSITH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -62,9 +67,9 @@ struct cap_register {
     uint32_t cr_perms;  /* Permissions */
     uint32_t cr_uperms; /* User Permissions */
     uint64_t cr_pesbt_xored_for_mem;  /* Perms, E, Sealed, Bot, & Top bits (128-bit) */
-    uint32_t cr_otype;  /* Object Type, 24 bits */
+    uint32_t cr_otype;  /* Object Type, 24/16 bits */
+    uint8_t cr_flags;   /* Flags */
     uint8_t cr_tag;     /* Tag */
-    uint8_t _sbit_for_memory; /* sealed flag */
 #ifdef __cplusplus
     inline uint64_t base() const {
        return cr_base;
@@ -144,7 +149,9 @@ typedef struct cap_register cap_register_t;
 #define CC256_HWPERMS_COUNT           (12)
 #define CC256_HWPERMS_RESERVED_COUNT  (3)
 #define CC256_UPERMS_COUNT            (16)
-#define CC256_PERMS_MEM_SHFT          (1)  /* sealed bit comes first */
+#define CC256_FLAGS_COUNT             (1)
+#define CC256_FLAGS_ALL_BITS          CC_BITMASK64(CC256_FLAGS_COUNT) /* 1 bit */
+#define CC256_PERMS_MEM_SHFT          CC256_FLAGS_COUNT /* flags bit comes first */
 #define CC256_UPERMS_MEM_SHFT         (CC256_PERMS_MEM_SHFT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT)
 #define CC256_PERMS_ALL_BITS          CC_BITMASK64(CC256_HWPERMS_COUNT) /* 12 bits */
 #define CC256_PERMS_ALL_BITS_UNTAGGED CC_BITMASK64(CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT) /* 15 bits */
@@ -152,8 +159,11 @@ typedef struct cap_register cap_register_t;
 #define CC256_OTYPE_ALL_BITS          CC_BITMASK64(CC256_OTYPE_BITS)
 #define CC256_OTYPE_MEM_SHFT          (32)
 #define CC256_OTYPE_BITS              (24)
+#define CC256_RESERVED_BITS           (8) /* reserved bits, stored as part of otype */
 #define CC256_NULL_LENGTH ((cc128_length_t)UINT64_MAX)
 #define CC256_NULL_TOP ((cc128_length_t)UINT64_MAX)
+CC128_STATIC_ASSERT(CC256_FLAGS_COUNT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT + CC256_UPERMS_COUNT +
+                            CC256_OTYPE_BITS + CC256_RESERVED_BITS == 64, "");
 
 // Offsets based on capBitsToCapability() from cheri_prelude_128.sail
 // (Note: we subtract 64 since we only access the high 64 bits when (de)compressing)
@@ -177,7 +187,8 @@ typedef struct cap_register cap_register_t;
 enum {
     CC128_FIELD(UPERMS, 127, 124),
     CC128_FIELD(HWPERMS, 123, 112),
-    CC128_FIELD(RESERVED, 111, 109),
+    CC128_FIELD(RESERVED, 111, 110),
+    CC128_FIELD(FLAGS, 109, 109),
     CC128_FIELD(OTYPE, 108, 91),
     CC128_FIELD(INTERNAL_EXPONENT, 90, 90),
     CC128_FIELD(TOP_ENCODED, 89, 78),
@@ -270,6 +281,7 @@ enum {
         CC128_ENCODE_FIELD(0, UPERMS) |
         CC128_ENCODE_FIELD(0, HWPERMS) |
         CC128_ENCODE_FIELD(0, RESERVED) |
+        CC128_ENCODE_FIELD(0, FLAGS) |
         CC128_ENCODE_FIELD(1, INTERNAL_EXPONENT) |
         CC128_ENCODE_FIELD(CC128_OTYPE_UNSEALED, OTYPE) |
         CC128_ENCODE_FIELD(CC128_RESET_TOP, EXP_NONZERO_TOP) |
@@ -383,6 +395,7 @@ TRUNCATE_LSB_FUNC(23)
 static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
     cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
     cdp->cr_uperms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, UPERMS);
+    cdp->cr_flags = (uint8_t)CC128_EXTRACT_FIELD(pesbt, FLAGS);
     uint32_t BWidth = CC128_BOT_WIDTH;
     uint32_t BMask = (1u << BWidth) - 1;
     uint32_t TMask = BMask >> 2;
@@ -605,6 +618,7 @@ static inline uint64_t compress_128cap_without_xor(const cap_register_t* csp) {
         CC128_ENCODE_FIELD(csp->cr_uperms, UPERMS) |
         CC128_ENCODE_FIELD(csp->cr_perms, HWPERMS) |
         CC128_ENCODE_FIELD(csp->cr_otype, OTYPE) |
+        CC128_ENCODE_FIELD(csp->cr_flags, FLAGS) |
         CC128_ENCODE_FIELD(IE, INTERNAL_EXPONENT) |
         CC128_ENCODE_FIELD(Te, TOP_ENCODED) |
         CC128_ENCODE_FIELD(Be, BOTTOM_ENCODED);
@@ -655,9 +669,11 @@ static bool fast_cc128_is_representable_new_addr(bool sealed, uint64_t base, cc1
 static bool cc128_is_representable_cap_exact(const cap_register_t* cap) {
     uint64_t pesbt = compress_128cap_without_xor(cap);
     cap_register_t decompressed_cap;
+    decompressed_cap.cr_tag = cap->cr_tag; /* initialize the tag bit */
     decompress_128cap_already_xored(pesbt, cap->_cr_cursor, &decompressed_cap);
     // These fields must not change:
     cc128_debug_assert(decompressed_cap.cr_otype == cap->cr_otype);
+    cc128_debug_assert(decompressed_cap.cr_flags == cap->cr_flags);
     cc128_debug_assert(decompressed_cap.cr_uperms == cap->cr_uperms);
     cc128_debug_assert(decompressed_cap.cr_perms == cap->cr_perms);
     // If any of these fields changed then the capability is not representable:
@@ -985,8 +1001,8 @@ static inline bool cc256_is_cap_sealed(const cap_register_t* cp) {
 
 static inline void decompress_256cap(inmemory_chericap256 mem, cap_register_t* cdp, bool tagged) {
     /* See CHERI ISA: Figure 3.1: 256-bit memory representation of a capability */
-    cdp->_sbit_for_memory = mem.u64s[0] & 1;
     uint32_t hwperms_mask = tagged ? CC256_PERMS_ALL_BITS: CC256_PERMS_ALL_BITS_UNTAGGED;
+    cdp->cr_flags = mem.u64s[0] & CC256_FLAGS_ALL_BITS;
     cdp->cr_perms = (mem.u64s[0] >> CC256_PERMS_MEM_SHFT) & hwperms_mask;
     cdp->cr_uperms = (mem.u64s[0] >> CC256_UPERMS_MEM_SHFT) & CC256_UPERMS_ALL_BITS;
     cdp->cr_otype = (mem.u64s[0] >> CC256_OTYPE_MEM_SHFT) ^ CC256_OTYPE_UNSEALED;
@@ -999,12 +1015,11 @@ static inline void decompress_256cap(inmemory_chericap256 mem, cap_register_t* c
 }
 
 static inline void compress_256cap(inmemory_chericap256* buffer, const cap_register_t* csp) {
-
-    bool sealed_bit = csp->cr_tag ? cc256_is_cap_sealed(csp) : csp->_sbit_for_memory;
+    bool flags_bits = csp->cr_flags & CC256_FLAGS_ALL_BITS;
     // When writing an untagged value, just write back the bits that were loaded (including the reserved HWPERMS)
     uint64_t hwperms_mask = csp->cr_tag ? CC256_PERMS_ALL_BITS: CC256_PERMS_ALL_BITS_UNTAGGED;
     buffer->u64s[0] =
-        sealed_bit |
+        flags_bits |
         ((csp->cr_perms & hwperms_mask) << CC256_PERMS_MEM_SHFT) |
         ((csp->cr_uperms & CC256_UPERMS_ALL_BITS) << CC256_UPERMS_MEM_SHFT) |
         ((uint64_t)(csp->cr_otype ^ CC256_OTYPE_UNSEALED) << CC256_OTYPE_MEM_SHFT);
