@@ -355,8 +355,8 @@ static inline uint32_t cc128_get_exponent(cc128_length_t length) {
     }
 }
 
-static inline uint64_t cc128_getbits(uint64_t src, uint32_t str, uint32_t sz) {
-    return ((src >> str) & ((UINT64_C(1) << sz) - UINT64_C(1)));
+static inline uint64_t cc128_getbits(uint64_t src, uint32_t start, uint32_t size) {
+    return ((src >> start) & ((UINT64_C(1) << size) - UINT64_C(1)));
 }
 
 // truncates `value`, keeping only the _least_ significant `n` bits.
