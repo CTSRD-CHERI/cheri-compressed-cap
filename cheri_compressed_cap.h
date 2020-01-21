@@ -139,17 +139,17 @@ typedef struct cap_register cap_register_t;
 #define CC128_MAX_LENGTH CAP_MAX_ADDRESS_PLUS_ONE
 #define CC128_MAX_TOP CAP_MAX_ADDRESS_PLUS_ONE
 
-
+#define CC_BITMASK64(nbits) ((UINT64_C(1) << (nbits)) - UINT64_C(1))
 /* For CHERI256 all permissions are shifted by one since the sealed bit comes first */
 #define CC256_HWPERMS_COUNT           (12)
 #define CC256_HWPERMS_RESERVED_COUNT  (3)
 #define CC256_UPERMS_COUNT            (16)
 #define CC256_PERMS_MEM_SHFT          (1)  /* sealed bit comes first */
 #define CC256_UPERMS_MEM_SHFT         (CC256_PERMS_MEM_SHFT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT)
-#define CC256_PERMS_ALL_BITS          ((1 << CC256_HWPERMS_COUNT) - 1) /* 12 bits */
-#define CC256_PERMS_ALL_BITS_UNTAGGED ((1 << (CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT)) - 1) /* 15 bits */
-#define CC256_UPERMS_ALL_BITS         ((1 << CC256_UPERMS_COUNT) - 1) /* 19 bits */
-#define CC256_OTYPE_ALL_BITS          ((1 << 24) - 1)
+#define CC256_PERMS_ALL_BITS          CC_BITMASK64(CC256_HWPERMS_COUNT) /* 12 bits */
+#define CC256_PERMS_ALL_BITS_UNTAGGED CC_BITMASK64(CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT) /* 15 bits */
+#define CC256_UPERMS_ALL_BITS         CC_BITMASK64(CC256_UPERMS_COUNT) /* 19 bits */
+#define CC256_OTYPE_ALL_BITS          CC_BITMASK64(CC256_OTYPE_BITS)
 #define CC256_OTYPE_MEM_SHFT          (32)
 #define CC256_OTYPE_BITS              (24)
 #define CC256_NULL_LENGTH ((cc128_length_t)UINT64_MAX)
@@ -161,9 +161,9 @@ typedef struct cap_register cap_register_t;
     CC128_FIELD_ ## name ## _START = (start - 64), \
     CC128_FIELD_ ## name ## _LAST = (last - 64), \
     CC128_FIELD_ ## name ## _SIZE = CC128_FIELD_ ## name ## _LAST - CC128_FIELD_ ## name ## _START + 1, \
-    CC128_FIELD_ ## name ## _MASK0 = (UINT64_C(1) << CC128_FIELD_ ## name ## _SIZE) - 1, \
-    CC128_FIELD_ ## name ## _MASK64 = (uint64_t)CC128_FIELD_ ## name ## _MASK0 << CC128_FIELD_ ## name ## _START, \
-    CC128_FIELD_ ## name ## _MAX_VALUE = CC128_FIELD_ ## name ## _MASK0
+    CC128_FIELD_ ## name ## _MASK_NOT_SHIFTED = CC_BITMASK64(CC128_FIELD_ ## name ## _SIZE), \
+    CC128_FIELD_ ## name ## _MASK64 = (uint64_t)CC128_FIELD_ ## name ## _MASK_NOT_SHIFTED << CC128_FIELD_ ## name ## _START, \
+    CC128_FIELD_ ## name ## _MAX_VALUE = CC128_FIELD_ ## name ## _MASK_NOT_SHIFTED
 
 #define CC128_ENCODE_FIELD(value, name) \
     ((uint64_t)((value) & CC128_FIELD_ ## name ## _MAX_VALUE) << CC128_FIELD_ ## name ## _START)
