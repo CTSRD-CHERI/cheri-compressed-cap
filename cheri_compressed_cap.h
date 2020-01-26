@@ -68,8 +68,8 @@ struct cap_register {
     uint32_t cr_uperms; /* User Permissions */
     uint32_t cr_otype;  /* Object Type, 24/16 bits */
     uint8_t cr_flags;   /* Flags */
-    uint8_t cr_tag;     /* Tag */
     uint8_t cr_reserved; /* Remaining hardware-reserved bits to preserve */
+    uint8_t cr_tag;     /* Tag */
 #ifdef __cplusplus
     inline uint64_t base() const {
        return cr_base;
