@@ -66,10 +66,10 @@ struct cap_register {
     cc128_length_t _cr_top; /* Capability top */
     uint32_t cr_perms;  /* Permissions */
     uint32_t cr_uperms; /* User Permissions */
-    uint64_t cr_pesbt_xored_for_mem;  /* Perms, E, Sealed, Bot, & Top bits (128-bit) */
     uint32_t cr_otype;  /* Object Type, 24/16 bits */
     uint8_t cr_flags;   /* Flags */
     uint8_t cr_tag;     /* Tag */
+    uint8_t cr_reserved; /* Remaining hardware-reserved bits to preserve */
 #ifdef __cplusplus
     inline uint64_t base() const {
        return cr_base;
@@ -157,9 +157,11 @@ typedef struct cap_register cap_register_t;
 #define CC256_PERMS_ALL_BITS_UNTAGGED CC_BITMASK64(CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT) /* 15 bits */
 #define CC256_UPERMS_ALL_BITS         CC_BITMASK64(CC256_UPERMS_COUNT) /* 19 bits */
 #define CC256_OTYPE_ALL_BITS          CC_BITMASK64(CC256_OTYPE_BITS)
+#define CC256_RESERVED_ALL_BITS       CC_BITMASK64(CC256_RESERVED_BITS)
 #define CC256_OTYPE_MEM_SHFT          (32)
 #define CC256_OTYPE_BITS              (24)
-#define CC256_RESERVED_BITS           (8) /* reserved bits, stored as part of otype */
+#define CC256_RESERVED_MEM_SHFT       (CC256_OTYPE_MEM_SHFT + CC256_OTYPE_BITS)
+#define CC256_RESERVED_BITS           (8)
 #define CC256_NULL_LENGTH ((cc128_length_t)UINT64_MAX)
 #define CC256_NULL_TOP ((cc128_length_t)UINT64_MAX)
 CC128_STATIC_ASSERT(CC256_FLAGS_COUNT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT + CC256_UPERMS_COUNT +
@@ -395,6 +397,7 @@ TRUNCATE_LSB_FUNC(23)
 static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
     cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
     cdp->cr_uperms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, UPERMS);
+    cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
     cdp->cr_flags = (uint8_t)CC128_EXTRACT_FIELD(pesbt, FLAGS);
     uint32_t BWidth = CC128_BOT_WIDTH;
     uint32_t BMask = (1u << BWidth) - 1;
@@ -521,9 +524,6 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
  * Decompress a 128-bit capability.
  */
 static inline void decompress_128cap(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
-    // TODO: add a bool tagged parameter and return false for invalid capabilities
-    //  and also only store pesbt for untagged values
-    cdp->cr_pesbt_xored_for_mem = pesbt;
     decompress_128cap_already_xored(pesbt ^ CC128_NULL_XOR_MASK, cursor, cdp);
 }
 
@@ -550,7 +550,7 @@ static inline uint64_t compress_128cap_without_xor(const cap_register_t* csp) {
     uint64_t Te;
     if (!IE) {
         // precisely representable -> just extract the bits
-        cc128_debug_assert(top <= CAP_MAX_ADDRESS_PLUS_ONE); // must be 64 bits
+        cc128_debug_assert((uint64_t)(top >> 64) <= 1); // should be at most 1 bit over
         Be = cc128_truncate64(base, CC128_FIELD_BOTTOM_ENCODED_SIZE);
         Te = cc128_truncate64((uint64_t)top, CC128_FIELD_TOP_ENCODED_SIZE);
     } else {
@@ -614,17 +614,16 @@ static inline uint64_t compress_128cap_without_xor(const cap_register_t* csp) {
         Te = Tbits | expHighBits;
         Be = Bbits | expLowBits;
     }
+    cc128_debug_assert(!(csp->cr_tag && csp->cr_reserved) && "Unknown reserved bits set it tagged capability");
     uint64_t pesbt =
         CC128_ENCODE_FIELD(csp->cr_uperms, UPERMS) |
         CC128_ENCODE_FIELD(csp->cr_perms, HWPERMS) |
         CC128_ENCODE_FIELD(csp->cr_otype, OTYPE) |
+        CC128_ENCODE_FIELD(csp->cr_reserved, RESERVED) |
         CC128_ENCODE_FIELD(csp->cr_flags, FLAGS) |
         CC128_ENCODE_FIELD(IE, INTERNAL_EXPONENT) |
         CC128_ENCODE_FIELD(Te, TOP_ENCODED) |
         CC128_ENCODE_FIELD(Be, BOTTOM_ENCODED);
-    // For untagged values we add the initially loaded reserved bits in the reserved field:
-    if (!csp->cr_tag)
-        pesbt |= CC128_ENCODE_FIELD(CC128_EXTRACT_FIELD(csp->cr_pesbt_xored_for_mem ^ CC128_NULL_XOR_MASK, RESERVED), RESERVED);
     return pesbt;
 }
 
@@ -934,6 +933,7 @@ static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, 
         new_top = new_cap._cr_top;
     }
     cc128_debug_assert(new_top >= new_base);
+    cc128_debug_assert(!(cap->cr_tag && cap->cr_reserved) && "Unknown reserved bits set it tagged capability");
     cap->cr_base = new_base;
     cap->_cr_cursor = cursor; // ensure that the address is correct
     cap->_cr_top = new_top;
@@ -1005,16 +1005,19 @@ static inline void decompress_256cap(inmemory_chericap256 mem, cap_register_t* c
     cdp->cr_flags = mem.u64s[0] & CC256_FLAGS_ALL_BITS;
     cdp->cr_perms = (mem.u64s[0] >> CC256_PERMS_MEM_SHFT) & hwperms_mask;
     cdp->cr_uperms = (mem.u64s[0] >> CC256_UPERMS_MEM_SHFT) & CC256_UPERMS_ALL_BITS;
-    cdp->cr_otype = (mem.u64s[0] >> CC256_OTYPE_MEM_SHFT) ^ CC256_OTYPE_UNSEALED;
+    cdp->cr_otype = ((mem.u64s[0] >> CC256_OTYPE_MEM_SHFT) & CC256_OTYPE_ALL_BITS) ^ CC256_OTYPE_UNSEALED;
+    cdp->cr_reserved = (mem.u64s[0] >> CC256_RESERVED_MEM_SHFT) & CC256_RESERVED_ALL_BITS;
     cdp->cr_base = mem.u64s[2];
     /* Length is xor'ed with -1 to ensure that NULL is all zeroes in memory */
     uint64_t length = mem.u64s[3] ^ CC256_NULL_LENGTH;
     cdp->_cr_top = (cc128_length_t)cdp->cr_base + (cc128_length_t)length;
     cdp->_cr_cursor = mem.u64s[1];
     cdp->cr_tag = tagged;
+    cc128_debug_assert(!(cdp->cr_tag && cdp->cr_reserved) && "Unknown reserved bits set it tagged capability");
 }
 
 static inline void compress_256cap(inmemory_chericap256* buffer, const cap_register_t* csp) {
+    cc128_debug_assert(!(csp->cr_tag && csp->cr_reserved) && "Unknown reserved bits set it tagged capability");
     bool flags_bits = csp->cr_flags & CC256_FLAGS_ALL_BITS;
     // When writing an untagged value, just write back the bits that were loaded (including the reserved HWPERMS)
     uint64_t hwperms_mask = csp->cr_tag ? CC256_PERMS_ALL_BITS: CC256_PERMS_ALL_BITS_UNTAGGED;
@@ -1022,7 +1025,8 @@ static inline void compress_256cap(inmemory_chericap256* buffer, const cap_regis
         flags_bits |
         ((csp->cr_perms & hwperms_mask) << CC256_PERMS_MEM_SHFT) |
         ((csp->cr_uperms & CC256_UPERMS_ALL_BITS) << CC256_UPERMS_MEM_SHFT) |
-        ((uint64_t)(csp->cr_otype ^ CC256_OTYPE_UNSEALED) << CC256_OTYPE_MEM_SHFT);
+        ((uint64_t)((csp->cr_otype ^ CC256_OTYPE_UNSEALED) & CC256_OTYPE_ALL_BITS) << CC256_OTYPE_MEM_SHFT) |
+        ((uint64_t)(csp->cr_reserved & CC256_RESERVED_ALL_BITS) << CC256_RESERVED_MEM_SHFT);
     buffer->u64s[1] = csp->_cr_cursor;
     buffer->u64s[2] = csp->cr_base;
     cc128_length_t length65 = csp->_cr_top - csp->cr_base;
