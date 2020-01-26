@@ -74,6 +74,8 @@ static void dump_cap_fields(const cap_register_t* result) {
             top_full > UINT64_MAX ? " (greater than UINT64_MAX)": "");
     fprintf(stderr, "Sealed:      %d\n", cc128_is_cap_sealed(result) ? 1 : 0);
     fprintf(stderr, "OType:       0x%" PRIx32 "%s\n", result->cr_otype, otype_suffix(result->cr_otype));
+    fprintf(stderr, "Flags:       0x%" PRIx8 "\n", result->cr_flags);
+    fprintf(stderr, "Reserved:    0x%" PRIx8 "\n", result->cr_reserved);
     fprintf(stderr, "\n");
 }
 
@@ -99,5 +101,7 @@ int main(int argc, char** argv) {
     printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", pesbt, cursor);
     decompress_128cap(pesbt, cursor, &result);
     dump_cap_fields(&result);
+    uint64_t rt_pesbt = compress_128cap(&result);
+    printf("Re-compressed pesbt = %016" PRIx64 "%s\n", rt_pesbt, pesbt == rt_pesbt ? "" : " - WAS DESTRUCTIVE");
     return EXIT_SUCCESS;
 }
