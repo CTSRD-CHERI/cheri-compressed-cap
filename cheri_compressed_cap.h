@@ -676,10 +676,10 @@ static bool cc128_is_representable_cap_exact(const cap_register_t* cap) {
     cc128_debug_assert(decompressed_cap.cr_flags == cap->cr_flags);
     cc128_debug_assert(decompressed_cap.cr_uperms == cap->cr_uperms);
     cc128_debug_assert(decompressed_cap.cr_perms == cap->cr_perms);
+    cc128_debug_assert(decompressed_cap._cr_cursor == cap->_cr_cursor);
     // If any of these fields changed then the capability is not representable:
     if (decompressed_cap.cr_base != cap->cr_base ||
-        decompressed_cap._cr_top != cap->_cr_top ||
-        decompressed_cap._cr_cursor != cap->_cr_cursor) {
+        decompressed_cap._cr_top != cap->_cr_top) {
         return false;
     }
     return true;
