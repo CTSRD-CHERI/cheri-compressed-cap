@@ -65,11 +65,11 @@ static void dump_cap_fields(const cap_register_t* result) {
     fprintf(stderr, "Offset:      0x%016" PRIx64 "\n", result->_cr_cursor - result->cr_base);
     fprintf(stderr, "Cursor:      0x%016" PRIx64 "\n", result->_cr_cursor);
     cc128_length_t length = result->_cr_top - result->cr_base;
-    fprintf(stderr, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n",
+    fprintf(stderr, "Length:     0x%" PRIx64 "%016" PRIx64 " %s\n",
             (uint64_t)(length >> 64), (uint64_t)length,
             length > UINT64_MAX ? " (greater than UINT64_MAX)": "");
     cc128_length_t top_full = result->_cr_top;
-    fprintf(stderr, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n",
+    fprintf(stderr, "Top:        0x%" PRIx64 "%016" PRIx64 " %s\n",
             (uint64_t)(top_full >> 64), (uint64_t)top_full,
             top_full > UINT64_MAX ? " (greater than UINT64_MAX)": "");
     fprintf(stderr, "Sealed:      %d\n", cc128_is_cap_sealed(result) ? 1 : 0);
