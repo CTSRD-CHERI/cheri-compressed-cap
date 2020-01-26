@@ -395,10 +395,13 @@ TRUNCATE_LSB_FUNC(23)
 #define cc128_truncateLSB_generic(type_width) CC128_CONCAT(cc128_truncateLSB, type_width)
 
 static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
+    cdp->_cr_cursor = cursor;
     cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
     cdp->cr_uperms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, UPERMS);
-    cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
+    cdp->cr_otype = (uint32_t)CC128_EXTRACT_FIELD(pesbt, OTYPE);
     cdp->cr_flags = (uint8_t)CC128_EXTRACT_FIELD(pesbt, FLAGS);
+    cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
+
     uint32_t BWidth = CC128_BOT_WIDTH;
     uint32_t BMask = (1u << BWidth) - 1;
     uint32_t TMask = BMask >> 2;
@@ -424,7 +427,6 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
         B = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
         T = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_TOP);
     }
-    cdp->cr_otype = (uint32_t)CC128_EXTRACT_FIELD(pesbt, OTYPE);
     /*
         Reconstruct top two bits of T given T = B + len and:
         1) the top two bits of B
@@ -516,7 +518,6 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
 
     // Note: top<base can happen for invalid capabilities with arbitrary bit patterns
     cdp->_cr_top = top;
-    cdp->_cr_cursor = cursor;
     cdp->cr_base = (uint64_t)base;
 }
 
