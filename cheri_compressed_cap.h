@@ -644,8 +644,9 @@ static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, 
  *   base + offset.
  */
 static inline bool cc128_is_representable_new_addr(bool sealed, uint64_t base, cc128_length_t length, uint64_t cursor, uint64_t new_cursor) {
+    cc128_length_t top = (cc128_length_t)base + length;
     // in-bounds capabilities are always representable
-    if (__builtin_expect(cursor >= base && new_cursor < length, true)) {
+    if (__builtin_expect(new_cursor >= base && new_cursor < top, true)) {
         return true;
     }
 
@@ -660,7 +661,7 @@ static inline bool cc128_is_representable_new_addr(bool sealed, uint64_t base, c
         cap_register_t c;
         memset(&c, 0, sizeof(c));
         c.cr_base = base;
-        c._cr_top = (cc128_length_t)base + length;
+        c._cr_top = top;
         c._cr_cursor = cursor;
         c.cr_otype = sealed ? 42 : CC128_OTYPE_UNSEALED; // important to set as compress assumes this is in bounds
         /* Get an EBT */
