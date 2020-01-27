@@ -788,19 +788,19 @@ static bool fast_cc128_is_representable_new_addr(bool sealed, uint64_t base, cc1
 static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, cc128_length_t req_top, uint64_t* alignment_mask) {
     cc128_debug_assert(cap->cr_tag && "Cannot be used on untagged capabilities");
     cc128_debug_assert(!cc128_is_cap_sealed(cap) && "Cannot be used on sealed capabilities");
-    cc128_debug_assert(req_base <= req_top && "Cannot grow capabilities");
+    cc128_debug_assert(req_base <= req_top && "Cannot invert base and top");
     /*
      * With compressed capabilities we may need to increase the range of
      * memory addresses to be wider than requested so it is
      * representable.
      */
     const uint64_t cursor = cap->_cr_cursor;
-    cc128_debug_assert(req_base == cursor && "CSetbounds should set base to current cursor");
     cc128_length_t orig_length65 = cap->_cr_top - cap->cr_base;
-    cc128_length_t req_length65 = req_top - cursor;
+    cc128_length_t req_length65 = req_top - req_base;
     cc128_debug_assert((orig_length65 >> 64) <= 1 && "Length cannot be bigger than 1 << 64");
     cc128_debug_assert((req_top >> 64) <= 1 && "New top cannot be bigger than 1 << 64");
-    cc128_debug_assert(req_length65 <= orig_length65 && "Cannot grow capabilities");
+    cc128_debug_assert(req_base >= cap->cr_base && "Cannot decrease base");
+    cc128_debug_assert(req_top <= cap->_cr_top && "Cannot increase top");
     assert((cap->_cr_cursor < cap->_cr_top || (cap->_cr_cursor == cap->_cr_top && cap->_cr_top == cap->cr_base)) &&
            "Must be used on inbounds (or zero-length) caps");
     assert(cap->_cr_cursor >= cap->cr_base && "Must be used on inbounds caps");
