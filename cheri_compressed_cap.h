@@ -624,6 +624,8 @@ static bool cc128_is_representable_cap_exact(const cap_register_t* cap) {
     return true;
 }
 
+static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, cc128_length_t req_top, uint64_t* alignment_mask, bool internal_ignore_sanity);
+
 /*
  * Check to see if a memory region is representable by a compressed
  * capability. It is representable if:
@@ -654,13 +656,17 @@ static inline bool cc128_is_representable_new_addr(bool sealed, uint64_t base, c
 #endif
 
     if (slow_representable_check) {
+        /* Simply compress and uncompress to check. */
         cap_register_t c;
         memset(&c, 0, sizeof(c));
-        /* Simply compress and uncompress to check. */
         c.cr_base = base;
         c._cr_top = (cc128_length_t)base + length;
-        c._cr_cursor = new_cursor;
+        c._cr_cursor = cursor;
         c.cr_otype = sealed ? 42 : CC128_OTYPE_UNSEALED; // important to set as compress assumes this is in bounds
+        /* Get an EBT */
+        cc128_setbounds_impl(&c, c.cr_base, c._cr_top, NULL, true);
+        /* Check with new cursor */
+        c._cr_cursor = new_cursor;
         return cc128_is_representable_cap_exact(&c);
     } else {
         return fast_cc128_is_representable_new_addr(sealed, base, length, cursor, new_cursor);
@@ -724,9 +730,9 @@ static bool fast_cc128_is_representable_new_addr(bool sealed, uint64_t base, cc1
 }
 
 /* @return whether the operation was able to set precise bounds precise or not */
-static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, cc128_length_t req_top, uint64_t* alignment_mask) {
-    cc128_debug_assert(cap->cr_tag && "Cannot be used on untagged capabilities");
-    cc128_debug_assert(!cc128_is_cap_sealed(cap) && "Cannot be used on sealed capabilities");
+static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, cc128_length_t req_top, uint64_t* alignment_mask, bool internal_ignore_sanity) {
+    cc128_debug_assert((internal_ignore_sanity || cap->cr_tag) && "Cannot be used on untagged capabilities");
+    cc128_debug_assert((internal_ignore_sanity || !cc128_is_cap_sealed(cap)) && "Cannot be used on sealed capabilities");
     cc128_debug_assert(req_base <= req_top && "Cannot invert base and top");
     /*
      * With compressed capabilities we may need to increase the range of
@@ -736,13 +742,13 @@ static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, 
     const uint64_t cursor = cap->_cr_cursor;
     cc128_length_t orig_length65 = cap->_cr_top - cap->cr_base;
     cc128_length_t req_length65 = req_top - req_base;
-    cc128_debug_assert((orig_length65 >> 64) <= 1 && "Length cannot be bigger than 1 << 64");
-    cc128_debug_assert((req_top >> 64) <= 1 && "New top cannot be bigger than 1 << 64");
+    cc128_debug_assert((orig_length65 >> 64) <= 1 && "Length must be smaller than 1 << 65");
+    cc128_debug_assert((req_top >> 64) <= 1 && "New top must be smaller than 1 << 65");
     cc128_debug_assert(req_base >= cap->cr_base && "Cannot decrease base");
     cc128_debug_assert(req_top <= cap->_cr_top && "Cannot increase top");
-    assert((cap->_cr_cursor < cap->_cr_top || (cap->_cr_cursor == cap->_cr_top && cap->_cr_top == cap->cr_base)) &&
+    assert((internal_ignore_sanity || cap->_cr_cursor < cap->_cr_top || (cap->_cr_cursor == cap->_cr_top && cap->_cr_top == cap->cr_base)) &&
            "Must be used on inbounds (or zero-length) caps");
-    assert(cap->_cr_cursor >= cap->cr_base && "Must be used on inbounds caps");
+    assert((internal_ignore_sanity || cap->_cr_cursor >= cap->cr_base) && "Must be used on inbounds caps");
 
     // function setCapBounds(cap, base, top) : (Capability, bits(64), bits(65)) -> (bool, Capability) = {
     //  /* {cap with base=base; length=(bits(64)) length; offset=0} */
@@ -894,7 +900,7 @@ static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, 
 
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool cc128_setbounds(cap_register_t* cap, uint64_t req_base, cc128_length_t req_top) {
-    return cc128_setbounds_impl(cap, req_base, req_top, NULL);
+    return cc128_setbounds_impl(cap, req_base, req_top, NULL, false);
 }
 
 /* @return the mask that needs to be applied to base in order to get a precisely representable capability */
@@ -919,7 +925,7 @@ static inline uint64_t cc128_get_alignment_mask(uint64_t req_length) {
   // uint64_t req_base = UINT64_MAX & ~(UINT64_C(1) << cc128_idx_MSNZ(req_length));
   uint64_t req_base = UINT64_MAX - req_length;
   tmpcap._cr_cursor = req_base;
-  cc128_setbounds_impl(&tmpcap, req_base, req_base + req_length, &mask);
+  cc128_setbounds_impl(&tmpcap, req_base, req_base + req_length, &mask, false);
   // base should have been rounded down using this mask:
   cc128_debug_assert((req_base & mask) == tmpcap.cr_base);
   return mask;
