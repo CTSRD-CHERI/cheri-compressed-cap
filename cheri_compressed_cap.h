@@ -938,6 +938,10 @@ static inline uint64_t cc128_get_required_alignment(uint64_t req_length) {
     return ~cc128_get_alignment_mask(req_length) + 1;
 }
 
+static inline uint64_t cc128_get_representable_length(uint64_t req_length) {
+    uint64_t mask = cc128_get_alignment_mask(req_length);
+    return (req_length + ~mask) & mask;
+}
 
 #endif /* CC128_DEFINE_FUNCTIONS != 0 */
 
