@@ -773,7 +773,6 @@ static inline bool cc128_setbounds_impl(cap_register_t* cap, uint64_t req_base, 
     bool exact = false;
     cc128_length_t new_top;
     uint64_t new_base;
-    const uint8_t newE = E;
     uint32_t new_ebt;
     if (!InternalExponent) {
         //  /* The non-ie e == 0 case is easy. It is exact so just extract relevant bits. */
