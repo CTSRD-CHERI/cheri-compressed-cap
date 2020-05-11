@@ -28,14 +28,8 @@ add_compile_options(-pedantic -Wall -Wextra -Wno-old-style-cast -Wno-c++98-compa
 add_library(cheri_compressed_cap14 cheri_compressed_cap.c cheri_compressed_cap.h)
 
 add_executable(decompress_c128_cap decompress_c128_cap.c)
-add_executable(decompress_c128_cap23 decompress_c128_cap.c)
-target_compile_definitions(decompress_c128_cap23 PRIVATE -DCC128_OLD_FORMAT)
-add_executable(decompress_c128_cap14 decompress_c128_cap.c)
 include(GNUInstallDirs)
 install(TARGETS decompress_c128_cap RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS decompress_c128_cap23 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS decompress_c128_cap14 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
 
 # Test against sail generated C code:
 # This needs GMP (and CMake doesn't include a find module)
