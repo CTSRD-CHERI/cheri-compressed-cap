@@ -423,7 +423,7 @@ struct cc128_bounds_bits {
 };
 
 /// Extract the bits used for bounds and infer the top two bits of T
-struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
+static inline struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
     CC128_STATIC_ASSERT(CC128_MANTISSA_WIDTH == CC128_BOT_WIDTH, "Wrong bot width?");
     uint32_t BWidth = CC128_BOT_WIDTH;
     uint32_t BMask = (1u << BWidth) - 1;
@@ -464,8 +464,8 @@ struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
     return result;
 }
 
-void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
-                             uint64_t* base_out, cc128_length_t* top_out) {
+static inline void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor, uint64_t* base_out,
+                                           cc128_length_t* top_out) {
     // For the remaining computations we have to clamp E to max_E
     //  let E = min(maxE, unsigned(c.E)) in
     uint8_t E = MIN(CC128_MAX_EXPONENT, bounds.E);
