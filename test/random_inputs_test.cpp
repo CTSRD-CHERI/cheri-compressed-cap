@@ -17,14 +17,28 @@ static_assert(CC128_FIELD_OTYPE_LAST == 44, "");
 
 #define CHECK_AND_SAVE_SUCCESS(expr) do { CHECK(expr); if (!(expr)) { success = false; } } while (false)
 
+bool operator==(const cc128_bounds_bits& a, const cc128_bounds_bits& b) {
+    return a.B == b.B && a.E == b.E && a.T == b.T && a.IE == b.IE;
+}
 
 static bool check_fields_match(const cap_register_t& result, const test_input& input, const std::string& prefix) {
     cap_register_t sail_result;
     memset(&sail_result, 0, sizeof(sail_result));
     sail_decode_128_raw(input.pesbt, input.cursor, false, &sail_result);
 
+    cc128_bounds_bits bounds_bits = cc128_extract_bounds_bits(input.pesbt);
+    cc128_bounds_bits sail_bounds_bits = sail_extract_bounds_bits_128(input.pesbt);
+    REQUIRE(sail_bounds_bits == bounds_bits);
+
+    CAPTURE(bounds_bits);
+    CAPTURE(sail_result);
+    CAPTURE(result);
+    // TODO: CHECK(sail_result._cr_top >= sail_result.cr_base);
+    // TODO: CHECK(result._cr_top >= result.cr_base);
+
     bool success = true;
     CAPTURE(prefix);
+
     CHECK_AND_SAVE_SUCCESS(sail_result._cr_cursor == result._cr_cursor);
     CHECK_AND_SAVE_SUCCESS(sail_result._cr_top == result._cr_top);
     CHECK_AND_SAVE_SUCCESS(sail_result.cr_base == result.cr_base);
@@ -104,23 +118,18 @@ static bool test_one_entry(const test_input& ti) {
     return success;
 }
 
-// bad test from cheritest:
-//     Write C24|v:1 s:0 p:00007ffd b:900000000000efe0 l:0000000000001000
-//             |o:0000000000000fa0 t:3ffff
-// -> 0x9000000040000a14:  csc	c24,zero,48(c11)
-//    Cap Tag Write [ff70] 0 -> 1
-//    Cap Memory Write [900000000000ff70] = v:1 PESBT:fffd000007f9afe4 Cursor:900000000000ff80
-// ->
-//    Cap Memory Read [900000000000ff70] = v:1 PESBT:fffd000007f9afe4 Cursor:900000000000ff80
-//    Write C24|v:1 s:0 p:00007ffd b:900000000000efe0 l:0000000000000000
-//             |o:0000000000000fa0 t:3ffff
-
 TEST_CASE("Check sail-generated inputs decode correctly", "[decode]") {
     int failure_count = 0;
+#if 0
+    test_input inputs[] = {
+        { .pesbt = 0x7b2a8ea87565c909, .cursor = 0x235ec19a4806f340 }
+    };
+#endif
     for (size_t i = 0; i < array_lengthof(inputs); i++) {
         if (!test_one_entry(inputs[i])) {
             fprintf(stderr, "Failed at index %zd\n", i);
             failure_count++;
+            // break;
         }
     }
     REQUIRE(failure_count == 0);

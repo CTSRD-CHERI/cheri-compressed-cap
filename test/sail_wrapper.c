@@ -83,17 +83,31 @@ void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_
     two_u64s_to_sail_128(&sail_all_bits, mem_pesbt, mem_cursor);
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
     KILL(lbits)(&sail_all_bits);
-    sail_dump_cap("sail_result", sail_result);
+    // sail_dump_cap("sail_result", sail_result);
     sail_cap_to_cap_register_t(&sail_result, cdp);
 }
 
-void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
+struct zCapability _sail_decode_128_raw_impl(uint64_t pesbt, uint64_t cursor, bool tag) {
     lbits sail_all_bits;
     two_u64s_to_sail_128(&sail_all_bits, pesbt, cursor);
     struct zCapability sail_result = sailgen_capBitsToCapability(tag, sail_all_bits);
     KILL(lbits)(&sail_all_bits);
-    sail_dump_cap("sail_result", sail_result);
+    return sail_result;
+}
+
+void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
+    struct zCapability sail_result = _sail_decode_128_raw_impl(pesbt, cursor, tag);
     sail_cap_to_cap_register_t(&sail_result, cdp);
+}
+
+struct cc128_bounds_bits sail_extract_bounds_bits_128(uint64_t pesbt) {
+    struct cc128_bounds_bits result;
+    struct zCapability sail_result = _sail_decode_128_raw_impl(pesbt, 0, false);
+    result.E = sail_result.zE;
+    result.B = sail_result.zB;
+    result.T = sail_result.zT;
+    result.IE = sail_result.zinternal_e;
+    return result;
 }
 
 static inline lbits cc_length_to_lbits(cc128_length_t l) {

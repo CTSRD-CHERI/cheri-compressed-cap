@@ -39,8 +39,13 @@ static const char* otype_suffix(uint32_t otype) {
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const cap_register_t& value);
+std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value);
+std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value) {
+    os << "{ B: " << value.B << " T: " << value.T << " E: " << value.E << " IE: " << value.IE << " }";
+    return os;
+}
 
+std::ostream& operator<<(std::ostream& os, const cap_register_t& value);
 std::ostream& operator<<(std::ostream& os, const cap_register_t& value) {
     char buffer[4096];
     cc128_length_t top_full = value._cr_top;
