@@ -515,6 +515,8 @@ static inline void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint
        invert the MSB of top.  This corrects for errors that happen when the
        representable space wraps the address space. */
     //  let base2 : bits(2) = 0b0 @ [base[cap_addr_width - 1]];
+    // Note: we ignore the top bit of base here. If we don't we can get cases
+    // where setbounds/incoffset/etc. break monotonicity.
     unsigned base2 = cc128_truncate64(base >> (CC128_CAP_ADDR_WIDTH - 1), 1);
     //  let top2  : bits(2) = top[cap_addr_width .. cap_addr_width - 1];
     unsigned top2 = cc128_truncate64(top >> (CC128_CAP_ADDR_WIDTH - 1), 2);
