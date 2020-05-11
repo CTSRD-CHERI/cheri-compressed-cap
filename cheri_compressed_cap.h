@@ -462,7 +462,7 @@ struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
     uint8_t T_infer = (BTop2 + L_carry + L_msb) & 0x3;
     result.T |= ((uint16_t)T_infer) << (BWidth - 2);
     return result;
-};
+}
 
 void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
                              uint64_t* base_out, cc128_length_t* top_out) {
