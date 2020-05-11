@@ -41,7 +41,8 @@ static const char* otype_suffix(uint32_t otype) {
 
 std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value);
 std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value) {
-    os << "{ B: " << value.B << " T: " << value.T << " E: " << value.E << " IE: " << value.IE << " }";
+    os << "{ B: " << (unsigned)value.B << " T: " << (unsigned)value.T << " E: " << (unsigned)value.E
+       << " IE: " << (unsigned)value.IE << " }";
     return os;
 }
 
