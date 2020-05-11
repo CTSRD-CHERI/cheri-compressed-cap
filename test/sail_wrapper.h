@@ -2,10 +2,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void sail_decode_mem128(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp);
-void sail_decode_raw128(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp);
+void sail_decode_128_mem(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp);
+void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp);
 uint64_t sail_compress_128_raw(const cap_register_t* csp);
-uint64_t sail_compress_128_for_mem(const cap_register_t* csp);
+uint64_t sail_compress_128_mem(const cap_register_t* csp);
 
 uint64_t sail_null_pesbt(void);
 #ifdef __cplusplus

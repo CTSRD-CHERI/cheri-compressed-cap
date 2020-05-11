@@ -36,31 +36,6 @@ install(TARGETS decompress_c128_cap RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS decompress_c128_cap23 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS decompress_c128_cap14 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-enable_testing()
-
-function(add_cc_test _tgt _src)
-    if (HAVE_ASAN)
-        add_executable(${_tgt}-asan-ubsan ${_src})
-        target_compile_options(${_tgt}-asan-ubsan PRIVATE -fsanitize=undefined,address)
-        target_link_libraries(${_tgt}-asan-ubsan PRIVATE -fsanitize=undefined,address)
-        add_test(NAME test-${_tgt}-asan-ubsan COMMAND ${_tgt}-asan-ubsan)
-    endif()
-    if (HAVE_MSAN)
-        add_executable(${_tgt}-msan-ubsan ${_src})
-        target_compile_options(${_tgt}-msan-ubsan PRIVATE -fsanitize=undefined,address)
-        target_link_libraries(${_tgt}-msan-ubsan PRIVATE -fsanitize=undefined,address)
-        add_test(NAME test-${_tgt}-msan-ubsan COMMAND ${_tgt}-msan-ubsan)
-    endif()
-    # UBSan will be added if available -> no suffix
-    add_executable(${_tgt} ${_src})
-    add_test(NAME test-${_tgt} COMMAND ${_tgt})
-endfunction()
-
-add_cc_test(simple_test test/simple_test.cpp)
-
-add_cc_test(setbounds_test test/setbounds_test.cpp)
-
-add_cc_test(random_inputs_test test/random_inputs_test.cpp)
 
 # Test against sail generated C code:
 # This needs GMP (and CMake doesn't include a find module)
@@ -70,10 +45,55 @@ pkg_check_modules(GMP REQUIRED IMPORTED_TARGET GLOBAL gmp)
 add_library(sail_wrapper128 STATIC test/sail_wrapper.c test/sail.c)
 target_link_libraries(sail_wrapper128 PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
 target_compile_options(sail_wrapper128 PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+
+if (HAVE_ASAN)
+    add_library(sail_wrapper128-asan-ubsan STATIC test/sail_wrapper.c test/sail.c)
+    target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
+    target_link_libraries(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
+    target_link_libraries(sail_wrapper128-asan-ubsan PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+    target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+endif()
+if (HAVE_MSAN)
+    add_library(sail_wrapper128-msan-ubsan STATIC test/sail_wrapper.c test/sail.c)
+    target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
+    target_link_libraries(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
+    target_link_libraries(sail_wrapper128-msan-ubsan PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+    target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+endif()
+
 # Add a test exe for sail generated code
 add_executable(test_sail_wrapper128 decompress_c128_cap.c)
 target_compile_definitions(test_sail_wrapper128 PRIVATE DECOMPRESS_WITH_SAIL_GENERATED_CODE=1)
-target_link_libraries(test_sail_wrapper128 PRIVATE sail_wrapper128 )
+target_link_libraries(test_sail_wrapper128 PRIVATE sail_wrapper128)
+
+enable_testing()
+
+function(add_cc_test _tgt _src)
+    if (HAVE_ASAN)
+        add_executable(${_tgt}-asan-ubsan ${_src})
+        target_compile_options(${_tgt}-asan-ubsan PRIVATE -fsanitize=undefined,address)
+        target_link_libraries(${_tgt}-asan-ubsan PRIVATE -fsanitize=undefined,address)
+        target_link_libraries(${_tgt}-asan-ubsan PRIVATE sail_wrapper128-asan-ubsan)
+        add_test(NAME test-${_tgt}-asan-ubsan COMMAND ${_tgt}-asan-ubsan)
+    endif()
+    if (HAVE_MSAN)
+        add_executable(${_tgt}-msan-ubsan ${_src})
+        target_compile_options(${_tgt}-msan-ubsan PRIVATE -fsanitize=undefined,memory)
+        target_link_libraries(${_tgt}-msan-ubsan PRIVATE -fsanitize=undefined,memory)
+        target_link_libraries(${_tgt}-msan-ubsan PRIVATE sail_wrapper128-msan-ubsan)
+        add_test(NAME test-${_tgt}-msan-ubsan COMMAND ${_tgt}-msan-ubsan)
+    endif()
+    # UBSan will be added if available -> no suffix
+    add_executable(${_tgt} ${_src})
+    add_test(NAME test-${_tgt} COMMAND ${_tgt})
+    target_link_libraries(${_tgt} PRIVATE sail_wrapper128)
+endfunction()
+
+add_cc_test(simple_test test/simple_test.cpp)
+
+add_cc_test(setbounds_test test/setbounds_test.cpp)
+
+add_cc_test(random_inputs_test test/random_inputs_test.cpp)
 
 if (HAVE_LIBFUZZER)
     if (HAVE_ASAN)

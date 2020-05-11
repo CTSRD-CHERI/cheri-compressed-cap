@@ -75,7 +75,7 @@ static void two_u64s_to_sail_128(lbits* out, uint64_t first64, uint64_t second64
     KILL(lbits)(&sail_second64);
 }
 
-void sail_decode_mem128(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_register_t* cdp) {
+void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_register_t* cdp) {
     lbits sail_all_bits;
     two_u64s_to_sail_128(&sail_all_bits, mem_pesbt, mem_cursor);
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
@@ -84,10 +84,10 @@ void sail_decode_mem128(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_r
     sail_cap_to_cap_register_t(&sail_result, cdp, mem_pesbt ^ CC128_NULL_XOR_MASK);
 }
 
-void sail_decode_xored128(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
+void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
     lbits sail_all_bits;
     two_u64s_to_sail_128(&sail_all_bits, pesbt, cursor);
-    struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
+    struct zCapability sail_result = sailgen_capBitsToCapability(tag, sail_all_bits);
     KILL(lbits)(&sail_all_bits);
     sail_dump_cap("sail_result", sail_result);
     sail_cap_to_cap_register_t(&sail_result, cdp, pesbt ^ CC128_NULL_XOR_MASK);
@@ -137,7 +137,7 @@ uint64_t sail_compress_128_raw(const cap_register_t* csp) {
     return result;
 }
 
-uint64_t sail_compress_128_for_mem(const cap_register_t* csp) {
+uint64_t sail_compress_128_mem(const cap_register_t* csp) {
     struct zCapability sailcap = cap_register_t_to_sail_cap(csp);
     lbits sailbits;
     CREATE(lbits)(&sailbits);

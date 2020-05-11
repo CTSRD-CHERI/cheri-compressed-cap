@@ -103,13 +103,13 @@ int main(int argc, char** argv) {
     memset(&result, 0, sizeof(result));
     printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", pesbt, cursor);
 #ifdef DECOMPRESS_WITH_SAIL_GENERATED_CODE
-    sail_decode_mem128(pesbt, cursor, false, &result);
+    sail_decode_128_mem(pesbt, cursor, false, &result);
 #else
     decompress_128cap(pesbt, cursor, &result);
 #endif
     dump_cap_fields(&result);
 #ifdef DECOMPRESS_WITH_SAIL_GENERATED_CODE
-    uint64_t rt_pesbt = sail_compress_128_for_mem(&result);
+    uint64_t rt_pesbt = sail_compress_128_mem(&result);
 #else
     uint64_t rt_pesbt = compress_128cap(&result);
 #endif
