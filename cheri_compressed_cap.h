@@ -404,7 +404,7 @@ static inline uint64_t cc128_truncateLSB_##type_width(uint64_t value, size_t n) 
 }
 
 TRUNCATE_LSB_FUNC(14)
-// TRUNCATE_LSB_FUNC(64)
+TRUNCATE_LSB_FUNC(64)
 
 #define	CC128_CONCAT1(x,y)	x ## y
 #define	CC128_CONCAT(x,y)	CC128_CONCAT1(x,y)
@@ -511,34 +511,25 @@ void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
     top &= ((cc128_length_t)1 << CC128_CAP_LEN_WIDTH) - 1;
     cc128_debug_assert((uint64_t)(top >> CC128_CAP_ADDR_WIDTH) <= 1); // max 65 bits
 
-    // if (base[cap_addr_width] == bitone) then {
-    bool base_high = (base >> CC128_CAP_ADDR_WIDTH);
-    if (base_high) {
-        /* If base[64] is set this indicates under or overflow i.e. a has
-         * wrapped around the address space and been corrected. In this case
-         * we need to correct top[64] because top is not quite modulo 2**64 due
-         * to having max top == 2**64 in one particular case:
-         */
-        // top[cap_addr_width] = if (aHi == 1) & (tHi == 1) then bitone else bitzero;
-        if (aHi && tHi) {
-            top |= ((cc128_length_t)1 << 64);
-        } else {
-            top &= UINT64_MAX; // clear top bit
-        }
-        base = (uint64_t)base; // strip the high bit
+    /* If the base and top are more than an address space away from each other,
+       invert the MSB of top.  This corrects for errors that happen when the
+       representable space wraps the address space. */
+    //  let base2 : bits(2) = 0b0 @ [base[cap_addr_width - 1]];
+    unsigned base2 = cc128_truncate64(base >> (CC128_CAP_ADDR_WIDTH - 1), 1);
+    //  let top2  : bits(2) = top[cap_addr_width .. cap_addr_width - 1];
+    unsigned top2 = cc128_truncate64(top >> (CC128_CAP_ADDR_WIDTH - 1), 2);
+    //  if (E < (maxE - 1)) & (unsigned(top2 - base2) > 1) then {
+    //      top[cap_addr_width] = ~(top[cap_addr_width]);
+    //  };
+    if (E < (CC128_MAX_EXPONENT - 1) && (top2 - base2) > 1) {
+        top = top ^ ((unsigned __int128)1 << 64);
     }
-    cc128_debug_assert(base <= CC128_CAP_ADDR_MAX);
 
-    /* The following is apparently equivalent to above and used by hw. */
-    /*
-    let base2 : bits(2) = bitzero @ base[63];
-    let top2  : bits(2) = top[64..63];
-    if (E < (unsigned(resetE) - 1)) & (unsigned(top2 - base2) > 1) then {
-      top[64] = ~(top[64]);
-    };
-    */
     cc128_debug_assert((uint64_t)(top >> 64) <= 1); // should be at most 1 bit over
-    *base_out = (uint64_t)base;
+    // Note: base can be > 2^64 for some (untagged) inputs with E == maxE
+    // Note: base can also be > top for some (untagged) inputs.
+    // cc128_debug_assert(base <= top);
+    *base_out = (uint64_t)base; // strip the (invalid) top bit
     *top_out = top;
 }
 
