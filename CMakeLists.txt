@@ -34,24 +34,44 @@ install(TARGETS decompress_c128_cap RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 # Test against sail generated C code:
 # This needs GMP (and CMake doesn't include a find module)
 find_package(PkgConfig)
-pkg_check_modules(GMP REQUIRED IMPORTED_TARGET GLOBAL gmp)
+pkg_check_modules(PC_GMP gmp)
+find_path(GMP_INCLUDE_DIR gmp.h
+          HINTS ${PC_GMP_INCLUDEDIR} ${PC_GMP_INCLUDE_DIRS}
+          PATH_SUFFIXES gmp)
+message(STATUS "GMP include dir: ${GMP_INCLUDE_DIR}")
+find_library(GMP_LIBRARY NAMES gmp
+             HINTS ${PC_GMPL_LIBDIR} ${PC_GMP_LIBRARY_DIRS})
+message(STATUS "GMP library: ${GMP_LIBRARY}")
+
+if (NOT GMP_LIBRARY)
+    message(FATAL_ERROR "Cannot find GMP library")
+endif()
+if (NOT GMP_INCLUDE_DIR)
+    message(FATAL_ERROR "Cannot find GMP includes")
+endif()
+add_library(GMP::GMP UNKNOWN IMPORTED)
+set_target_properties(GMP::GMP PROPERTIES
+  IMPORTED_LOCATION "${GMP_LIBRARY}"
+  INTERFACE_INCLUDE_DIRECTORIES "${GMP_INCLUDE_DIR}"
+)
+
 
 add_library(sail_wrapper128 STATIC test/sail_wrapper.c test/sail.c)
-target_link_libraries(sail_wrapper128 PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+target_link_libraries(sail_wrapper128 PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
 target_compile_options(sail_wrapper128 PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
 
 if (HAVE_ASAN)
     add_library(sail_wrapper128-asan-ubsan STATIC test/sail_wrapper.c test/sail.c)
     target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
     target_link_libraries(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
-    target_link_libraries(sail_wrapper128-asan-ubsan PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+    target_link_libraries(sail_wrapper128-asan-ubsan PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
     target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
 endif()
 if (HAVE_MSAN)
     add_library(sail_wrapper128-msan-ubsan STATIC test/sail_wrapper.c test/sail.c)
     target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
     target_link_libraries(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
-    target_link_libraries(sail_wrapper128-msan-ubsan PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+    target_link_libraries(sail_wrapper128-msan-ubsan PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
     target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
 endif()
 
