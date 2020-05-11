@@ -181,7 +181,7 @@ uint64_t sail_null_pesbt(void) {
     sailgen_capToBits(&null_bits, znull_cap);
     sail_dump_cap("null cap", znull_cap);
     print_bits("null bits: ", null_bits);
-    uint64_t result = extract_bits(null_bits, 0, 64);
+    uint64_t result = extract_bits(null_bits, 64, 64);
     KILL(lbits)(&null_bits);
     return result;
 }
