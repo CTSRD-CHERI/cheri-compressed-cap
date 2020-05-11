@@ -462,16 +462,8 @@ struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
     return result;
 };
 
-static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
-    cdp->_cr_cursor = cursor;
-    cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
-    cdp->cr_uperms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, UPERMS);
-    cdp->cr_otype = (uint32_t)CC128_EXTRACT_FIELD(pesbt, OTYPE);
-    cdp->cr_flags = (uint8_t)CC128_EXTRACT_FIELD(pesbt, FLAGS);
-    cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
-    cdp->cr_ebt = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EBT);
-
-    struct cc128_bounds_bits bounds = cc128_extract_bounds_bits(pesbt);
+void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
+                             uint64_t* base_out, cc128_length_t* top_out) {
     // For the remaining computations we have to clamp E to max_E
     uint8_t E = MIN(CC128_MAX_EXPONENT, bounds.E);
 
@@ -489,7 +481,7 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     unsigned T3 = (unsigned)cc128_getbits(bounds.T, CC128_MANTISSA_WIDTH - 3, 3);
 #endif
     // let R3 = B3 - 0b001 in /* wraps */
-    unsigned R3 = (unsigned)cc128_truncate64(B3 - 1, 3); //B3 == 0 ? 7 : B3 - 1;
+    unsigned R3 = (unsigned)cc128_truncate64(B3 - 1, 3); // B3 == 0 ? 7 : B3 - 1;
     /* Do address, base and top lie in the R aligned region above the one containing R? */
     // let aHi = if a3 <_u R3 then 1 else 0 in
     // let bHi = if B3 <_u R3 then 1 else 0 in
@@ -507,7 +499,7 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     // let a_top = (a >> (E + 14)) in
     // Note: shifting by 64 is a no-op and causes wrong results!
     const unsigned a_top_shift = E + CC128_MANTISSA_WIDTH;
-    uint64_t a_top = a_top_shift >= CC128_CAP_ADDR_WIDTH ? 0 :  cursor >> a_top_shift;
+    uint64_t a_top = a_top_shift >= CC128_CAP_ADDR_WIDTH ? 0 : cursor >> a_top_shift;
 
     // base : CapLenBits = truncate((a_top + correction_base) @ c.B @ zeros(E), cap_len_width);
     cc128_length_t base = (uint64_t)((int64_t)a_top + correction_base);
@@ -527,11 +519,11 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     // if (base[cap_addr_width] == bitone) then {
     bool base_high = (base >> CC128_CAP_ADDR_WIDTH);
     if (base_high) {
-          /* If base[64] is set this indicates under or overflow i.e. a has
-           * wrapped around the address space and been corrected. In this case
-           * we need to correct top[64] because top is not quite modulo 2**64 due
-           * to having max top == 2**64 in one particular case:
-           */
+        /* If base[64] is set this indicates under or overflow i.e. a has
+         * wrapped around the address space and been corrected. In this case
+         * we need to correct top[64] because top is not quite modulo 2**64 due
+         * to having max top == 2**64 in one particular case:
+         */
         // top[cap_addr_width] = if (aHi == 1) & (tHi == 1) then bitone else bitzero;
         if (aHi && tHi) {
             top |= ((cc128_length_t)1 << 64);
@@ -551,10 +543,23 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     };
     */
     cc128_debug_assert((uint64_t)(top >> 64) <= 1); // should be at most 1 bit over
+    *base_out = (uint64_t)base;
+    *top_out = top;
+}
 
-    // Note: top<base can happen for invalid capabilities with arbitrary bit patterns
-    cdp->_cr_top = top;
-    cdp->cr_base = (uint64_t)base;
+static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
+    cdp->_cr_cursor = cursor;
+    cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
+    cdp->cr_uperms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, UPERMS);
+    cdp->cr_otype = (uint32_t)CC128_EXTRACT_FIELD(pesbt, OTYPE);
+    cdp->cr_flags = (uint8_t)CC128_EXTRACT_FIELD(pesbt, FLAGS);
+    cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
+    cdp->cr_ebt = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EBT);
+
+    struct cc128_bounds_bits bounds = cc128_extract_bounds_bits(pesbt);
+    _cc128_compute_base_top(bounds, cursor, &cdp->cr_base, &cdp->_cr_top);
+    // XXX: Can top < base happen for invalid capabilities with arbitrary bit patterns?
+    // cc128_debug_assert(cdp->_cr_top >= cdp->cr_base);
 }
 
 /*
