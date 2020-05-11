@@ -62,6 +62,19 @@ add_cc_test(setbounds_test test/setbounds_test.cpp)
 
 add_cc_test(random_inputs_test test/random_inputs_test.cpp)
 
+# Test against sail generated C code:
+# This needs GMP (and CMake doesn't include a find module)
+find_package(PkgConfig)
+pkg_check_modules(GMP REQUIRED IMPORTED_TARGET GLOBAL gmp)
+
+add_library(sail_wrapper128 STATIC test/sail_wrapper.c test/sail.c)
+target_link_libraries(sail_wrapper128 PUBLIC PkgConfig::GMP)  # needs GMP, should propagate to all users
+target_compile_options(sail_wrapper128 PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+# Add a test exe for sail generated code
+add_executable(test_sail_wrapper128 decompress_c128_cap.c)
+target_compile_definitions(test_sail_wrapper128 PRIVATE DECOMPRESS_WITH_SAIL_GENERATED_CODE=1)
+target_link_libraries(test_sail_wrapper128 PRIVATE sail_wrapper128 )
+
 if (HAVE_LIBFUZZER)
     if (HAVE_ASAN)
         add_executable(fuzz_decompress_asan test/fuzz-decompress.cpp)
