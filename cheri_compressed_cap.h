@@ -412,6 +412,56 @@ TRUNCATE_LSB_FUNC(23)
 // FIXME: only one level of expansion works here?
 #define cc128_truncateLSB_generic(type_width) CC128_CONCAT(cc128_truncateLSB, type_width)
 
+
+struct cc128_bounds_bits {
+    uint16_t B; // bottom bits (currently 14 bits)
+    uint16_t T; // top bits (12 bits plus two implied bits)
+    uint8_t E; // exponent
+    bool IE; // internal exponent flag
+};
+
+/// Extract the bits used for bounds and infer the top two bits of T
+struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
+    CC128_STATIC_ASSERT(CC128_MANTISSA_WIDTH == CC128_BOT_WIDTH, "Wrong bot width?");
+    uint32_t BWidth = CC128_BOT_WIDTH;
+    uint32_t BMask = (1u << BWidth) - 1;
+    uint32_t TMask = BMask >> 2;
+    struct cc128_bounds_bits result;
+    CC128_STATIC_ASSERT(sizeof(result.B) * __CHAR_BIT__ >= CC128_BOT_WIDTH, "B field too small");
+    CC128_STATIC_ASSERT(sizeof(result.T) * __CHAR_BIT__ >= CC128_BOT_WIDTH, "T field too small");
+    CC128_STATIC_ASSERT(sizeof(result.E) * __CHAR_BIT__ >=
+                            CC128_FIELD_EXPONENT_LOW_PART_SIZE + CC128_FIELD_EXPONENT_HIGH_PART_SIZE,
+                        "E field too small");
+    result.IE = (bool)(uint32_t)CC128_EXTRACT_FIELD(pesbt, INTERNAL_EXPONENT);
+    uint8_t L_msb;
+    if (result.IE) {
+        result.E = (uint8_t)(CC128_EXTRACT_FIELD(pesbt, EXPONENT_LOW_PART) |
+                             (CC128_EXTRACT_FIELD(pesbt, EXPONENT_HIGH_PART) << CC128_FIELD_EXPONENT_LOW_PART_SIZE));
+        // Do not offset by 1! We also need to encode E=0 even with IE
+        // Also allow nonsense values over 64 - BWidth + 2: this is expected by sail-generated tests
+        // E = MIN(64 - BWidth + 2, E);
+        result.B = (uint16_t)CC128_EXTRACT_FIELD(pesbt, EXP_NONZERO_BOTTOM) << CC128_FIELD_EXPONENT_LOW_PART_SIZE;
+        result.T = (uint16_t)CC128_EXTRACT_FIELD(pesbt, EXP_NONZERO_TOP) << CC128_FIELD_EXPONENT_HIGH_PART_SIZE;
+        L_msb = 1;
+    } else {
+        result.E = 0;
+        L_msb = 0;
+        result.B = (uint16_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
+        result.T = (uint16_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_TOP);
+    }
+    /*
+        Reconstruct top two bits of T given T = B + len and:
+        1) the top two bits of B
+        2) most significant two bits of length derived from format above
+        3) carry out of B[20..0] + len[20..0] that is implied if T[20..0] < B[20..0]
+    */
+    uint8_t L_carry = result.T < (result.B & TMask) ? 1 : 0;
+    uint64_t BTop2 = cc128_getbits(result.B, CC128_MANTISSA_WIDTH - 2, 2);
+    uint8_t T_infer = (BTop2 + L_carry + L_msb) & 0x3;
+    result.T |= ((uint16_t)T_infer) << (BWidth - 2);
+    return result;
+};
+
 static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cap_register_t* cdp) {
     cdp->_cr_cursor = cursor;
     cdp->cr_perms = (uint32_t)CC128_EXTRACT_FIELD(pesbt, HWPERMS);
@@ -421,42 +471,9 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     cdp->cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(pesbt, RESERVED);
     cdp->cr_ebt = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EBT);
 
-    uint32_t BWidth = CC128_BOT_WIDTH;
-    uint32_t BMask = (1u << BWidth) - 1;
-    uint32_t TMask = BMask >> 2;
-
-    bool IE = (bool)(uint32_t)CC128_EXTRACT_FIELD(pesbt, INTERNAL_EXPONENT);
-
-    uint8_t E, L_msb;
-    uint32_t B;
-    uint32_t T;
-
-    if (IE) {
-        E = (uint8_t)(CC128_EXTRACT_FIELD(pesbt, EXPONENT_LOW_PART) |
-            (CC128_EXTRACT_FIELD(pesbt, EXPONENT_HIGH_PART) << CC128_FIELD_EXPONENT_LOW_PART_SIZE));
-        // Do not offset by 1! We also need to encode E=0 even with IE
-        // Also allow nonsense values over 64 - BWidth + 2: this is expected by sail-generated tests
-        // E = MIN(64 - BWidth + 2, E);
-        B = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_NONZERO_BOTTOM) << CC128_FIELD_EXPONENT_LOW_PART_SIZE;
-        T = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_NONZERO_TOP) << CC128_FIELD_EXPONENT_HIGH_PART_SIZE;
-        L_msb = 1;
-    } else {
-        E = 0;
-        L_msb = 0;
-        B = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
-        T = (uint32_t)CC128_EXTRACT_FIELD(pesbt, EXP_ZERO_TOP);
-    }
-    /*
-        Reconstruct top two bits of T given T = B + len and:
-        1) the top two bits of B
-        2) most significant two bits of length derived from format above
-        3) carry out of B[20..0] + len[20..0] that is implied if T[20..0] < B[20..0]
-    */
-    uint8_t L_carry = T < (B & TMask) ? 1 : 0;
-    uint64_t BTop2 = cc128_getbits(B, CC128_MANTISSA_WIDTH - 2, 2);
-    uint8_t T_infer = (BTop2 + L_carry + L_msb) & 0x3;
-    T |= ((uint32_t)T_infer) << (BWidth - 2);
-    E = MIN(CC128_MAX_EXPONENT, E);
+    struct cc128_bounds_bits bounds = cc128_extract_bounds_bits(pesbt);
+    // For the remaining computations we have to clamp E to max_E
+    uint8_t E = MIN(CC128_MAX_EXPONENT, bounds.E);
 
     /* Extract bits we need to make the top correction and calculate representable limit */
     // let a3 = truncate(a >> (E + 11), 3) in
@@ -468,8 +485,8 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     unsigned T3 = (unsigned)cc128_truncateLSB_generic(CC128_MANTISSA_WIDTH)(T, 3);
 #else
     unsigned a3 = (unsigned)cc128_getbits(cursor, E + CC128_MANTISSA_WIDTH - 3, 3);
-    unsigned B3 = (unsigned)cc128_getbits(B, CC128_MANTISSA_WIDTH - 3, 3);
-    unsigned T3 = (unsigned)cc128_getbits(T, CC128_MANTISSA_WIDTH - 3, 3);
+    unsigned B3 = (unsigned)cc128_getbits(bounds.B, CC128_MANTISSA_WIDTH - 3, 3);
+    unsigned T3 = (unsigned)cc128_getbits(bounds.T, CC128_MANTISSA_WIDTH - 3, 3);
 #endif
     // let R3 = B3 - 0b001 in /* wraps */
     unsigned R3 = (unsigned)cc128_truncate64(B3 - 1, 3); //B3 == 0 ? 7 : B3 - 1;
@@ -495,14 +512,14 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
     // base : CapLenBits = truncate((a_top + correction_base) @ c.B @ zeros(E), cap_len_width);
     cc128_length_t base = (uint64_t)((int64_t)a_top + correction_base);
     base <<= CC128_MANTISSA_WIDTH;
-    base |= B;
+    base |= bounds.B;
     base <<= E;
     base &= ((cc128_length_t)1 << CC128_CAP_LEN_WIDTH) - 1;
     cc128_debug_assert((uint64_t)(base >> CC128_CAP_ADDR_WIDTH) <= 1); // max 65 bits
     // top  : truncate((a_top + correction_top)  @ c.T @ zeros(E), cap_len_width);
     cc128_length_t top = (uint64_t)((int64_t)a_top + correction_top);
     top <<= CC128_MANTISSA_WIDTH;
-    top |= T;
+    top |= bounds.T;
     top <<= E;
     top &= ((cc128_length_t)1 << CC128_CAP_LEN_WIDTH) - 1;
     cc128_debug_assert((uint64_t)(top >> CC128_CAP_ADDR_WIDTH) <= 1); // max 65 bits

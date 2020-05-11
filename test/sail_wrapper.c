@@ -47,21 +47,24 @@ static void set_top_base_from_sail(const struct zCapability* sail, cap_register_
     KILL(ztuple_z8z5bv64zCz0z5bvz9)(&base_top);
 }
 
-static void sail_cap_to_cap_register_t(const struct zCapability* sail, cap_register_t* c, uint64_t decoded_pesbt) {
+static void sail_cap_to_cap_register_t(const struct zCapability* sail, cap_register_t* c) {
     memset(c, 0, sizeof(*c));
     c->_cr_cursor = sail->zaddress;
     set_top_base_from_sail(sail, c);
     c->cr_perms = sailgen_getCapHardPerms(*sail);
     c->cr_uperms = sail->zuperms;
     c->cr_otype = sail->zotype;
-    // TODO: ebt from sail?
-    c->cr_ebt = (uint32_t)CC128_EXTRACT_FIELD(decoded_pesbt, EBT);
-    lbits raw_cap_bits;
-    CREATE(lbits)(&raw_cap_bits);
-    sailgen_capToBits(&raw_cap_bits, *sail);
     c->cr_flags = sailgen_getCapFlags(*sail);
     c->cr_reserved = sail->zreserved;
     c->cr_tag = sail->ztag;
+    // extract cc128 EBT field:
+    lbits raw_cap_bits;
+    // TODO: avoid roundtrip via sailgen_capToBits?
+    CREATE(lbits)(&raw_cap_bits);
+    sailgen_capToBits(&raw_cap_bits, *sail);
+    uint64_t sail_pesbt = extract_bits(raw_cap_bits, 64, 64);
+    c->cr_ebt = (uint32_t)CC128_EXTRACT_FIELD(sail_pesbt, EBT);
+    KILL(lbits)(&raw_cap_bits);
 }
 
 static void two_u64s_to_sail_128(lbits* out, uint64_t first64, uint64_t second64) {
@@ -81,7 +84,7 @@ void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
     KILL(lbits)(&sail_all_bits);
     sail_dump_cap("sail_result", sail_result);
-    sail_cap_to_cap_register_t(&sail_result, cdp, mem_pesbt ^ CC128_NULL_XOR_MASK);
+    sail_cap_to_cap_register_t(&sail_result, cdp);
 }
 
 void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
@@ -90,7 +93,7 @@ void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register
     struct zCapability sail_result = sailgen_capBitsToCapability(tag, sail_all_bits);
     KILL(lbits)(&sail_all_bits);
     sail_dump_cap("sail_result", sail_result);
-    sail_cap_to_cap_register_t(&sail_result, cdp, pesbt ^ CC128_NULL_XOR_MASK);
+    sail_cap_to_cap_register_t(&sail_result, cdp);
 }
 
 static inline lbits cc_length_to_lbits(cc128_length_t l) {
@@ -118,12 +121,22 @@ static struct zCapability cap_register_t_to_sail_cap(const cap_register_t* c) {
     result.zotype = c->cr_otype;
     result.zflag_cap_mode = c->cr_flags;
     result.zsealed = result.zotype != (uint64_t)zotype_unsealed;
+
+    // Extract E,B,T,IE from the cr_ebt field:
+    uint64_t fake_pesbt = CC128_ENCODE_FIELD(c->cr_ebt, EBT);
+    struct cc128_bounds_bits cc128_bounds = cc128_extract_bounds_bits(fake_pesbt);
+    result.zinternal_e = cc128_bounds.IE;
+    result.zE = cc128_bounds.E;
+    result.zT = cc128_bounds.T;
+    result.zB = cc128_bounds.B;
+#if 0
     lbits top = cc_length_to_lbits(c->_cr_top);
     struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 bounded = sailgen_setCapBounds(result, c->cr_base, top);
     KILL(lbits)(&top);
     assert(bounded.ztup0 && "Setbounds not exact?");
     result = bounded.ztup1; // Get E/B/T from bounded cap
     sail_dump_cap("sail_result", result);
+#endif
     return result;
 }
 
