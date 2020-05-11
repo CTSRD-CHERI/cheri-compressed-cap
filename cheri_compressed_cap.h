@@ -398,19 +398,21 @@ static inline uint64_t cc128_truncate64(uint64_t value, size_t n) {
 
 // truncates `value`, keeping only the _most_ significant `n` bits.
 #define TRUNCATE_LSB_FUNC(type_width) \
-static inline uint64_t cc128_truncateLSB##type_width(uint64_t value, size_t n) { \
+static inline uint64_t cc128_truncateLSB_##type_width(uint64_t value, size_t n) { \
     CC128_STATIC_ASSERT(type_width <= 64, ""); \
     return value >> (type_width - n);\
 }
 
 TRUNCATE_LSB_FUNC(14)
-TRUNCATE_LSB_FUNC(23)
 // TRUNCATE_LSB_FUNC(64)
 
 #define	CC128_CONCAT1(x,y)	x ## y
 #define	CC128_CONCAT(x,y)	CC128_CONCAT1(x,y)
+#define	CC128_EXPAND1(x)	x
+#define	CC128_EXPAND(x)	CC128_EXPAND1(x)
 // FIXME: only one level of expansion works here?
-#define cc128_truncateLSB_generic(type_width) CC128_CONCAT(cc128_truncateLSB, type_width)
+#define cc128_truncateLSB_generic(type_width) CC128_CONCAT(cc128_truncateLSB_, CC128_EXPAND(type_width))
+#define cc128_truncateLSB(type_width)   cc128_truncateLSB_generic(CC128_EXPAND(type_width))
 
 
 struct cc128_bounds_bits {
@@ -465,21 +467,15 @@ struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt) {
 void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
                              uint64_t* base_out, cc128_length_t* top_out) {
     // For the remaining computations we have to clamp E to max_E
+    //  let E = min(maxE, unsigned(c.E)) in
     uint8_t E = MIN(CC128_MAX_EXPONENT, bounds.E);
-
     /* Extract bits we need to make the top correction and calculate representable limit */
-    // let a3 = truncate(a >> (E + 11), 3) in
+    // let a3 = truncate(a >> (E + mantissa_width - 3), 3) in
     // let B3 = truncateLSB(c.B, 3) in
     // let T3 = truncateLSB(c.T, 3) in
-#if 0
     unsigned a3 = (unsigned)cc128_truncate64(cursor >> (E + CC128_MANTISSA_WIDTH - 3), 3);
-    unsigned B3 = (unsigned)cc128_truncateLSB_generic(CC128_MANTISSA_WIDTH)(B, 3);
-    unsigned T3 = (unsigned)cc128_truncateLSB_generic(CC128_MANTISSA_WIDTH)(T, 3);
-#else
-    unsigned a3 = (unsigned)cc128_getbits(cursor, E + CC128_MANTISSA_WIDTH - 3, 3);
-    unsigned B3 = (unsigned)cc128_getbits(bounds.B, CC128_MANTISSA_WIDTH - 3, 3);
-    unsigned T3 = (unsigned)cc128_getbits(bounds.T, CC128_MANTISSA_WIDTH - 3, 3);
-#endif
+    unsigned B3 = (unsigned)cc128_truncateLSB(CC128_MANTISSA_WIDTH)(bounds.B, 3);
+    unsigned T3 = (unsigned)cc128_truncateLSB(CC128_MANTISSA_WIDTH)(bounds.T, 3);
     // let R3 = B3 - 0b001 in /* wraps */
     unsigned R3 = (unsigned)cc128_truncate64(B3 - 1, 3); // B3 == 0 ? 7 : B3 - 1;
     /* Do address, base and top lie in the R aligned region above the one containing R? */
@@ -495,10 +491,9 @@ void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor,
     // let correction_top  = tHi - aHi in
     int correction_base = bHi - aHi;
     int correction_top = tHi - aHi;
-    // let a_top = (a >> (E + mantissa_width)) in {
-    // let a_top = (a >> (E + 14)) in
-    // Note: shifting by 64 is a no-op and causes wrong results!
+    // Note: shifting by 64 is UB and causes wrong results -> clamp the shift value!
     const unsigned a_top_shift = E + CC128_MANTISSA_WIDTH;
+    // let a_top = (a >> (E + mantissa_width)) in
     uint64_t a_top = a_top_shift >= CC128_CAP_ADDR_WIDTH ? 0 : cursor >> a_top_shift;
 
     // base : CapLenBits = truncate((a_top + correction_base) @ c.B @ zeros(E), cap_len_width);
