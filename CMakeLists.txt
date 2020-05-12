@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 project(cheri_compressed_cap C CXX)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 14)
+if(APPLE)
+    # XXX: ugly hack, would be nice if llvm could find this
+    include_directories(/Library/Developer/CommandLineTools/usr/include/c++/v1)
+endif()
 
 include(CheckCXXCompilerFlag)
 # CMAKE_REQUIRED_LINK_OPTIONS needs cmake 3.13
@@ -56,23 +60,22 @@ set_target_properties(GMP::GMP PROPERTIES
 )
 
 
-add_library(sail_wrapper128 STATIC test/sail_wrapper.c test/sail.c)
-target_link_libraries(sail_wrapper128 PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
-target_compile_options(sail_wrapper128 PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+function(add_sail_wrapper128 _suffix _sanitizer_flags)
+    add_library(sail_wrapper128${_suffix} STATIC test/sail_wrapper.c test/sail.c)
+    if (_sanitizer_flags)
+        target_compile_options(sail_wrapper128${_suffix} PRIVATE "${_sanitizer_flags}")
+        target_link_libraries(sail_wrapper128${_suffix} PRIVATE "${_sanitizer_flags}")
+    endif()
+    target_link_libraries(sail_wrapper128${_suffix} PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
+    target_compile_options(sail_wrapper128${_suffix} PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+endfunction()
 
+add_sail_wrapper128("" "")
 if (HAVE_ASAN)
-    add_library(sail_wrapper128-asan-ubsan STATIC test/sail_wrapper.c test/sail.c)
-    target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
-    target_link_libraries(sail_wrapper128-asan-ubsan PRIVATE -fsanitize=undefined,address)
-    target_link_libraries(sail_wrapper128-asan-ubsan PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
-    target_compile_options(sail_wrapper128-asan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+    add_sail_wrapper128("-asan-ubsan" "-fsanitize=undefined,address")
 endif()
 if (HAVE_MSAN)
-    add_library(sail_wrapper128-msan-ubsan STATIC test/sail_wrapper.c test/sail.c)
-    target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
-    target_link_libraries(sail_wrapper128-msan-ubsan PRIVATE -fsanitize=undefined,memory)
-    target_link_libraries(sail_wrapper128-msan-ubsan PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
-    target_compile_options(sail_wrapper128-msan-ubsan PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+    add_sail_wrapper128("-msan-ubsan" "-fsanitize=undefined,address")
 endif()
 
 # Add a test exe for sail generated code
@@ -111,13 +114,17 @@ add_cc_test(random_inputs_test test/random_inputs_test.cpp)
 
 if (HAVE_LIBFUZZER)
     if (HAVE_ASAN)
+        add_sail_wrapper128("-fuzzer-asan-ubsan" "-fsanitize=undefined,address,fuzzer")
         add_executable(fuzz_decompress_asan test/fuzz-decompress.cpp)
         target_compile_options(fuzz_decompress_asan PRIVATE -fsanitize=undefined,address,fuzzer)
         target_link_libraries(fuzz_decompress_asan PRIVATE -fsanitize=undefined,address,fuzzer)
+        target_link_libraries(fuzz_decompress_asan PRIVATE sail_wrapper128-fuzzer-asan-ubsan)
     endif()
     if (HAVE_MSAN)
+        add_sail_wrapper128("-fuzzer-msan-ubsan" "-fsanitize=undefined,address,fuzzer")
         add_executable(fuzz_decompress_msan test/fuzz-decompress.cpp)
         target_compile_options(fuzz_decompress_msan PRIVATE -fsanitize=undefined,memory,fuzzer)
         target_link_libraries(fuzz_decompress_msan PRIVATE -fsanitize=undefined,memory,fuzzer)
+        target_link_libraries(fuzz_decompress_msan PRIVATE sail_wrapper128-fuzzer-msan-ubsan)
     endif()
 endif()
