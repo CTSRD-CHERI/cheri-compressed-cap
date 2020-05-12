@@ -544,10 +544,10 @@ static inline void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint
 
     cc128_debug_assert((uint64_t)(top >> 64) <= 1); // should be at most 1 bit over
     // Check that base <= top for valid inputs
-    if (top <= CC128_MAX_TOP && base < CC128_MAX_TOP && _cc128_bounds_bits_valid(bounds)) {
+    if (_cc128_bounds_bits_valid(bounds)) {
         // Note: base can be > 2^64 for some (untagged) inputs with E near maxE
         // It can also be > top for some (untagged) inputs.
-        cc128_debug_assert(base <= top);
+        cc128_debug_assert((uint64_t)base <= top);
     } else {
         // cc128_debug_assert(!tagged && "Should not create invalid tagged capabilities");
     }
