@@ -464,6 +464,21 @@ static inline struct cc128_bounds_bits cc128_extract_bounds_bits(uint64_t pesbt)
     return result;
 }
 
+// Certain bit patterns can result in invalid bounds bits. These values must never be tagged!
+static inline bool _cc128_bounds_bits_valid(struct cc128_bounds_bits bounds) {
+    // https://github.com/CTSRD-CHERI/sail-cheri-riscv/blob/7a308ef3661e43461c8431c391aaece7fba6e992/src/cheri_properties.sail#L104
+    uint64_t Bmsb = cc128_getbits(bounds.B, CC128_MANTISSA_WIDTH - 1, 1);
+    uint64_t Bmsb2 = cc128_getbits(bounds.B, CC128_MANTISSA_WIDTH - 2, 2);
+    uint64_t Tmsb = cc128_getbits(bounds.T, CC128_MANTISSA_WIDTH - 1, 1);
+    if (bounds.E >= CC128_MAX_EXPONENT) {
+        return Tmsb == 0 && Bmsb2 == 0;
+    } else if (bounds.E == CC128_MAX_EXPONENT - 1) {
+        return Bmsb == 0;
+    } else {
+        return true;
+    }
+}
+
 static inline void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint64_t cursor, uint64_t* base_out,
                                            cc128_length_t* top_out) {
     // For the remaining computations we have to clamp E to max_E
@@ -528,9 +543,14 @@ static inline void _cc128_compute_base_top(struct cc128_bounds_bits bounds, uint
     }
 
     cc128_debug_assert((uint64_t)(top >> 64) <= 1); // should be at most 1 bit over
-    // Note: base can be > 2^64 for some (untagged) inputs with E == maxE
-    // Note: base can also be > top for some (untagged) inputs.
-    // cc128_debug_assert(base <= top);
+    // Check that base <= top for valid inputs
+    if (top <= CC128_MAX_TOP && base < CC128_MAX_TOP && _cc128_bounds_bits_valid(bounds)) {
+        // Note: base can be > 2^64 for some (untagged) inputs with E near maxE
+        // It can also be > top for some (untagged) inputs.
+        cc128_debug_assert(base <= top);
+    } else {
+        // cc128_debug_assert(!tagged && "Should not create invalid tagged capabilities");
+    }
     *base_out = (uint64_t)base; // strip the (invalid) top bit
     *top_out = top;
 }
@@ -546,8 +566,6 @@ static inline void decompress_128cap_already_xored(uint64_t pesbt, uint64_t curs
 
     struct cc128_bounds_bits bounds = cc128_extract_bounds_bits(pesbt);
     _cc128_compute_base_top(bounds, cursor, &cdp->cr_base, &cdp->_cr_top);
-    // XXX: Can top < base happen for invalid capabilities with arbitrary bit patterns?
-    // cc128_debug_assert(cdp->_cr_top >= cdp->cr_base);
 }
 
 /*
