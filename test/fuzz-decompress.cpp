@@ -54,6 +54,9 @@ static void dump_cap_fields(const cap_register_t& result) {
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    if (size != 16) {
+        return 0; // Need 128 bits of data
+    }
     FuzzedDataProvider fuzzData(data, size);
     uint64_t pesbt = fuzzData.ConsumeIntegral<uint64_t>();
     uint64_t cursor = fuzzData.ConsumeIntegral<uint64_t>();
