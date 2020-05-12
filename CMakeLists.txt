@@ -75,7 +75,7 @@ if (HAVE_ASAN)
     add_sail_wrapper128("-asan-ubsan" "-fsanitize=undefined,address")
 endif()
 if (HAVE_MSAN)
-    add_sail_wrapper128("-msan-ubsan" "-fsanitize=undefined,address")
+    add_sail_wrapper128("-msan-ubsan" "-fsanitize=undefined,memory")
 endif()
 
 # Add a test exe for sail generated code
