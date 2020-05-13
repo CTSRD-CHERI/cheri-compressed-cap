@@ -25,18 +25,7 @@ static const char* otype_suffix(uint32_t otype) {
     default:
         break;
     }
-    switch (otype) {
-    case CC256_OTYPE_UNSEALED:
-        return " (CC256_OTYPE_UNSEALED)";
-    case CC256_OTYPE_SENTRY:
-        return " (CC256_OTYPE_SENTRY)";
-    case CC256_OTYPE_RESERVED2:
-        return " (CC256_OTYPE_RESERVED2)";
-    case CC256_OTYPE_RESERVED3:
-        return " (CC256_OTYPE_RESERVED3)";
-    default:
-        return "";
-    }
+    return "";
 }
 
 std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value);
@@ -100,10 +89,10 @@ static void dump_cap_fields(const cap_register_t& result) {
 __attribute__((used)) static cap_register_t decompress_representable(uint64_t pesbt_already_xored, uint64_t cursor) {
     cap_register_t result;
     printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", pesbt_already_xored, cursor);
-    decompress_128cap_already_xored(pesbt_already_xored, cursor, &result);
+    cc128_decompress_raw(pesbt_already_xored, cursor, false, &result);
     dump_cap_fields(result);
     // Check that the result is the same again when compressed
-    uint64_t new_pesbt_already_xored = compress_128cap_without_xor(&result);
+    uint64_t new_pesbt_already_xored = cc128_compress_raw(&result);
     CHECK(pesbt_already_xored == new_pesbt_already_xored);
     CHECK(cursor  == result.address());
     return result;

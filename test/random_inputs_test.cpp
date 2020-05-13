@@ -56,8 +56,8 @@ static bool test_one_entry(const test_input& ti) {
     // decompress_representable(ti.input.pesbt, ti.input.cursor);
     cap_register_t result;
     memset(&result, 0, sizeof(result));
-    // The inputs already have the NULL xor mask removed -> decompress_128cap_already_xored()
-    decompress_128cap_already_xored(ti.pesbt, ti.cursor, &result);
+    // The inputs already have the NULL xor mask removed -> cc128_decompress_raw()
+    cc128_decompress_raw(ti.pesbt, ti.cursor, false, &result);
     CAPTURE(ti.pesbt, ti.cursor);
 
     bool success = check_fields_match(result, ti, "");
@@ -77,8 +77,8 @@ static bool test_one_entry(const test_input& ti) {
     // Now try recompressing and compare pesbt (for valid capabilities)
     cc128_length_t top_full = result.top();
     // Also don't attempt to recompress massively out-of-bounds caps since that might not work:
-    if (top_full >= result.cr_base && top_full <= CAP_MAX_ADDRESS_PLUS_ONE && result.address() <= result.length()) {
-        uint64_t recompressed_pesbt = compress_128cap_without_xor(&result);
+    if (top_full >= result.cr_base && top_full <= CC128_MAX_TOP && result.address() <= result.length()) {
+        uint64_t recompressed_pesbt = cc128_compress_raw(&result);
         uint64_t sail_recompressed_pesbt = sail_compress_128_raw(&result);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == sail_recompressed_pesbt);
         CAPTURE(recompressed_pesbt);
@@ -91,8 +91,8 @@ static bool test_one_entry(const test_input& ti) {
         // But even if it didn't compress the same at least all fields decompressed from the new pesbt must be the same:
         cap_register_t result_recompressed;
         memset(&result_recompressed, 0, sizeof(result_recompressed));
-        // The inputs already have the NULL xor mask removed -> decompress_128cap_already_xored()
-        decompress_128cap_already_xored(recompressed_pesbt, ti.cursor, &result_recompressed);
+        // The inputs already have the NULL xor mask removed -> cc128_decompress_raw()
+        cc128_decompress_raw(recompressed_pesbt, ti.cursor, false, &result_recompressed);
         success = success && check_fields_match(result_recompressed, ti, "Recompressed pesbt: ");
         // Sanity check: recompress with sail
         memset(&result_recompressed, 0, sizeof(result_recompressed));
@@ -109,7 +109,7 @@ static bool test_one_entry(const test_input& ti) {
             // Set the PESBT field in the capreg so that the reserved bits can be added back to the capability
             result_recompressed.cr_reserved = (uint8_t)CC128_EXTRACT_FIELD(recompressed_pesbt, RESERVED);
         }
-        uint64_t recompressed_pesbt_after_normalize = compress_128cap_without_xor(&result_recompressed);
+        uint64_t recompressed_pesbt_after_normalize = cc128_compress_raw(&result_recompressed);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == recompressed_pesbt_after_normalize);
         uint64_t sail_recompressed_pesbt_after_normalize = sail_compress_128_raw(&result_recompressed);
         // Should match the sail values:

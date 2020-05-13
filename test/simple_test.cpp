@@ -20,10 +20,10 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
         uint32_t computed_ebt = cc128_compute_ebt(null_cap.cr_base, null_cap._cr_top, NULL, &ebt_exact);
         REQUIRE(computed_ebt == null_cap.cr_ebt);
         REQUIRE(ebt_exact);
-        auto pesbt = compress_128cap(&null_cap);
+        auto pesbt = cc128_compress_mem(&null_cap);
         auto pesbt_from_sail = sail_compress_128_mem(&null_cap);
         CHECK(pesbt == pesbt_from_sail);
-        auto pesbt_without_xor = compress_128cap_without_xor(&null_cap);
+        auto pesbt_without_xor = cc128_compress_raw(&null_cap);
         auto pesbt_from_sail_without_xor = sail_compress_128_raw(&null_cap);
         CHECK(pesbt_without_xor == pesbt_from_sail_without_xor);
         fprintf(stderr, "NULL ENCODED: 0x%llx\n", (long long)pesbt_without_xor);
@@ -31,7 +31,7 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
         check(pesbt, (uint64_t)0, "compressing NULL should result in zero pesbt");
         cap_register_t decompressed;
         memset(&decompressed, 'b', sizeof(decompressed));
-        decompress_128cap(pesbt, 0, &decompressed);
+        cc128_decompress_mem(pesbt, 0, false, &decompressed);
         CHECK_FIELD(decompressed, base, 0);
         CHECK(decompressed.address() == 0);
         CHECK_FIELD(decompressed, software_permissions, 0);
@@ -71,7 +71,7 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
 TEST_CASE("Zeroes decode to NULL cap", "[nullcap]") {
     cap_register_t result;
     memset(&result, 'a', sizeof(result));
-    decompress_128cap(0, 0, &result);
+    cc128_decompress_mem(0, 0, false, &result);
     fprintf(stderr, "Decompressed 128-bit NULL cap:\n");
     dump_cap_fields(result);
     fprintf(stderr, "\n");
@@ -116,11 +116,11 @@ static void check_representable(uint64_t base, cc128_length_t length, uint64_t o
     bool exact_input = false;
     cap.cr_ebt = cc128_compute_ebt(cap.cr_base, cap._cr_top, NULL, &exact_input);
     REQUIRE(exact_input == should_work);
-    uint64_t compressed = compress_128cap(&cap);
+    uint64_t compressed = cc128_compress_mem(&cap);
     cap_register_t decompressed;
     memset(&decompressed, 0, sizeof(decompressed));
 
-    decompress_128cap(compressed, cap.cr_base + cap.offset(), &decompressed);
+    cc128_decompress_mem(compressed, cap.cr_base + cap.offset(), cap.cr_tag, &decompressed);
     CAPTURE(cap);
     CAPTURE(decompressed);
     bool unsealed_roundtrip = cap.cr_base == decompressed.cr_base && cap.length() == decompressed.length() && cap.offset() == decompressed.offset();
@@ -131,7 +131,7 @@ static void check_representable(uint64_t base, cc128_length_t length, uint64_t o
     auto cap_sealed = cap;
     cap_sealed.cr_otype = 22;
     bool sealed_representable = cc128_is_representable_cap_exact(&cap_sealed);
-    decompress_128cap(compressed, cap.cr_base + cap.offset(), &decompressed);
+    cc128_decompress_mem(compressed, cap.cr_base + cap.offset(), cap.cr_tag, &decompressed);
     bool sealed_roundtrip = cap.cr_base == decompressed.cr_base && cap.length() == decompressed.length() && cap.offset() == decompressed.offset();
     CHECK(sealed_representable == should_work);
     CHECK(sealed_roundtrip == unsealed_representable);
@@ -147,7 +147,7 @@ static inline bool check_repr(bool sealed, uint64_t base, uint64_t length, uint6
 
 TEST_CASE("Check max size cap represetable", "[representable]") {
     // 0000000d b:0000000000000000 l:ffffffffffffffff |o:0000000000000000 t:ffffff
-    check_representable(0, CAP_MAX_ADDRESS_PLUS_ONE, 0, true, "1 << 64 length");
+    check_representable(0, CC128_MAX_ADDRESS_PLUS_ONE, 0, true, "1 << 64 length");
     check_representable(0, 0, 0, true, "zero length");
     check_representable(0, UINT64_MAX, 0, false, "UINT64_MAX length");
 
