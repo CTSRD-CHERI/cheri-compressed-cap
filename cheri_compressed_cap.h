@@ -42,6 +42,9 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cheri_compressed_cap_64.h"
+
+
 #include "cheri_compressed_cap_128.h"
 
 // QEMU already provides cap_register_t but if used in other programs

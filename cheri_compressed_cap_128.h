@@ -36,7 +36,22 @@
  */
 
 // The following macros are expected to be defined
+#undef CC_BITS
 #define CC_BITS 128
+/* These should match the definitions in sail! */
+#define CC128_CAP_SIZE 16
+#define CC128_CAP_BITS 128
+#define CC128_ADDR_WIDTH 64
+#define CC128_LEN_WIDTH 65
+#define CC128_MANTISSA_WIDTH 14
+#define CC128_MAX_EXPONENT 52
+#define CC128_MAX_ADDRESS_PLUS_ONE ((cc128_length_t)1u << CC128_ADDR_WIDTH)
+#define CC128_NULL_TOP CC128_MAX_ADDRESS_PLUS_ONE
+#define CC128_NULL_LENGTH CC128_MAX_ADDRESS_PLUS_ONE
+#define CC128_MAX_LENGTH CC128_MAX_ADDRESS_PLUS_ONE
+#define CC128_MAX_TOP CC128_MAX_ADDRESS_PLUS_ONE
+#define CC128_MAX_ADDR UINT64_MAX
+
 /* Use __uint128 to represent 65 bit length */
 __extension__ typedef unsigned __int128 cc128_length_t;
 __extension__ typedef signed __int128 cc128_offset_t;
@@ -75,14 +90,6 @@ enum {
 #define CC128_BOT_INTERNAL_EXP_WIDTH CC128_FIELD_EXP_NONZERO_BOTTOM_SIZE
 #define CC128_EXP_LOW_WIDTH CC128_FIELD_EXPONENT_LOW_PART_SIZE
 
-/* These should match the definitions in sail! */
-#define CC128_CAP_SIZE 16
-#define CC128_CAP_BITS 128
-#define CC128_ADDR_WIDTH 64
-#define CC128_LEN_WIDTH 65
-#define CC128_MANTISSA_WIDTH 14
-#define CC128_MAX_EXPONENT 52
-
 #define CC128_PERM_GLOBAL (1 << 0)
 #define CC128_PERM_EXECUTE (1 << 1)
 #define CC128_PERM_LOAD (1 << 2)
@@ -104,12 +111,6 @@ enum {
 #define CC128_UPERMS_SHFT (15)
 #define CC128_UPERMS_MEM_SHFT (12)
 #define CC128_MAX_UPERM (3)
-#define CC128_MAX_ADDRESS_PLUS_ONE ((cc128_length_t)1u << CC128_ADDR_WIDTH)
-#define CC128_NULL_TOP CC128_MAX_ADDRESS_PLUS_ONE
-#define CC128_NULL_LENGTH CC128_MAX_ADDRESS_PLUS_ONE
-#define CC128_MAX_LENGTH CC128_MAX_ADDRESS_PLUS_ONE
-#define CC128_MAX_TOP CC128_MAX_ADDRESS_PLUS_ONE
-#define CC128_MAX_ADDR UINT64_MAX
 
 // We reserve 16 otypes
 enum _CC_N(OTypes) {
@@ -150,17 +151,8 @@ enum {
 #define CC128_NULL_XOR_MASK UINT64_C(0x00001ffffc018004)
 #pragma GCC diagnostic pop
 
-#ifdef __cplusplus
-template <size_t a, size_t b> static constexpr bool check_same() {
-    static_assert(a == b, "");
-    return true;
-}
-#define CC128_STATIC_ASSERT_SAME(a, b) static_assert(check_same<a, b>(), "")
-#else
-#define CC128_STATIC_ASSERT_SAME(a, b) _Static_assert(a == b, "")
-#endif
-CC128_STATIC_ASSERT_SAME(CC128_NULL_XOR_MASK, CC128_NULL_PESBT);
-CC128_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
+_CC_STATIC_ASSERT_SAME(CC128_NULL_XOR_MASK, CC128_NULL_PESBT);
+_CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
 #include "cheri_compressed_cap_common.h"
 

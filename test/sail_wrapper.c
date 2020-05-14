@@ -174,7 +174,7 @@ uint64_t sail_compress_128_mem(const cap_register_t* csp) {
     return result;
 }
 
-uint64_t sail_null_pesbt(void) {
+uint64_t sail_null_pesbt_128(void) {
     // NULL CAP BITS:
     lbits null_bits;
     CREATE(lbits)(&null_bits);

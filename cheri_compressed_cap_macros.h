@@ -75,7 +75,8 @@
     })
 
 #define _CC_FIELD(name, last, start)                                                                                   \
-    _CC_N(FIELD_##name##_START) = (start - 64), _CC_N(FIELD_##name##_LAST) = (last - 64),                              \
+    _CC_N(FIELD_##name##_START) = (start - _CC_N(ADDR_WIDTH)),                                                         \
+    _CC_N(FIELD_##name##_LAST) = (last - _CC_N(ADDR_WIDTH)),                                                           \
     _CC_N(FIELD_##name##_SIZE) = _CC_N(FIELD_##name##_LAST) - _CC_N(FIELD_##name##_START) + 1,                         \
     _CC_N(FIELD_##name##_MASK_NOT_SHIFTED) = _CC_BITMASK64(_CC_N(FIELD_##name##_SIZE)),                                \
     _CC_N(FIELD_##name##_MASK64) = (uint64_t)_CC_N(FIELD_##name##_MASK_NOT_SHIFTED) << _CC_N(FIELD_##name##_START),    \
@@ -84,11 +85,22 @@
 #define _CC_ENCODE_FIELD(value, name)                                                                                  \
     ((uint64_t)((value)&_CC_N(FIELD_##name##_MAX_VALUE)) << _CC_N(FIELD_##name##_START))
 
-#define _CC_EXTRACT_FIELD(value, name) cc128_getbits((value), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
+#define _CC_EXTRACT_FIELD(value, name) _cc_N(getbits)((value), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
 
 #define _CC_ENCODE_EBT_FIELD(value, name)                                                                              \
     ((uint64_t)((value)&_CC_N(FIELD_##name##_MAX_VALUE)) << (_CC_N(FIELD_##name##_START) + _CC_N(FIELD_EBT_START)))
 
 #define _CC_SPECIAL_OTYPE(name, subtract)                                                                              \
     _CC_N(name) = (_CC_N(MAX_REPRESENTABLE_OTYPE) - subtract##u), _CC_N(name##_SIGNED) = (((int64_t)-1) - subtract##u)
+
+#ifdef __cplusplus
+template <size_t a, size_t b> static constexpr bool check_same() {
+    static_assert(a == b, "");
+    return true;
+}
+#define _CC_STATIC_ASSERT_SAME(a, b) static_assert(check_same<a, b>(), "")
+#else
+#define _CC_STATIC_ASSERT_SAME(a, b) _Static_assert(a == b, "")
+#endif
+
 #endif // _CC_CONCAT

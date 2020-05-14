@@ -166,5 +166,5 @@ TEST_CASE("Check max size cap represetable", "[representable]") {
 }
 
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
-    CHECK(sail_null_pesbt() == CC128_NULL_XOR_MASK);
+    CHECK(sail_null_pesbt_128() == CC128_NULL_XOR_MASK);
 }
