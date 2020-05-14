@@ -751,8 +751,6 @@ public:
     static inline void decompress_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
         _cc_N(decompress_mem)(pesbt, cursor, tag, cdp);
     }
-    static inline bounds_bits extract_bounds_bits(addr_t pesbt) {
-        return _cc_N(extract_bounds_bits)(pesbt);
-    }
+    static inline bounds_bits extract_bounds_bits(addr_t pesbt) { return _cc_N(extract_bounds_bits)(pesbt); }
 };
 #endif

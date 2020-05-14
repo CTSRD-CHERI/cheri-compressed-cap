@@ -14,16 +14,11 @@ static const char* otype_suffix(uint32_t otype) {
     // Two separate switches since if the number of otype bits is the same
     // we cannot have both of the case statements in one switch
     switch (otype) {
-    case CC128_OTYPE_UNSEALED:
-        return " (CC128_OTYPE_UNSEALED)";
-    case CC128_OTYPE_SENTRY:
-        return " (CC128_OTYPE_SENTRY)";
-    case CC128_OTYPE_RESERVED2:
-        return " (CC128_OTYPE_RESERVED2)";
-    case CC128_OTYPE_RESERVED3:
-        return " (CC128_OTYPE_RESERVED3)";
-    default:
-        break;
+    case CC128_OTYPE_UNSEALED: return " (CC128_OTYPE_UNSEALED)";
+    case CC128_OTYPE_SENTRY: return " (CC128_OTYPE_SENTRY)";
+    case CC128_OTYPE_RESERVED2: return " (CC128_OTYPE_RESERVED2)";
+    case CC128_OTYPE_RESERVED3: return " (CC128_OTYPE_RESERVED3)";
+    default: break;
     }
     return "";
 }
@@ -56,6 +51,13 @@ std::ostream& operator<<(std::ostream& os, const cap_register_t& value) {
     return os;
 }
 
+static inline bool operator==(const cc128_bounds_bits& a, const cc128_bounds_bits& b) {
+    return a.B == b.B && a.E == b.E && a.T == b.T && a.IE == b.IE;
+}
+static inline bool operator==(const cc64_bounds_bits& a, const cc64_bounds_bits& b) {
+    return a.B == b.B && a.E == b.E && a.T == b.T && a.IE == b.IE;
+}
+
 #include "catch.hpp"
 
 static bool failed = false;
@@ -77,7 +79,7 @@ static void dump_cap_fields(const cap_register_t& result) {
     fprintf(stderr, "Offset:      0x%016" PRIx64 "\n", (uint64_t)result.offset());
     fprintf(stderr, "Cursor:      0x%016" PRIx64 "\n", result.address());
     fprintf(stderr, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(result.length() >> 64),
-            (uint64_t)result.length() , result.length()  > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
+            (uint64_t)result.length(), result.length() > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
     cc128_length_t top_full = result.top();
     fprintf(stderr, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(top_full >> 64), (uint64_t)top_full,
             top_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
@@ -94,7 +96,7 @@ __attribute__((used)) static cap_register_t decompress_representable(uint64_t pe
     // Check that the result is the same again when compressed
     uint64_t new_pesbt_already_xored = cc128_compress_raw(&result);
     CHECK(pesbt_already_xored == new_pesbt_already_xored);
-    CHECK(cursor  == result.address());
+    CHECK(cursor == result.address());
     return result;
 }
 
