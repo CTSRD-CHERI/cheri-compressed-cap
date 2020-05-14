@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
  */
 #include "sail.h"
+#include "sail_failure.h"
 #include "sail_wrapper.h"
 
 #include SAIL_COMPRESSION_GENERATED_C_FILE
@@ -65,7 +66,7 @@ static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
 static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_cap_t* c);
 static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len);
 
-_cc_addr_t _compress_sailcap_raw(struct zCapability sailcap) {
+static _cc_addr_t _compress_sailcap_raw(struct zCapability sailcap) {
     sail_cap_bits sailbits;
     CREATE(sail_cap_bits)(&sailbits);
 #if SAIL_WRAPPER_CC_BITS == 128
@@ -94,7 +95,7 @@ static void sail_cap_to_cap_t(const struct zCapability* sail, _cc_cap_t* c) {
     c->cr_ebt = (uint32_t)_CC_EXTRACT_FIELD(sail_pesbt, EBT);
 }
 
-void sail_decode_common_mem(_cc_addr_t mem_pesbt, _cc_addr_t mem_cursor, bool tag, _cc_cap_t* cdp) {
+static void sail_decode_common_mem(_cc_addr_t mem_pesbt, _cc_addr_t mem_cursor, bool tag, _cc_cap_t* cdp) {
     sail_cap_bits sail_all_bits;
     pesbt_and_addr_to_sail_cap_bits(&sail_all_bits, mem_pesbt, mem_cursor);
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
@@ -103,7 +104,7 @@ void sail_decode_common_mem(_cc_addr_t mem_pesbt, _cc_addr_t mem_cursor, bool ta
     sail_cap_to_cap_t(&sail_result, cdp);
 }
 
-struct zCapability _sail_decode_common_raw_impl(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag) {
+static struct zCapability _sail_decode_common_raw_impl(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag) {
     sail_cap_bits sail_all_bits;
     pesbt_and_addr_to_sail_cap_bits(&sail_all_bits, pesbt, cursor);
     struct zCapability sail_result = sailgen_capBitsToCapability(tag, sail_all_bits);
@@ -111,32 +112,18 @@ struct zCapability _sail_decode_common_raw_impl(_cc_addr_t pesbt, _cc_addr_t cur
     return sail_result;
 }
 
-void sail_decode_common_raw(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
+static void sail_decode_common_raw(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
     struct zCapability sail_result = _sail_decode_common_raw_impl(pesbt, cursor, tag);
     sail_cap_to_cap_t(&sail_result, cdp);
 }
 
-_cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {
+static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {
     _cc_bounds_bits result;
     struct zCapability sail_result = _sail_decode_common_raw_impl(pesbt, 0, false);
     result.E = sail_result.zE;
     result.B = sail_result.zB;
     result.T = sail_result.zT;
     result.IE = sail_result.zinternal_e;
-    return result;
-}
-
-static inline lbits cc_length_to_lbits(_cc_length_t l) {
-    lbits highbit;
-    CREATE_OF(lbits, fbits)(&highbit, (uint64_t)(l >> _CC_ADDR_WIDTH), 1, true);
-    lbits low;
-    CREATE_OF(lbits, fbits)(&low, (uint64_t)l, _CC_ADDR_WIDTH, true);
-    lbits result;
-    CREATE(lbits)(&result);
-    append(&result, highbit, low);
-    KILL(lbits)(&highbit);
-    KILL(lbits)(&low);
-    // print_bits("cclen: ", result);
     return result;
 }
 
@@ -162,9 +149,11 @@ static struct zCapability cap_t_to_sail_cap(const _cc_cap_t* c) {
     return result;
 }
 
-_cc_addr_t sail_compress_common_raw(const _cc_cap_t* csp) { return _compress_sailcap_raw(cap_t_to_sail_cap(csp)); }
+static _cc_addr_t sail_compress_common_raw(const _cc_cap_t* csp) {
+    return _compress_sailcap_raw(cap_t_to_sail_cap(csp));
+}
 
-_cc_addr_t sail_compress_common_mem(const _cc_cap_t* csp) {
+static _cc_addr_t sail_compress_common_mem(const _cc_cap_t* csp) {
     struct zCapability sailcap = cap_t_to_sail_cap(csp);
     sail_cap_bits sailbits;
     CREATE(sail_cap_bits)(&sailbits);
@@ -177,7 +166,7 @@ _cc_addr_t sail_compress_common_mem(const _cc_cap_t* csp) {
     return result;
 }
 
-_cc_addr_t sail_null_pesbt_common(void) {
+static _cc_addr_t sail_null_pesbt_common(void) {
     // NULL CAP BITS:
     _cc_addr_t null_pesbt = _compress_sailcap_raw(znull_cap);
     sail_dump_cap("null cap", znull_cap);

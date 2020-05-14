@@ -39,8 +39,8 @@
 
 /* CHERI-64 uses uint64_t, CHERI-128 uses lbits */
 typedef uint64_t sail_cap_bits;
-void CREATE(sail_cap_bits)(sail_cap_bits* bits) { *bits = 0; }
-void KILL(sail_cap_bits)(sail_cap_bits* bits) { *bits = UINT64_MAX; }
+static void CREATE(sail_cap_bits)(sail_cap_bits* bits) { *bits = 0; }
+static void KILL(sail_cap_bits)(sail_cap_bits* bits) { *bits = UINT64_MAX; }
 static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint32_t pesbt, uint32_t cursor) {
     *out = (sail_cap_bits)pesbt << 32 | (sail_cap_bits)cursor;
 }

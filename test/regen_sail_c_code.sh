@@ -19,3 +19,5 @@ sail -c -c_no_main -c_prefix sailgen_ -c_specialize -c_preserve -verbose -o "$ou
 cd "$output_dir"
 cp /Users/alex/cheri/output/sdk/opamroot/4.06.1/share/sail/lib/sail.h .
 cp /Users/alex/cheri/output/sdk/opamroot/4.06.1/share/sail/lib/sail.c .
+cp /Users/alex/cheri/output/sdk/opamroot/4.06.1/share/sail/lib/sail_failure.c .
+cp /Users/alex/cheri/output/sdk/opamroot/4.06.1/share/sail/lib/sail_failure.h .

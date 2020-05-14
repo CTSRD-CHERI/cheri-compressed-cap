@@ -39,8 +39,8 @@
 
 /* CHERI-64 uses uint64_t, CHERI-128 uses lbits */
 typedef lbits sail_cap_bits;
-void create_sail_cap_bits(sail_cap_bits* bits) { create_lbits(bits); }
-void kill_sail_cap_bits(sail_cap_bits* bits) { kill_lbits(bits); }
+static void create_sail_cap_bits(sail_cap_bits* bits) { create_lbits(bits); }
+static void kill_sail_cap_bits(sail_cap_bits* bits) { kill_lbits(bits); }
 static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint64_t pesbt, uint64_t cursor) {
     lbits sail_pesbt;
     lbits sail_cursor;
