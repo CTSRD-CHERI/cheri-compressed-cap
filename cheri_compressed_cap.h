@@ -44,7 +44,6 @@
 
 #include "cheri_compressed_cap_64.h"
 
-
 #include "cheri_compressed_cap_128.h"
 
 // QEMU already provides cap_register_t but if used in other programs
@@ -61,7 +60,7 @@ typedef cc128_cap_t cap_register_t;
 #define CC256_UPERMS_COUNT (16)
 #define CC256_FLAGS_COUNT (1)
 #define CC256_FLAGS_ALL_BITS _CC_BITMASK64(CC256_FLAGS_COUNT) /* 1 bit */
-#define CC256_PERMS_MEM_SHFT CC256_FLAGS_COUNT               /* flags bit comes first */
+#define CC256_PERMS_MEM_SHFT CC256_FLAGS_COUNT                /* flags bit comes first */
 #define CC256_UPERMS_MEM_SHFT (CC256_PERMS_MEM_SHFT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT)
 #define CC256_PERMS_ALL_BITS _CC_BITMASK64(CC256_HWPERMS_COUNT)                                         /* 12 bits */
 #define CC256_PERMS_ALL_BITS_UNTAGGED _CC_BITMASK64(CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT) /* 15 bits */
@@ -74,11 +73,11 @@ typedef cc128_cap_t cap_register_t;
 #define CC256_RESERVED_BITS (8)
 #define CC256_NULL_LENGTH ((cc128_length_t)UINT64_MAX)
 #define CC256_NULL_TOP ((cc128_length_t)UINT64_MAX)
-_CC_STATIC_ASSERT(CC256_FLAGS_COUNT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT + CC256_UPERMS_COUNT +
-                          CC256_OTYPE_BITS + CC256_RESERVED_BITS == 64, "");
+_CC_STATIC_ASSERT_SAME(CC256_FLAGS_COUNT + CC256_HWPERMS_COUNT + CC256_HWPERMS_RESERVED_COUNT + CC256_UPERMS_COUNT +
+                        CC256_OTYPE_BITS + CC256_RESERVED_BITS,
+                       64);
 
-#define CC256_SPECIAL_OTYPE(name, subtract) \
-    CC256_ ## name = (CC256_MAX_REPRESENTABLE_OTYPE - subtract ## u)
+#define CC256_SPECIAL_OTYPE(name, subtract) CC256_##name = (CC256_MAX_REPRESENTABLE_OTYPE - subtract##u)
 // Reserve 16 otypes
 enum CC256_OTypes {
     CC256_MAX_REPRESENTABLE_OTYPE = ((1u << CC256_OTYPE_BITS) - 1u),
@@ -96,13 +95,11 @@ typedef union _inmemory_chericap256 {
     uint64_t u64s[4];
 } inmemory_chericap256;
 
-static inline bool cc256_is_cap_sealed(const cap_register_t* cp) {
-    return cp->cr_otype != CC256_OTYPE_UNSEALED;
-}
+static inline bool cc256_is_cap_sealed(const cap_register_t* cp) { return cp->cr_otype != CC256_OTYPE_UNSEALED; }
 
 static inline void decompress_256cap(inmemory_chericap256 mem, cap_register_t* cdp, bool tagged) {
     /* See CHERI ISA: Figure 3.1: 256-bit memory representation of a capability */
-    uint32_t hwperms_mask = tagged ? CC256_PERMS_ALL_BITS: CC256_PERMS_ALL_BITS_UNTAGGED;
+    uint32_t hwperms_mask = tagged ? CC256_PERMS_ALL_BITS : CC256_PERMS_ALL_BITS_UNTAGGED;
     cdp->cr_flags = mem.u64s[0] & CC256_FLAGS_ALL_BITS;
     cdp->cr_perms = (mem.u64s[0] >> CC256_PERMS_MEM_SHFT) & hwperms_mask;
     cdp->cr_uperms = (mem.u64s[0] >> CC256_UPERMS_MEM_SHFT) & CC256_UPERMS_ALL_BITS;
@@ -121,10 +118,9 @@ static inline void compress_256cap(inmemory_chericap256* buffer, const cap_regis
     _cc_debug_assert(!(csp->cr_tag && csp->cr_reserved) && "Unknown reserved bits set it tagged capability");
     bool flags_bits = csp->cr_flags & CC256_FLAGS_ALL_BITS;
     // When writing an untagged value, just write back the bits that were loaded (including the reserved HWPERMS)
-    uint64_t hwperms_mask = csp->cr_tag ? CC256_PERMS_ALL_BITS: CC256_PERMS_ALL_BITS_UNTAGGED;
+    uint64_t hwperms_mask = csp->cr_tag ? CC256_PERMS_ALL_BITS : CC256_PERMS_ALL_BITS_UNTAGGED;
     buffer->u64s[0] =
-        flags_bits |
-        ((csp->cr_perms & hwperms_mask) << CC256_PERMS_MEM_SHFT) |
+        flags_bits | ((csp->cr_perms & hwperms_mask) << CC256_PERMS_MEM_SHFT) |
         ((csp->cr_uperms & CC256_UPERMS_ALL_BITS) << CC256_UPERMS_MEM_SHFT) |
         ((uint64_t)((csp->cr_otype ^ CC256_OTYPE_UNSEALED) & CC256_OTYPE_ALL_BITS) << CC256_OTYPE_MEM_SHFT) |
         ((uint64_t)(csp->cr_reserved & CC256_RESERVED_ALL_BITS) << CC256_RESERVED_MEM_SHFT);
