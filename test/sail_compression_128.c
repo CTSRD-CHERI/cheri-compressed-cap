@@ -2781,7 +2781,7 @@ static void sailgen_to_bits(lbits *zcbz324, sail_int zl, sail_int zn)
   {
     sail_int zgsz338;
     CREATE(sail_int)(&zgsz338);
-    CONVERT_OF(sail_int, mach_int)(&zgsz338, 0l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz338, INT64_C(0));
     get_slice_int((*(&zcbz324)), zl, zn, zgsz338);
     KILL(sail_int)(&zgsz338);
   }
@@ -2803,7 +2803,7 @@ static uint64_t sailgen_zzzz7lzzJzzK6z3to_bits(int64_t zl, sail_int zn)
     CONVERT_OF(sail_int, mach_int)(&zgsz339, zl);
     sail_int zgsz340;
     CREATE(sail_int)(&zgsz340);
-    CONVERT_OF(sail_int, mach_int)(&zgsz340, 0l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz340, INT64_C(0));
     lbits zgsz341;
     CREATE(lbits)(&zgsz341);
     get_slice_int(&zgsz341, zgsz339, zn, zgsz340);
@@ -2826,7 +2826,7 @@ static void sailgen_zzzz7lzzJzzK68z3to_bits(lbits *zcbz326, int64_t zl, sail_int
   {
     sail_int zgsz343;
     CREATE(sail_int)(&zgsz343);
-    CONVERT_OF(sail_int, mach_int)(&zgsz343, 0l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz343, INT64_C(0));
     sail_int zgsz342;
     CREATE(sail_int)(&zgsz342);
     CONVERT_OF(sail_int, mach_int)(&zgsz342, zl);
@@ -2985,7 +2985,7 @@ static void sailgen_n_leading_spaces(sail_int *zcbz331, sail_string zs)
     KILL(sail_string)(&zp0z3);
     goto case_98;
     }
-    CONVERT_OF(sail_int, mach_int)(&zgsz352, 0l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz352, INT64_C(0));
     KILL(sail_string)(&zp0z3);
     goto finish_match_97;
   }
@@ -2998,7 +2998,7 @@ case_98: ;
     {
       sail_int zgsz354;
       CREATE(sail_int)(&zgsz354);
-      CONVERT_OF(sail_int, mach_int)(&zgsz354, 1l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz354, INT64_C(1));
       string_take(&zgaz314, zs, zgsz354);
       KILL(sail_int)(&zgsz354);
     }
@@ -3022,7 +3022,7 @@ case_98: ;
         {
           sail_int zgsz356;
           CREATE(sail_int)(&zgsz356);
-          CONVERT_OF(sail_int, mach_int)(&zgsz356, 1l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz356, INT64_C(1));
           string_drop(&zgaz315, zs, zgsz356);
           KILL(sail_int)(&zgsz356);
         }
@@ -3032,7 +3032,7 @@ case_98: ;
       {
         sail_int zgsz358;
         CREATE(sail_int)(&zgsz358);
-        CONVERT_OF(sail_int, mach_int)(&zgsz358, 1l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz358, INT64_C(1));
         add_int(&zgsz355, zgsz358, zgaz316);
         KILL(sail_int)(&zgsz358);
       }
@@ -3042,7 +3042,7 @@ case_98: ;
     }
   case_101: ;
     {
-      CONVERT_OF(sail_int, mach_int)(&zgsz355, 0l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz355, INT64_C(0));
       goto finish_match_100;
     }
   case_102: ;
@@ -3085,7 +3085,7 @@ static void sailgen_zzzz7nzzJzzK64z3MAX(sail_int *zcbz332, int64_t zn)
   {
     sail_int zgsz362;
     CREATE(sail_int)(&zgsz362);
-    CONVERT_OF(sail_int, mach_int)(&zgsz362, 1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz362, INT64_C(1));
     sub_int((*(&zcbz332)), zgaz317, zgsz362);
     KILL(sail_int)(&zgsz362);
   }
@@ -3120,7 +3120,7 @@ static int64_t sailgen_zzzz7nzzJzzK18z3MAX(int64_t zn)
     CONVERT_OF(sail_int, mach_int)(&zgsz365, zgaz318);
     sail_int zgsz366;
     CREATE(sail_int)(&zgsz366);
-    CONVERT_OF(sail_int, mach_int)(&zgsz366, 1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz366, INT64_C(1));
     sail_int zgsz367;
     CREATE(sail_int)(&zgsz367);
     sub_int(&zgsz367, zgsz365, zgsz366);
@@ -3144,7 +3144,7 @@ static void create_letbind_0(void) {
 
 
   int64_t zgsz368;
-  zgsz368 = 1l;
+  zgsz368 = INT64_C(1);
   znum_flags = zgsz368;
 
 let_end_111: ;
@@ -3157,7 +3157,7 @@ static void create_letbind_1(void) {
 
 
   int64_t zgsz369;
-  zgsz369 = 4l;
+  zgsz369 = INT64_C(4);
   zreserved_otypes = zgsz369;
 
 let_end_112: ;
@@ -3170,7 +3170,7 @@ static void create_letbind_2(void) {
 
 
   int64_t zgsz370;
-  zgsz370 = -1l;
+  zgsz370 = INT64_C(-1);
   zotype_unsealed = zgsz370;
 
 let_end_113: ;
@@ -3209,7 +3209,7 @@ static void create_letbind_5(void) {
 
 
   int64_t zgsz373;
-  zgsz373 = 16l;
+  zgsz373 = INT64_C(16);
   zcap_sizze = zgsz373;
 
 let_end_116: ;
@@ -3222,7 +3222,7 @@ static void create_letbind_6(void) {
 
 
   int64_t zgsz374;
-  zgsz374 = 4l;
+  zgsz374 = INT64_C(4);
   zlog2_cap_sizze = zgsz374;
 
 let_end_117: ;
@@ -3235,7 +3235,7 @@ static void create_letbind_7(void) {
 
 
   int64_t zgsz375;
-  zgsz375 = 18l;
+  zgsz375 = INT64_C(18);
   zotype_width = zgsz375;
 
 let_end_118: ;
@@ -3248,7 +3248,7 @@ static void create_letbind_8(void) {
 
 
   int64_t zgsz376;
-  zgsz376 = 4l;
+  zgsz376 = INT64_C(4);
   zuperms_width = zgsz376;
 
 let_end_119: ;
@@ -3261,7 +3261,7 @@ static void create_letbind_9(void) {
 
 
   int64_t zgsz377;
-  zgsz377 = 64l;
+  zgsz377 = INT64_C(64);
   zcap_addr_width = zgsz377;
 
 let_end_120: ;
@@ -3277,10 +3277,10 @@ static void create_letbind_10(void) {
   {
     sail_int zgsz379;
     CREATE(sail_int)(&zgsz379);
-    CONVERT_OF(sail_int, mach_int)(&zgsz379, 64l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz379, INT64_C(64));
     sail_int zgsz380;
     CREATE(sail_int)(&zgsz380);
-    CONVERT_OF(sail_int, mach_int)(&zgsz380, 1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz380, INT64_C(1));
     sail_int zgsz381;
     CREATE(sail_int)(&zgsz381);
     add_int(&zgsz381, zgsz379, zgsz380);
@@ -3301,7 +3301,7 @@ static void create_letbind_11(void) {
 
 
   int64_t zgsz382;
-  zgsz382 = 14l;
+  zgsz382 = INT64_C(14);
   zmantissa_width = zgsz382;
 
 let_end_122: ;
@@ -3336,7 +3336,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz385;
     CREATE(sail_int)(&zgsz385);
-    CONVERT_OF(sail_int, mach_int)(&zgsz385, 4l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz385, INT64_C(4));
     lbits zgsz386;
     CREATE(lbits)(&zgsz386);
     UNDEFINED(lbits)(&zgsz386, zgsz385);
@@ -3372,7 +3372,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz387;
     CREATE(sail_int)(&zgsz387);
-    CONVERT_OF(sail_int, mach_int)(&zgsz387, 2l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz387, INT64_C(2));
     lbits zgsz388;
     CREATE(lbits)(&zgsz388);
     UNDEFINED(lbits)(&zgsz388, zgsz387);
@@ -3388,7 +3388,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz389;
     CREATE(sail_int)(&zgsz389);
-    CONVERT_OF(sail_int, mach_int)(&zgsz389, 6l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz389, INT64_C(6));
     lbits zgsz390;
     CREATE(lbits)(&zgsz390);
     UNDEFINED(lbits)(&zgsz390, zgsz389);
@@ -3402,7 +3402,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz391;
     CREATE(sail_int)(&zgsz391);
-    CONVERT_OF(sail_int, mach_int)(&zgsz391, 14l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz391, INT64_C(14));
     lbits zgsz392;
     CREATE(lbits)(&zgsz392);
     UNDEFINED(lbits)(&zgsz392, zgsz391);
@@ -3414,7 +3414,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz393;
     CREATE(sail_int)(&zgsz393);
-    CONVERT_OF(sail_int, mach_int)(&zgsz393, 14l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz393, INT64_C(14));
     lbits zgsz394;
     CREATE(lbits)(&zgsz394);
     UNDEFINED(lbits)(&zgsz394, zgsz393);
@@ -3426,7 +3426,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz395;
     CREATE(sail_int)(&zgsz395);
-    CONVERT_OF(sail_int, mach_int)(&zgsz395, 18l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz395, INT64_C(18));
     lbits zgsz396;
     CREATE(lbits)(&zgsz396);
     UNDEFINED(lbits)(&zgsz396, zgsz395);
@@ -3438,7 +3438,7 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz384)
   {
     sail_int zgsz397;
     CREATE(sail_int)(&zgsz397);
-    CONVERT_OF(sail_int, mach_int)(&zgsz397, 64l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz397, INT64_C(64));
     lbits zgsz398;
     CREATE(lbits)(&zgsz398);
     UNDEFINED(lbits)(&zgsz398, zgsz397);
@@ -3507,7 +3507,7 @@ static void create_letbind_13(void) {
 
 
   int64_t zgsz3100;
-  zgsz3100 = 52l;
+  zgsz3100 = INT64_C(52);
   zmaxE = zgsz3100;
 
 let_end_127: ;
@@ -3520,7 +3520,7 @@ static void create_letbind_14(void) {
 
 
   int64_t zgsz3101;
-  zgsz3101 = 3l;
+  zgsz3101 = INT64_C(3);
   zinternal_exponent_take_bits = zgsz3101;
 
 let_end_128: ;
@@ -3536,7 +3536,7 @@ static void create_letbind_15(void) {
   {
     sail_int zgsz3103;
     CREATE(sail_int)(&zgsz3103);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3103, 6l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3103, INT64_C(6));
     sail_int zgsz3104;
     CREATE(sail_int)(&zgsz3104);
     CONVERT_OF(sail_int, mach_int)(&zgsz3104, zmaxE);
@@ -3588,11 +3588,11 @@ static void create_letbind_17(void) {
 
   struct zCapability zgsz3114;
   uint64_t zgaz342;
-  zgaz342 = sailgen_zzzz7nzzJzzK4z3zzeros_implicit(4l);
+  zgaz342 = sailgen_zzzz7nzzJzzK4z3zzeros_implicit(INT64_C(4));
   uint64_t zgaz343;
-  zgaz343 = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(2l);
+  zgaz343 = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(INT64_C(2));
   uint64_t zgaz344;
-  zgaz344 = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(14l);
+  zgaz344 = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(INT64_C(14));
   uint64_t zgaz345;
   {
     sail_int zgsz3110;
@@ -3610,7 +3610,7 @@ static void create_letbind_17(void) {
     KILL(sail_int)(&zgsz3110);
   }
   uint64_t zgaz346;
-  zgaz346 = sailgen_zzzz7nzzJzzK64z3zzeros_implicit(64l);
+  zgaz346 = sailgen_zzzz7nzzJzzK64z3zzeros_implicit(INT64_C(64));
   struct zCapability zgsz3113;
   zgsz3113.zB = zgaz344;
   zgsz3113.zE = zresetE;
@@ -3655,11 +3655,11 @@ static void create_letbind_18(void) {
 
   struct zCapability zgsz3119;
   uint64_t zgaz347;
-  zgaz347 = sailgen_zzzz7nzzJzzK4z3ones(4l);
+  zgaz347 = sailgen_zzzz7nzzJzzK4z3ones(INT64_C(4));
   uint64_t zgaz348;
-  zgaz348 = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(2l);
+  zgaz348 = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(INT64_C(2));
   uint64_t zgaz349;
-  zgaz349 = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(14l);
+  zgaz349 = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(INT64_C(14));
   uint64_t zgaz350;
   {
     sail_int zgsz3115;
@@ -3677,7 +3677,7 @@ static void create_letbind_18(void) {
     KILL(sail_int)(&zgsz3115);
   }
   uint64_t zgaz351;
-  zgaz351 = sailgen_zzzz7nzzJzzK64z3zzeros_implicit(64l);
+  zgaz351 = sailgen_zzzz7nzzJzzK64z3zzeros_implicit(INT64_C(64));
   struct zCapability zgsz3118;
   zgsz3118.zB = zgaz349;
   zgsz3118.zE = zresetE;
@@ -3729,7 +3729,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
     {
       sail_int zgsz3120;
       CREATE(sail_int)(&zgsz3120);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3120, 90l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3120, INT64_C(90));
       zgaz393 = bitvector_access(zc, zgsz3120);
       KILL(sail_int)(&zgsz3120);
     }
@@ -3740,10 +3740,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
   {
     sail_int zgsz3121;
     CREATE(sail_int)(&zgsz3121);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3121, 108l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3121, INT64_C(108));
     sail_int zgsz3122;
     CREATE(sail_int)(&zgsz3122);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3122, 91l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3122, INT64_C(91));
     lbits zgsz3123;
     CREATE(lbits)(&zgsz3123);
     vector_subrange_lbits(&zgsz3123, zc, zgsz3121, zgsz3122);
@@ -3790,13 +3790,13 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
     bool zsealed;
     zsealed = zgaz353;
     uint64_t zE;
-    zE = sailgen_zzzz7nzzJzzK6z3zzeros_implicit(6l);
+    zE = sailgen_zzzz7nzzJzzK6z3zzeros_implicit(INT64_C(6));
     uint64_t zBs;
-    zBs = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(14l);
+    zBs = sailgen_zzzz7nzzJzzK14z3zzeros_implicit(INT64_C(14));
     uint64_t zT;
-    zT = sailgen_zzzz7nzzJzzK12z3zzeros_implicit(12l);
+    zT = sailgen_zzzz7nzzJzzK12z3zzeros_implicit(INT64_C(12));
     uint64_t zlenMSBs;
-    zlenMSBs = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(2l);
+    zlenMSBs = sailgen_zzzz7nzzJzzK2z3zzeros_implicit(INT64_C(2));
     {
       unit zgsz3130;
       if (zinternal_exponent) {
@@ -3805,10 +3805,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3139;
           CREATE(sail_int)(&zgsz3139);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3139, 80l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3139, INT64_C(80));
           sail_int zgsz3140;
           CREATE(sail_int)(&zgsz3140);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3140, 78l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3140, INT64_C(78));
           lbits zgsz3141;
           CREATE(lbits)(&zgsz3141);
           vector_subrange_lbits(&zgsz3141, zc, zgsz3139, zgsz3140);
@@ -3821,10 +3821,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3142;
           CREATE(sail_int)(&zgsz3142);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3142, 66l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3142, INT64_C(66));
           sail_int zgsz3143;
           CREATE(sail_int)(&zgsz3143);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3143, 64l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3143, INT64_C(64));
           lbits zgsz3144;
           CREATE(lbits)(&zgsz3144);
           vector_subrange_lbits(&zgsz3144, zc, zgsz3142, zgsz3143);
@@ -3863,10 +3863,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3148;
           CREATE(sail_int)(&zgsz3148);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3148, 89l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3148, INT64_C(89));
           sail_int zgsz3149;
           CREATE(sail_int)(&zgsz3149);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3149, 81l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3149, INT64_C(81));
           lbits zgsz3150;
           CREATE(lbits)(&zgsz3150);
           vector_subrange_lbits(&zgsz3150, zc, zgsz3148, zgsz3149);
@@ -3898,10 +3898,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
       {
         sail_int zgsz3157;
         CREATE(sail_int)(&zgsz3157);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3157, 77l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3157, INT64_C(77));
         sail_int zgsz3158;
         CREATE(sail_int)(&zgsz3158);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3158, 67l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3158, INT64_C(67));
         lbits zgsz3159;
         CREATE(lbits)(&zgsz3159);
         vector_subrange_lbits(&zgsz3159, zc, zgsz3157, zgsz3158);
@@ -3937,10 +3937,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3131;
           CREATE(sail_int)(&zgsz3131);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3131, 89l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3131, INT64_C(89));
           sail_int zgsz3132;
           CREATE(sail_int)(&zgsz3132);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3132, 78l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3132, INT64_C(78));
           lbits zgsz3133;
           CREATE(lbits)(&zgsz3133);
           vector_subrange_lbits(&zgsz3133, zc, zgsz3131, zgsz3132);
@@ -3955,10 +3955,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
       {
         sail_int zgsz3136;
         CREATE(sail_int)(&zgsz3136);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3136, 77l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3136, INT64_C(77));
         sail_int zgsz3137;
         CREATE(sail_int)(&zgsz3137);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3137, 64l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3137, INT64_C(64));
         lbits zgsz3138;
         CREATE(lbits)(&zgsz3138);
         vector_subrange_lbits(&zgsz3138, zc, zgsz3136, zgsz3137);
@@ -3981,10 +3981,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
           CONVERT_OF(lbits, fbits)(&zgsz3163, zBs, UINT64_C(14) , true);
           sail_int zgsz3164;
           CREATE(sail_int)(&zgsz3164);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3164, 11l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3164, INT64_C(11));
           sail_int zgsz3165;
           CREATE(sail_int)(&zgsz3165);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3165, 0l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3165, INT64_C(0));
           lbits zgsz3166;
           CREATE(lbits)(&zgsz3166);
           vector_subrange_lbits(&zgsz3166, zgsz3163, zgsz3164, zgsz3165);
@@ -4011,10 +4011,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
           CONVERT_OF(lbits, fbits)(&zgsz3167, zBs, UINT64_C(14) , true);
           sail_int zgsz3168;
           CREATE(sail_int)(&zgsz3168);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3168, 13l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3168, INT64_C(13));
           sail_int zgsz3169;
           CREATE(sail_int)(&zgsz3169);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3169, 12l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3169, INT64_C(12));
           lbits zgsz3170;
           CREATE(lbits)(&zgsz3170);
           vector_subrange_lbits(&zgsz3170, zgsz3167, zgsz3168, zgsz3169);
@@ -4064,10 +4064,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
       {
         sail_int zgsz3177;
         CREATE(sail_int)(&zgsz3177);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3177, 127l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3177, INT64_C(127));
         sail_int zgsz3178;
         CREATE(sail_int)(&zgsz3178);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3178, 124l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3178, INT64_C(124));
         lbits zgsz3179;
         CREATE(lbits)(&zgsz3179);
         vector_subrange_lbits(&zgsz3179, zc, zgsz3177, zgsz3178);
@@ -4082,7 +4082,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3180;
           CREATE(sail_int)(&zgsz3180);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3180, 123l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3180, INT64_C(123));
           zgaz359 = bitvector_access(zc, zgsz3180);
           KILL(sail_int)(&zgsz3180);
         }
@@ -4095,7 +4095,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3181;
           CREATE(sail_int)(&zgsz3181);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3181, 122l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3181, INT64_C(122));
           zgaz361 = bitvector_access(zc, zgsz3181);
           KILL(sail_int)(&zgsz3181);
         }
@@ -4108,7 +4108,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3182;
           CREATE(sail_int)(&zgsz3182);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3182, 121l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3182, INT64_C(121));
           zgaz363 = bitvector_access(zc, zgsz3182);
           KILL(sail_int)(&zgsz3182);
         }
@@ -4121,7 +4121,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3183;
           CREATE(sail_int)(&zgsz3183);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3183, 120l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3183, INT64_C(120));
           zgaz365 = bitvector_access(zc, zgsz3183);
           KILL(sail_int)(&zgsz3183);
         }
@@ -4134,7 +4134,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3184;
           CREATE(sail_int)(&zgsz3184);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3184, 119l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3184, INT64_C(119));
           zgaz367 = bitvector_access(zc, zgsz3184);
           KILL(sail_int)(&zgsz3184);
         }
@@ -4147,7 +4147,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3185;
           CREATE(sail_int)(&zgsz3185);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3185, 118l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3185, INT64_C(118));
           zgaz369 = bitvector_access(zc, zgsz3185);
           KILL(sail_int)(&zgsz3185);
         }
@@ -4160,7 +4160,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3186;
           CREATE(sail_int)(&zgsz3186);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3186, 117l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3186, INT64_C(117));
           zgaz371 = bitvector_access(zc, zgsz3186);
           KILL(sail_int)(&zgsz3186);
         }
@@ -4173,7 +4173,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3187;
           CREATE(sail_int)(&zgsz3187);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3187, 116l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3187, INT64_C(116));
           zgaz373 = bitvector_access(zc, zgsz3187);
           KILL(sail_int)(&zgsz3187);
         }
@@ -4186,7 +4186,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3188;
           CREATE(sail_int)(&zgsz3188);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3188, 115l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3188, INT64_C(115));
           zgaz375 = bitvector_access(zc, zgsz3188);
           KILL(sail_int)(&zgsz3188);
         }
@@ -4199,7 +4199,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3189;
           CREATE(sail_int)(&zgsz3189);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3189, 114l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3189, INT64_C(114));
           zgaz377 = bitvector_access(zc, zgsz3189);
           KILL(sail_int)(&zgsz3189);
         }
@@ -4212,7 +4212,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3190;
           CREATE(sail_int)(&zgsz3190);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3190, 113l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3190, INT64_C(113));
           zgaz379 = bitvector_access(zc, zgsz3190);
           KILL(sail_int)(&zgsz3190);
         }
@@ -4225,7 +4225,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3191;
           CREATE(sail_int)(&zgsz3191);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3191, 112l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3191, INT64_C(112));
           zgaz381 = bitvector_access(zc, zgsz3191);
           KILL(sail_int)(&zgsz3191);
         }
@@ -4236,10 +4236,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
       {
         sail_int zgsz3192;
         CREATE(sail_int)(&zgsz3192);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3192, 111l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3192, INT64_C(111));
         sail_int zgsz3193;
         CREATE(sail_int)(&zgsz3193);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3193, 110l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3193, INT64_C(110));
         lbits zgsz3194;
         CREATE(lbits)(&zgsz3194);
         vector_subrange_lbits(&zgsz3194, zc, zgsz3192, zgsz3193);
@@ -4254,7 +4254,7 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
         {
           sail_int zgsz3195;
           CREATE(sail_int)(&zgsz3195);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3195, 109l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3195, INT64_C(109));
           zgaz384 = bitvector_access(zc, zgsz3195);
           KILL(sail_int)(&zgsz3195);
         }
@@ -4281,10 +4281,10 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
       {
         sail_int zgsz3199;
         CREATE(sail_int)(&zgsz3199);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3199, 63l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3199, INT64_C(63));
         sail_int zgsz3200;
         CREATE(sail_int)(&zgsz3200);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3200, 0l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3200, INT64_C(0));
         lbits zgsz3201;
         CREATE(lbits)(&zgsz3201);
         vector_subrange_lbits(&zgsz3201, zc, zgsz3199, zgsz3200);
@@ -4743,7 +4743,7 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(sail_int, mach_int)(&zgsz3241, zmantissa_width);
       sail_int zgsz3242;
       CREATE(sail_int)(&zgsz3242);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3242, 3l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3242, INT64_C(3));
       sail_int zgsz3243;
       CREATE(sail_int)(&zgsz3243);
       sub_int(&zgsz3243, zgsz3241, zgsz3242);
@@ -4761,7 +4761,7 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(sail_int, mach_int)(&zgsz3245, zgaz3156);
       sail_int zgsz3246;
       CREATE(sail_int)(&zgsz3246);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3246, 3l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3246, INT64_C(3));
       lbits zgsz3247;
       CREATE(lbits)(&zgsz3247);
       vector_subrange_lbits(&zgsz3247, zgsz3244, zgsz3245, zgsz3246);
@@ -4784,10 +4784,10 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(lbits, fbits)(&zgsz3248, zgaz3154, UINT64_C(14) , true);
       sail_int zgsz3249;
       CREATE(sail_int)(&zgsz3249);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3249, 2l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3249, INT64_C(2));
       sail_int zgsz3250;
       CREATE(sail_int)(&zgsz3250);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3250, 0l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3250, INT64_C(0));
       lbits zgsz3251;
       CREATE(lbits)(&zgsz3251);
       vector_subrange_lbits(&zgsz3251, zgsz3248, zgsz3249, zgsz3250);
@@ -4810,7 +4810,7 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(sail_int, mach_int)(&zgsz3252, zmantissa_width);
       sail_int zgsz3253;
       CREATE(sail_int)(&zgsz3253);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3253, 1l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3253, INT64_C(1));
       sail_int zgsz3254;
       CREATE(sail_int)(&zgsz3254);
       sub_int(&zgsz3254, zgsz3252, zgsz3253);
@@ -4828,7 +4828,7 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(sail_int, mach_int)(&zgsz3256, zgaz3153);
       sail_int zgsz3257;
       CREATE(sail_int)(&zgsz3257);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3257, 3l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3257, INT64_C(3));
       lbits zgsz3258;
       CREATE(lbits)(&zgsz3258);
       vector_subrange_lbits(&zgsz3258, zgsz3255, zgsz3256, zgsz3257);
@@ -4851,10 +4851,10 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(lbits, fbits)(&zgsz3259, zgaz3151, UINT64_C(14) , true);
       sail_int zgsz3260;
       CREATE(sail_int)(&zgsz3260);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3260, 2l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3260, INT64_C(2));
       sail_int zgsz3261;
       CREATE(sail_int)(&zgsz3261);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3261, 0l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3261, INT64_C(0));
       lbits zgsz3262;
       CREATE(lbits)(&zgsz3262);
       vector_subrange_lbits(&zgsz3262, zgsz3259, zgsz3260, zgsz3261);
@@ -4880,10 +4880,10 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
         CONVERT_OF(lbits, fbits)(&zgsz3264, zgaz3130, UINT64_C(6) , true);
         sail_int zgsz3265;
         CREATE(sail_int)(&zgsz3265);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3265, 5l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3265, INT64_C(5));
         sail_int zgsz3266;
         CREATE(sail_int)(&zgsz3266);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3266, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3266, INT64_C(3));
         lbits zgsz3267;
         CREATE(lbits)(&zgsz3267);
         vector_subrange_lbits(&zgsz3267, zgsz3264, zgsz3265, zgsz3266);
@@ -4905,10 +4905,10 @@ static void sailgen_capToBits(lbits *zcbz337, struct zCapability zcap)
       CONVERT_OF(lbits, fbits)(&zgsz3269, zgaz3131, UINT64_C(6) , true);
       sail_int zgsz3270;
       CREATE(sail_int)(&zgsz3270);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3270, 2l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3270, INT64_C(2));
       sail_int zgsz3271;
       CREATE(sail_int)(&zgsz3271);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3271, 0l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3271, INT64_C(0));
       lbits zgsz3272;
       CREATE(lbits)(&zgsz3272);
       vector_subrange_lbits(&zgsz3272, zgsz3269, zgsz3270, zgsz3271);
@@ -5242,7 +5242,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
             CONVERT_OF(sail_int, mach_int)(&zgsz3292, zgaz3191);
             sail_int zgsz3293;
             CREATE(sail_int)(&zgsz3293);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3293, 3l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3293, INT64_C(3));
             sail_int zgsz3294;
             CREATE(sail_int)(&zgsz3294);
             sub_int(&zgsz3294, zgsz3292, zgsz3293);
@@ -5276,7 +5276,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
         CONVERT_OF(lbits, fbits)(&zgsz3298, zgaz3193, UINT64_C(64) , true);
         sail_int zgsz3299;
         CREATE(sail_int)(&zgsz3299);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3299, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3299, INT64_C(3));
         lbits zgsz3300;
         CREATE(lbits)(&zgsz3300);
         sail_truncate(&zgsz3300, zgsz3298, zgsz3299);
@@ -5297,7 +5297,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
         CONVERT_OF(lbits, fbits)(&zgsz3301, zgaz3190, UINT64_C(14) , true);
         sail_int zgsz3302;
         CREATE(sail_int)(&zgsz3302);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3302, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3302, INT64_C(3));
         lbits zgsz3303;
         CREATE(lbits)(&zgsz3303);
         sail_truncateLSB(&zgsz3303, zgsz3301, zgsz3302);
@@ -5318,7 +5318,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
         CONVERT_OF(lbits, fbits)(&zgsz3304, zgaz3189, UINT64_C(14) , true);
         sail_int zgsz3305;
         CREATE(sail_int)(&zgsz3305);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3305, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3305, INT64_C(3));
         lbits zgsz3306;
         CREATE(lbits)(&zgsz3306);
         sail_truncateLSB(&zgsz3306, zgsz3304, zgsz3305);
@@ -5349,21 +5349,21 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
     {
       bool zgaz3188;
       zgaz3188 = sailgen_z8operatorz0zzzz7nzzJzzK3z3zI_uz9(za3, zR3);
-      if (zgaz3188) {  zaHi = 1l;  } else {  zaHi = 0l;  }
+      if (zgaz3188) {  zaHi = INT64_C(1);  } else {  zaHi = INT64_C(0);  }
     
     }
     int64_t zbHi;
     {
       bool zgaz3187;
       zgaz3187 = sailgen_z8operatorz0zzzz7nzzJzzK3z3zI_uz9(zB3, zR3);
-      if (zgaz3187) {  zbHi = 1l;  } else {  zbHi = 0l;  }
+      if (zgaz3187) {  zbHi = INT64_C(1);  } else {  zbHi = INT64_C(0);  }
     
     }
     int64_t ztHi;
     {
       bool zgaz3186;
       zgaz3186 = sailgen_z8operatorz0zzzz7nzzJzzK3z3zI_uz9(zT3, zR3);
-      if (zgaz3186) {  ztHi = 1l;  } else {  ztHi = 0l;  }
+      if (zgaz3186) {  ztHi = INT64_C(1);  } else {  ztHi = INT64_C(0);  }
     
     }
     int64_t zcorrection_base;
@@ -5590,7 +5590,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
             CONVERT_OF(sail_int, mach_int)(&zgsz3340, zcap_addr_width);
             sail_int zgsz3341;
             CREATE(sail_int)(&zgsz3341);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3341, 1l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3341, INT64_C(1));
             sail_int zgsz3342;
             CREATE(sail_int)(&zgsz3342);
             sub_int(&zgsz3342, zgsz3340, zgsz3341);
@@ -5610,7 +5610,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
         }
         uint64_t zgsz3344;
         zgsz3344 = UINT64_C(0b0);
-        zgsz3344 = update_fbits(zgsz3344, 0l, zgaz3161);
+        zgsz3344 = update_fbits(zgsz3344, INT64_C(0), zgaz3161);
         zgaz3162 = zgsz3344;
       
       }
@@ -5647,7 +5647,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
           CONVERT_OF(sail_int, mach_int)(&zgsz3349, zcap_addr_width);
           sail_int zgsz3350;
           CREATE(sail_int)(&zgsz3350);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3350, 1l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3350, INT64_C(1));
           sail_int zgsz3351;
           CREATE(sail_int)(&zgsz3351);
           sub_int(&zgsz3351, zgsz3349, zgsz3350);
@@ -5690,7 +5690,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
                 CONVERT_OF(sail_int, mach_int)(&zgsz3356, zmaxE);
                 sail_int zgsz3357;
                 CREATE(sail_int)(&zgsz3357);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3357, 1l);
+                CONVERT_OF(sail_int, mach_int)(&zgsz3357, INT64_C(1));
                 sail_int zgsz3358;
                 CREATE(sail_int)(&zgsz3358);
                 sub_int(&zgsz3358, zgsz3356, zgsz3357);
@@ -5738,7 +5738,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
             {
               sail_int zgsz3366;
               CREATE(sail_int)(&zgsz3366);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3366, 1l);
+              CONVERT_OF(sail_int, mach_int)(&zgsz3366, INT64_C(1));
               sail_int zgsz3365;
               CREATE(sail_int)(&zgsz3365);
               CONVERT_OF(sail_int, mach_int)(&zgsz3365, zgaz3168);
@@ -5787,7 +5787,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
             CONVERT_OF(sail_int, mach_int)(&zgsz3370, zcap_addr_width);
             sail_int zgsz3371;
             CREATE(sail_int)(&zgsz3371);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3371, 1l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3371, INT64_C(1));
             sail_int zgsz3372;
             CREATE(sail_int)(&zgsz3372);
             sub_int(&zgsz3372, zgsz3370, zgsz3371);
@@ -5802,7 +5802,7 @@ static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz340, 
             CONVERT_OF(sail_int, mach_int)(&zgsz3373, zgaz3173);
             sail_int zgsz3374;
             CREATE(sail_int)(&zgsz3374);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3374, 0l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3374, INT64_C(0));
             lbits zgsz3375;
             CREATE(lbits)(&zgsz3375);
             vector_subrange_lbits(&zgsz3375, zbase, zgsz3373, zgsz3374);
@@ -6003,7 +6003,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zgsz3386, zmantissa_width);
           sail_int zgsz3387;
           CREATE(sail_int)(&zgsz3387);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3387, 1l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3387, INT64_C(1));
           sail_int zgsz3388;
           CREATE(sail_int)(&zgsz3388);
           sub_int(&zgsz3388, zgsz3386, zgsz3387);
@@ -6066,7 +6066,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
       sail_int zgsz3397;
       CREATE(sail_int)(&zgsz3397);
       CONVERT_OF(sail_int, mach_int)(&zgsz3397, ze);
-      zgaz3230 = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgsz3397, 0l);
+      zgaz3230 = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgsz3397, INT64_C(0));
       KILL(sail_int)(&zgsz3397);
     }
     bool zgsz3402;
@@ -6080,7 +6080,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(sail_int, mach_int)(&zgsz3398, zmantissa_width);
         sail_int zgsz3399;
         CREATE(sail_int)(&zgsz3399);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3399, 2l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3399, INT64_C(2));
         sail_int zgsz3400;
         CREATE(sail_int)(&zgsz3400);
         sub_int(&zgsz3400, zgsz3398, zgsz3399);
@@ -6152,7 +6152,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zgsz3409, ze);
           sail_int zgsz3410;
           CREATE(sail_int)(&zgsz3410);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3410, 3l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3410, INT64_C(3));
           sail_int zgsz3411;
           CREATE(sail_int)(&zgsz3411);
           add_int(&zgsz3411, zgsz3409, zgsz3410);
@@ -6185,7 +6185,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(sail_int, mach_int)(&zgsz3415, zmantissa_width);
         sail_int zgsz3416;
         CREATE(sail_int)(&zgsz3416);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3416, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3416, INT64_C(3));
         sail_int zgsz3417;
         CREATE(sail_int)(&zgsz3417);
         sub_int(&zgsz3417, zgsz3415, zgsz3416);
@@ -6224,7 +6224,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zgsz3421, ze);
           sail_int zgsz3422;
           CREATE(sail_int)(&zgsz3422);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3422, 3l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3422, INT64_C(3));
           sail_int zgsz3423;
           CREATE(sail_int)(&zgsz3423);
           add_int(&zgsz3423, zgsz3421, zgsz3422);
@@ -6249,7 +6249,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(sail_int, mach_int)(&zgsz3425, zmantissa_width);
         sail_int zgsz3426;
         CREATE(sail_int)(&zgsz3426);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3426, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3426, INT64_C(3));
         sail_int zgsz3427;
         CREATE(sail_int)(&zgsz3427);
         sub_int(&zgsz3427, zgsz3425, zgsz3426);
@@ -6279,10 +6279,10 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
       {
         sail_int zgsz3430;
         CREATE(sail_int)(&zgsz3430);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3430, 64l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3430, INT64_C(64));
         sail_int zgsz3431;
         CREATE(sail_int)(&zgsz3431);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3431, 1l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3431, INT64_C(1));
         sail_int zgsz3432;
         CREATE(sail_int)(&zgsz3432);
         add_int(&zgsz3432, zgsz3430, zgsz3431);
@@ -6300,7 +6300,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zgsz3433, ze);
           sail_int zgsz3434;
           CREATE(sail_int)(&zgsz3434);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3434, 3l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3434, INT64_C(3));
           sail_int zgsz3435;
           CREATE(sail_int)(&zgsz3435);
           add_int(&zgsz3435, zgsz3433, zgsz3434);
@@ -6346,7 +6346,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         sail_unsigned(&zgaz3200, zgaz3199);
         KILL(lbits)(&zgaz3199);
       }
-      zlostSignificantBase = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgaz3200, 0l);
+      zlostSignificantBase = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgaz3200, INT64_C(0));
       unit zgsz3445;
       zgsz3445 = UNIT;
       KILL(sail_int)(&zgaz3200);
@@ -6361,7 +6361,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         sail_unsigned(&zgaz3202, zgaz3201);
         KILL(lbits)(&zgaz3201);
       }
-      zlostSignificantTop = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgaz3202, 0l);
+      zlostSignificantTop = sailgen_zzz3zzzz7mzzJzzK0z3neq_int(zgaz3202, INT64_C(0));
       unit zgsz3444;
       zgsz3444 = UNIT;
       KILL(sail_int)(&zgaz3202);
@@ -6375,7 +6375,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(lbits, fbits)(&zgsz3441, zT_ie, UINT64_C(11) , true);
         sail_int zgsz3442;
         CREATE(sail_int)(&zgsz3442);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3442, 1l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3442, INT64_C(1));
         lbits zgsz3443;
         CREATE(lbits)(&zgsz3443);
         add_bits_int(&zgsz3443, zgsz3441, zgsz3442);
@@ -6415,7 +6415,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             CONVERT_OF(sail_int, mach_int)(&zgsz3449, zmantissa_width);
             sail_int zgsz3450;
             CREATE(sail_int)(&zgsz3450);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3450, 4l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3450, INT64_C(4));
             sail_int zgsz3451;
             CREATE(sail_int)(&zgsz3451);
             sub_int(&zgsz3451, zgsz3449, zgsz3450);
@@ -6456,7 +6456,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         {
           sail_int zgsz3460;
           CREATE(sail_int)(&zgsz3460);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3460, 0l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3460, INT64_C(0));
           lbits zgsz3459;
           CREATE(lbits)(&zgsz3459);
           CONVERT_OF(lbits, fbits)(&zgsz3459, zB_ie, UINT64_C(11) , true);
@@ -6478,7 +6478,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         {
           sail_int zgsz3463;
           CREATE(sail_int)(&zgsz3463);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3463, 0l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3463, INT64_C(0));
           lbits zgsz3462;
           CREATE(lbits)(&zgsz3462);
           CONVERT_OF(lbits, fbits)(&zgsz3462, zT_ie, UINT64_C(11) , true);
@@ -6503,7 +6503,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             CONVERT_OF(sail_int, mach_int)(&zgsz3465, ze);
             sail_int zgsz3466;
             CREATE(sail_int)(&zgsz3466);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3466, 4l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3466, INT64_C(4));
             sail_int zgsz3467;
             CREATE(sail_int)(&zgsz3467);
             add_int(&zgsz3467, zgsz3465, zgsz3466);
@@ -6536,7 +6536,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zgsz3471, zmantissa_width);
           sail_int zgsz3472;
           CREATE(sail_int)(&zgsz3472);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3472, 3l);
+          CONVERT_OF(sail_int, mach_int)(&zgsz3472, INT64_C(3));
           sail_int zgsz3473;
           CREATE(sail_int)(&zgsz3473);
           sub_int(&zgsz3473, zgsz3471, zgsz3472);
@@ -6566,7 +6566,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
       
       }
       int64_t zgaz3211;
-      if (zlostSignificantTop) {  zgaz3211 = 1l;  } else {  zgaz3211 = 0l;  }
+      if (zlostSignificantTop) {  zgaz3211 = INT64_C(1);  } else {  zgaz3211 = INT64_C(0);  }
       unit zgsz3481;
       {
         int64_t zincT;
@@ -6583,7 +6583,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
               CONVERT_OF(sail_int, mach_int)(&zgsz3482, ze);
               sail_int zgsz3483;
               CREATE(sail_int)(&zgsz3483);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3483, 4l);
+              CONVERT_OF(sail_int, mach_int)(&zgsz3483, INT64_C(4));
               sail_int zgsz3484;
               CREATE(sail_int)(&zgsz3484);
               add_int(&zgsz3484, zgsz3482, zgsz3483);
@@ -6608,7 +6608,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             CONVERT_OF(sail_int, mach_int)(&zgsz3486, zmantissa_width);
             sail_int zgsz3487;
             CREATE(sail_int)(&zgsz3487);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3487, 3l);
+            CONVERT_OF(sail_int, mach_int)(&zgsz3487, INT64_C(3));
             sail_int zgsz3488;
             CREATE(sail_int)(&zgsz3488);
             sub_int(&zgsz3488, zgsz3486, zgsz3487);
@@ -6713,7 +6713,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(sail_int, mach_int)(&zgsz3498, ze);
         sail_int zgsz3499;
         CREATE(sail_int)(&zgsz3499);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3499, 1l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3499, INT64_C(1));
         sail_int zgsz3500;
         CREATE(sail_int)(&zgsz3500);
         add_int(&zgsz3500, zgsz3498, zgsz3499);
@@ -6727,7 +6727,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         sail_int zgsz3501;
         CREATE(sail_int)(&zgsz3501);
         CONVERT_OF(sail_int, mach_int)(&zgsz3501, zgaz3226);
-        zgaz3227 = sailgen_zzzz7lzzJzzK6z3to_bits(6l, zgsz3501);
+        zgaz3227 = sailgen_zzzz7lzzJzzK6z3to_bits(INT64_C(6), zgsz3501);
         KILL(sail_int)(&zgsz3501);
       }
     
@@ -6789,7 +6789,7 @@ static uint64_t sailgen_getCapPerms(struct zCapability zcap)
   {
     uint64_t zgaz3234;
     zgaz3234 = sailgen_getCapHardPerms(zcap);
-    zgaz3235 = sailgen_zzzz7mzzJzzK15zzCzz0zz7nzzJzzK12z3EXTZ(15l, zgaz3234);
+    zgaz3235 = sailgen_zzzz7mzzJzzK15zzCzz0zz7nzzJzzK12z3EXTZ(INT64_C(15), zgaz3234);
   
   }
   uint64_t zgsz3505;
@@ -6820,7 +6820,7 @@ static uint64_t sailgen_getCapPerms(struct zCapability zcap)
     {
       sbits zgsz3510;
       zgsz3510 = CONVERT_OF(sbits, fbits)(zgaz3237, UINT64_C(19) , true);
-      zgsz3505 = sailgen_zzz3zzzz7mzzJzzK31z3EXTZ(31l, zgsz3510);
+      zgsz3505 = sailgen_zzz3zzzz7mzzJzzK31z3EXTZ(INT64_C(31), zgsz3510);
     
     }
   
@@ -6856,10 +6856,10 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
       CONVERT_OF(lbits, fbits)(&zgsz3511, zperms, UINT64_C(31) , true);
       sail_int zgsz3512;
       CREATE(sail_int)(&zgsz3512);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3512, 30l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3512, INT64_C(30));
       sail_int zgsz3513;
       CREATE(sail_int)(&zgsz3513);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3513, 15l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3513, INT64_C(15));
       lbits zgsz3514;
       CREATE(lbits)(&zgsz3514);
       vector_subrange_lbits(&zgsz3514, zgsz3511, zgsz3512, zgsz3513);
@@ -6892,7 +6892,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3519;
       CREATE(sail_int)(&zgsz3519);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3519, 11l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3519, INT64_C(11));
       lbits zgsz3518;
       CREATE(lbits)(&zgsz3518);
       CONVERT_OF(lbits, fbits)(&zgsz3518, zperms, UINT64_C(31) , true);
@@ -6909,7 +6909,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3521;
       CREATE(sail_int)(&zgsz3521);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3521, 10l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3521, INT64_C(10));
       lbits zgsz3520;
       CREATE(lbits)(&zgsz3520);
       CONVERT_OF(lbits, fbits)(&zgsz3520, zperms, UINT64_C(31) , true);
@@ -6926,7 +6926,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3523;
       CREATE(sail_int)(&zgsz3523);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3523, 9l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3523, INT64_C(9));
       lbits zgsz3522;
       CREATE(lbits)(&zgsz3522);
       CONVERT_OF(lbits, fbits)(&zgsz3522, zperms, UINT64_C(31) , true);
@@ -6943,7 +6943,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3525;
       CREATE(sail_int)(&zgsz3525);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3525, 8l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3525, INT64_C(8));
       lbits zgsz3524;
       CREATE(lbits)(&zgsz3524);
       CONVERT_OF(lbits, fbits)(&zgsz3524, zperms, UINT64_C(31) , true);
@@ -6960,7 +6960,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3527;
       CREATE(sail_int)(&zgsz3527);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3527, 7l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3527, INT64_C(7));
       lbits zgsz3526;
       CREATE(lbits)(&zgsz3526);
       CONVERT_OF(lbits, fbits)(&zgsz3526, zperms, UINT64_C(31) , true);
@@ -6977,7 +6977,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3529;
       CREATE(sail_int)(&zgsz3529);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3529, 6l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3529, INT64_C(6));
       lbits zgsz3528;
       CREATE(lbits)(&zgsz3528);
       CONVERT_OF(lbits, fbits)(&zgsz3528, zperms, UINT64_C(31) , true);
@@ -6994,7 +6994,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3531;
       CREATE(sail_int)(&zgsz3531);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3531, 5l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3531, INT64_C(5));
       lbits zgsz3530;
       CREATE(lbits)(&zgsz3530);
       CONVERT_OF(lbits, fbits)(&zgsz3530, zperms, UINT64_C(31) , true);
@@ -7011,7 +7011,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3533;
       CREATE(sail_int)(&zgsz3533);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3533, 4l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3533, INT64_C(4));
       lbits zgsz3532;
       CREATE(lbits)(&zgsz3532);
       CONVERT_OF(lbits, fbits)(&zgsz3532, zperms, UINT64_C(31) , true);
@@ -7028,7 +7028,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3535;
       CREATE(sail_int)(&zgsz3535);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3535, 3l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3535, INT64_C(3));
       lbits zgsz3534;
       CREATE(lbits)(&zgsz3534);
       CONVERT_OF(lbits, fbits)(&zgsz3534, zperms, UINT64_C(31) , true);
@@ -7045,7 +7045,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3537;
       CREATE(sail_int)(&zgsz3537);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3537, 2l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3537, INT64_C(2));
       lbits zgsz3536;
       CREATE(lbits)(&zgsz3536);
       CONVERT_OF(lbits, fbits)(&zgsz3536, zperms, UINT64_C(31) , true);
@@ -7062,7 +7062,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3539;
       CREATE(sail_int)(&zgsz3539);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3539, 1l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3539, INT64_C(1));
       lbits zgsz3538;
       CREATE(lbits)(&zgsz3538);
       CONVERT_OF(lbits, fbits)(&zgsz3538, zperms, UINT64_C(31) , true);
@@ -7079,7 +7079,7 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
     {
       sail_int zgsz3541;
       CREATE(sail_int)(&zgsz3541);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3541, 0l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3541, INT64_C(0));
       lbits zgsz3540;
       CREATE(lbits)(&zgsz3540);
       CONVERT_OF(lbits, fbits)(&zgsz3540, zperms, UINT64_C(31) , true);
@@ -7348,7 +7348,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
       CONVERT_OF(sail_int, mach_int)(&zgsz3557, zmaxE);
       sail_int zgsz3558;
       CREATE(sail_int)(&zgsz3558);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3558, 2l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3558, INT64_C(2));
       sail_int zgsz3559;
       CREATE(sail_int)(&zgsz3559);
       sub_int(&zgsz3559, zgsz3557, zgsz3558);
@@ -7496,7 +7496,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
       CONVERT_OF(lbits, fbits)(&zgsz3580, zgaz3283, UINT64_C(14) , true);
       sail_int zgsz3581;
       CREATE(sail_int)(&zgsz3581);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3581, 3l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3581, INT64_C(3));
       lbits zgsz3582;
       CREATE(lbits)(&zgsz3582);
       sail_truncateLSB(&zgsz3582, zgsz3580, zgsz3581);
@@ -7534,7 +7534,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
         CONVERT_OF(sail_int, mach_int)(&zgsz3586, zmantissa_width);
         sail_int zgsz3587;
         CREATE(sail_int)(&zgsz3587);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3587, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3587, INT64_C(3));
         sail_int zgsz3588;
         CREATE(sail_int)(&zgsz3588);
         sub_int(&zgsz3588, zgsz3586, zgsz3587);
@@ -7586,7 +7586,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
     CONVERT_OF(lbits, fbits)(&zgsz3595, zdiff, UINT64_C(14) , true);
     sail_int zgsz3596;
     CREATE(sail_int)(&zgsz3596);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3596, 1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3596, INT64_C(1));
     lbits zgsz3597;
     CREATE(lbits)(&zgsz3597);
     sub_bits_int(&zgsz3597, zgsz3595, zgsz3596);
@@ -7599,7 +7599,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
   {
     sail_int zgsz3599;
     CREATE(sail_int)(&zgsz3599);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3599, 0l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3599, INT64_C(0));
     sail_int zgsz3598;
     CREATE(sail_int)(&zgsz3598);
     CONVERT_OF(sail_int, mach_int)(&zgsz3598, zi_top);
@@ -7612,7 +7612,7 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
   {
     sail_int zgsz3601;
     CREATE(sail_int)(&zgsz3601);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3601, -1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3601, INT64_C(-1));
     sail_int zgsz3600;
     CREATE(sail_int)(&zgsz3600);
     CONVERT_OF(sail_int, mach_int)(&zgsz3600, zi_top);
@@ -7687,7 +7687,7 @@ static void sailgen_capToString(sail_string *zcbz351, struct zCapability zcap)
         CONVERT_OF(sail_int, mach_int)(&zgsz3605, zcap_len_width);
         sail_int zgsz3606;
         CREATE(sail_int)(&zgsz3606);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3606, 3l);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3606, INT64_C(3));
         sail_int zgsz3607;
         CREATE(sail_int)(&zgsz3607);
         add_int(&zgsz3607, zgsz3605, zgsz3606);
@@ -7709,12 +7709,12 @@ static void sailgen_capToString(sail_string *zcbz351, struct zCapability zcap)
     if (zgaz3290) {
     uint64_t zgaz3291;
     zgaz3291 = zcap.zotype;
-    zgaz3293 = sailgen_zzzz7mzzJzzK64zzCzz0zz7nzzJzzK18z3EXTS(64l, zgaz3291);
+    zgaz3293 = sailgen_zzzz7mzzJzzK64zzCzz0zz7nzzJzzK18z3EXTS(INT64_C(64), zgaz3291);
   
     } else {
     uint64_t zgaz3292;
     zgaz3292 = zcap.zotype;
-    zgaz3293 = sailgen_zzzz7mzzJzzK64zzCzz0zz7nzzJzzK18z3EXTZ(64l, zgaz3292);
+    zgaz3293 = sailgen_zzzz7mzzJzzK64zzCzz0zz7nzzJzzK18z3EXTZ(INT64_C(64), zgaz3292);
   
     }
   
@@ -8019,7 +8019,7 @@ static unit sailgen_main(unit zgsz3617)
   struct zCapability znew_cap;
   {
     uint64_t zgaz3322;
-    zgaz3322 = sailgen_zzzz7nzzJzzK31z3ones(31l);
+    zgaz3322 = sailgen_zzzz7nzzJzzK31z3ones(INT64_C(31));
     znew_cap = sailgen_setCapPerms(zTestCap, zgaz3322);
   
   }
@@ -8069,7 +8069,7 @@ static unit sailgen_initializze_registers(unit zgsz3625)
     {
       sail_int zgsz3626;
       CREATE(sail_int)(&zgsz3626);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3626, 64l);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3626, INT64_C(64));
       lbits zgsz3627;
       CREATE(lbits)(&zgsz3627);
       UNDEFINED(lbits)(&zgsz3627, zgsz3626);
@@ -8084,10 +8084,10 @@ static unit sailgen_initializze_registers(unit zgsz3625)
   {
     sail_int zgsz3630;
     CREATE(sail_int)(&zgsz3630);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3630, 64l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3630, INT64_C(64));
     sail_int zgsz3631;
     CREATE(sail_int)(&zgsz3631);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3631, 1l);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3631, INT64_C(1));
     sail_int zgsz3632;
     CREATE(sail_int)(&zgsz3632);
     add_int(&zgsz3632, zgsz3630, zgsz3631);
