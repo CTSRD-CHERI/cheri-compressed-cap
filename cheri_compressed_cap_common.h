@@ -731,3 +731,28 @@ static inline _cc_addr_t _cc_N(get_representable_length)(_cc_addr_t req_length) 
     _cc_addr_t mask = _cc_N(get_alignment_mask)(req_length);
     return (req_length + ~mask) & mask;
 }
+
+/// Provide a C++ class with the same function names
+/// to simplify writing code that handles both 128 and 64-bit capabilities
+#ifdef __cplusplus
+class _CC_CONCAT(CompressedCap, CC_BITS) {
+public:
+    using length_t = _cc_length_t;
+    using offset_t = _cc_offset_t;
+    using addr_t = _cc_addr_t;
+    using cap_t = _cc_cap_t;
+    using bounds_bits = _cc_bounds_bits;
+
+    static inline addr_t compress_raw(const cap_t* csp) { return _cc_N(compress_raw)(csp); }
+    static inline void decompress_raw(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
+        _cc_N(decompress_raw)(pesbt, cursor, tag, cdp);
+    }
+    static inline addr_t compress_mem(const cap_t* csp) { return _cc_N(compress_mem)(csp); }
+    static inline void decompress_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
+        _cc_N(decompress_mem)(pesbt, cursor, tag, cdp);
+    }
+    static inline bounds_bits extract_bounds_bits(addr_t pesbt) {
+        return _cc_N(extract_bounds_bits)(pesbt);
+    }
+};
+#endif
