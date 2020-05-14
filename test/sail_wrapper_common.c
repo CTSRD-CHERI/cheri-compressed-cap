@@ -1,11 +1,42 @@
+/*-
+ * SPDX-License-Identifier: BSD-2-Clause
+ *
+ * Copyright (c) 2020 Alex Richardson
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory (Department of Computer Science and
+ * Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+ * DARPA SSITH research programme.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 #include "sail_wrapper.h"
 
 #include "sail.h"
 
-#include "sail_compression_128.c"
+#include SAIL_COMPRESSION_GENERATED_C_FILE
 
 __attribute__((constructor, used)) static void sail_startup(void) { model_init(); }
-__attribute__((destructor,used)) static void sail_cleanup(void) { model_fini(); }
+__attribute__((destructor, used)) static void sail_cleanup(void) { model_fini(); }
 
 static inline void sail_dump_cap(const char* msg, struct zCapability cap) {
     sail_string zcap_str;
@@ -78,7 +109,7 @@ static void two_u64s_to_sail_128(lbits* out, uint64_t first64, uint64_t second64
     KILL(lbits)(&sail_second64);
 }
 
-void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_register_t* cdp) {
+void sail_decode_common_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_register_t* cdp) {
     lbits sail_all_bits;
     two_u64s_to_sail_128(&sail_all_bits, mem_pesbt, mem_cursor);
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
@@ -87,7 +118,7 @@ void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cap_
     sail_cap_to_cap_register_t(&sail_result, cdp);
 }
 
-struct zCapability _sail_decode_128_raw_impl(uint64_t pesbt, uint64_t cursor, bool tag) {
+struct zCapability _sail_decode_common_raw_impl(uint64_t pesbt, uint64_t cursor, bool tag) {
     lbits sail_all_bits;
     two_u64s_to_sail_128(&sail_all_bits, pesbt, cursor);
     struct zCapability sail_result = sailgen_capBitsToCapability(tag, sail_all_bits);
@@ -95,14 +126,14 @@ struct zCapability _sail_decode_128_raw_impl(uint64_t pesbt, uint64_t cursor, bo
     return sail_result;
 }
 
-void sail_decode_128_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
-    struct zCapability sail_result = _sail_decode_128_raw_impl(pesbt, cursor, tag);
+void sail_decode_common_raw(uint64_t pesbt, uint64_t cursor, bool tag, cap_register_t* cdp) {
+    struct zCapability sail_result = _sail_decode_common_raw_impl(pesbt, cursor, tag);
     sail_cap_to_cap_register_t(&sail_result, cdp);
 }
 
-struct cc128_bounds_bits sail_extract_bounds_bits_128(uint64_t pesbt) {
+struct cc128_bounds_bits sail_extract_bounds_bits_common(uint64_t pesbt) {
     struct cc128_bounds_bits result;
-    struct zCapability sail_result = _sail_decode_128_raw_impl(pesbt, 0, false);
+    struct zCapability sail_result = _sail_decode_common_raw_impl(pesbt, 0, false);
     result.E = sail_result.zE;
     result.B = sail_result.zB;
     result.T = sail_result.zT;
@@ -154,7 +185,7 @@ static struct zCapability cap_register_t_to_sail_cap(const cap_register_t* c) {
     return result;
 }
 
-uint64_t sail_compress_128_raw(const cap_register_t* csp) {
+uint64_t sail_compress_common_raw(const cap_register_t* csp) {
     struct zCapability sailcap = cap_register_t_to_sail_cap(csp);
     lbits sailbits;
     CREATE(lbits)(&sailbits);
@@ -164,7 +195,7 @@ uint64_t sail_compress_128_raw(const cap_register_t* csp) {
     return result;
 }
 
-uint64_t sail_compress_128_mem(const cap_register_t* csp) {
+uint64_t sail_compress_common_mem(const cap_register_t* csp) {
     struct zCapability sailcap = cap_register_t_to_sail_cap(csp);
     lbits sailbits;
     CREATE(lbits)(&sailbits);
@@ -174,7 +205,7 @@ uint64_t sail_compress_128_mem(const cap_register_t* csp) {
     return result;
 }
 
-uint64_t sail_null_pesbt_128(void) {
+uint64_t sail_null_pesbt_common(void) {
     // NULL CAP BITS:
     lbits null_bits;
     CREATE(lbits)(&null_bits);
