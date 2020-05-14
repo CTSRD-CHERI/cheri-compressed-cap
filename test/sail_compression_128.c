@@ -7,14 +7,14 @@ enum zwrite_kind { zWrite_plain, zWrite_conditional, zWrite_release, zWrite_excl
 
 static bool eq_zwrite_kind(enum zwrite_kind op1, enum zwrite_kind op2) { return op1 == op2; }
 
-enum zwrite_kind UNDEFINED(zwrite_kind)(unit u) { return zWrite_plain; }
+static enum zwrite_kind UNDEFINED(zwrite_kind)(unit u) { return zWrite_plain; }
 
 // enum trans_kind
 enum ztrans_kind { zTransaction_start, zTransaction_commit, zTransaction_abort };
 
 static bool eq_ztrans_kind(enum ztrans_kind op1, enum ztrans_kind op2) { return op1 == op2; }
 
-enum ztrans_kind UNDEFINED(ztrans_kind)(unit u) { return zTransaction_start; }
+static enum ztrans_kind UNDEFINED(ztrans_kind)(unit u) { return zTransaction_start; }
 
 // struct tuple_(%string, %i)
 struct ztuple_z8z5stringzCz0z5iz9 {
@@ -258,7 +258,7 @@ enum zread_kind { zRead_plain, zRead_reserve, zRead_acquire, zRead_exclusive, zR
 
 static bool eq_zread_kind(enum zread_kind op1, enum zread_kind op2) { return op1 == op2; }
 
-enum zread_kind UNDEFINED(zread_kind)(unit u) { return zRead_plain; }
+static enum zread_kind UNDEFINED(zread_kind)(unit u) { return zRead_plain; }
 
 // union option
 enum kind_zoption { Kind_zNone };
@@ -516,21 +516,21 @@ enum zcache_op_kind { zCache_op_D_IVAC, zCache_op_D_ISW, zCache_op_D_CSW, zCache
 
 static bool eq_zcache_op_kind(enum zcache_op_kind op1, enum zcache_op_kind op2) { return op1 == op2; }
 
-enum zcache_op_kind UNDEFINED(zcache_op_kind)(unit u) { return zCache_op_D_IVAC; }
+static enum zcache_op_kind UNDEFINED(zcache_op_kind)(unit u) { return zCache_op_D_IVAC; }
 
 // enum a64_barrier_type
 enum za64_barrier_type { zA64_barrier_all, zA64_barrier_LD, zA64_barrier_ST };
 
 static bool eq_za64_barrier_type(enum za64_barrier_type op1, enum za64_barrier_type op2) { return op1 == op2; }
 
-enum za64_barrier_type UNDEFINED(za64_barrier_type)(unit u) { return zA64_barrier_all; }
+static enum za64_barrier_type UNDEFINED(za64_barrier_type)(unit u) { return zA64_barrier_all; }
 
 // enum a64_barrier_domain
 enum za64_barrier_domain { zA64_FullShare, zA64_InnerShare, zA64_OuterShare, zA64_NonShare };
 
 static bool eq_za64_barrier_domain(enum za64_barrier_domain op1, enum za64_barrier_domain op2) { return op1 == op2; }
 
-enum za64_barrier_domain UNDEFINED(za64_barrier_domain)(unit u) { return zA64_FullShare; }
+static enum za64_barrier_domain UNDEFINED(za64_barrier_domain)(unit u) { return zA64_FullShare; }
 
 // struct tuple_(%enum za64_barrier_domain, %enum za64_barrier_type)
 struct ztuple_z8z5enumz0zza64_barrier_domainzCz0z5enumz0zza64_barrier_typez9 {
@@ -2015,7 +2015,7 @@ enum zClearRegSet { zGPRegs, zFPRegs };
 
 static bool eq_zClearRegSet(enum zClearRegSet op1, enum zClearRegSet op2) { return op1 == op2; }
 
-enum zClearRegSet UNDEFINED(zClearRegSet)(unit u) { return zGPRegs; }
+static enum zClearRegSet UNDEFINED(zClearRegSet)(unit u) { return zGPRegs; }
 
 // struct Capability
 struct zCapability {
@@ -2079,7 +2079,7 @@ enum zCapEx { zCapEx_None, zCapEx_LengthViolation, zCapEx_TagViolation, zCapEx_S
 
 static bool eq_zCapEx(enum zCapEx op1, enum zCapEx op2) { return op1 == op2; }
 
-enum zCapEx UNDEFINED(zCapEx)(unit u) { return zCapEx_None; }
+static enum zCapEx UNDEFINED(zCapEx)(unit u) { return zCapEx_None; }
 
 // struct cheri_cause
 struct zcheri_cause {
@@ -2101,7 +2101,7 @@ enum zCPtrCmpOp { zCEQ, zCNE, zCLT, zCLE, zCLTU, zCLEU, zCEXEQ, zCNEXEQ };
 
 static bool eq_zCPtrCmpOp(enum zCPtrCmpOp op1, enum zCPtrCmpOp op2) { return op1 == op2; }
 
-enum zCPtrCmpOp UNDEFINED(zCPtrCmpOp)(unit u) { return zCEQ; }
+static enum zCPtrCmpOp UNDEFINED(zCPtrCmpOp)(unit u) { return zCEQ; }
 
 
 
@@ -8112,7 +8112,7 @@ end_block_exception_221: ;
   return UNIT;
 }
 
-void model_init(void)
+static void model_init(void)
 {
   setup_rts();
   CREATE(lbits)(&zTestLen);
@@ -8140,7 +8140,7 @@ void model_init(void)
   create_letbind_20();
 }
 
-void model_fini(void)
+static void model_fini(void)
 {
   kill_letbind_20();
   kill_letbind_19();
@@ -8167,7 +8167,7 @@ void model_fini(void)
   cleanup_rts();
 }
 
-int model_main(int argc, char *argv[])
+static int model_main(int argc, char *argv[])
 {
   model_init();
   if (process_arguments(argc, argv)) exit(EXIT_FAILURE);

@@ -63,7 +63,7 @@ set_target_properties(GMP::GMP PROPERTIES
 
 
 function(add_sail_wrapper _suffix _sanitizer_flags)
-    add_library(sail_wrapper128${_suffix} STATIC test/sail_wrapper_128.c test/sail_wrapper_64.c test/sail.c)
+    add_library(sail_wrapper128${_suffix} STATIC test/sail_wrapper_128.c test/sail_wrapper_64.c test/sail.c test/sail_failure.c)
     if (_sanitizer_flags)
         target_compile_options(sail_wrapper128${_suffix} PRIVATE "${_sanitizer_flags}")
         target_link_libraries(sail_wrapper128${_suffix} PRIVATE "${_sanitizer_flags}")
