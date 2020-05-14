@@ -105,9 +105,7 @@ _CC_STATIC_ASSERT_SAME(CC64_FIELD_RESERVED_SIZE, 0);
 #define CC64_PERM_UNSEAL (1 << 9)
 #define CC64_PERM_ACCESS_SYS_REGS (1 << 10)
 #define CC64_PERM_SETCID (1 << 11)
-#define CC64_PERM_RESERVED4 (1 << 12)
-#define CC64_PERM_RESERVED5 (1 << 13)
-#define CC64_PERM_RESERVED6 (1 << 14)
+_CC_STATIC_ASSERT(CC64_PERM_SETCID < CC64_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
 
 #define CC64_PERMS_ALL (0xfff) /* [0...11] */
 #define CC64_UPERMS_ALL (0)  /* [15...18] */
@@ -156,9 +154,6 @@ enum {
 // _CC_STATIC_ASSERT_SAME(CC64_NULL_XOR_MASK, CC64_NULL_PESBT);
 _CC_STATIC_ASSERT_SAME(CC64_MANTISSA_WIDTH, CC64_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
-// FIXME: fix the asserts
-#undef _CC_STATIC_ASSERT
-#define _CC_STATIC_ASSERT(...)
 #include "cheri_compressed_cap_common.h"
 
 #define CC64_FIELD(name, last, start) _CC_FIELD(name, last, start)

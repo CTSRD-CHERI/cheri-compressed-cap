@@ -102,9 +102,8 @@ enum {
 #define CC128_PERM_UNSEAL (1 << 9)
 #define CC128_PERM_ACCESS_SYS_REGS (1 << 10)
 #define CC128_PERM_SETCID (1 << 11)
-#define CC128_PERM_RESERVED4 (1 << 12)
-#define CC128_PERM_RESERVED5 (1 << 13)
-#define CC128_PERM_RESERVED6 (1 << 14)
+_CC_STATIC_ASSERT(CC128_PERM_SETCID < CC128_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
+_CC_STATIC_ASSERT((CC128_PERM_SETCID << 1) > CC128_FIELD_HWPERMS_MAX_VALUE, "all permission bits should be used");
 
 #define CC128_PERMS_ALL (0xfff) /* [0...11] */
 #define CC128_UPERMS_ALL (0xf)  /* [15...18] */

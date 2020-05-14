@@ -45,11 +45,27 @@
 #define _CC_MANTISSA_WIDTH _CC_N(MANTISSA_WIDTH)
 #define _CC_MAX_EXPONENT _CC_N(MAX_EXPONENT)
 #define _CC_BOT_INTERNAL_EXP_WIDTH _CC_N(FIELD_EXP_NONZERO_BOTTOM_SIZE)
-#define _CC_EXP_LOW_WIDTH _CC_N(EXP_LOW_WIDTH)
+#define _CC_EXP_LOW_WIDTH _CC_N(FIELD_EXPONENT_LOW_PART_SIZE)
+#define _CC_EXP_HIGH_WIDTH _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE)
 #define _CC_ADDR_WIDTH _CC_N(ADDR_WIDTH)
 #define _CC_LEN_WIDTH _CC_N(LEN_WIDTH)
 #define _CC_MAX_ADDR _CC_N(MAX_ADDR)
 #define _CC_MAX_TOP _CC_N(MAX_TOP)
+
+// CHeck that the sizes of the individual fields match up
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_SIZE) + _CC_N(FIELD_OTYPE_SIZE) + _CC_N(FIELD_FLAGS_SIZE) +
+                           _CC_N(FIELD_RESERVED_SIZE) + _CC_N(FIELD_HWPERMS_SIZE) + _CC_N(FIELD_UPERMS_SIZE),
+                       _CC_ADDR_WIDTH);
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_ZERO_TOP_SIZE) +
+                           _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
+                       _CC_N(FIELD_EBT_SIZE));
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_TOP_ENCODED_SIZE) +
+                           _CC_N(FIELD_BOTTOM_ENCODED_SIZE),
+                       _CC_N(FIELD_EBT_SIZE));
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_NONZERO_TOP_SIZE) +
+                           _CC_N(FIELD_EXP_NONZERO_BOTTOM_SIZE) + _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE) +
+                           _CC_N(FIELD_EXPONENT_LOW_PART_SIZE),
+                       _CC_N(FIELD_EBT_SIZE));
 
 struct _cc_N(cap) {
     /* offset = cursor - base */
@@ -328,13 +344,10 @@ static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return cp->cr_oty
  * Compress a capability to 128 bits.
  */
 static inline _cc_addr_t _cc_N(compress_raw)(const _cc_cap_t* csp) {
-    _CC_STATIC_ASSERT(_CC_MANTISSA_WIDTH == 14, "This code assumes 14-bit bot");
-    _CC_STATIC_ASSERT(_CC_BOT_INTERNAL_EXP_WIDTH == 11, "This code assumes 14-bit bot");
-
     _cc_debug_assert(!(csp->cr_tag && csp->cr_reserved) && "Unknown reserved bits set it tagged capability");
-    uint64_t pesbt = _CC_ENCODE_FIELD(csp->cr_uperms, UPERMS) | _CC_ENCODE_FIELD(csp->cr_perms, HWPERMS) |
-                     _CC_ENCODE_FIELD(csp->cr_otype, OTYPE) | _CC_ENCODE_FIELD(csp->cr_reserved, RESERVED) |
-                     _CC_ENCODE_FIELD(csp->cr_flags, FLAGS) | _CC_ENCODE_FIELD(csp->cr_ebt, EBT);
+    _cc_addr_t pesbt = _CC_ENCODE_FIELD(csp->cr_uperms, UPERMS) | _CC_ENCODE_FIELD(csp->cr_perms, HWPERMS) |
+                       _CC_ENCODE_FIELD(csp->cr_otype, OTYPE) | _CC_ENCODE_FIELD(csp->cr_reserved, RESERVED) |
+                       _CC_ENCODE_FIELD(csp->cr_flags, FLAGS) | _CC_ENCODE_FIELD(csp->cr_ebt, EBT);
     return pesbt;
 }
 
@@ -426,8 +439,8 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
         //  lostSignificantTop  : bool = false;
         //  lostSignificantBase : bool = false;
         //  incE : bool = false;
-        uint32_t ebt_bits = _CC_ENCODE_EBT_FIELD(0, INTERNAL_EXPONENT) | _CC_ENCODE_EBT_FIELD(req_top, TOP_ENCODED) |
-                            _CC_ENCODE_EBT_FIELD(req_base, BOTTOM_ENCODED);
+        uint32_t ebt_bits = _CC_ENCODE_EBT_FIELD(0, INTERNAL_EXPONENT) | _CC_ENCODE_EBT_FIELD(req_top, EXP_ZERO_TOP) |
+                            _CC_ENCODE_EBT_FIELD(req_base, EXP_ZERO_BOTTOM);
         if (alignment_mask)
             *alignment_mask = _CC_MAX_ADDR; // no adjustment to base required
         *exact = true;
@@ -643,9 +656,8 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
     assert((cap->_cr_cursor < cap->_cr_top || (cap->_cr_cursor == cap->_cr_top && cap->_cr_top == cap->cr_base)) &&
            "Must be used on inbounds (or zero-length) caps");
     assert((cap->_cr_cursor >= cap->cr_base) && "Must be used on inbounds caps");
-    _CC_STATIC_ASSERT(_CC_MANTISSA_WIDTH == 14, "");
-    _CC_STATIC_ASSERT(_CC_BOT_INTERNAL_EXP_WIDTH == 11, "");
-    _CC_STATIC_ASSERT(_CC_EXP_LOW_WIDTH == 3, ""); // expected 6-bit exponent
+    _CC_STATIC_ASSERT(_CC_EXP_LOW_WIDTH == 3, "expected 3 bits to be used by");  // expected 3 bits to
+    _CC_STATIC_ASSERT(_CC_EXP_HIGH_WIDTH == 3, "expected 3 bits to be used by"); // expected 3 bits to
     bool exact = false;
     uint32_t new_ebt = _cc_N(compute_ebt)(req_base, req_top, alignment_mask, &exact);
 
