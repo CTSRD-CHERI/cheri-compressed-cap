@@ -147,11 +147,10 @@ enum {
 };
 // Whatever NULL would encode to is this constant. We mask on store/load so this
 // invisibly keeps null 0 whatever we choose it to be.
-// #define CC64_NULL_XOR_MASK 0x1ffff8000000
-#define CC64_NULL_XOR_MASK UINT64_C(0x00001ffffc018004)
+#define CC64_NULL_XOR_MASK UINT32_C(0x7c302)
 #pragma GCC diagnostic pop
 
-// _CC_STATIC_ASSERT_SAME(CC64_NULL_XOR_MASK, CC64_NULL_PESBT);
+_CC_STATIC_ASSERT_SAME(CC64_NULL_XOR_MASK, CC64_NULL_PESBT);
 _CC_STATIC_ASSERT_SAME(CC64_MANTISSA_WIDTH, CC64_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
 #include "cheri_compressed_cap_common.h"

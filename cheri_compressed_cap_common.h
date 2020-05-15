@@ -100,6 +100,7 @@ struct _cc_N(cap) {
     inline uint32_t software_permissions() const { return cr_uperms; }
     inline uint32_t permissions() const { return cr_perms; }
     inline uint32_t type() const { return cr_otype; }
+    inline bool is_sealed() const { return cr_otype != _CC_N(OTYPE_UNSEALED); }
 #endif
 };
 typedef struct _cc_N(cap) _cc_N(cap_t);

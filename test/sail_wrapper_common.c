@@ -170,6 +170,6 @@ static _cc_addr_t sail_null_pesbt_common(void) {
     // NULL CAP BITS:
     _cc_addr_t null_pesbt = _compress_sailcap_raw(znull_cap);
     sail_dump_cap("null cap", znull_cap);
-    fprintf(stderr, "Sail null pesbt 0x%jx", (uintmax_t)null_pesbt);
+    fprintf(stderr, "Sail%d null pesbt 0x%jx\n", SAIL_WRAPPER_CC_BITS, (uintmax_t)null_pesbt);
     return null_pesbt;
 }

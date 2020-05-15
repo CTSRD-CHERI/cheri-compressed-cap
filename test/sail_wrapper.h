@@ -51,6 +51,7 @@ cc64_addr_t sail_null_pesbt_64(void);
 }
 
 class TestAPI128 : public CompressedCap128 {
+public:
     static inline void sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
         return sail_decode_128_mem(pesbt, cursor, tag, cdp);
     }
@@ -63,5 +64,17 @@ class TestAPI128 : public CompressedCap128 {
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128(); }
 };
 
-class TestAPI64 : public CompressedCap64 {};
+class TestAPI64 : public CompressedCap64 {
+public:
+    static inline void sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
+        return sail_decode_64_mem(pesbt, cursor, tag, cdp);
+    }
+    static inline void sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
+        return sail_decode_64_raw(pesbt, cursor, tag, cdp);
+    }
+    static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_64(pesbt); }
+    static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_64_raw(csp); }
+    static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_64_mem(csp); }
+    static inline addr_t sail_null_pesbt() { return sail_null_pesbt_64(); }
+};
 #endif
