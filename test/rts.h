@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 /* ***** Setup and cleanup functions for RTS ***** */
