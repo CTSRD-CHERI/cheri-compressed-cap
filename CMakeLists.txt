@@ -28,6 +28,7 @@ if (HAVE_UBSAN)
 endif()
 
 add_compile_options(-Wno-gnu-statement-expression)
+add_compile_options(-fno-common)
 
 add_compile_options(-pedantic -Wall -Wextra -Wno-old-style-cast -Wno-c++98-compat-pedantic -Wno-c++98-c++11-compat-binary-literal -Wno-c11-extensions -Wno-padded)
 # TODO: -Weverything
