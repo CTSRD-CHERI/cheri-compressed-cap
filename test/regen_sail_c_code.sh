@@ -1,5 +1,5 @@
-#!/bin/sh
-
+#!/usr/bin/env bash
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 set -xe
 SAIL_DIR=${SAIL_RISCV_DIR:-${HOME}/cheri/sail/}
 if [ ! -e "${SAIL_DIR}/sail" ]; then
@@ -17,7 +17,7 @@ fi
 sail_pre_srcs="sail-riscv/model/prelude.sail sail-riscv/model/prelude_mapping.sail"
 sail128_srcs="$sail_pre_srcs sail-riscv/model/riscv_xlen64.sail sail-riscv/model/riscv_flen_D.sail src/cheri_prelude.sail src/cheri_types.sail src/cheri_prelude_128.sail src/cheri_cap_common.sail"
 sail64_srcs="$sail_pre_srcs sail-riscv/model/riscv_xlen32.sail sail-riscv/model/riscv_flen_F.sail src/cheri_prelude.sail src/cheri_types.sail src/cheri_prelude_64.sail src/cheri_cap_common.sail"
-output_dir=$(pwd)
+output_dir=${SCRIPT_DIR}
 cd "$SAIL_RISCV_DIR"
 # -c_no_rts
 "${SAIL_DIR}/sail" -c -c_no_main -c_prefix sailgen_ -c_specialize -c_preserve -verbose -o "$output_dir/sail_compression_128" $sail128_srcs "$output_dir/compression_test.sail" -static

@@ -7796,13 +7796,13 @@ end_function_206: ;
 }
 
 // register TestCap
-struct zCapability zTestCap;
+static struct zCapability zTestCap;
 
 // register TestAddr
-uint64_t zTestAddr;
+static uint64_t zTestAddr;
 
 // register TestLen
-lbits zTestLen;
+static lbits zTestLen;
 
 static unit sailgen_main(unit);
 
