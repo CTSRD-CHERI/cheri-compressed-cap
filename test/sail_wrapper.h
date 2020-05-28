@@ -39,6 +39,7 @@ struct cc128_bounds_bits sail_extract_bounds_bits_128(cc128_addr_t pesbt);
 cc128_addr_t sail_compress_128_raw(const cc128_cap_t* csp);
 cc128_addr_t sail_compress_128_mem(const cc128_cap_t* csp);
 cc128_addr_t sail_null_pesbt_128(void);
+bool sail_setbounds_128(cc128_cap_t* cap, cc128_addr_t req_base, cc128_length_t req_top);
 
 void sail_decode_64_mem(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t * cdp);
 void sail_decode_64_raw(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t* cdp);
@@ -46,6 +47,7 @@ struct cc64_bounds_bits sail_extract_bounds_bits_64(uint32_t pesbt);
 cc64_addr_t sail_compress_64_raw(const cc64_cap_t* csp);
 cc64_addr_t sail_compress_64_mem(const cc64_cap_t* csp);
 cc64_addr_t sail_null_pesbt_64(void);
+bool sail_setbounds_64(cc64_cap_t* cap, cc64_addr_t req_base, cc64_length_t req_top);
 
 #ifdef __cplusplus
 }
@@ -62,6 +64,9 @@ public:
     static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_128_raw(csp); }
     static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_128_mem(csp); }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128(); }
+    static inline bool sail_setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
+        return sail_setbounds_128(cap, req_base, req_top);
+    }
 };
 
 class TestAPI64 : public CompressedCap64 {
@@ -76,5 +81,8 @@ public:
     static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_64_raw(csp); }
     static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_64_mem(csp); }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_64(); }
+    static inline bool sail_setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
+        return sail_setbounds_64(cap, req_base, req_top);
+    }
 };
 #endif

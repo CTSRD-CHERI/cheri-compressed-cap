@@ -166,10 +166,23 @@ static _cc_addr_t sail_compress_common_mem(const _cc_cap_t* csp) {
     return result;
 }
 
-static _cc_addr_t sail_null_pesbt_common(void) {
+_cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_BITS)(void) {
     // NULL CAP BITS:
     _cc_addr_t null_pesbt = _compress_sailcap_raw(znull_cap);
     sail_dump_cap("null cap", znull_cap);
     fprintf(stderr, "Sail%d null pesbt 0x%jx\n", SAIL_WRAPPER_CC_BITS, (uintmax_t)null_pesbt);
     return null_pesbt;
+}
+
+bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_BITS)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_length_t req_top) {
+    struct zCapability sailcap = cap_t_to_sail_cap(cap);
+    sail_cap_bits sailtop;
+    CREATE(sail_cap_bits)(&sailtop);
+    cc_length_t_to_sail_cap_bits(&sailtop, req_top);
+    __typeof__(sailgen_setCapBounds(sailcap, req_base, sailtop)) result =
+        sailgen_setCapBounds(sailcap, req_base, sailtop);
+    KILL(sail_cap_bits)(&sailtop);
+    bool exact = result.ztup0;
+    sail_cap_to_cap_t(&result.ztup1, cap);
+    return exact;
 }

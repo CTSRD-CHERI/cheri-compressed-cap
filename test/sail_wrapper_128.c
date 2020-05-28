@@ -51,6 +51,17 @@ static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint64_t pesbt, 
     KILL(lbits)(&sail_pesbt);
     KILL(lbits)(&sail_cursor);
 }
+static void cc_length_t_to_sail_cap_bits(sail_cap_bits* out, unsigned __int128 len) {
+    lbits len_high;
+    lbits len_low;
+    CREATE_OF(lbits, fbits)(&len_high, len >> 64, 1, true);
+    CREATE_OF(lbits, fbits)(&len_low, (uint64_t)len, 64, true);
+    CREATE(lbits)(out);
+    append(out, len_high, len_low);
+    KILL(lbits)(&len_high);
+    KILL(lbits)(&len_low);
+}
+
 static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len);
 static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len) {
     return extract_bits(*bits, start, len);
@@ -87,4 +98,3 @@ struct cc128_bounds_bits sail_extract_bounds_bits_128(uint64_t pesbt) {
 }
 uint64_t sail_compress_128_raw(const cc128_cap_t* csp) { return sail_compress_common_raw(csp); }
 uint64_t sail_compress_128_mem(const cc128_cap_t* csp) { return sail_compress_common_mem(csp); }
-uint64_t sail_null_pesbt_128(void) { return sail_null_pesbt_common(); }

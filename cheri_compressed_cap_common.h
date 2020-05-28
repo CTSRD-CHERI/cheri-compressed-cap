@@ -101,6 +101,12 @@ struct _cc_N(cap) {
     inline uint32_t permissions() const { return cr_perms; }
     inline uint32_t type() const { return cr_otype; }
     inline bool is_sealed() const { return cr_otype != _CC_N(OTYPE_UNSEALED); }
+    inline bool operator==(const _cc_N(cap) & other) const {
+        return _cr_cursor == other._cr_cursor && cr_base == other.cr_base && _cr_top == other._cr_top &&
+               cr_perms == other.cr_perms && cr_uperms == other.cr_uperms && cr_otype == other.cr_otype &&
+               cr_ebt == other.cr_ebt && cr_flags == other.cr_flags && cr_reserved == other.cr_reserved &&
+               cr_tag == other.cr_tag;
+    }
 #endif
 };
 typedef struct _cc_N(cap) _cc_N(cap_t);
@@ -753,5 +759,9 @@ public:
         _cc_N(decompress_mem)(pesbt, cursor, tag, cdp);
     }
     static inline bounds_bits extract_bounds_bits(addr_t pesbt) { return _cc_N(extract_bounds_bits)(pesbt); }
+    static inline bool setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
+        return _cc_N(setbounds)(cap, req_base, req_top);
+    }
+    static inline bool is_representable_cap_exact(const cap_t* cap) { return _cc_N(is_representable_cap_exact)(cap); }
 };
 #endif
