@@ -14,9 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Run CMake with Ninja'
-      uses: lukka/run-cmake@v2
-      with:
-        buildDirectory: '${{ runner.workspace }}/build'
-        cmakeGenerator: 'Ninja'
+      run: |
+        apt install -y cmake ninja-build
+        mkdir -p ${{ runner.workspace }}/build
+        cd '${{ runner.workspace }}/build' && cmake -GNinja ..
+        ninja -C '${{ runner.workspace }}/build'
     - name: Run tests
       run: ninja -C '${{ runner.workspace }}/build' test
