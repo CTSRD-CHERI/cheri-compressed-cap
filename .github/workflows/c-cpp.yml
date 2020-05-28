@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: 'Run CMake with Ninja'
+    - name: 'Run CMake and build'
       run: |
         mkdir -p build
         cd build && cmake ..
