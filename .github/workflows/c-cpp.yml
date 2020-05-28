@@ -18,3 +18,5 @@ jobs:
       with:
         buildDirectory: '${{ runner.workspace }}/build'
         cmakeGenerator: 'Ninja'
+    - name: Run tests
+      run: ninja -C '${{ runner.workspace }}/build' test
