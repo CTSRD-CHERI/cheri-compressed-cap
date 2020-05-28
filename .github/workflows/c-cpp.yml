@@ -19,4 +19,4 @@ jobs:
         cd build && cmake ..
         make -j`nproc`
     - name: Run tests
-      run: make -C build test
+      run: cd build && ctest -V
