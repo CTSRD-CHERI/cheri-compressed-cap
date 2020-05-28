@@ -15,8 +15,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: 'Run CMake with Ninja'
       run: |
-        mkdir -p ${{ runner.workspace }}/build
-        cd '${{ runner.workspace }}/build' && cmake ..
-        make -C '${{ runner.workspace }}/build' -j`nproc`
+        mkdir -p build
+        cd build && cmake ..
+        make -j`nproc`
     - name: Run tests
-      run: make -C '${{ runner.workspace }}/build' test
+      run: make -C build test
