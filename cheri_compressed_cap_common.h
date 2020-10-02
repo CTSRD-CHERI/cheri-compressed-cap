@@ -768,9 +768,7 @@ static inline _cc_addr_t _cc_N(get_representable_length)(_cc_addr_t req_length) 
 /// Provide a C++ class with the same function names
 /// to simplify writing code that handles both 128 and 64-bit capabilities
 #ifdef __cplusplus
-inline bool _cc_N(cap)::operator==(const _cc_N(cap) & other) const {
-    return _cc_N(exactly_equal)(this, other);
-}
+inline bool _cc_N(cap)::operator==(const _cc_N(cap) & other) const { return _cc_N(exactly_equal)(this, &other); }
 
 class _CC_CONCAT(CompressedCap, CC_BITS) {
 public:
