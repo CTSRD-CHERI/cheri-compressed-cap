@@ -107,17 +107,11 @@ struct _cc_N(cap) {
 typedef struct _cc_N(cap) _cc_N(cap_t);
 #define _cc_cap_t _cc_N(cap_t)
 
-static inline bool _cc_N(exactly_equal)(struct _cc_N(cap) const *a, struct _cc_N(cap) const *b) {
-  return a->cr_tag == b->cr_tag &&
-         a->_cr_cursor == b->_cr_cursor &&
-         a->cr_base == b->cr_base &&
-         a->_cr_top == b->_cr_top &&
-         a->cr_perms == b->cr_perms &&
-         a->cr_uperms == b->cr_uperms &&
-         a->cr_otype == b->cr_otype &&
-         a->cr_ebt == b->cr_ebt &&
-         a->cr_flags == b->cr_flags &&
-         a->cr_reserved == b->cr_reserved;
+static inline bool _cc_N(exactly_equal)(struct _cc_N(cap) const* a, struct _cc_N(cap) const* b) {
+    return a->cr_tag == b->cr_tag && a->_cr_cursor == b->_cr_cursor && a->cr_base == b->cr_base &&
+           a->_cr_top == b->_cr_top && a->cr_perms == b->cr_perms && a->cr_uperms == b->cr_uperms &&
+           a->cr_otype == b->cr_otype && a->cr_ebt == b->cr_ebt && a->cr_flags == b->cr_flags &&
+           a->cr_reserved == b->cr_reserved;
 }
 
 /* Returns the index of the most significant bit set in x */
