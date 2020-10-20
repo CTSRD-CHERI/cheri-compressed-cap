@@ -40,14 +40,6 @@
 __attribute__((constructor, used)) static void sail_startup(void) { model_init(); }
 __attribute__((destructor, used)) static void sail_cleanup(void) { model_fini(); }
 
-static inline void sail_dump_cap(const char* msg, struct zCapability cap) {
-    sail_string zcap_str;
-    CREATE(sail_string)(&zcap_str);
-    sailgen_capToString(&zcap_str, cap);
-    fprintf(stderr, "%s: %s\n", msg, zcap_str);
-    KILL(sail_string)(&zcap_str);
-}
-
 static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
     sail_int start_sail;
     CREATE_OF(sail_int, mach_int)(&start_sail, start);
@@ -61,6 +53,102 @@ static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
     uint64_t result = CONVERT_OF(fbits, lbits)(slice_bits, true);
     KILL(lbits)(&slice_bits);
     return result;
+}
+
+#ifdef IS_MORELLO
+
+static inline uint64_t extract_low_bits(lbits bits) {
+    fbits bits_low = CONVERT_OF(fbits, lbits)(bits, true);
+    return (uint64_t)bits_low;
+}
+
+#define CHECK_FIELD_LENGTHS
+
+static inline void check_length(lbits bits, uint64_t length) {
+#ifdef CHECK_FIELD_LENGTHS
+    sail_int len;
+    CREATE(sail_int)(&len);
+    length_lbits(&len, bits);
+    assert(CONVERT_OF(mach_int, sail_int)(len) == length);
+    KILL(sail_int)(&len);
+#endif
+}
+
+/* Exported API */
+void sail_decode_common_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128_cap_t* cdp) {
+    // The Morello cap is just all the bits slammed together with no extra decode
+
+    lbits cap_without_tag;
+    pesbt_and_addr_to_sail_cap_bits(&cap_without_tag, mem_pesbt, mem_cursor);
+    lbits capbits;
+    CREATE(lbits)(&capbits);
+    lbits captag;
+    CREATE_OF(lbits, fbits)(&captag, tag ? 1 : 0, 1, true);
+    append(&capbits, captag, cap_without_tag);
+    KILL(lbits)(&captag);
+    KILL(lbits)(&cap_without_tag);
+
+    check_length(capbits, 129);
+
+    // Now extract some fields
+
+    // Bounds (base and top)
+    struct sail_bounds_tuple bounds;
+    _CC_CONCAT(create_, sail_bounds_tuple)(&bounds);
+    _CC_CONCAT(MORELLO_SAIL_PREFIX,CapGetBounds)(&bounds, capbits);
+
+    check_length(bounds.ztup0, 65);
+    check_length(bounds.ztup1, 65);
+
+    cdp->cr_base = extract_bits(bounds.ztup0, 0, 64);
+    uint64_t top_hi = extract_bits(bounds.ztup1, 64, 1);
+    uint64_t top_lo = extract_low_bits(bounds.ztup1);
+    cdp->_cr_top = (((cc128_length_t)top_hi) << 64) | (cc128_length_t)top_lo;
+    _CC_CONCAT(kill_, sail_bounds_tuple)(&bounds);
+
+    // Address including flag bits
+    cdp->_cr_cursor = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetValue)(capbits);
+    cdp->cr_perms = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetPermissions)(capbits);
+    cdp->cr_otype = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetObjectType)(capbits);
+    cdp->cr_tag = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetTag)(capbits);
+
+    // Fix these extra fields not really present in sail
+    cdp->cr_reserved = 0;
+    cdp->cr_flags = cdp->_cr_cursor >> 56;
+    cdp->cr_uperms = 0;
+
+    // Morello sail does not have this field explicitly
+    cdp->cr_ebt = (uint32_t)_CC_EXTRACT_FIELD(mem_pesbt, EBT);
+
+    // Destroy cap
+    KILL(lbits)(&capbits);
+}
+
+void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128_cap_t* cdp) {
+    // Morello RAW has no mask. If this has been masked, undo it.
+    sail_decode_common_mem(mem_pesbt ^ CC128_NULL_XOR_MASK, mem_cursor, tag, cdp);
+}
+
+uint64_t sail_compress_common_raw(const cc128_cap_t* csp) {
+    assert(0);
+}
+
+uint64_t sail_compress_common_mem(const cc128_cap_t* csp) {
+    assert(0);
+}
+
+static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {
+    assert(0);
+}
+
+#else
+
+static inline void sail_dump_cap(const char* msg, struct zCapability cap) {
+    sail_string zcap_str;
+    CREATE(sail_string)(&zcap_str);
+    sailgen_capToString(&zcap_str, cap);
+    fprintf(stderr, "%s: %s\n", msg, zcap_str);
+    KILL(sail_string)(&zcap_str);
 }
 
 static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_cap_t* c);
@@ -187,3 +275,5 @@ bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_BITS)(_cc_cap_t* cap, _cc_addr_
     sail_cap_to_cap_t(&result.ztup1, cap);
     return exact;
 }
+
+#endif // Morello

@@ -47,10 +47,8 @@
 
 static const char* otype_suffix(uint32_t otype) {
     switch (otype) {
-    case CC128_OTYPE_UNSEALED: return " (CC128_OTYPE_UNSEALED)";
-    case CC128_OTYPE_SENTRY: return " (CC128_OTYPE_SENTRY)";
-    case CC128_OTYPE_RESERVED2: return " (CC128_OTYPE_RESERVED2)";
-    case CC128_OTYPE_RESERVED3: return " (CC128_OTYPE_RESERVED3)";
+#define OTYPE_CASE(Name, ...) case CC128_ ## Name: return " (CC128_" #Name ")";
+        LS_SPECIAL_OTYPES(OTYPE_CASE,)
     default: return "";
     }
 }

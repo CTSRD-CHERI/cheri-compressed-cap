@@ -10,9 +10,13 @@
 
 #include "decode_inputs.cpp"
 
+#ifndef IS_MORELLO
+
 static_assert(CC128_FIELD_OTYPE_START == 27, "");
 static_assert(CC128_FIELD_OTYPE_SIZE == 18, "");
 static_assert(CC128_FIELD_OTYPE_LAST == 44, "");
+
+#endif
 
 #define CHECK_AND_SAVE_SUCCESS(expr)                                                                                   \
     do {                                                                                                               \
