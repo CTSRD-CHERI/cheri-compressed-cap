@@ -3140,14 +3140,3 @@ static void model_fini(void)
   kill_letbind_0();
   cleanup_rts();
 }
-
-static int model_main(int argc, char *argv[])
-{
-  model_init();
-  if (process_arguments(argc, argv)) exit(EXIT_FAILURE);
-  sailgen_main(UNIT);
-  model_fini();
-  return EXIT_SUCCESS;
-}
-
-

@@ -103,6 +103,11 @@ add_executable(test_sail_wrapper128 decompress_c128_cap.c)
 target_compile_definitions(test_sail_wrapper128 PRIVATE DECOMPRESS_WITH_SAIL_GENERATED_CODE=1)
 target_link_libraries(test_sail_wrapper128 PRIVATE sail_wrapper128)
 
+# For Morello too
+add_executable(test_morello_sail_wrapper128 decompress_c128_cap.c)
+target_compile_definitions(test_morello_sail_wrapper128 PRIVATE DECOMPRESS_WITH_SAIL_GENERATED_CODE=1 IS_MORELLO=1)
+target_link_libraries(test_morello_sail_wrapper128 PRIVATE sail_wrapper128_morello)
+
 enable_testing()
 
 function(add_cc_test _tgt _src)

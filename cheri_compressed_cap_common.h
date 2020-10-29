@@ -219,6 +219,11 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         result.T = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_NONZERO_TOP) << _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE);
         L_msb = 1;
     } else {
+        // So, I cheated by inverting E on memory load (to match the rest of CHERI), which Morello does not do.
+        // This means parts of B and T are incorrectly inverted. So invert back again.
+#ifdef IS_MORELLO
+        pesbt ^= _CC_N(NULL_XOR_MASK);
+#endif
         result.E = 0;
         L_msb = 0;
         result.B = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
