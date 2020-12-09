@@ -780,5 +780,7 @@ public:
     static inline cap_t make_max_perms_cap(addr_t base, addr_t cursor, length_t top) {
         return _cc_N(make_max_perms_cap)(base, cursor, top);
     }
+    static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
+    static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }
 };
 #endif
