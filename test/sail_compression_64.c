@@ -2287,7 +2287,7 @@ end_block_exception_11: ;
 
 static void sailgen_zzz3zzz3sail_ones(lbits *zcbz34, sail_int zn)
 {
-  __label__ end_function_13, end_block_exception_14, end_function_228;
+  __label__ end_function_13, end_block_exception_14, end_function_236;
 
   lbits zgaz34;
   CREATE(lbits)(&zgaz34);
@@ -2295,10 +2295,10 @@ static void sailgen_zzz3zzz3sail_ones(lbits *zcbz34, sail_int zn)
   not_bits((*(&zcbz34)), zgaz34);
   KILL(lbits)(&zgaz34);
 end_function_13: ;
-  goto end_function_228;
+  goto end_function_236;
 end_block_exception_14: ;
-  goto end_function_228;
-end_function_228: ;
+  goto end_function_236;
+end_function_236: ;
 }
 
 
@@ -2378,14 +2378,14 @@ end_block_exception_20: ;
 
 static void sailgen_zzz3zzz3EXTZ(lbits *zcbz37, sail_int zm, lbits zv)
 {
-  __label__ end_function_22, end_block_exception_23, end_function_227;
+  __label__ end_function_22, end_block_exception_23, end_function_235;
 
   zero_extend((*(&zcbz37)), zv, zm);
 end_function_22: ;
-  goto end_function_227;
+  goto end_function_235;
 end_block_exception_23: ;
-  goto end_function_227;
-end_function_227: ;
+  goto end_function_235;
+end_function_235: ;
 }
 
 static uint64_t sailgen_zzzz7mzzJzzK15zzCzz0zz7nzzJzzK12z3EXTZ(int64_t zm, uint64_t zv)
@@ -2552,14 +2552,14 @@ end_block_exception_41: ;
 
 static void sailgen_zzz3zzz3zzeros_implicit(lbits *zcbz314, sail_int zn)
 {
-  __label__ end_function_43, end_block_exception_44, end_function_226;
+  __label__ end_function_43, end_block_exception_44, end_function_234;
 
   zeros((*(&zcbz314)), zn);
 end_function_43: ;
-  goto end_function_226;
+  goto end_function_234;
 end_block_exception_44: ;
-  goto end_function_226;
-end_function_226: ;
+  goto end_function_234;
+end_function_234: ;
 }
 
 static uint64_t sailgen_zzzz7nzzJzzK2z3zzeros_implicit(int64_t zn)
@@ -2650,14 +2650,14 @@ end_block_exception_56: ;
 
 static void sailgen_zzz3zzz3ones(lbits *zcbz319, sail_int zn)
 {
-  __label__ end_function_58, end_block_exception_59, end_function_225;
+  __label__ end_function_58, end_block_exception_59, end_function_233;
 
   sailgen_zzz3zzz3sail_ones((*(&zcbz319)), zn);
 end_function_58: ;
-  goto end_function_225;
+  goto end_function_233;
 end_block_exception_59: ;
-  goto end_function_225;
-end_function_225: ;
+  goto end_function_233;
+end_function_233: ;
 }
 
 static uint64_t sailgen_bool_to_bits(bool);
@@ -2730,7 +2730,7 @@ static uint64_t sailgen_zzzz7lzzJzzK36z3to_bits(int64_t, sail_int);
 
 static void sailgen_to_bits(lbits *zcbz322, sail_int zl, sail_int zn)
 {
-  __label__ end_function_70, end_block_exception_71, end_function_224;
+  __label__ end_function_70, end_block_exception_71, end_function_232;
 
   {
     sail_int zgsz332;
@@ -2740,10 +2740,10 @@ static void sailgen_to_bits(lbits *zcbz322, sail_int zl, sail_int zn)
     KILL(sail_int)(&zgsz332);
   }
 end_function_70: ;
-  goto end_function_224;
+  goto end_function_232;
 end_block_exception_71: ;
-  goto end_function_224;
-end_function_224: ;
+  goto end_function_232;
+end_function_232: ;
 }
 
 static uint64_t sailgen_zzzz7lzzJzzK6z3to_bits(int64_t zl, sail_int zn)
@@ -2922,7 +2922,7 @@ static void sailgen_n_leading_spaces(sail_int *rop, sail_string);
 
 static void sailgen_n_leading_spaces(sail_int *zcbz329, sail_string zs)
 {
-  __label__ case_92, case_93, finish_match_91, end_function_97, end_block_exception_98, end_function_223;
+  __label__ case_92, case_93, finish_match_91, end_function_97, end_block_exception_98, end_function_231;
 
   sail_int zgsz345;
   CREATE(sail_int)(&zgsz345);
@@ -3010,10 +3010,10 @@ finish_match_91: ;
   COPY(sail_int)((*(&zcbz329)), zgsz345);
   KILL(sail_int)(&zgsz345);
 end_function_97: ;
-  goto end_function_223;
+  goto end_function_231;
 end_block_exception_98: ;
-  goto end_function_223;
-end_function_223: ;
+  goto end_function_231;
+end_function_231: ;
 }
 
 static int64_t sailgen_zzzz7nzzJzzK32z3MAX(int64_t);
@@ -3510,8 +3510,8 @@ static struct zEncCapability sailgen_capBitsToEncCapability(uint64_t zc)
 end_function_124: ;
   return zcbz332;
 end_block_exception_125: ;
-  struct zEncCapability zcbz357 = { .zreserved = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zotype = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zflags = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz357;
+  struct zEncCapability zcbz359 = { .zreserved = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zotype = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zflags = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz359;
 }
 
 static uint64_t sailgen_encCapToBits(struct zEncCapability);
@@ -4063,8 +4063,8 @@ static struct zCapability sailgen_undefined_Capability(unit zgsz3162)
 end_function_137: ;
   return zcbz334;
 end_block_exception_138: ;
-  struct zCapability zcbz358 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz358;
+  struct zCapability zcbz360 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz360;
 }
 
 static struct zCapability znull_cap;
@@ -5370,8 +5370,8 @@ end_cleanup_147: ;
 end_function_145: ;
   return zcbz336;
 end_block_exception_148: ;
-  struct zCapability zcbz359 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz359;
+  struct zCapability zcbz361 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz361;
 }
 
 static struct zCapability sailgen_capBitsToCapability(bool, uint64_t);
@@ -5388,8 +5388,8 @@ static struct zCapability sailgen_capBitsToCapability(bool zt, uint64_t zc)
 end_function_150: ;
   return zcbz337;
 end_block_exception_151: ;
-  struct zCapability zcbz360 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz360;
+  struct zCapability zcbz362 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz362;
 }
 
 static struct zEncCapability sailgen_capToEncCap(struct zCapability);
@@ -5810,8 +5810,8 @@ end_cleanup_155: ;
 end_function_153: ;
   return zcbz338;
 end_block_exception_156: ;
-  struct zEncCapability zcbz361 = { .zreserved = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zotype = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zflags = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz361;
+  struct zEncCapability zcbz363 = { .zreserved = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zotype = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zflags = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz363;
 }
 
 static uint64_t sailgen_capToBits(struct zCapability);
@@ -5905,8 +5905,8 @@ static struct zCapability sailgen_memBitsToCapability(bool ztag, uint64_t zb)
 end_function_165: ;
   return zcbz341;
 end_block_exception_166: ;
-  struct zCapability zcbz362 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz362;
+  struct zCapability zcbz364 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz364;
 }
 
 // struct tuple_(%bv32, %bv33)
@@ -6615,8 +6615,8 @@ static struct ztuple_z8z5bv32zCz0z5bv33z9 sailgen_getCapBoundsBits(struct zCapab
 end_function_168: ;
   return zcbz342;
 end_block_exception_169: ;
-  struct ztuple_z8z5bv32zCz0z5bv33z9 zcbz363 = { .ztup1 = UINT64_C(0xdeadc0de), .ztup0 = UINT64_C(0xdeadc0de) };
-  return zcbz363;
+  struct ztuple_z8z5bv32zCz0z5bv33z9 zcbz365 = { .ztup1 = UINT64_C(0xdeadc0de), .ztup0 = UINT64_C(0xdeadc0de) };
+  return zcbz365;
 }
 
 // struct tuple_(%i64, %i64)
@@ -6674,8 +6674,8 @@ finish_match_171: ;
 end_function_173: ;
   return zcbz343;
 end_block_exception_174: ;
-  struct ztuple_z8z5i64zCz0z5i64z9 zcbz364 = { .ztup1 = INT64_C(0xdeadc0de), .ztup0 = INT64_C(0xdeadc0de) };
-  return zcbz364;
+  struct ztuple_z8z5i64zCz0z5i64z9 zcbz366 = { .ztup1 = INT64_C(0xdeadc0de), .ztup0 = INT64_C(0xdeadc0de) };
+  return zcbz366;
 }
 
 // struct tuple_(%bool, %struct zCapability)
@@ -7574,9 +7574,9 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
 end_function_176: ;
   return zcbz344;
 end_block_exception_177: ;
-  struct zCapability zcbz366 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zcbz365 = { .ztup1 = zcbz366, .ztup0 = false };
-  return zcbz365;
+  struct zCapability zcbz368 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zcbz367 = { .ztup1 = zcbz368, .ztup0 = false };
+  return zcbz367;
 }
 
 static uint64_t sailgen_getCapPerms(struct zCapability);
@@ -7898,8 +7898,8 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
 end_function_182: ;
   return zcbz346;
 end_block_exception_183: ;
-  struct zCapability zcbz367 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
-  return zcbz367;
+  struct zCapability zcbz369 = { .zuperms = UINT64_C(0xdeadc0de), .ztag = false, .zreserved = UINT64_C(0xdeadc0de), .zpermit_unseal = false, .zpermit_store_local_cap = false, .zpermit_store_cap = false, .zpermit_store = false, .zpermit_set_CID = false, .zpermit_seal = false, .zpermit_load_cap = false, .zpermit_load = false, .zpermit_execute = false, .zpermit_cinvoke = false, .zotype = UINT64_C(0xdeadc0de), .zinternal_E = false, .zglobal = false, .zflag_cap_mode = false, .zaddress = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zT = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zB = UINT64_C(0xdeadc0de) };
+  return zcbz369;
 }
 
 static uint64_t sailgen_getCapFlags(struct zCapability);
@@ -8495,7 +8495,7 @@ static void sailgen_capToString(sail_string *rop, struct zCapability);
 
 static void sailgen_capToString(sail_string *zcbz354, struct zCapability zcap)
 {
-  __label__ end_function_210, end_block_exception_211, end_function_222;
+  __label__ end_function_210, end_block_exception_211, end_function_230;
 
   int64_t zlen;
   zlen = sailgen_getCapLength(zcap);
@@ -8726,10 +8726,253 @@ static void sailgen_capToString(sail_string *zcbz354, struct zCapability zcap)
   KILL(sail_string)(&zlen_str);
 
 end_function_210: ;
-  goto end_function_222;
+  goto end_function_230;
 end_block_exception_211: ;
-  goto end_function_222;
-end_function_222: ;
+  goto end_function_230;
+end_function_230: ;
+}
+
+static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t);
+
+static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t zlen)
+{
+  __label__ case_214, finish_match_213, end_function_215, end_block_exception_216;
+
+  uint64_t zcbz355;
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3372;
+  {
+    uint64_t zgaz3370;
+    {
+      sail_int zgsz3753;
+      CREATE(sail_int)(&zgsz3753);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3753, INT64_C(32));
+      sail_int zgsz3754;
+      CREATE(sail_int)(&zgsz3754);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3754, INT64_C(0));
+      lbits zgsz3755;
+      CREATE(lbits)(&zgsz3755);
+      sailgen_to_bits(&zgsz3755, zgsz3753, zgsz3754);
+      zgaz3370 = CONVERT_OF(fbits, lbits)(zgsz3755, true);
+      KILL(lbits)(&zgsz3755);
+      KILL(sail_int)(&zgsz3754);
+      KILL(sail_int)(&zgsz3753);
+    }
+    uint64_t zgaz3371;
+    {
+      lbits zgsz3756;
+      CREATE(lbits)(&zgsz3756);
+      CONVERT_OF(lbits, fbits)(&zgsz3756, UINT64_C(0b0), UINT64_C(1) , true);
+      lbits zgsz3757;
+      CREATE(lbits)(&zgsz3757);
+      CONVERT_OF(lbits, fbits)(&zgsz3757, zlen, UINT64_C(32) , true);
+      lbits zgsz3758;
+      CREATE(lbits)(&zgsz3758);
+      append(&zgsz3758, zgsz3756, zgsz3757);
+      zgaz3371 = CONVERT_OF(fbits, lbits)(zgsz3758, true);
+      KILL(lbits)(&zgsz3758);
+      KILL(lbits)(&zgsz3757);
+      KILL(lbits)(&zgsz3756);
+    }
+    zgaz3372 = sailgen_setCapBounds(zdefault_cap, zgaz3370, zgaz3371);
+  
+  
+  }
+  uint64_t zgsz3759;
+  {
+    bool zexact;
+    zexact = zgaz3372.ztup0;
+    struct zCapability zc;
+    zc = zgaz3372.ztup1;
+    int64_t ze;
+    {
+      int64_t zgaz3378;
+      {
+        uint64_t zgaz3377;
+        zgaz3377 = zc.zE;
+        zgaz3378 = ((mach_int) zgaz3377);
+      
+      }
+      {
+        sail_int zgsz3760;
+        CREATE(sail_int)(&zgsz3760);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3760, zgaz3378);
+        sail_int zgsz3761;
+        CREATE(sail_int)(&zgsz3761);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3761, zcap_max_E);
+        sail_int zgsz3762;
+        CREATE(sail_int)(&zgsz3762);
+        min_int(&zgsz3762, zgsz3760, zgsz3761);
+        ze = CONVERT_OF(mach_int, sail_int)(zgsz3762);
+        KILL(sail_int)(&zgsz3762);
+        KILL(sail_int)(&zgsz3761);
+        KILL(sail_int)(&zgsz3760);
+      }
+    
+    }
+    int64_t zez7;
+    {
+      bool zgaz3376;
+      zgaz3376 = zc.zinternal_E;
+      if (zgaz3376) {
+      {
+        sail_int zgsz3763;
+        CREATE(sail_int)(&zgsz3763);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3763, ze);
+        sail_int zgsz3764;
+        CREATE(sail_int)(&zgsz3764);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3764, zinternal_E_take_bits);
+        sail_int zgsz3765;
+        CREATE(sail_int)(&zgsz3765);
+        add_int(&zgsz3765, zgsz3763, zgsz3764);
+        zez7 = CONVERT_OF(mach_int, sail_int)(zgsz3765);
+        KILL(sail_int)(&zgsz3765);
+        KILL(sail_int)(&zgsz3764);
+        KILL(sail_int)(&zgsz3763);
+      }
+      } else {  zez7 = INT64_C(0);  }
+    
+    }
+    sbits zgaz3374;
+    {
+      int64_t zgaz3373;
+      {
+        sail_int zgsz3766;
+        CREATE(sail_int)(&zgsz3766);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3766, INT64_C(32));
+        sail_int zgsz3767;
+        CREATE(sail_int)(&zgsz3767);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3767, zez7);
+        sail_int zgsz3768;
+        CREATE(sail_int)(&zgsz3768);
+        sub_int(&zgsz3768, zgsz3766, zgsz3767);
+        zgaz3373 = CONVERT_OF(mach_int, sail_int)(zgsz3768);
+        KILL(sail_int)(&zgsz3768);
+        KILL(sail_int)(&zgsz3767);
+        KILL(sail_int)(&zgsz3766);
+      }
+      {
+        sail_int zgsz3769;
+        CREATE(sail_int)(&zgsz3769);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3769, zgaz3373);
+        lbits zgsz3770;
+        CREATE(lbits)(&zgsz3770);
+        sailgen_zzz3zzz3ones(&zgsz3770, zgsz3769);
+        zgaz3374 = CONVERT_OF(sbits, lbits)(zgsz3770, true);
+        KILL(lbits)(&zgsz3770);
+        KILL(sail_int)(&zgsz3769);
+      }
+    
+    }
+    sbits zgaz3375;
+    {
+      sail_int zgsz3771;
+      CREATE(sail_int)(&zgsz3771);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3771, zez7);
+      lbits zgsz3772;
+      CREATE(lbits)(&zgsz3772);
+      sailgen_zzz3zzz3zzeros_implicit(&zgsz3772, zgsz3771);
+      zgaz3375 = CONVERT_OF(sbits, lbits)(zgsz3772, true);
+      KILL(lbits)(&zgsz3772);
+      KILL(sail_int)(&zgsz3771);
+    }
+    {
+      lbits zgsz3774;
+      CREATE(lbits)(&zgsz3774);
+      CONVERT_OF(lbits, sbits)(&zgsz3774, zgaz3374, true);
+      lbits zgsz3775;
+      CREATE(lbits)(&zgsz3775);
+      CONVERT_OF(lbits, sbits)(&zgsz3775, zgaz3375, true);
+      lbits zgsz3776;
+      CREATE(lbits)(&zgsz3776);
+      append(&zgsz3776, zgsz3774, zgsz3775);
+      zgsz3759 = CONVERT_OF(fbits, lbits)(zgsz3776, true);
+      KILL(lbits)(&zgsz3776);
+      KILL(lbits)(&zgsz3775);
+      KILL(lbits)(&zgsz3774);
+    }
+  
+  
+  
+  
+  
+  
+    goto finish_match_213;
+  }
+case_214: ;
+  sail_match_failure("getRepresentableAlignmentMask");
+finish_match_213: ;
+  zcbz355 = zgsz3759;
+
+
+end_function_215: ;
+  return zcbz355;
+end_block_exception_216: ;
+
+  return UINT64_C(0xdeadc0de);
+}
+
+static uint64_t sailgen_getRepresentableLength(uint64_t);
+
+static uint64_t sailgen_getRepresentableLength(uint64_t zlen)
+{
+  __label__ end_function_218, end_block_exception_219;
+
+  uint64_t zcbz356;
+  uint64_t zm;
+  zm = sailgen_getRepresentableAlignmentMask(zlen);
+  uint64_t zgaz3380;
+  {
+    uint64_t zgaz3379;
+    {
+      lbits zgsz3777;
+      CREATE(lbits)(&zgsz3777);
+      CONVERT_OF(lbits, fbits)(&zgsz3777, zm, UINT64_C(32) , true);
+      lbits zgsz3778;
+      CREATE(lbits)(&zgsz3778);
+      not_bits(&zgsz3778, zgsz3777);
+      zgaz3379 = CONVERT_OF(fbits, lbits)(zgsz3778, true);
+      KILL(lbits)(&zgsz3778);
+      KILL(lbits)(&zgsz3777);
+    }
+    {
+      lbits zgsz3779;
+      CREATE(lbits)(&zgsz3779);
+      CONVERT_OF(lbits, fbits)(&zgsz3779, zlen, UINT64_C(32) , true);
+      lbits zgsz3780;
+      CREATE(lbits)(&zgsz3780);
+      CONVERT_OF(lbits, fbits)(&zgsz3780, zgaz3379, UINT64_C(32) , true);
+      lbits zgsz3781;
+      CREATE(lbits)(&zgsz3781);
+      add_bits(&zgsz3781, zgsz3779, zgsz3780);
+      zgaz3380 = CONVERT_OF(fbits, lbits)(zgsz3781, true);
+      KILL(lbits)(&zgsz3781);
+      KILL(lbits)(&zgsz3780);
+      KILL(lbits)(&zgsz3779);
+    }
+  
+  }
+  {
+    lbits zgsz3782;
+    CREATE(lbits)(&zgsz3782);
+    CONVERT_OF(lbits, fbits)(&zgsz3782, zgaz3380, UINT64_C(32) , true);
+    lbits zgsz3783;
+    CREATE(lbits)(&zgsz3783);
+    CONVERT_OF(lbits, fbits)(&zgsz3783, zm, UINT64_C(32) , true);
+    lbits zgsz3784;
+    CREATE(lbits)(&zgsz3784);
+    and_bits(&zgsz3784, zgsz3782, zgsz3783);
+    zcbz356 = CONVERT_OF(fbits, lbits)(zgsz3784, true);
+    KILL(lbits)(&zgsz3784);
+    KILL(lbits)(&zgsz3783);
+    KILL(lbits)(&zgsz3782);
+  }
+
+
+end_function_218: ;
+  return zcbz356;
+end_block_exception_219: ;
+
+  return UINT64_C(0xdeadc0de);
 }
 
 // register TestCap
@@ -8744,15 +8987,15 @@ static uint64_t zTestLen;
 static unit sailgen_main(unit);
 
 
-static unit sailgen_main(unit zgsz3753)
+static unit sailgen_main(unit zgsz3785)
 {
-  __label__ end_function_217, end_block_exception_218;
+  __label__ end_function_225, end_block_exception_226;
 
-  unit zcbz355;
+  unit zcbz357;
   {
     zTestCap = znull_cap;
-    unit zgsz3754;
-    zgsz3754 = UNIT;
+    unit zgsz3786;
+    zgsz3786 = UNIT;
   }
   uint64_t zbits1;
   zbits1 = sailgen_capToBits(zTestCap);
@@ -8760,77 +9003,77 @@ static unit sailgen_main(unit zgsz3753)
   zbits2 = sailgen_capToMemBits(zTestCap);
   struct zCapability zcap1;
   {
-    bool zgaz3375;
-    zgaz3375 = zTestCap.ztag;
-    zcap1 = sailgen_capBitsToCapability(zgaz3375, zbits1);
+    bool zgaz3386;
+    zgaz3386 = zTestCap.ztag;
+    zcap1 = sailgen_capBitsToCapability(zgaz3386, zbits1);
   
   }
   struct zCapability zcap2;
   {
-    bool zgaz3374;
-    zgaz3374 = zTestCap.ztag;
-    zcap2 = sailgen_memBitsToCapability(zgaz3374, zbits2);
+    bool zgaz3385;
+    zgaz3385 = zTestCap.ztag;
+    zcap2 = sailgen_memBitsToCapability(zgaz3385, zbits2);
   
   }
   bool zrep;
   zrep = sailgen_fastRepCheck(zTestCap, zTestAddr);
   {
-    __label__ case_214, finish_match_213;
+    __label__ case_222, finish_match_221;
 
-    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3370;
-    zgaz3370 = sailgen_setCapBounds(zTestCap, zTestAddr, zTestLen);
-    unit zgsz3755;
+    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3381;
+    zgaz3381 = sailgen_setCapBounds(zTestCap, zTestAddr, zTestLen);
+    unit zgsz3787;
     {
       bool ztup__0;
-      ztup__0 = zgaz3370.ztup0;
+      ztup__0 = zgaz3381.ztup0;
       struct zCapability ztup__1;
-      ztup__1 = zgaz3370.ztup1;
+      ztup__1 = zgaz3381.ztup1;
       bool zexact;
       zexact = ztup__0;
       struct zCapability zcap;
       zcap = ztup__1;
-      zgsz3755 = UNIT;
+      zgsz3787 = UNIT;
     
     
     
     
-      goto finish_match_213;
+      goto finish_match_221;
     }
-  case_214: ;
+  case_222: ;
     sail_match_failure("main");
-  finish_match_213: ;
-    unit zgsz3760;
-    zgsz3760 = zgsz3755;
+  finish_match_221: ;
+    unit zgsz3792;
+    zgsz3792 = zgsz3787;
   
   
   }
   {
-    __label__ case_216, finish_match_215;
+    __label__ case_224, finish_match_223;
 
-    struct ztuple_z8z5i64zCz0z5i64z9 zgaz3371;
-    zgaz3371 = sailgen_getCapBounds(zTestCap);
-    unit zgsz3757;
+    struct ztuple_z8z5i64zCz0z5i64z9 zgaz3382;
+    zgaz3382 = sailgen_getCapBounds(zTestCap);
+    unit zgsz3789;
     {
       int64_t ztup__0;
-      ztup__0 = zgaz3371.ztup0;
+      ztup__0 = zgaz3382.ztup0;
       int64_t ztup__1;
-      ztup__1 = zgaz3371.ztup1;
+      ztup__1 = zgaz3382.ztup1;
       int64_t zbase;
       zbase = ztup__0;
       int64_t ztop;
       ztop = ztup__1;
-      zgsz3757 = UNIT;
+      zgsz3789 = UNIT;
     
     
     
     
-      goto finish_match_215;
+      goto finish_match_223;
     }
-  case_216: ;
+  case_224: ;
     sail_match_failure("main");
-  finish_match_215: ;
-    unit zgsz3759;
-    zgsz3759 = zgsz3757;
+  finish_match_223: ;
+    unit zgsz3791;
+    zgsz3791 = zgsz3789;
   
   
   }
@@ -8838,38 +9081,38 @@ static unit sailgen_main(unit zgsz3753)
   zflags = sailgen_getCapFlags(zTestCap);
   struct zCapability znew_cap;
   {
-    uint64_t zgaz3373;
+    uint64_t zgaz3384;
     {
-      int64_t zgaz3372;
+      int64_t zgaz3383;
       {
-        sail_int zgsz3761;
-        CREATE(sail_int)(&zgsz3761);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3761, INT64_C(15));
-        sail_int zgsz3762;
-        CREATE(sail_int)(&zgsz3762);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3762, INT64_C(0));
-        sail_int zgsz3763;
-        CREATE(sail_int)(&zgsz3763);
-        add_int(&zgsz3763, zgsz3761, zgsz3762);
-        zgaz3372 = CONVERT_OF(mach_int, sail_int)(zgsz3763);
-        KILL(sail_int)(&zgsz3763);
-        KILL(sail_int)(&zgsz3762);
-        KILL(sail_int)(&zgsz3761);
+        sail_int zgsz3793;
+        CREATE(sail_int)(&zgsz3793);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3793, INT64_C(15));
+        sail_int zgsz3794;
+        CREATE(sail_int)(&zgsz3794);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3794, INT64_C(0));
+        sail_int zgsz3795;
+        CREATE(sail_int)(&zgsz3795);
+        add_int(&zgsz3795, zgsz3793, zgsz3794);
+        zgaz3383 = CONVERT_OF(mach_int, sail_int)(zgsz3795);
+        KILL(sail_int)(&zgsz3795);
+        KILL(sail_int)(&zgsz3794);
+        KILL(sail_int)(&zgsz3793);
       }
       {
-        sail_int zgsz3764;
-        CREATE(sail_int)(&zgsz3764);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3764, zgaz3372);
-        lbits zgsz3765;
-        CREATE(lbits)(&zgsz3765);
-        sailgen_zzz3zzz3ones(&zgsz3765, zgsz3764);
-        zgaz3373 = CONVERT_OF(fbits, lbits)(zgsz3765, true);
-        KILL(lbits)(&zgsz3765);
-        KILL(sail_int)(&zgsz3764);
+        sail_int zgsz3796;
+        CREATE(sail_int)(&zgsz3796);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3796, zgaz3383);
+        lbits zgsz3797;
+        CREATE(lbits)(&zgsz3797);
+        sailgen_zzz3zzz3ones(&zgsz3797, zgsz3796);
+        zgaz3384 = CONVERT_OF(fbits, lbits)(zgsz3797, true);
+        KILL(lbits)(&zgsz3797);
+        KILL(sail_int)(&zgsz3796);
       }
     
     }
-    znew_cap = sailgen_setCapPerms(zTestCap, zgaz3373);
+    znew_cap = sailgen_setCapPerms(zTestCap, zgaz3384);
   
   }
   sail_string zcap_str;
@@ -8884,9 +9127,15 @@ static unit sailgen_main(unit zgsz3753)
 
 
   KILL(sail_string)(&zcap_str);
-  goto end_block_exception_218;
+  goto end_block_exception_226;
   }
-  zcbz355 = UNIT;
+  uint64_t zlen;
+  zlen = sailgen_getRepresentableLength(zTestAddr);
+  uint64_t zmask;
+  zmask = sailgen_getRepresentableAlignmentMask(zTestAddr);
+  zcbz357 = UNIT;
+
+
   KILL(sail_string)(&zcap_str);
 
 
@@ -8895,72 +9144,72 @@ static unit sailgen_main(unit zgsz3753)
 
 
 
-end_function_217: ;
-  return zcbz355;
-end_block_exception_218: ;
+end_function_225: ;
+  return zcbz357;
+end_block_exception_226: ;
 
   return UNIT;
 }
 
 static unit sailgen_initializze_registers(unit);
 
-static unit sailgen_initializze_registers(unit zgsz3766)
+static unit sailgen_initializze_registers(unit zgsz3798)
 {
-  __label__ end_function_220, end_block_exception_221;
+  __label__ end_function_228, end_block_exception_229;
 
-  unit zcbz356;
+  unit zcbz358;
   {
     zTestCap = sailgen_undefined_Capability(UNIT);
-    unit zgsz3770;
-    zgsz3770 = UNIT;
+    unit zgsz3802;
+    zgsz3802 = UNIT;
   }
   {
     {
-      sail_int zgsz3767;
-      CREATE(sail_int)(&zgsz3767);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3767, INT64_C(32));
-      lbits zgsz3768;
-      CREATE(lbits)(&zgsz3768);
-      UNDEFINED(lbits)(&zgsz3768, zgsz3767);
-      zTestAddr = CONVERT_OF(fbits, lbits)(zgsz3768, true);
-      KILL(lbits)(&zgsz3768);
-      KILL(sail_int)(&zgsz3767);
+      sail_int zgsz3799;
+      CREATE(sail_int)(&zgsz3799);
+      CONVERT_OF(sail_int, mach_int)(&zgsz3799, INT64_C(32));
+      lbits zgsz3800;
+      CREATE(lbits)(&zgsz3800);
+      UNDEFINED(lbits)(&zgsz3800, zgsz3799);
+      zTestAddr = CONVERT_OF(fbits, lbits)(zgsz3800, true);
+      KILL(lbits)(&zgsz3800);
+      KILL(sail_int)(&zgsz3799);
     }
-    unit zgsz3769;
-    zgsz3769 = UNIT;
+    unit zgsz3801;
+    zgsz3801 = UNIT;
   }
-  int64_t zgaz3376;
+  int64_t zgaz3387;
   {
-    sail_int zgsz3771;
-    CREATE(sail_int)(&zgsz3771);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3771, INT64_C(32));
-    sail_int zgsz3772;
-    CREATE(sail_int)(&zgsz3772);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3772, INT64_C(1));
-    sail_int zgsz3773;
-    CREATE(sail_int)(&zgsz3773);
-    add_int(&zgsz3773, zgsz3771, zgsz3772);
-    zgaz3376 = CONVERT_OF(mach_int, sail_int)(zgsz3773);
-    KILL(sail_int)(&zgsz3773);
-    KILL(sail_int)(&zgsz3772);
-    KILL(sail_int)(&zgsz3771);
+    sail_int zgsz3803;
+    CREATE(sail_int)(&zgsz3803);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3803, INT64_C(32));
+    sail_int zgsz3804;
+    CREATE(sail_int)(&zgsz3804);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3804, INT64_C(1));
+    sail_int zgsz3805;
+    CREATE(sail_int)(&zgsz3805);
+    add_int(&zgsz3805, zgsz3803, zgsz3804);
+    zgaz3387 = CONVERT_OF(mach_int, sail_int)(zgsz3805);
+    KILL(sail_int)(&zgsz3805);
+    KILL(sail_int)(&zgsz3804);
+    KILL(sail_int)(&zgsz3803);
   }
   {
-    sail_int zgsz3774;
-    CREATE(sail_int)(&zgsz3774);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3774, zgaz3376);
-    lbits zgsz3775;
-    CREATE(lbits)(&zgsz3775);
-    UNDEFINED(lbits)(&zgsz3775, zgsz3774);
-    zTestLen = CONVERT_OF(fbits, lbits)(zgsz3775, true);
-    KILL(lbits)(&zgsz3775);
-    KILL(sail_int)(&zgsz3774);
+    sail_int zgsz3806;
+    CREATE(sail_int)(&zgsz3806);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3806, zgaz3387);
+    lbits zgsz3807;
+    CREATE(lbits)(&zgsz3807);
+    UNDEFINED(lbits)(&zgsz3807, zgsz3806);
+    zTestLen = CONVERT_OF(fbits, lbits)(zgsz3807, true);
+    KILL(lbits)(&zgsz3807);
+    KILL(sail_int)(&zgsz3806);
   }
-  zcbz356 = UNIT;
+  zcbz358 = UNIT;
 
-end_function_220: ;
-  return zcbz356;
-end_block_exception_221: ;
+end_function_228: ;
+  return zcbz358;
+end_block_exception_229: ;
 
   return UNIT;
 }
