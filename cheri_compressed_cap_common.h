@@ -751,6 +751,25 @@ static inline _cc_addr_t _cc_N(get_representable_length)(_cc_addr_t req_length) 
     return (req_length + ~mask) & mask;
 }
 
+#define EXTRACT_WRAPPER(X)                                                                                             \
+    static inline _cc_addr_t _cc_N(cap_pesbt_extract_##X)(_cc_addr_t pesbt) { return _CC_EXTRACT_FIELD(pesbt, X); }
+#define ENCODE_WRAPPER(X)                                                                                              \
+    static inline _cc_addr_t _cc_N(cap_pesbt_encode_##X)(_cc_addr_t value) { return _CC_ENCODE_FIELD(value, X); }
+#define DEPOSIT_WRAPPER(X)                                                                                             \
+    static inline _cc_addr_t _cc_N(cap_pesbt_deposit_##X)(_cc_addr_t pesbt, _cc_addr_t value) {                        \
+        return (pesbt & ~_CC_N(FIELD_##X##_MASK64)) | _CC_ENCODE_FIELD(value, X);                                      \
+    }
+
+#define BOTH_WRAPPERS(X) EXTRACT_WRAPPER(X) ENCODE_WRAPPER(X) DEPOSIT_WRAPPER(X)
+
+BOTH_WRAPPERS(HWPERMS)
+BOTH_WRAPPERS(UPERMS)
+BOTH_WRAPPERS(OTYPE)
+
+#undef EXTRACT_WRAPPER
+#undef ENCODE_WRAPPER
+#undef BOTH_WRAPPERS
+
 /// Provide a C++ class with the same function names
 /// to simplify writing code that handles both 128 and 64-bit capabilities
 #ifdef __cplusplus
