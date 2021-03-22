@@ -11,16 +11,12 @@ std::ostream& operator<<(std::ostream& os, cc128_length_t value) {
 }
 
 static const char* otype_suffix(uint32_t otype) {
-    // Two separate switches since if the number of otype bits is the same
-    // we cannot have both of the case statements in one switch
     switch (otype) {
-    case CC128_OTYPE_UNSEALED: return " (CC128_OTYPE_UNSEALED)";
-    case CC128_OTYPE_SENTRY: return " (CC128_OTYPE_SENTRY)";
-    case CC128_OTYPE_RESERVED2: return " (CC128_OTYPE_RESERVED2)";
-    case CC128_OTYPE_RESERVED3: return " (CC128_OTYPE_RESERVED3)";
-    default: break;
+#define OTYPE_CASE(Name, ...)                                                                                          \
+    case CC128_##Name: return " (CC128_" #Name ")";
+        LS_SPECIAL_OTYPES(OTYPE_CASE, )
+    default: return "";
     }
-    return "";
 }
 
 std::ostream& operator<<(std::ostream& os, const cc128_bounds_bits& value);
