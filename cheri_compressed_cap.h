@@ -113,8 +113,8 @@ enum CC256_OTypes {
 
 #define LS_SPECIAL_OTYPES(ITEM, ...)                                                                                   \
     LS_SPECIAL_OTYPES_COMMON(ITEM, __VA_ARGS__)                                                                        \
-    ITEM(OTYPE_RESERVED2, __VA_ARGS__)                                                                                 \
-    ITEM(OTYPE_RESERVED3, __VA_ARGS__)
+    ITEM(OTYPE_INDIRECT_PAIR, __VA_ARGS__)                                                                             \
+    ITEM(OTYPE_INDIRECT_SENTRY, __VA_ARGS__)
 #endif
 
 /* Also support decoding of the raw 256-bit capabilities */
