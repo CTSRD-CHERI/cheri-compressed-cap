@@ -162,7 +162,7 @@ static void check_representable(uint64_t base, cc128_length_t length, uint64_t o
 
 static inline bool check_repr(bool sealed, uint64_t base, uint64_t length, uint64_t offset) {
     (void)sealed;
-    auto cap = make_max_perms_cap(base, offset, length);
+    auto cap = make_max_perms_cap(base, base + offset, base + length);
     return cc128_is_representable_cap_exact(&cap);
 }
 
