@@ -17,8 +17,23 @@ set(CMAKE_REQUIRED_LIBRARIES -fsanitize=memory)
 check_cxx_compiler_flag(-fsanitize=memory HAVE_MSAN)
 # XXX: needs instrumented system libraries
 set(HAVE_MSAN FALSE)
+# Check for libfuzzer compiler support and runtime libraries.
+include(CMakePushCheckState)
+cmake_push_check_state()
 set(CMAKE_REQUIRED_LIBRARIES -fsanitize=fuzzer)
-check_cxx_compiler_flag(-fsanitize=fuzzer HAVE_LIBFUZZER)
+set(CMAKE_REQUIRED_DEFINITIONS -fsanitize=fuzzer)
+set(CMAKE_REQUIRED_FLAGS -fsanitize=fuzzer)
+check_cxx_source_compiles([=[
+#include <stddef.h>
+#include <stdint.h>
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+  (void)Data;
+  (void)Size;
+  return 0;
+}
+]=] HAVE_LIBFUZZER)
+cmake_pop_check_state()
 
 include(CheckCCompilerFlag)
 check_c_compiler_flag(-Wunused-but-set-variable HAVE_UNUSED_BUT_SET_VARIABLE)
