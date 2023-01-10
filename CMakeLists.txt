@@ -129,6 +129,17 @@ add_test_sail_wrapper(128m)
 
 enable_testing()
 
+# See https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md
+Include(FetchContent)
+FetchContent_Declare(Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.2.1
+)
+FetchContent_MakeAvailable(Catch2)
+list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
+include(CTest)
+include(Catch)
+
 function(add_cc_test _format _target _suffix _sanitizer_flags)
     add_executable(${_target}_${_format}${_suffix} test/${_target}_${_format}.cpp)
     if (_sanitizer_flags)
@@ -138,6 +149,8 @@ function(add_cc_test _format _target _suffix _sanitizer_flags)
     if (NOT _format STREQUAL "256")
         target_link_libraries(${_target}_${_format}${_suffix} PRIVATE sail_wrapper_${_format}${_suffix})
     endif()
+    target_link_libraries(${_target}_${_format}${_suffix} PRIVATE Catch2::Catch2WithMain)
+    catch_discover_tests(${_target}_${_format}${_suffix})
     add_test(NAME test-${_target}_${_format}${_suffix} COMMAND ${_target}_${_format}${_suffix})
 endfunction()
 
