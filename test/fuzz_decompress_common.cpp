@@ -70,6 +70,7 @@ static void dump_cap_fields(const _cc_cap_t& result) {
     fprintf(stderr, "Reserved:    %d\n", (int)result.reserved_bits());
     fprintf(stderr, "Sealed:      %d\n", (int)result.is_sealed());
     fprintf(stderr, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
+    fprintf(stderr, "Exponent:    %d\n", result.cr_exp);
     fprintf(stderr, "\n");
 }
 

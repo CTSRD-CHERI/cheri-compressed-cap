@@ -178,6 +178,8 @@ static void sail_cap_to_cap_t(const struct zCapability* sail, _cc_cap_t* c) {
     _cc_N(update_flags)(c, sailgen_getCapFlags(*sail));
     _cc_N(update_reserved)(c, sail->zreserved);
     c->cr_tag = sail->ztag;
+    c->cr_exp = sail->zE;
+    c->cr_bounds_valid = true; // This field is only ever false for Morello.
     // extract cc128 EBT field:
     // TODO: avoid roundtrip via sailgen_capToBits?
     uint64_t sail_pesbt = _compress_sailcap_raw(*sail);

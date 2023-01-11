@@ -881,8 +881,8 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
     cap->_cr_top = new_top;
     cap->cr_exp = new_cap.cr_exp;
     _cc_N(update_ebt)(cap, new_ebt);
-#ifdef CC_IS_MORELLO
     cap->cr_bounds_valid = new_cap.cr_bounds_valid;
+#ifdef CC_IS_MORELLO
     bool to_small = _cc_N(cap_bounds_uses_value)(cap);
     // On morello we may end up with a length that could have been exact, but has changed the flag bits.
     if ((from_large && to_small) && ((new_base ^ req_base) >> (64 - MORELLO_FLAG_BITS))) {
