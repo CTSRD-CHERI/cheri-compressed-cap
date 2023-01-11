@@ -101,18 +101,26 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     FuzzedDataProvider fuzzData(data, size);
     _cc_addr_t pesbt = fuzzData.ConsumeIntegral<_cc_addr_t>();
     _cc_addr_t cursor = fuzzData.ConsumeIntegral<_cc_addr_t>();
+    _cc_addr_t new_len = fuzzData.ConsumeIntegral<_cc_addr_t>();
+
+    auto compare_caps = [pesbt, cursor](const char* context, const _cc_cap_t& result, const _cc_cap_t& sail_result) {
+        if (memcmp(&result, &sail_result, sizeof(result)) == 0)
+            return true;
+        fprintf(stderr, "%s FAILED\n", context);
+        fprintf(stderr, "PESBT  0x%016" PRIx64 "\n", (uint64_t)pesbt);
+        fprintf(stderr, "Cursor 0x%016" PRIx64 "\n", (uint64_t)cursor);
+        dump_cap_fields(result);
+        dump_cap_fields(sail_result);
+        return false;
+    };
+
     _cc_cap_t result;
     _cc_cap_t sail_result;
     memset(&result, 0, sizeof(result));
     memset(&sail_result, 0, sizeof(sail_result));
     _cc_N(decompress_mem)(pesbt, cursor, false, &result);
     _cc_sail_decode_mem(pesbt, cursor, false, &sail_result);
-    if (memcmp(&result, &sail_result, sizeof(result)) != 0) {
-        fprintf(stderr, "DECODE FROM MEM FAILED\n");
-        fprintf(stderr, "PESBT  0x%016" PRIx64 "\n", (uint64_t)pesbt);
-        fprintf(stderr, "Cursor 0x%016" PRIx64 "\n", (uint64_t)cursor);
-        dump_cap_fields(result);
-        dump_cap_fields(sail_result);
+    if (!compare_caps("DECODE FROM MEM", result, sail_result)) {
         abort();
     }
 
@@ -125,12 +133,20 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     memset(&sail_result, 0, sizeof(sail_result));
     _cc_N(decompress_raw)(pesbt, cursor, false, &result);
     _cc_sail_decode_raw(pesbt, cursor, false, &sail_result);
-    if (memcmp(&result, &sail_result, sizeof(result)) != 0) {
-        fprintf(stderr, "DECODE ALREADY XORED FAILED\n");
-        fprintf(stderr, "PESBT  0x%016" PRIx64 "\n", (uint64_t)pesbt);
-        fprintf(stderr, "Cursor 0x%016" PRIx64 "\n", (uint64_t)cursor);
+    if (!compare_caps("DECODE ALREADY XORED", result, sail_result)) {
+        abort();
+    }
+
+    // Try running setbounds (on an untagged capability) and compare to sail.
+    _cc_cap_t new_result = result;
+    _cc_cap_t new_sail_result = result;
+    new_result.cr_tag = false;
+    _cc_N(setbounds)(&new_result, new_result.base(), (_cc_length_t)new_result.base() + new_len);
+    sail_result.cr_tag = false;
+    _cc_sail_setbounds(&new_sail_result, new_sail_result.base(), (_cc_length_t)new_sail_result.base() + new_len);
+    if (!compare_caps("SETBOUNDS", result, sail_result)) {
+        fprintf(stderr, "While setting length to %" PRIx64 " on\n", (uint64_t)new_len);
         dump_cap_fields(result);
-        dump_cap_fields(sail_result);
         abort();
     }
 
