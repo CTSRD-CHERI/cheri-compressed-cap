@@ -61,3 +61,34 @@ TEST_CASE("Cheritest regression case", "[regression]") {
     CHECK(with_bounds.length() == 0x300000);
     CHECK(with_bounds.address() == cap.address());
 }
+
+TEST_CASE("Fuzzer assertion exact untagged", "[fuzz]") {
+    // Regression test for an assertion found by fuzzing setbounds.
+    constexpr uint64_t pesbt = UINT64_C(0x00f58dffffffffff);
+    constexpr uint64_t base = UINT64_C(0xff80000000000000);
+    constexpr uint64_t addr = UINT64_C(0xf806ffffffff3e0a);
+    constexpr TestAPICC::length_t top = base;
+    TestAPICC::cap_t decoded;
+    TestAPICC::decompress_raw(pesbt, addr, false, &decoded);
+    REQUIRE(decoded.base() == base);
+    REQUIRE(decoded.top() == top);
+    REQUIRE(decoded.address() == addr);
+    {
+        auto sail_setbounds_base_top = decoded;
+        auto cc_setbounds_base_top = decoded;
+        TestAPICC::sail_setbounds(&sail_setbounds_base_top, base, top);
+        TestAPICC::setbounds(&cc_setbounds_base_top, base, top);
+        CHECK(sail_setbounds_base_top == cc_setbounds_base_top);
+    }
+    {
+        auto sail_setbounds_addr_top = decoded;
+        auto cc_setbounds_addr_top = decoded;
+        TestAPICC::sail_setbounds(&sail_setbounds_addr_top, addr, top);
+        TestAPICC::setbounds(&cc_setbounds_addr_top, addr, top);
+        CHECK(cc_setbounds_addr_top == cc_setbounds_addr_top);
+    }
+
+    do_csetbounds<TestAPICC>(decoded, decoded.top(), nullptr);
+    decoded._cr_cursor = base;
+    do_csetbounds<TestAPICC>(decoded, decoded.top(), nullptr);
+}
