@@ -33,13 +33,26 @@
 #include "sail_failure.h"
 #include "sail_wrapper.h"
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsometimes-uninitialized"
 #ifdef HAVE_UNUSED_BUT_SET_VARIABLE
 #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #endif
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#ifdef HAVE_UNUSED_BUT_SET_VARIABLE
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+#endif
 #include SAIL_COMPRESSION_GENERATED_C_FILE
+#ifdef __clang__
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #define CC_FORMAT_LOWER SAIL_WRAPPER_CC_FORMAT_LOWER
 #define CC_FORMAT_UPPER SAIL_WRAPPER_CC_FORMAT_UPPER
