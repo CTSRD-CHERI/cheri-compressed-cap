@@ -92,3 +92,24 @@ TEST_CASE("Fuzzer assertion exact untagged", "[fuzz]") {
     decoded._cr_cursor = base;
     do_csetbounds<TestAPICC>(decoded, decoded.top(), nullptr);
 }
+
+TEST_CASE("TestRIG assertion untagged max cap", "[fuzz]") {
+    // Regression test for an assertion found by fuzzing QEMU vs sail using testrig.
+    // The length is too large, but this should be fine for untagged values.
+    const TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(0, 0xfffffffffa119000, CC128_MAX_TOP);
+    constexpr uint64_t req_len = UINT64_C(0xfffffffffa119000);
+    CHECK(cap.address() == req_len);
+    TestAPICC::cap_t untagged_cap = cap;
+    untagged_cap.cr_tag = false;
+
+    auto sail_setbounds_result = untagged_cap;
+    auto cc_setbounds_result = untagged_cap;
+    const TestAPICC::length_t req_top = (TestAPICC::length_t)cap.address() + req_len;
+    TestAPICC::sail_setbounds(&sail_setbounds_result, cap.address(), req_top);
+    TestAPICC::setbounds(&cc_setbounds_result, cap.address(), req_top);
+    CHECK(sail_setbounds_result == cc_setbounds_result);
+
+    do_csetbounds<TestAPICC>(untagged_cap, req_len, nullptr);
+    untagged_cap._cr_cursor = untagged_cap.base();
+    do_csetbounds<TestAPICC>(untagged_cap, req_len, nullptr);
+}

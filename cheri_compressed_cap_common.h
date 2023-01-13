@@ -876,9 +876,14 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
                          "Was inexact, but neither base nor top different?");
     }
 
-    _cc_debug_assert(new_top >= new_base);
-    _cc_debug_assert((!cap->cr_tag || _cc_N(get_reserved)(cap) == 0) &&
-                     "Unknown reserved bits set in tagged capability");
+    if (cap->cr_tag) {
+        // For invalid inputs, new_top could have been larger than max_top and if it is sufficiently larger, it
+        // will be truncated to zero, so we can only assert that we get top > base for tagged, valid inputs.
+        // See https://github.com/CTSRD-CHERI/sail-cheri-riscv/pull/36 for a decoding change that guarantees
+        // this invariant for any input.
+        _cc_debug_assert(new_top >= new_base);
+        _cc_debug_assert(_cc_N(get_reserved)(cap) == 0 && "Unknown reserved bits set in tagged capability");
+    }
     cap->_cr_cursor = req_base;
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
