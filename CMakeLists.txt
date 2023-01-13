@@ -60,10 +60,17 @@ if (HAVE_UBSAN)
     endif()
 endif()
 
-add_compile_options(-Wno-gnu-statement-expression)
-add_compile_options(-fno-common)
+add_compile_options(-fno-common -fdiagnostics-show-option)
+add_compile_options(-Wall -Wextra -Wno-c11-extensions -Wno-padded -Wno-gnu-statement-expression)
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-old-style-cast>
+                    $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++98-compat-pedantic>
+                    $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++98-c++11-compat-binary-literal>)
 
-add_compile_options(-pedantic -Wall -Wextra -Wno-old-style-cast -Wno-c++98-compat-pedantic -Wno-c++98-c++11-compat-binary-literal -Wno-c11-extensions -Wno-padded)
+# Cannot use -Wpedantic with GCC since that flags use of __int128, so only add it for Clang
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+    add_compile_options(-Wpedantic)
+endif()
+
 # TODO: -Weverything
 add_library(cheri_compressed_cap14 cheri_compressed_cap.c cheri_compressed_cap.h)
 
@@ -108,7 +115,7 @@ function(add_sail_wrapper _format _suffix _sanitizer_flags)
         target_link_libraries(sail_wrapper_${_format}${_suffix} PRIVATE "${_sanitizer_flags}")
     endif()
     target_link_libraries(sail_wrapper_${_format}${_suffix} PUBLIC GMP::GMP)  # needs GMP, should propagate to all users
-    target_compile_options(sail_wrapper_${_format}${_suffix} PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-extra-semi -Wno-gnu-binary-literal)
+    target_compile_options(sail_wrapper_${_format}${_suffix} PRIVATE -Wno-unused-function -Wno-unused-parameter -Wno-sign-compare -Wno-unused-label -Wno-gnu-binary-literal)
 endfunction()
 
 function(add_sail_wrappers _format)
