@@ -1,27 +1,38 @@
 cmake_minimum_required(VERSION 3.10)
 project(cheri_compressed_cap C CXX)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_C_STANDARD_REQUIRED 11)
+set(CMAKE_CXX_STANDARD_REQUIRED 14)
 if(APPLE AND NOT (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
     # XXX: ugly hack, would be nice if llvm could find this
     include_directories(SYSTEM /Library/Developer/CommandLineTools/usr/include/c++/v1)
 endif()
 
+include(CMakePushCheckState)
+include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
-# CMAKE_REQUIRED_LINK_OPTIONS needs cmake 3.13
-set(CMAKE_REQUIRED_LIBRARIES -fsanitize=undefined)
-check_cxx_compiler_flag(-fsanitize=undefined HAVE_UBSAN)
-set(CMAKE_REQUIRED_LIBRARIES -fsanitize=address)
-check_cxx_compiler_flag(-fsanitize=address HAVE_ASAN)
-set(CMAKE_REQUIRED_LIBRARIES -fsanitize=memory)
-check_cxx_compiler_flag(-fsanitize=memory HAVE_MSAN)
+
+macro(check_sanitizer_flag _flag _var)
+    cmake_push_check_state()
+    set(CMAKE_REQUIRED_LIBRARIES ${_flag})
+    # CMAKE_REQUIRED_LINK_OPTIONS needs cmake 3.13
+    set(CMAKE_REQUIRED_LINK_OPTIONS ${_flag})
+    set(CMAKE_REQUIRED_DEFINITIONS ${_flag})
+    set(CMAKE_REQUIRED_FLAGS ${_flag})
+    check_cxx_compiler_flag(-fsanitize=memory ${_var})
+    cmake_pop_check_state()
+endmacro()
+
+cmake_push_check_state()
+check_sanitizer_flag(-fsanitize=undefined HAVE_UBSAN)
+check_sanitizer_flag(-fsanitize=address HAVE_ASAN)
+check_sanitizer_flag(-fsanitize=memory HAVE_MSAN)
 # XXX: needs instrumented system libraries
 set(HAVE_MSAN FALSE)
 # Check for libfuzzer compiler support and runtime libraries.
-include(CMakePushCheckState)
 cmake_push_check_state()
 set(CMAKE_REQUIRED_LIBRARIES -fsanitize=fuzzer)
 set(CMAKE_REQUIRED_DEFINITIONS -fsanitize=fuzzer)
+set(CMAKE_REQUIRED_LINK_OPTIONS -fsanitize=fuzzer)
 set(CMAKE_REQUIRED_FLAGS -fsanitize=fuzzer)
 check_cxx_source_compiles([=[
 #include <stddef.h>
@@ -35,7 +46,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 ]=] HAVE_LIBFUZZER)
 cmake_pop_check_state()
 
-include(CheckCCompilerFlag)
 check_c_compiler_flag(-Wunused-but-set-variable HAVE_UNUSED_BUT_SET_VARIABLE)
 if (HAVE_UNUSED_BUT_SET_VARIABLE)
     add_compile_options(-DHAVE_UNUSED_BUT_SET_VARIABLE)
