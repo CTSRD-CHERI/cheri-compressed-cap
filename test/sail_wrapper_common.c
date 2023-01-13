@@ -149,11 +149,11 @@ void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, c
     sail_decode_common_mem(mem_pesbt ^ CC128_NULL_XOR_MASK, mem_cursor, tag, cdp);
 }
 
-uint64_t sail_compress_common_raw(const cc128m_cap_t* csp) { assert(0); }
+uint64_t sail_compress_common_raw(const cc128m_cap_t* csp) { abort(); }
 
-uint64_t sail_compress_common_mem(const cc128m_cap_t* csp) { assert(0); }
+uint64_t sail_compress_common_mem(const cc128m_cap_t* csp) { abort(); }
 
-static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) { assert(0); }
+static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {  abort(); }
 
 #else
 
