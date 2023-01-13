@@ -60,7 +60,7 @@ if (HAVE_UBSAN)
     endif()
 endif()
 
-add_compile_options(-fno-common -fdiagnostics-show-option)
+add_compile_options(-fno-common)
 add_compile_options(-Wall -Wextra -Wno-c11-extensions -Wno-padded -Wno-gnu-statement-expression)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-old-style-cast>
                     $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++98-compat-pedantic>
