@@ -18,7 +18,7 @@ macro(check_sanitizer_flag _flag _var)
     set(CMAKE_REQUIRED_LINK_OPTIONS ${_flag})
     set(CMAKE_REQUIRED_DEFINITIONS ${_flag})
     set(CMAKE_REQUIRED_FLAGS ${_flag})
-    check_cxx_compiler_flag(-fsanitize=memory ${_var})
+    check_cxx_compiler_flag(${_flag} ${_var})
     cmake_pop_check_state()
 endmacro()
 
