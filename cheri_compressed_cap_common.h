@@ -948,6 +948,18 @@ static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cu
     return creg;
 }
 
+static inline _cc_cap_t _cc_N(make_null_derived_cap)(_cc_addr_t addr) {
+    _cc_cap_t creg;
+    memset(&creg, 0, sizeof(creg));
+    creg._cr_cursor = addr;
+    creg._cr_top = _CC_N(MAX_TOP);
+    creg.cr_pesbt = _CC_N(NULL_PESBT);
+    creg.cr_bounds_valid = 1;
+    creg.cr_exp = _CC_N(NULL_EXP);
+    _cc_debug_assert(_cc_N(is_representable_cap_exact)(&creg));
+    return creg;
+}
+
 static inline _cc_addr_t _cc_N(get_required_alignment)(_cc_addr_t req_length) {
     // To get the required alignment from the CRAM mask we can just invert
     // the bits and add one to get a power-of-two
@@ -987,6 +999,9 @@ public:
     static inline bool is_representable_cap_exact(const cap_t* cap) { return _cc_N(is_representable_cap_exact)(cap); }
     static inline cap_t make_max_perms_cap(addr_t base, addr_t cursor, length_t top) {
         return _cc_N(make_max_perms_cap)(base, cursor, top);
+    }
+    static inline cap_t make_null_derived_cap(addr_t addr) {
+        return _cc_N(make_null_derived_cap)(addr);
     }
     static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
     static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }
