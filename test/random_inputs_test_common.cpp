@@ -89,7 +89,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
     if (!success) {
         fprintf(stderr, "Decompressed raw pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", (uint64_t)ti.pesbt,
                 (uint64_t)ti.cursor);
-        dump_cap_fields(result);
+        dump_cap_fields(stderr, result);
     }
     // Now try recompressing and compare pesbt (for valid capabilities)
     typename Handler::length_t top_full = result.top();
@@ -122,9 +122,9 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
         success = success && check_fields_match<Handler>(result_recompressed, ti, "Sail recompressed pesbt: ");
         if (!success) {
             fprintf(stderr, "\nOriginal decoded:\n");
-            dump_cap_fields(result);
+            dump_cap_fields(stderr, result);
             fprintf(stderr, "\nRecompressed decoded:\n");
-            dump_cap_fields(result_recompressed);
+            dump_cap_fields(stderr, result_recompressed);
         }
         _cc_addr_t recompressed_pesbt_after_normalize = Handler::compress_raw(&result_recompressed);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == recompressed_pesbt_after_normalize);
