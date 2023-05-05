@@ -32,8 +32,6 @@ static inline bool operator==(const _cc_N(bounds_bits)& a, const _cc_N(bounds_bi
 }
 #endif
 
-#include <catch2/catch_test_macros.hpp>
-
 static bool failed = false;
 
 template <typename T> static inline bool check(T expected, T actual, const std::string& msg) {
@@ -46,31 +44,49 @@ template <typename T> static inline bool check(T expected, T actual, const std::
 
 template <class T, std::size_t N> constexpr inline size_t array_lengthof(T (&)[N]) { return N; }
 
-template <class Cap> static void dump_cap_fields(const Cap& result) {
-    fprintf(stderr, "Permissions: 0x%" PRIx32 "\n", result.permissions()); // TODO: decode perms
-    fprintf(stderr, "User Perms:  0x%" PRIx32 "\n", result.software_permissions());
-    fprintf(stderr, "Base:        0x%016" PRIx64 "\n", (uint64_t)result.base());
-    fprintf(stderr, "Offset:      0x%016" PRIx64 "\n", (uint64_t)result.offset());
-    fprintf(stderr, "Cursor:      0x%016" PRIx64 "\n", (uint64_t)result.address());
+template <class Cap> static void dump_cap_fields(FILE* f, const Cap& result) {
+    fprintf(f, "Permissions: 0x%" PRIx32 "\n", result.permissions()); // TODO: decode perms
+    fprintf(f, "User Perms:  0x%" PRIx32 "\n", result.software_permissions());
+    fprintf(f, "Base:        0x%016" PRIx64 "\n", (uint64_t)result.base());
+    fprintf(f, "Offset:      0x%016" PRIx64 "\n", (uint64_t)result.offset());
+    fprintf(f, "Cursor:      0x%016" PRIx64 "\n", (uint64_t)result.address());
     unsigned __int128 len_full = result.length();
-    fprintf(stderr, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(len_full >> 64), (uint64_t)len_full,
+    fprintf(f, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(len_full >> 64), (uint64_t)len_full,
             len_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
     unsigned __int128 top_full = result.top();
-    fprintf(stderr, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(top_full >> 64), (uint64_t)top_full,
+    fprintf(f, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(top_full >> 64), (uint64_t)top_full,
             top_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
-    fprintf(stderr, "Flags:       %d\n", (int)result.flags());
-    fprintf(stderr, "Reserved:    %d\n", (int)result.reserved_bits());
-    fprintf(stderr, "Sealed:      %d\n", (int)result.is_sealed());
-    fprintf(stderr, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
-    fprintf(stderr, "\n");
+    fprintf(f, "Flags:       %d\n", (int)result.flags());
+    fprintf(f, "Reserved:    %d\n", (int)result.reserved_bits());
+    fprintf(f, "Sealed:      %d\n", (int)result.is_sealed());
+    fprintf(f, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
+    fprintf(f, "\n");
 }
+
+std::ostream& operator<<(std::ostream& os, const _cc_cap_t& value);
+std::ostream& operator<<(std::ostream& os, const _cc_cap_t& value) {
+    char buf[1024];
+    FILE* f = fmemopen(buf, sizeof(buf), "w+");
+    dump_cap_fields(f, value);
+    fclose(f);
+    return os << buf;
+}
+
+std::ostream& operator<<(std::ostream& os, const cc128_length_t& value);
+std::ostream& operator<<(std::ostream& os, const cc128_length_t& value) {
+    char buf[64];
+    snprintf(buf, sizeof(buf), "0x%" PRIx64 "%016" PRIx64, (uint64_t)(value >> 64), (uint64_t)value);
+    return os << buf;
+}
+
+#include <catch2/catch_test_macros.hpp>
 
 #ifndef TEST_CC_IS_CHERI256
 __attribute__((used)) static _cc_cap_t decompress_representable(_cc_addr_t pesbt_already_xored, _cc_addr_t cursor) {
     _cc_cap_t result;
     printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", (uint64_t)pesbt_already_xored, (uint64_t)cursor);
     _cc_N(decompress_raw)(pesbt_already_xored, cursor, false, &result);
-    dump_cap_fields(result);
+    dump_cap_fields(stderr, result);
     // Check that the result is the same again when compressed
     _cc_addr_t new_pesbt_already_xored = _cc_N(compress_raw)(&result);
     CHECK(pesbt_already_xored == new_pesbt_already_xored);
