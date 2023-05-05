@@ -770,6 +770,19 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
     return _cc_N(is_representable_new_addr)(_cc_N(is_cap_sealed)(cap), cap->cr_base, length, cap->_cr_cursor, new_addr);
 }
 
+static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
+    if (cap->cr_tag && _cc_N(is_cap_sealed)(cap)) {
+        cap->cr_tag = false;
+    }
+    if (!_cc_N(is_representable_with_addr)(cap, new_addr)) {
+        // Detag and recompute the new bounds if the capability became unrepresentable.
+        cap->cr_tag = false;
+        _cc_N(decompress_raw)(cap->cr_pesbt, new_addr, false, cap);
+    } else {
+        cap->_cr_cursor = new_addr;
+    }
+}
+
 static bool _cc_N(fast_is_representable_new_addr)(bool sealed, _cc_addr_t base, _cc_length_t length, _cc_addr_t cursor,
                                                   _cc_addr_t new_cursor) {
     (void)sealed;
