@@ -337,6 +337,17 @@ static inline bool _cc_N(bounds_bits_valid)(_cc_bounds_bits bounds) {
     }
 }
 
+/// Returns the address with Morello flags (high address bits) removed and sign extended.
+/// This is currently an no-op for non-Morello but that may change in the future.
+static inline _cc_addr_t _cc_N(cap_bounds_address)(_cc_addr_t addr) {
+    // Remove flags bits
+    _cc_addr_t cursor = addr & _CC_CURSOR_MASK;
+    // Sign extend
+    if (cursor & ((_CC_CURSOR_MASK >> 1) + 1))
+        cursor |= ~_CC_CURSOR_MASK;
+    return cursor;
+}
+
 static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cursor, _cc_addr_t* base_out,
                                            _cc_length_t* top_out) {
 #ifdef CC_IS_MORELLO
@@ -346,13 +357,8 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
         *top_out = _CC_N(MAX_TOP);
         return valid;
     }
-
-    // Remove flags bits
-    cursor = cursor & _CC_CURSOR_MASK;
-    // Sign extend
-    if (cursor & ((_CC_CURSOR_MASK >> 1) + 1))
-        cursor |= ~_CC_CURSOR_MASK;
 #endif
+    cursor = _cc_N(cap_bounds_address)(cursor);
 
     // For the remaining computations we have to clamp E to max_E
     //  let E = min(maxE, unsigned(c.E)) in
@@ -721,15 +727,6 @@ static inline bool _cc_N(is_representable_new_addr)(bool sealed, _cc_addr_t base
     } else {
         return _cc_N(fast_is_representable_new_addr)(sealed, base, length, cursor, new_cursor);
     }
-}
-
-static inline _cc_addr_t _cc_N(cap_bounds_address)(const _cc_cap_t* cap) {
-    // Remove flags bits
-    _cc_addr_t cursor = cap->_cr_cursor & _CC_CURSOR_MASK;
-    // Sign extend
-    if (cursor & ((_CC_CURSOR_MASK >> 1) + 1))
-        cursor |= ~_CC_CURSOR_MASK;
-    return cursor;
 }
 
 // This should only be used on decompressed caps, as it relies on the exp field
