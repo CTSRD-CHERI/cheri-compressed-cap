@@ -94,10 +94,8 @@ static inline void check_length(lbits bits, uint64_t length) {
 #endif
 }
 
-/* Exported API */
-void sail_decode_common_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128m_cap_t* cdp) {
-    // The Morello cap is just all the bits slammed together with no extra decode
-
+// The Morello cap is just all the bits slammed together with no extra decode
+static lbits to_sail_cap(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
     lbits cap_without_tag;
     pesbt_and_addr_to_sail_cap_bits(&cap_without_tag, mem_pesbt, mem_cursor);
     lbits capbits;
@@ -109,44 +107,59 @@ void sail_decode_common_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, c
     KILL(lbits)(&cap_without_tag);
 
     check_length(capbits, 129);
+    return capbits;
+}
+
+static lbits cap_t_to_sail_cap(const _cc_cap_t* c) {
+    return to_sail_cap(c->cr_pesbt ^ _CC_N(NULL_XOR_MASK), c->_cr_cursor, c->cr_tag);
+}
+
+/* Exported API */
+static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
+    _cc_cap_t result;
+    memset(&result, 0, sizeof(result));
 
     // Now extract some fields
-
     // Bounds (base and top)
     struct sail_bounds_tuple bounds;
     _CC_CONCAT(create_, sail_bounds_tuple)(&bounds);
-    _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetBounds)(&bounds, capbits);
+    _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetBounds)(&bounds, *sail_cap);
 
     check_length(bounds.ztup0, 65);
     check_length(bounds.ztup1, 65);
 
-    cdp->cr_base = extract_bits(bounds.ztup0, 0, 64);
+    result.cr_base = extract_bits(bounds.ztup0, 0, 64);
     uint64_t top_hi = extract_bits(bounds.ztup1, 64, 1);
     uint64_t top_lo = extract_low_bits(bounds.ztup1);
-    cdp->_cr_top = (((cc128m_length_t)top_hi) << 64) | (cc128m_length_t)top_lo;
+    result._cr_top = (((_cc_length_t)top_hi) << 64) | (_cc_length_t)top_lo;
     _CC_CONCAT(kill_, sail_bounds_tuple)(&bounds);
 
-    cdp->cr_bounds_valid = bounds.ztup2;
+    result.cr_bounds_valid = bounds.ztup2;
 
     // Address including flag bits
-    cdp->_cr_cursor = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetValue)(capbits);
-    _cc_N(update_perms)(cdp, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetPermissions)(capbits));
-    _cc_N(update_otype)(cdp, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetObjectType)(capbits));
-    cdp->cr_tag = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetTag)(capbits);
+    result._cr_cursor = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetValue)(*sail_cap);
+    _cc_N(update_perms)(&result, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetPermissions)(*sail_cap));
+    _cc_N(update_otype)(&result, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetObjectType)(*sail_cap));
+    result.cr_tag = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetTag)(*sail_cap);
 
     // Fix these extra fields not really present in sail
-    _cc_N(update_reserved)(cdp, 0);
-    _cc_N(update_flags)(cdp, 0);
-    _cc_N(update_uperms)(cdp, 0);
-    cdp->cr_pesbt = mem_pesbt;
+    _cc_N(update_reserved)(&result, 0);
+    _cc_N(update_flags)(&result, 0);
+    _cc_N(update_uperms)(&result, 0);
+    // Morello sail does not include the XOR, so we have to apply it here to match the C compression library.
+    result.cr_pesbt = extract_bits(*sail_cap, 64, 64) ^ _CC_N(NULL_XOR_MASK);
+    return result;
+}
 
-    // Destroy cap
+void sail_decode_common_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, _cc_cap_t* cdp) {
+    lbits capbits = to_sail_cap(mem_pesbt, mem_cursor, tag);
+    *cdp = from_sail_cap(&capbits);
     KILL(lbits)(&capbits);
 }
 
-void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128m_cap_t* cdp) {
+void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, _cc_cap_t* cdp) {
     // Morello RAW has no mask. If this has been masked, undo it.
-    sail_decode_common_mem(mem_pesbt ^ CC128_NULL_XOR_MASK, mem_cursor, tag, cdp);
+    sail_decode_common_mem(mem_pesbt ^ _CC_N(NULL_XOR_MASK), mem_cursor, tag, cdp);
 }
 
 uint64_t sail_compress_common_raw(const cc128m_cap_t* csp) { abort(); }
