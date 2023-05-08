@@ -102,7 +102,7 @@ static inline void check_crrl_and_cram(_cc_addr_t value) {
     }
 }
 
-void fuzz_setbounds(const cc128_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t req_len) {
+void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t req_len) {
     _cc_cap_t new_result = input_cap;
     new_result.cr_tag = false;
     _cc_cap_t new_sail_result = new_result;
