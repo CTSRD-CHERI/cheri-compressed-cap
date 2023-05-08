@@ -23,6 +23,7 @@ sail128_srcs="prelude.sail builtins.sail decode_start.sail v8_base.sail decode_e
 keep_required_functions=(
   -c_preserve CapGetBounds
   -c_preserve CapSetBounds
+  -c_preserve CapGetExponent
   -c_preserve CapGetValue
   -c_preserve CapGetPermissions
   -c_preserve CapGetObjectType

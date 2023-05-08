@@ -13927,7 +13927,10 @@ static unit sailgen_main(unit zgsz3175)
   struct ztuple_z8z5bvzCz0z5bvzCz0z5boolz9 zbits6;
   CREATE(ztuple_z8z5bvzCz0z5bvzCz0z5boolz9)(&zbits6);
   sailgen_CapGetBounds(&zbits6, zTestCap);
+  int64_t zexp;
+  zexp = sailgen_CapGetExponent(zTestCap);
   zcbz330 = UNIT;
+
   KILL(ztuple_z8z5bvzCz0z5bvzCz0z5boolz9)(&zbits6);
 
 

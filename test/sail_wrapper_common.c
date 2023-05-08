@@ -120,7 +120,7 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     memset(&result, 0, sizeof(result));
 
     // Now extract some fields
-    // Bounds (base and top)
+    // Bounds (base and top) and exponent
     struct sail_bounds_tuple bounds;
     _CC_CONCAT(create_, sail_bounds_tuple)(&bounds);
     _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetBounds)(&bounds, *sail_cap);
@@ -135,6 +135,7 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     _CC_CONCAT(kill_, sail_bounds_tuple)(&bounds);
 
     result.cr_bounds_valid = bounds.ztup2;
+    result.cr_exp = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetExponent)(*sail_cap);
 
     // Address including flag bits
     result._cr_cursor = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetValue)(*sail_cap);
@@ -162,9 +163,9 @@ void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, _
     sail_decode_common_mem(mem_pesbt ^ _CC_N(NULL_XOR_MASK), mem_cursor, tag, cdp);
 }
 
-uint64_t sail_compress_common_raw(const cc128m_cap_t* csp) { abort(); }
+uint64_t sail_compress_common_raw(const _cc_cap_t* csp) { abort(); }
 
-uint64_t sail_compress_common_mem(const cc128m_cap_t* csp) { abort(); }
+uint64_t sail_compress_common_mem(const _cc_cap_t* csp) { abort(); }
 
 static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {  abort(); }
 

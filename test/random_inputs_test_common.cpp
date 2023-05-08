@@ -53,6 +53,9 @@ static bool check_fields_match(const typename Handler::cap_t& result, const test
     CHECK_AND_SAVE_SUCCESS(sail_result.reserved_bits() == result.reserved_bits());
     CHECK_AND_SAVE_SUCCESS(sail_result.cr_tag == result.cr_tag);
     CHECK_AND_SAVE_SUCCESS(sail_result.software_permissions() == result.software_permissions());
+    CHECK_AND_SAVE_SUCCESS(sail_result.cr_exp == result.cr_exp);
+    CHECK_AND_SAVE_SUCCESS(sail_result == result);
+    CHECK_AND_SAVE_SUCCESS(memcmp(&sail_result, &result, sizeof(result)) == 0);
 
     // Since we are parsing arbitrary bit patterns, the length can be negative.
     // For the CRRL/CRAM check we only look at the low 64 bits of length.
