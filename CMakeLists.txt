@@ -188,10 +188,7 @@ function(add_cc_tests _format)
         if (NOT _format STREQUAL "128m")
             add_cc_tests_target(${_format} setbounds_test)
         endif()
-        # TODO: 41047 failed assertions
-        if (NOT _format STREQUAL "128m")
-            add_cc_tests_target(${_format} random_inputs_test)
-        endif()
+        add_cc_tests_target(${_format} random_inputs_test)
     endif()
 endfunction()
 
