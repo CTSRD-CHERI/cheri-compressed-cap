@@ -918,27 +918,6 @@ static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_len
     return _cc_N(setbounds_impl)(cap, req_base, req_top, NULL);
 }
 
-/* @return the mask that needs to be applied to base in order to get a precisely representable capability */
-static inline _cc_addr_t _cc_N(get_alignment_mask)(_cc_addr_t req_length) {
-    if (req_length == 0) {
-        // With a lenght of zero we know it is precise so we can just return an
-        // all ones mask.
-        // This avoids undefined behaviour when counting most significant bit later.
-        return _CC_MAX_ADDR;
-    }
-    // To compute the mask we set bounds on a maximum permissions capability and
-    // return the mask that was used to adjust the length
-    _cc_cap_t tmpcap;
-    memset(&tmpcap, 0, sizeof(tmpcap));
-    tmpcap.cr_tag = 1;
-    tmpcap._cr_top = _CC_MAX_TOP;
-    _cc_N(update_otype)(&tmpcap, _CC_N(OTYPE_UNSEALED));
-    _cc_N(update_ebt)(&tmpcap, _CC_N(RESET_EBT));
-    _cc_addr_t mask = 0;
-    _cc_N(setbounds_impl)(&tmpcap, 0, req_length, &mask);
-    return mask;
-}
-
 static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
     _cc_cap_t creg;
     memset(&creg, 0, sizeof(creg));
@@ -956,6 +935,22 @@ static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cu
     assert(exact_input && "Invalid arguments");
     assert(_cc_N(is_representable_cap_exact)(&creg));
     return creg;
+}
+
+/* @return the mask that needs to be applied to base in order to get a precisely representable capability */
+static inline _cc_addr_t _cc_N(get_alignment_mask)(_cc_addr_t req_length) {
+    if (req_length == 0) {
+        // With a length of zero we know it is precise so we can just return an
+        // all ones mask.
+        // This avoids undefined behaviour when counting most significant bit later.
+        return _CC_MAX_ADDR;
+    }
+    // To compute the mask we set bounds on a maximum permissions capability and
+    // return the mask that was used to adjust the length
+    _cc_cap_t tmpcap = _cc_N(make_max_perms_cap(0, 0, _CC_MAX_TOP));
+    _cc_addr_t mask = 0;
+    _cc_N(setbounds_impl)(&tmpcap, 0, req_length, &mask);
+    return mask;
 }
 
 static inline _cc_cap_t _cc_N(make_null_derived_cap)(_cc_addr_t addr) {
