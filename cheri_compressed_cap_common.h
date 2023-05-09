@@ -731,8 +731,10 @@ static inline bool _cc_N(is_representable_new_addr)(bool sealed, _cc_addr_t base
     }
 }
 
-// This should only be used on decompressed caps, as it relies on the exp field
+/// Returns whether the capability bounds depend on any of the cursor bits or if they can be fully derived from E/B/T.
 static inline bool _cc_N(cap_bounds_uses_value)(const _cc_cap_t* cap) {
+    // This should only be used on decompressed caps, as it relies on the exp field
+    _cc_debug_assert(_cc_N(extract_bounds_bits)(cap->cr_pesbt).E == cap->cr_pesbt);
     return cap->cr_exp < (sizeof(_cc_addr_t) * 8) - _CC_N(FIELD_BOTTOM_ENCODED_SIZE);
 }
 
