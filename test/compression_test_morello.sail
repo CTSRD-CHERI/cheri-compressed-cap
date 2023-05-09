@@ -3,6 +3,7 @@ register TestCap : bits(129)
 
 function main () : unit -> unit = {
   TestCap = Zeros(129);
+  TestCap2 = CMAX;
   /* while (true) do { */
       let bits1 = CapGetValue(TestCap);
       let bits2 = CapGetPermissions(TestCap);

@@ -163,9 +163,18 @@ void sail_decode_common_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, _
     sail_decode_common_mem(mem_pesbt ^ _CC_N(NULL_XOR_MASK), mem_cursor, tag, cdp);
 }
 
-uint64_t sail_compress_common_raw(const _cc_cap_t* csp) { abort(); }
+uint64_t sail_compress_common_mem(const _cc_cap_t* csp) {
+    lbits capbits = cap_t_to_sail_cap(csp);
+    // The sail representation uses the memory format internally.
+    uint64_t mem_pesbt = extract_bits(capbits, 64, 64);
+    KILL(lbits)(&capbits);
+    return mem_pesbt;
+}
 
-uint64_t sail_compress_common_mem(const _cc_cap_t* csp) { abort(); }
+uint64_t sail_compress_common_raw(const _cc_cap_t* csp) {
+    // Morello sail does not include the XOR, so we have to apply it here to match the C compression library.
+    return sail_compress_common_mem(csp) ^ _CC_N(NULL_XOR_MASK);
+}
 
 static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {  abort(); }
 
@@ -305,4 +314,10 @@ bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _
     return exact;
 }
 
-#endif // Morello
+_cc_cap_t _CC_CONCAT(sail_reset_capability_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
+    _cc_cap_t result;
+    sail_cap_to_cap_t(&zdefault_cap, &result);
+    return result;
+}
+
+#endif // SAIL_WRAPPER_CC_IS_MORELLO

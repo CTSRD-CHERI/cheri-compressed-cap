@@ -91,3 +91,9 @@ uint64_t sail_compress_128m_mem(const cc128m_cap_t* csp) { return sail_compress_
 bool sail_setbounds_128m(cc128m_cap_t* cap, cc128m_addr_t req_base, cc128m_length_t req_top) {
     abort(); // TODO: call sailgen_CapSetBounds();
 }
+
+_cc_cap_t sail_reset_capability_128m(void) {
+    _cc_cap_t result;
+    return from_sail_cap(&zCMAX);
+    return result;
+}
