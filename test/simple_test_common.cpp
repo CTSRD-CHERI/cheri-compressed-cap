@@ -131,10 +131,14 @@ TEST_CASE("Check omnipotent capability matches sail", "[sail]") {
     auto sail_reset_cap = TestAPICC::sail_reset_capability();
     auto cc_lib_reset_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     CHECK(sail_reset_cap == cc_lib_reset_cap);
-#ifndef TEST_CC_IS_MORELLO
-    // FIXME: cr_exp is not set correctly for Morello
     CHECK(_cc_N(raw_equal(&sail_reset_cap, &cc_lib_reset_cap)));
-#endif
+    CHECK(cc_lib_reset_cap.cr_exp == _CC_N(RESET_EXP));
+}
+
+TEST_CASE("Check make_max_perms_cap() sets cr_exp correctly", "[sail]") {
+    // make_max_perms_cap was not updating the cr_exp field and kept it as the NULL exponent.
+    auto cap = TestAPICC::make_max_perms_cap(0, 16, 16);
+    CHECK(cap.cr_exp == 0);
 }
 
 // TODO: Implement sail_null_pesbt_128

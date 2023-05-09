@@ -468,6 +468,7 @@ static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_
 // Update ebt bits in pesbt
 static inline void _cc_N(update_ebt)(_cc_cap_t* csp, _cc_addr_t new_ebt) {
     csp->cr_pesbt = (csp->cr_pesbt & ~_CC_N(FIELD_EBT_MASK64)) | new_ebt;
+    csp->cr_exp = _cc_N(extract_bounds_bits)(new_ebt).E;
 }
 
 /*
@@ -897,7 +898,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
     cap->_cr_cursor = req_base;
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
-    cap->cr_exp = new_cap.cr_exp;
     _cc_N(update_ebt)(cap, new_ebt);
     cap->cr_bounds_valid = new_cap.cr_bounds_valid;
 #ifdef CC_IS_MORELLO
@@ -929,7 +929,7 @@ static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cu
     creg.cr_pesbt = _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) | _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) |
                     _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE);
     creg.cr_tag = true;
-    creg.cr_exp = _CC_N(NULL_EXP);
+    creg.cr_exp = _CC_N(RESET_EXP);
     bool exact_input = false;
     _cc_N(update_ebt)(&creg, _cc_N(compute_ebt)(creg.cr_base, creg._cr_top, NULL, &exact_input));
     assert(exact_input && "Invalid arguments");
