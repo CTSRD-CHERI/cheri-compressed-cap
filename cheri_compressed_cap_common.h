@@ -437,6 +437,7 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
 }
 
 static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
+    memset(cdp, 0, sizeof(*cdp));
     cdp->cr_tag = tag;
     cdp->_cr_cursor = cursor;
     cdp->cr_pesbt = pesbt;
