@@ -45,22 +45,22 @@ template <typename T> static inline bool check(T expected, T actual, const std::
 template <class T, std::size_t N> constexpr inline size_t array_lengthof(T (&)[N]) { return N; }
 
 template <class Cap> static void dump_cap_fields(FILE* f, const Cap& result) {
-    fprintf(f, "Permissions: 0x%" PRIx32 "\n", result.permissions()); // TODO: decode perms
-    fprintf(f, "User Perms:  0x%" PRIx32 "\n", result.software_permissions());
-    fprintf(f, "Base:        0x%016" PRIx64 "\n", (uint64_t)result.base());
-    fprintf(f, "Offset:      0x%016" PRIx64 "\n", (uint64_t)result.offset());
-    fprintf(f, "Cursor:      0x%016" PRIx64 "\n", (uint64_t)result.address());
-    unsigned __int128 len_full = result.length();
-    fprintf(f, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(len_full >> 64), (uint64_t)len_full,
-            len_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
+    fprintf(f, "Base:        %#016" PRIx64 "\n", (uint64_t)result.base());
+    fprintf(f, "Cursor:      %#016" PRIx64 "    Offset: %" PRIx64 "\n", (uint64_t)result.address(),
+            (uint64_t)result.offset());
     unsigned __int128 top_full = result.top();
     fprintf(f, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(top_full >> 64), (uint64_t)top_full,
             top_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
-    fprintf(f, "Flags:       %d\n", (int)result.flags());
-    fprintf(f, "Reserved:    %d\n", (int)result.reserved_bits());
-    fprintf(f, "Sealed:      %d\n", (int)result.is_sealed());
-    fprintf(f, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
-    fprintf(f, "\n");
+    unsigned __int128 len_full = result.length();
+    fprintf(f, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(len_full >> 64), (uint64_t)len_full,
+            len_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
+#ifndef TEST_CC_IS_CHERI256
+    fprintf(f, "PESBT:       %#016" PRIx64 "  Exponent: %d\n", (uint64_t)result.cr_pesbt, result.cr_exp);
+#endif
+    fprintf(f, "Tag:         %d  Permissions: %#" PRIx32 "  User Perms: %#" PRIx32 "\n", result.cr_tag,
+            result.permissions(), result.software_permissions());
+    fprintf(f, "Flags:       %d  Reserved: %d  Sealed: %d  OType: %#" PRIx32 "%s", (int)result.flags(),
+            (int)result.reserved_bits(), (int)result.is_sealed(), result.type(), otype_suffix(result.type()));
 }
 
 std::ostream& operator<<(std::ostream& os, const _cc_cap_t& value);
