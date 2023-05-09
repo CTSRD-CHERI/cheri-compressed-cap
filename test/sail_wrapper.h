@@ -45,6 +45,7 @@ cc64_addr_t sail_null_pesbt_64(void);
 cc64_addr_t sail_representable_mask_64(cc64_addr_t len);
 cc64_addr_t sail_representable_length_64(cc64_addr_t len);
 bool sail_setbounds_64(cc64_cap_t* cap, cc64_addr_t req_base, cc64_length_t req_top);
+cc64_cap_t sail_reset_capability_64(void);
 
 void sail_decode_128_mem(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag, cc128_cap_t* cdp);
 void sail_decode_128_raw(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag, cc128_cap_t* cdp);
@@ -55,6 +56,7 @@ cc128_addr_t sail_null_pesbt_128(void);
 cc128_addr_t sail_representable_mask_128(cc128_addr_t len);
 cc128_addr_t sail_representable_length_128(cc128_addr_t len);
 bool sail_setbounds_128(cc128_cap_t* cap, cc128_addr_t req_base, cc128_length_t req_top);
+cc128_cap_t sail_reset_capability_128(void);
 
 void sail_decode_128m_mem(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag, cc128m_cap_t* cdp);
 void sail_decode_128m_raw(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag, cc128m_cap_t* cdp);
@@ -65,6 +67,7 @@ cc128m_addr_t sail_null_pesbt_128m(void);
 cc128m_addr_t sail_representable_mask_128m(cc128m_addr_t len);
 cc128m_addr_t sail_representable_length_128m(cc128m_addr_t len);
 bool sail_setbounds_128m(cc128m_cap_t* cap, cc128m_addr_t req_base, cc128m_length_t req_top);
+cc128m_cap_t sail_reset_capability_128m(void);
 
 #define _cc_sail_decode_mem _CC_CONCAT(_CC_CONCAT(sail_decode_, CC_FORMAT_LOWER), _mem)
 #define _cc_sail_decode_raw _CC_CONCAT(_CC_CONCAT(sail_decode_, CC_FORMAT_LOWER), _raw)
@@ -96,6 +99,7 @@ public:
     static inline bool sail_setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
         return sail_setbounds_64(cap, req_base, req_top);
     }
+    static inline cap_t sail_reset_capability() { return sail_reset_capability_64(); }
 };
 
 class TestAPI128 : public CompressedCap128 {
@@ -115,6 +119,7 @@ public:
     static inline bool sail_setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
         return sail_setbounds_128(cap, req_base, req_top);
     }
+    static inline cap_t sail_reset_capability() { return sail_reset_capability_128(); }
 };
 
 class TestAPI128m : public CompressedCap128m {
@@ -134,6 +139,7 @@ public:
     static inline bool sail_setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
         return sail_setbounds_128m(cap, req_base, req_top);
     }
+    static inline cap_t sail_reset_capability() { return sail_reset_capability_128m(); }
 };
 
 #define TestAPICC _CC_CONCAT(TestAPI, CC_FORMAT_LOWER)

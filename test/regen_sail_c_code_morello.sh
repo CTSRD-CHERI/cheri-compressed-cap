@@ -19,7 +19,7 @@ if [ ! -d "$SAIL_MORELLO_DIR/src" ]; then
   exit 1
 fi
 
-sail128_srcs="prelude.sail builtins.sail decode_start.sail v8_base.sail decode_end.sail stubs.sail no_devices.sail"
+sail128_srcs="prelude.sail builtins.sail decode_start.sail v8_base.sail decode_end.sail stubs.sail no_devices.sail impdefs.sail"
 keep_required_functions=(
   -c_preserve CapGetBounds
   -c_preserve CapSetBounds

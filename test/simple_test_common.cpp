@@ -126,6 +126,17 @@ TEST_CASE("Check max size cap representable", "[representable]") {
     check_representable((_cc_addr_t)0xffffffffff000000, 0x00000000000ffffff, 0, false, "length with too many bits");
 }
 
+TEST_CASE("Check omnipotent capability matches sail", "[sail]") {
+    // 0000000d b:0000000000000000 l:ffffffffffffffff |o:0000000000000000 t:ffffff
+    auto sail_reset_cap = TestAPICC::sail_reset_capability();
+    auto cc_lib_reset_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(sail_reset_cap == cc_lib_reset_cap);
+#ifndef TEST_CC_IS_MORELLO
+    // FIXME: cr_exp is not set correctly for Morello
+    CHECK(_cc_N(raw_equal(&sail_reset_cap, &cc_lib_reset_cap)));
+#endif
+}
+
 // TODO: Implement sail_null_pesbt_128
 #ifndef TEST_CC_IS_MORELLO
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
