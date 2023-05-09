@@ -20,7 +20,6 @@ TEST_CASE("Compressed NULL cap has canonical bounds", "[nullcap]") {
 #endif
 
 // TODO: Implement non-stub sail_compress_common_mem/raw for Morello
-#ifndef TEST_CC_IS_MORELLO
 TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     _cc_cap_t null_cap;
     memset(&null_cap, 0, sizeof(null_cap));
@@ -49,7 +48,6 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     CHECK(decompressed.top() == _CC_N(NULL_TOP));
     CHECK_FIELD(decompressed, type, _CC_N(OTYPE_UNSEALED));
 }
-#endif
 
 TEST_CASE("Zeroes decode to NULL cap", "[nullcap]") {
     _cc_cap_t result;
