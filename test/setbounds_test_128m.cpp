@@ -16,3 +16,19 @@ TEST_CASE("Morello setbounds with high bits", "[bounds]") {
     CHECK(result.top() == 0x954);  // Same for top
     CHECK(was_exact);
 }
+
+TEST_CASE("Fuzzer generated behaviour difference 1", "[fuzz]") {
+    // Check that Morello flags are not set if setbounds overflows (found by fuzzer).
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(0x000001fffffebef8, 0xff0001ffffff0011, 0x0000001fffffec0f8);
+    cap.cr_tag = false;
+    uint64_t req_len = UINT64_C(0xffffff7272727272);
+    bool was_exact = false;
+    CHECK(cap.cr_exp == 0);
+    auto result = do_csetbounds<TestAPICC>(cap, &was_exact, req_len);
+    CHECK(result.address() == 0xff0001ffffff0011);
+    CHECK(result.base() == 0x0000000000000000);
+    CHECK(result.top() == (CC128M_MAX_ADDRESS_PLUS_ONE | 0x0020000000000000));
+    CHECK(result.length() == (CC128M_MAX_ADDRESS_PLUS_ONE | 0x0020000000000000));
+    CHECK(result.cr_exp == 50);
+    CHECK(!was_exact);
+}
