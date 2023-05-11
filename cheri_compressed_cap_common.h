@@ -768,7 +768,7 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     if (top == _CC_MAX_TOP && base == 0) {
         return true; // 1 << 65 is always representable
     }
-    if (length == 0) {
+    if (length == 0 && !_cc_N(cap_sign_change_causes_unrepresentability)(cap, cap->_cr_cursor, new_addr)) {
         return true; // length 0 is always representable
     }
 
