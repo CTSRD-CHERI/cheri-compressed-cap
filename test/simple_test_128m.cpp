@@ -17,3 +17,18 @@ TEST_CASE("Fast representability check sign extended", "[fuzz]") {
     // It should also not be representable if we do the full check.
     CHECK(!_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
 }
+
+TEST_CASE("Fast representability check zero length", "[fuzz]") {
+    // Check that the fast representability check does not treat zero length caps as always representable.
+    // This is not true if the cursor change results in a sign change on the resulting bounds.
+    TestAPICC::cap_t cap = TestAPICC::decompress_raw(0xaff000000000000, 0x0080000000800000, false);
+    CHECK(cap.base() == 0xff80000000800007);
+    CHECK(cap.top() == 0xff80000000800007);
+    TestAPICC::addr_t new_addr = 0;
+    bool sail_fast_rep = TestAPICC::sail_fast_is_representable(cap, new_addr);
+    bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    CHECK(sail_fast_rep == cc_fast_rep);
+    CHECK(!cc_fast_rep);
+    // It should also not be representable if we do the full check.
+    CHECK(!_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
+}
