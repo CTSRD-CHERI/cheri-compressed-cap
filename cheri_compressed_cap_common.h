@@ -754,9 +754,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         cap->cr_tag = 0;
     }
     bool from_large = !_cc_N(cap_bounds_uses_value)(cap);
-#else
-    // Morello allows setbounds to do weird things and will just result in untagged results
-    _cc_debug_assert(!(cap->cr_tag && _cc_N(is_cap_sealed)(cap)) && "Cannot be used on tagged sealed capabilities");
 #endif
     _cc_debug_assert(req_base <= req_top && "Cannot invert base and top");
     /*
@@ -830,6 +827,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
 
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
+    _cc_debug_assert(!(cap->cr_tag && _cc_N(is_cap_sealed)(cap)) && "Cannot be used on tagged sealed capabilities");
     return _cc_N(setbounds_impl)(cap, req_len, NULL);
 }
 
