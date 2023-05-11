@@ -91,7 +91,22 @@ uint64_t sail_compress_128m_raw(const cc128m_cap_t* csp) { return sail_compress_
 uint64_t sail_compress_128m_mem(const cc128m_cap_t* csp) { return sail_compress_common_mem(csp); }
 
 bool sail_setbounds_128m(cc128m_cap_t* cap, cc128m_length_t req_len) {
-    abort(); // TODO: call sailgen_CapSetBounds();
+    lbits sail_len;
+    CREATE(sail_cap_bits)(&sail_len);
+    cc_length_t_to_sail_cap_bits(&sail_len, req_len);
+    cc128_addr_t req_base = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)(cap->_cr_cursor);
+    cc128_length_t req_top = (cc128_length_t)req_base + req_len;
+    lbits sail_result;
+    CREATE(lbits)(&sail_result);
+    lbits capbits = cap_t_to_sail_cap(cap);
+    _CC_CONCAT(MORELLO_SAIL_PREFIX, CapSetBounds)(&sail_result, capbits, sail_len, false);
+    KILL(lbits)(&sail_len);
+    KILL(lbits)(&capbits);
+    // Update cap in-place and check if the resulting bounds were exact.
+    *cap = from_sail_cap(&sail_result);
+    bool exact = cap->_cr_top == req_top && cap->cr_base == req_base;
+    KILL(lbits)(&sail_result);
+    return exact;
 }
 
 bool sail_fast_is_representable_128m(const cc128m_cap_t* cap, cc128m_addr_t new_addr) {
