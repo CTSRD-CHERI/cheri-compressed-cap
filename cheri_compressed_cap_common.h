@@ -763,10 +763,6 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
     if (!cap->cr_bounds_valid)
         return false;
 #endif
-    // in-bounds capabilities are otherwise always representable
-    if (__builtin_expect(new_addr >= cap->cr_base && new_addr < cap->_cr_top, true)) {
-        return true;
-    }
     const _cc_length_t length = cap->_cr_top - cap->cr_base;
     return _cc_N(is_representable_new_addr)(_cc_N(is_cap_sealed)(cap), cap->cr_base, length, cap->_cr_cursor, new_addr);
 }
