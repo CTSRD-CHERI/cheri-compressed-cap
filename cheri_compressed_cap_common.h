@@ -820,10 +820,10 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
 }
 
 /* @return whether the operation was able to set precise bounds precise or not */
-static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_length_t req_top) {
-    _cc_debug_assert(_cc_N(cap_bounds_address)(req_base) == _cc_N(cap_bounds_address)(cap->_cr_cursor) &&
-                     "API misuse detected");
-    return _cc_N(setbounds_impl)(cap, req_base, req_top, NULL);
+static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
+    // TODO: this is not quite right for Morello
+    _cc_length_t req_top = (_cc_length_t)cap->_cr_cursor + req_len;
+    return _cc_N(setbounds_impl)(cap, cap->_cr_cursor, req_top, NULL);
 }
 
 static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
@@ -910,9 +910,7 @@ public:
         return result;
     }
     static inline bounds_bits extract_bounds_bits(addr_t pesbt) { return _cc_N(extract_bounds_bits)(pesbt); }
-    static inline bool setbounds(cap_t* cap, addr_t req_base, length_t req_top) {
-        return _cc_N(setbounds)(cap, req_base, req_top);
-    }
+    static inline bool setbounds(cap_t* cap, length_t req_len) { return _cc_N(setbounds)(cap, req_len); }
     static inline bool is_representable_cap_exact(const cap_t& cap) { return _cc_N(is_representable_cap_exact)(&cap); }
     static inline cap_t make_max_perms_cap(addr_t base, addr_t cursor, length_t top) {
         return _cc_N(make_max_perms_cap)(base, cursor, top);
