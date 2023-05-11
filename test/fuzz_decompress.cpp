@@ -60,14 +60,14 @@ static bool compare_caps(const char* context, const _cc_cap_t& result, const _cc
 // TODO: Implement for Morello
 #ifndef TEST_CC_IS_MORELLO
 static inline void check_crrl_and_cram(_cc_addr_t value) {
-    _cc_addr_t sail_crrl = _cc_sail_representable_length(value);
+    _cc_addr_t sail_crrl = _cc_sail(representable_length)(value);
     _cc_addr_t clib_crrl = _cc_N(get_representable_length)(value);
     if (sail_crrl != clib_crrl) {
         fprintf(stderr, "CRRL(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n", (uint64_t)value,
                 (uint64_t)sail_crrl, (uint64_t)clib_crrl);
         abort();
     }
-    _cc_addr_t sail_cram = _cc_sail_representable_mask(value);
+    _cc_addr_t sail_cram = _cc_sail(representable_mask)(value);
     _cc_addr_t clib_cram = _cc_N(get_alignment_mask)(value);
     if (sail_cram != clib_cram) {
         fprintf(stderr, "CRAM(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n", (uint64_t)value,
@@ -81,7 +81,7 @@ void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t 
     new_result.cr_tag = false;
     _cc_cap_t new_sail_result = new_result;
     _cc_N(setbounds)(&new_result, req_base, (_cc_length_t)req_base + req_len);
-    _cc_sail_setbounds(&new_sail_result, req_base, (_cc_length_t)req_base + req_len);
+    _cc_sail(setbounds)(&new_sail_result, req_base, (_cc_length_t)req_base + req_len);
     if (!compare_caps("SETBOUNDS", new_result, new_sail_result)) {
         fprintf(stderr, "with req_base=%" PRIx64 " and req_len=%" PRIx64 "\n", (uint64_t)req_base, (uint64_t)req_len);
         dump_cap_fields(input_cap);
