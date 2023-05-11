@@ -102,14 +102,15 @@ static inline void check_crrl_and_cram(_cc_addr_t value) {
     }
 }
 
-void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t req_len) {
+void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_len) {
     _cc_cap_t new_result = input_cap;
     new_result.cr_tag = false;
     _cc_cap_t new_sail_result = new_result;
-    _cc_N(setbounds)(&new_result, req_base, (_cc_length_t)req_base + req_len);
-    _cc_sail(setbounds)(&new_sail_result, req_base, (_cc_length_t)req_base + req_len);
+    _cc_N(setbounds)(&new_result, req_len);
+    _cc_sail(setbounds)(&new_sail_result, req_len);
     if (!compare_caps("SETBOUNDS", new_result, new_sail_result)) {
-        fprintf(stderr, "with req_base=%" PRIx64 " and req_len=%" PRIx64 "\n", (uint64_t)req_base, (uint64_t)req_len);
+        fprintf(stderr, "with addr=%" PRIx64 " and req_len=%" PRIx64 "\n", (uint64_t)input_cap.address(),
+                (uint64_t)req_len);
         dump_cap_fields(input_cap);
         abort();
     }
@@ -185,9 +186,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 // TODO: Implement for Morello
 #ifndef TEST_CC_IS_MORELLO
     // Try running setbounds (on an untagged capability) and compare to sail.
-    fuzz_setbounds(result, /*req_base=*/result.base(), /*req_len=*/new_len);
-    fuzz_setbounds(result, /*req_base=*/result.address(), /*req_len=*/new_len);
-    fuzz_setbounds(result, /*req_base=*/random_base, /*req_len=*/new_len);
+    fuzz_setbounds(result, new_len);
+    _cc_N(set_addr)(&result, result.base());
+    fuzz_setbounds(result, new_len);
+    _cc_N(set_addr)(&result, random_base);
+    fuzz_setbounds(result, new_len);
 #endif
     return 0; // Non-zero return values are reserved for future use.
 }
