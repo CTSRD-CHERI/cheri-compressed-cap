@@ -503,8 +503,7 @@ static inline bool _cc_N(all_zeroes)(uint64_t offset, uint32_t e, uint32_t bwidt
 }
 #endif /* ! SIMPLE_REPRESENT_CHECK */
 
-static bool _cc_N(fast_is_representable_new_addr)(bool sealed, _cc_addr_t base, _cc_length_t length, _cc_addr_t cursor,
-                                                  _cc_addr_t new_cursor);
+static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr);
 
 /// Check that a capability is representable by compressing and recompressing
 static inline bool _cc_N(is_representable_cap_exact)(const _cc_cap_t* cap) {
@@ -674,27 +673,20 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
  *   where Imid = i<E+19, E>, Amid = a<E+19, E>, R = B - 2^12 and a =
  *   base + offset.
  */
-static inline bool _cc_N(is_representable_with_addr_impl)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
+static inline bool _cc_N(is_representable_with_addr_impl)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor,
+                                                          bool slow_representable_check) {
     uint64_t extended_cursor = cc64_cap_bounds_address(new_cursor);
     // in-bounds capabilities are always representable
     if (__builtin_expect(extended_cursor >= oldcap->cr_base && extended_cursor < oldcap->_cr_top, true)) {
         return true;
     }
-
-#if defined(_CC_USE_FAST_REP_CHECK)
-    const bool slow_representable_check = false;
-#else
-    const bool slow_representable_check = true;
-#endif
-
     if (slow_representable_check) {
         /* Simply compress and uncompress with new cursor to check representability. */
         _cc_cap_t newcap = *oldcap;
         newcap._cr_cursor = new_cursor;
         return _cc_N(is_representable_cap_exact)(&newcap);
     } else {
-        return _cc_N(fast_is_representable_new_addr)(_cc_N(is_cap_sealed)(oldcap), oldcap->cr_base,
-                                                     oldcap->_cr_top - oldcap->cr_base, oldcap->_cr_cursor, new_cursor);
+        return _cc_N(fast_is_representable_new_addr)(oldcap, new_cursor);
     }
 }
 
@@ -729,7 +721,12 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
     if (!cap->cr_bounds_valid)
         return false;
 #endif
-    return _cc_N(is_representable_with_addr_impl)(cap, new_addr);
+#if defined(_CC_USE_FAST_REP_CHECK)
+    const bool slow_representable_check = false;
+#else
+    const bool slow_representable_check = true;
+#endif
+    return _cc_N(is_representable_with_addr_impl)(cap, new_addr, slow_representable_check);
 }
 
 static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
@@ -745,17 +742,14 @@ static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
     }
 }
 
-static bool _cc_N(fast_is_representable_new_addr)(bool sealed, _cc_addr_t base, _cc_length_t length, _cc_addr_t cursor,
-                                                  _cc_addr_t new_cursor) {
-    (void)sealed;
+static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
     uint32_t bwidth = _CC_MANTISSA_WIDTH;
 
-    cursor &= _CC_CURSOR_MASK;
-    new_cursor &= _CC_CURSOR_MASK;
+    _cc_addr_t base = cap->cr_base;
+    _cc_length_t top = cap->_cr_top;
+    _cc_length_t length = top - base;
 
     uint32_t highest_exp = (_CC_ADDR_WIDTH - bwidth + 2);
-
-    _cc_length_t top = base + length;
 
     if (top == _CC_MAX_TOP && base == 0) {
         return true; // 1 << 65 is always representable
@@ -768,7 +762,9 @@ static bool _cc_N(fast_is_representable_new_addr)(bool sealed, _cc_addr_t base, 
 
     int64_t b, r, Imid, Amid;
     bool inRange, inLimits;
-    int64_t inc = (int64_t)(new_cursor - cursor);
+    // For Morello this computation uses the sig-extended bounds value.
+    int64_t inc = _cc_N(cap_bounds_address)(new_addr - cap->_cr_cursor);
+    _cc_addr_t cursor = _cc_N(cap_bounds_address)(cap->_cr_cursor);
 
 #define MOD_MASK ((UINT64_C(1) << bwidth) - UINT64_C(1))
 
