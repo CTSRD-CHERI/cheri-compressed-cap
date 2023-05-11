@@ -101,6 +101,7 @@ static inline void check_crrl_and_cram(_cc_addr_t value) {
         abort();
     }
 }
+#endif
 
 void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_len) {
     _cc_cap_t new_result = input_cap;
@@ -115,7 +116,6 @@ void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_len) {
         abort();
     }
 }
-#endif
 
 void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
     bool cc_fast_rep = TestAPICC::fast_is_representable_new_addr(&input_cap, new_addr);
@@ -183,14 +183,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     fuzz_representable(result, random_base);
     fuzz_representable(tagged_result, random_base);
 
-// TODO: Implement for Morello
-#ifndef TEST_CC_IS_MORELLO
     // Try running setbounds (on an untagged capability) and compare to sail.
     fuzz_setbounds(result, new_len);
     _cc_N(set_addr)(&result, result.base());
     fuzz_setbounds(result, new_len);
     _cc_N(set_addr)(&result, random_base);
     fuzz_setbounds(result, new_len);
-#endif
+
     return 0; // Non-zero return values are reserved for future use.
 }

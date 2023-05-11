@@ -27,8 +27,9 @@ static inline void check_csetbounds_invariants(const typename Handler::cap_t& in
                                                const typename Handler::cap_t& with_bounds, bool was_exact,
                                                typename Handler::length_t requested_len) {
     CAPTURE(initial_cap, with_bounds, was_exact);
-    typename Handler::addr_t requested_base = initial_cap.address();
-    typename Handler::length_t requested_top = initial_cap.address() + requested_len;
+    // Strip the high bits and sign extend to compute the requested base.
+    typename Handler::addr_t requested_base = _cc_N(cap_bounds_address)(initial_cap.address());
+    typename Handler::length_t requested_top = requested_base + requested_len;
     // Address should be the same!
     REQUIRE(with_bounds.address() == initial_cap.address());
     if (was_exact) {
