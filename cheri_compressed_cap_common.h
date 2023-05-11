@@ -76,6 +76,7 @@ enum {
 #define _cc_length_t _cc_N(length_t)
 #define _cc_offset_t _cc_N(offset_t)
 #define _cc_addr_t _cc_N(addr_t)
+#define _cc_saddr_t _cc_N(saddr_t)
 
 #define _CC_MANTISSA_WIDTH _CC_N(MANTISSA_WIDTH)
 #define _CC_MAX_EXPONENT _CC_N(MAX_EXPONENT)
@@ -723,7 +724,7 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     _cc_addr_t cursor = _cc_N(cap_bounds_address)(cap->_cr_cursor);
 
     // i_top uses an arithmetic shift, i_mid and a_mid use logic shifts.
-    _cc_addr_t i_top = (int64_t)inc >> (bounds.E + _CC_MANTISSA_WIDTH);
+    _cc_saddr_t i_top = (_cc_saddr_t)inc >> (bounds.E + _CC_MANTISSA_WIDTH);
     _cc_addr_t i_mid = _cc_N(truncate64)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
     _cc_addr_t a_mid = _cc_N(truncate64)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
     _cc_addr_t B3 = (_cc_addr_t)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
@@ -737,7 +738,7 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     bool inLimits;
     if (i_top == 0) {
         inLimits = i_mid < diff1;
-    } else if (i_top == ~(_cc_addr_t)0) {
+    } else if (i_top == (_cc_saddr_t)-1) {
         inLimits = i_mid >= diff && R != a_mid;
     } else {
         inLimits = false;
