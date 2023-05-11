@@ -738,8 +738,10 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
 }
 
 /* @return whether the operation was able to set precise bounds precise or not */
-static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_length_t req_top,
-                                         _cc_addr_t* alignment_mask) {
+static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _cc_addr_t* alignment_mask) {
+    // TODO: this is not quite right for Morello
+    uint64_t req_base = cap->_cr_cursor;
+    _cc_length_t req_top = (_cc_length_t)req_base + req_len;
 #ifdef CC_IS_MORELLO
     if (!cap->cr_bounds_valid) {
         cap->cr_tag = 0;
@@ -821,9 +823,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
 
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
-    // TODO: this is not quite right for Morello
-    _cc_length_t req_top = (_cc_length_t)cap->_cr_cursor + req_len;
-    return _cc_N(setbounds_impl)(cap, cap->_cr_cursor, req_top, NULL);
+    return _cc_N(setbounds_impl)(cap, req_len, NULL);
 }
 
 static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
@@ -857,7 +857,7 @@ static inline _cc_addr_t _cc_N(get_alignment_mask)(_cc_addr_t req_length) {
     // return the mask that was used to adjust the length
     _cc_cap_t tmpcap = _cc_N(make_max_perms_cap(0, 0, _CC_MAX_TOP));
     _cc_addr_t mask = 0;
-    _cc_N(setbounds_impl)(&tmpcap, 0, req_length, &mask);
+    _cc_N(setbounds_impl)(&tmpcap, req_length, &mask);
     return mask;
 }
 
