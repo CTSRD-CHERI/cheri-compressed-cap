@@ -19,9 +19,9 @@ TEST_CASE("Assertion failure during set_addr found by fuzzer", "[fuzz]") {
     CHECK(cap.cr_exp == 49);
     // The following check previously triggered an assertion failure because we
     // were incorrectly masking off the high bits of new_addr.
-    CHECK(cc128m_is_representable_with_addr(&cap, expected_base));
+    CHECK(cc128m_is_representable_with_addr(&cap, expected_base, /*slow_representable_check=*/true));
     cc128m_set_addr(&cap, cap.base());
     CHECK(cap.base() == expected_base);
     CHECK(cap.top() == expected_top);
-    CHECK(cc128m_is_representable_with_addr(&cap, expected_base));
+    CHECK(cc128m_is_representable_with_addr(&cap, expected_base, /*slow_representable_check=*/true));
 }

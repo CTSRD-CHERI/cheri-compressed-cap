@@ -149,38 +149,36 @@ TEST_CASE("Check NULL mask matches sail", "[sail]") {
 }
 #endif
 
-static inline void checkFastRepCheckSucceeds(const _cc_cap_t& cap, _cc_addr_t new_addr) {
+static inline TestAPICC::cap_t checkFastRepCheckSucceeds(const _cc_cap_t& cap, _cc_addr_t new_addr,
+                                                         bool set_addr_should_retain_tag = true) {
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(&cap, new_addr);
     bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
     CHECK(sail_fast_rep == cc_fast_rep);
     CHECK(cc_fast_rep);
     // It should also be representable if we do the full check since the bounds interpretation does not change.
-    CHECK(_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
+    CHECK(_cc_N(slow_is_representable_with_addr)(&cap, new_addr));
     // Check that creating a new capability with same pesbt and new address decodes to the same bounds
     TestAPICC::cap_t new_cap_with_other_cursor;
     TestAPICC::decompress_raw(cap.cr_pesbt, new_addr, false, &new_cap_with_other_cursor);
     CHECK(new_cap_with_other_cursor.base() == cap.base());
     CHECK(new_cap_with_other_cursor.top() == cap.top());
-    // If the bounds are valid
-    if (cap.cr_bounds_valid) {
-        // Update the address and check that it retains the tag and bounds stay the same.
-        auto tmp = cap;
-        tmp.cr_tag = true;
-        // Unseal to ensure set_addr only checks representability.
-        _cc_N(update_otype)(&tmp, _CC_N(OTYPE_UNSEALED));
-        _cc_N(set_addr)(&tmp, new_addr);
-        CHECK(tmp.cr_tag);
-        CHECK(tmp.base() == cap.base());
-        CHECK(tmp.top() == cap.top());
-    } else {
-        // Invalid capabilities should decode to maximum bounds.
-        CHECK(cap.base() == 0);
-        CHECK(cap.top() == _CC_MAX_TOP);
+    auto updated = cap;
+    updated.cr_tag = true;
+    // Updating the address should retain the tag and bounds should stay the same.
+    // Calls to set_addr checksfor sealed, so unseal to ensure set_addr only checks representability.
+    _cc_N(update_otype)(&updated, _CC_N(OTYPE_UNSEALED));
+    _cc_N(set_addr)(&updated, new_addr);
+    CHECK(updated.cr_tag == set_addr_should_retain_tag);
+    if (set_addr_should_retain_tag) {
+        CHECK(updated.base() == cap.base());
+        CHECK(updated.top() == cap.top());
     }
+    return cap;
 }
 
 static inline TestAPICC::cap_t checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_addr_t addr, _cc_addr_t expected_base,
-                                                         _cc_length_t expected_top, _cc_addr_t new_addr) {
+                                                         _cc_length_t expected_top, _cc_addr_t new_addr,
+                                                         bool set_addr_should_retain_tag = true) {
     TestAPICC::cap_t cap;
     TestAPICC::cap_t sail_cap;
     TestAPICC::decompress_raw(pesbt, addr, false, &cap);
@@ -188,7 +186,7 @@ static inline TestAPICC::cap_t checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_a
     CHECK(cap == sail_cap);
     CHECK(cap.base() == expected_base);
     CHECK(cap.top() == expected_top);
-    checkFastRepCheckSucceeds(cap, new_addr);
+    checkFastRepCheckSucceeds(cap, new_addr, set_addr_should_retain_tag);
     return cap;
 }
 
@@ -204,7 +202,7 @@ static inline void checkRepCheckFails(_cc_addr_t pesbt, _cc_addr_t addr, _cc_add
     CHECK(sail_fast_rep == cc_fast_rep);
     CHECK(!cc_fast_rep);
     // It should also not be representable if we do the full check since the bounds interpretation changes.
-    CHECK(!_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
+    CHECK(!_cc_N(slow_is_representable_with_addr)(&cap, new_addr));
     // Check that creating a new capability with same pesbt and new address decodes to different bounds
     TestAPICC::cap_t new_cap_with_other_cursor;
     TestAPICC::decompress_raw(pesbt, new_addr, false, &new_cap_with_other_cursor);
