@@ -22,15 +22,18 @@ fi
 sail128_srcs="prelude.sail builtins.sail decode_start.sail v8_base.sail decode_end.sail stubs.sail no_devices.sail impdefs.sail"
 keep_required_functions=(
   -c_preserve CapGetBounds
-  -c_preserve CapSetBounds
+  -c_preserve CapGetBottom
   -c_preserve CapGetExponent
-  -c_preserve CapGetPermissions
   -c_preserve CapGetObjectType
+  -c_preserve CapGetPermissions
   -c_preserve CapGetTag
+  -c_preserve CapGetTop
   -c_preserve CapGetValue
+  -c_preserve CapIsInternalExponent
   -c_preserve CapIsRepresentable
   -c_preserve CapIsRepresentableFast
-  )
+  -c_preserve CapSetBounds
+)
 output_dir=${SCRIPT_DIR}
 
 cd "$SAIL_MORELLO_DIR/src" || exit 1

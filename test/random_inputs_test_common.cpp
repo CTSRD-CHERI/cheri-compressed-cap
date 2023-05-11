@@ -28,11 +28,8 @@ static bool check_fields_match(const typename Handler::cap_t& result, const test
     Handler::sail_decode_raw(input.pesbt, input.cursor, false, &sail_result);
 
     typename Handler::bounds_bits bounds_bits = Handler::extract_bounds_bits(input.pesbt);
-    // TODO: Implement sail_extract_bounds_bits for Morello
-#ifndef TEST_CC_IS_MORELLO
     typename Handler::bounds_bits sail_bounds_bits = Handler::sail_extract_bounds_bits(input.pesbt);
     REQUIRE(sail_bounds_bits == bounds_bits);
-#endif
 
     CAPTURE(bounds_bits);
     CAPTURE(sail_result);

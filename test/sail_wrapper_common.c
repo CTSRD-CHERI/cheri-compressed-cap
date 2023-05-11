@@ -176,8 +176,6 @@ uint64_t sail_compress_common_raw(const _cc_cap_t* csp) {
     return sail_compress_common_mem(csp) ^ _CC_N(NULL_XOR_MASK);
 }
 
-static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {  abort(); }
-
 #else
 
 static inline void sail_dump_cap(const char* msg, struct zCapability cap) {
