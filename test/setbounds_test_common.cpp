@@ -188,3 +188,22 @@ TEST_CASE("setbounds test cases from sail", "[bounds]") {
     }
 }
 #endif
+
+TEST_CASE("Setbounds API misuse", "[regression]") {
+    // QEMU was not detagging capabilities correctly (found running tests/cp2/test_cp2_x_csetboundsexact_length.s)
+    // Calling csetboundsexact on a zero-length capability should have trapped for MIPS
+    auto cap = make_max_perms_cap(0x0000000000103060, 0x0000000000103060, 0x0000000000103060);
+    CHECK(cap.cr_tag);
+    // Calling setbounds with a value > length should detag
+    // NB: Calling checked_setbounds directly with such a value will raise an exception in debug mode.
+    auto with_bounds_greater_top = cap;
+    bool exact = _cc_N(setbounds)(&with_bounds_greater_top, 8);
+    CHECK(exact);
+    CHECK(!with_bounds_greater_top.cr_tag);
+    CHECK(with_bounds_greater_top.address() == cap.address());
+    CHECK(with_bounds_greater_top.base() == cap.base());
+    CHECK(with_bounds_greater_top.top() == cap.top() + 8);
+#ifndef NDEBUG
+    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, 8), std::invalid_argument);
+#endif
+}
