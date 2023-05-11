@@ -281,14 +281,6 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         // Do not offset by 1! We also need to encode E=0 even with IE
         // Also allow nonsense values over 64 - BWidth + 2: this is expected by sail-generated tests
         // E = MIN(64 - BWidth + 2, E);
-#ifdef CC_IS_MORELLO
-        if (result.E == _CC_N(MAX_ENCODABLE_EXPONENT)) {
-            result.B = 0;
-            // This isn't top, its T. We just special case again when top is calculated.
-            result.T = 0;
-            return result;
-        }
-#endif
         result.B = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_NONZERO_BOTTOM) << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE);
         result.T = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_NONZERO_TOP) << _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE);
         L_msb = 1;
