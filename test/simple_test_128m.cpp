@@ -61,3 +61,11 @@ TEST_CASE("Zero exp cap with sign-changing new addr", "[fuzz]") {
                                          /*new_addr=*/0x00ffffffffffe484, /*set_addr_should_retain_tag=*/false);
     CHECK(cap.cr_exp == 0);
 }
+
+TEST_CASE("UBSan signed shift out-of-range in fast rep check", "[fuzz]") {
+    // Avoid an UBSan error shifting a signed value by more than the bitwidth.
+    auto cap = checkFastRepCheckSucceeds(/*pesbt=*/0x8000000040060000, /*addr=*/0x000000000040f0e0,
+                                         /*expected_base=*/0, /*expected_top=*/0x4000000000000000,
+                                         /*new_addr=*/0xffffffffffffffff);
+    CHECK(cap.cr_exp == 48);
+}
