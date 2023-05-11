@@ -161,6 +161,22 @@ static inline void checkFastRepCheckSucceeds(const _cc_cap_t& cap, _cc_addr_t ne
     TestAPICC::decompress_raw(cap.cr_pesbt, new_addr, false, &new_cap_with_other_cursor);
     CHECK(new_cap_with_other_cursor.base() == cap.base());
     CHECK(new_cap_with_other_cursor.top() == cap.top());
+    // If the bounds are valid
+    if (cap.cr_bounds_valid) {
+        // Update the address and check that it retains the tag and bounds stay the same.
+        auto tmp = cap;
+        tmp.cr_tag = true;
+        // Unseal to ensure set_addr only checks representability.
+        _cc_N(update_otype)(&tmp, _CC_N(OTYPE_UNSEALED));
+        _cc_N(set_addr)(&tmp, new_addr);
+        CHECK(tmp.cr_tag);
+        CHECK(tmp.base() == cap.base());
+        CHECK(tmp.top() == cap.top());
+    } else {
+        // Invalid capabilities should decode to maximum bounds.
+        CHECK(cap.base() == 0);
+        CHECK(cap.top() == _CC_MAX_TOP);
+    }
 }
 
 static inline TestAPICC::cap_t checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_addr_t addr, _cc_addr_t expected_base,
