@@ -187,3 +187,20 @@ static inline void checkRepCheckFails(_cc_addr_t pesbt, _cc_addr_t addr, _cc_add
     TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(pesbt, new_addr, false);
     CHECK((new_cap_with_other_cursor.base() != expected_base || new_cap_with_other_cursor.top() != expected_top));
 }
+
+TEST_CASE("Omnipotent cap representable", "") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    // Check that various address are representable with a full-address-space capability.
+    checkFastRepCheckSucceeds(max_cap, 0);
+    checkFastRepCheckSucceeds(max_cap, 1);
+    checkFastRepCheckSucceeds(max_cap, _CC_MAX_ADDR - 1);
+    checkFastRepCheckSucceeds(max_cap, _CC_MAX_ADDR);
+    checkFastRepCheckSucceeds(max_cap, _CC_MAX_ADDR >> 1);
+    // Alternating ones and zeroes
+    checkFastRepCheckSucceeds(max_cap, (_cc_addr_t)UINT64_C(0xaaaaaaaaaaaaaaaa));
+    // And a few arbitrary values
+    checkFastRepCheckSucceeds(max_cap, 0x3fffca);
+    checkFastRepCheckSucceeds(max_cap, 0x12345678);
+    checkFastRepCheckSucceeds(max_cap, 1234);
+    checkFastRepCheckSucceeds(max_cap, _CC_MAX_ADDR - 1234);
+}
