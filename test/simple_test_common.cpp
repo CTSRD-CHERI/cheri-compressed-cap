@@ -147,11 +147,7 @@ TEST_CASE("Check NULL mask matches sail", "[sail]") {
 }
 #endif
 
-static inline void checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_addr_t addr, _cc_addr_t expected_base,
-                                             _cc_length_t expected_top, _cc_addr_t new_addr) {
-    TestAPICC::cap_t cap = TestAPICC::decompress_raw(pesbt, addr, false);
-    CHECK(cap.base() == expected_base);
-    CHECK(cap.top() == expected_top);
+static inline void checkFastRepCheckSucceeds(const _cc_cap_t& cap, _cc_addr_t new_addr) {
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(cap, new_addr);
     bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
     CHECK(sail_fast_rep == cc_fast_rep);
@@ -159,9 +155,20 @@ static inline void checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_addr_t addr, 
     // It should also be representable if we do the full check since the bounds interpretation does not change.
     CHECK(_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
     // Check that creating a new capability with same pesbt and new address decodes to the same bounds
-    TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(pesbt, new_addr, false);
-    CHECK(new_cap_with_other_cursor.base() == expected_base);
-    CHECK(new_cap_with_other_cursor.top() == expected_top);
+    TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(cap.cr_pesbt, new_addr, false);
+    CHECK(new_cap_with_other_cursor.base() == cap.base());
+    CHECK(new_cap_with_other_cursor.top() == cap.top());
+}
+
+static inline TestAPICC::cap_t checkFastRepCheckSucceeds(_cc_addr_t pesbt, _cc_addr_t addr, _cc_addr_t expected_base,
+                                                         _cc_length_t expected_top, _cc_addr_t new_addr) {
+    TestAPICC::cap_t cap = TestAPICC::decompress_raw(pesbt, addr, false);
+    TestAPICC::cap_t sail_cap = TestAPICC::sail_decode_raw(pesbt, addr, false);
+    CHECK(cap == sail_cap);
+    CHECK(cap.base() == expected_base);
+    CHECK(cap.top() == expected_top);
+    checkFastRepCheckSucceeds(cap, new_addr);
+    return cap;
 }
 
 /// Check that both the fast and the full representability check fails for the given input.

@@ -221,6 +221,7 @@ static inline uint64_t _cc_N(getbits)(uint64_t src, uint32_t start, uint32_t siz
 }
 
 // truncates `value`, keeping only the _least_ significant `n` bits.
+static inline uint64_t _cc_N(truncate_addr)(_cc_addr_t value, size_t n) { return value & (((_cc_addr_t)1 << n) - 1); }
 static inline uint64_t _cc_N(truncate64)(uint64_t value, size_t n) { return value & ((UINT64_C(1) << n) - 1); }
 
 // truncates `value`, keeping only the _most_ significant `n` bits.
@@ -728,10 +729,10 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     _cc_addr_t i_mid = _cc_N(truncate64)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
     _cc_addr_t a_mid = _cc_N(truncate64)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
     _cc_addr_t B3 = (_cc_addr_t)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
-    _cc_addr_t R3 = (_cc_addr_t)_cc_N(truncate64)(B3 - 1, 3); // B3 == 0 ? 7 : B3 - 1;
-    _cc_addr_t R = R3 << (_CC_MANTISSA_WIDTH - 3);
-    _cc_addr_t diff = R - a_mid;
-    _cc_addr_t diff1 = diff - 1;
+    _cc_addr_t R3 = _cc_N(truncate_addr)(B3 - 1, 3);
+    _cc_addr_t R = _cc_N(truncate_addr)(R3 << (_CC_MANTISSA_WIDTH - 3), _CC_MANTISSA_WIDTH);
+    _cc_addr_t diff = _cc_N(truncate_addr)(R - a_mid, _CC_MANTISSA_WIDTH);
+    _cc_addr_t diff1 = _cc_N(truncate_addr)(diff - 1, _CC_MANTISSA_WIDTH);
     // i_top determines: (1) whether the increment is inRange i.e. less than the size of the representable region
     // (2**(E+MW)) (2) whether it is positive or negative. To satisfy (1) all top bits must be the same so we are
     // interested in the cases where i_top is 0 or -1.
