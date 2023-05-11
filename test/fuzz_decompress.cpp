@@ -70,6 +70,7 @@ static void dump_cap_fields(const _cc_cap_t& result) {
     fprintf(stderr, "Sealed:      %d\n", (int)result.is_sealed());
     fprintf(stderr, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
     fprintf(stderr, "Exponent:    %d\n", result.cr_exp);
+    fprintf(stderr, "PESBT:       %#016" PRIx64 "\n", (uint64_t)result.cr_pesbt);
     fprintf(stderr, "\n");
 }
 
@@ -145,6 +146,16 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     _cc_N(decompress_raw)(pesbt, cursor, false, &result);
     _cc_sail_decode_raw(pesbt, cursor, false, &sail_result);
     if (!compare_caps("DECODE ALREADY XORED", result, sail_result)) {
+        abort();
+    }
+
+    // Compare the fast representability check to sail.
+    bool cc_rep = _cc_N(fast_is_representable_new_addr)(&result, random_base);
+    bool sail_rep = _cc_sail(fast_is_representable)(&result, random_base);
+    if (cc_rep != sail_rep) {
+        fprintf(stderr, "Fast rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
+                sail_rep, cc_rep, random_base);
+        dump_cap_fields(result);
         abort();
     }
 
