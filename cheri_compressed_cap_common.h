@@ -817,7 +817,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
         _cc_debug_assert(new_top >= new_base);
         _cc_debug_assert(_cc_N(get_reserved)(cap) == 0 && "Unknown reserved bits set in tagged capability");
     }
-    cap->_cr_cursor = req_base;
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
     _cc_N(update_ebt)(cap, new_ebt);
