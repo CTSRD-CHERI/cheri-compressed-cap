@@ -77,8 +77,16 @@ static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start
 
 /* Exported API */
 struct cc128m_bounds_bits sail_extract_bounds_bits_128m(uint64_t pesbt) {
-    return sail_extract_bounds_bits_common(pesbt);
+    // We have to XOR the pesbt bits here since the Morello sail model does not invert on load/store.
+    lbits sailcap = to_sail_cap(pesbt ^ CC128M_NULL_XOR_MASK, 0, false);
+    struct cc128m_bounds_bits result = {.E = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetExponent)(sailcap),
+                                        .B = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetBottom)(sailcap),
+                                        .T = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetTop)(sailcap),
+                                        .IE = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapIsInternalExponent)(sailcap)};
+    KILL(lbits)(&sailcap);
+    return result;
 }
+
 uint64_t sail_compress_128m_raw(const cc128m_cap_t* csp) { return sail_compress_common_raw(csp); }
 uint64_t sail_compress_128m_mem(const cc128m_cap_t* csp) { return sail_compress_common_mem(csp); }
 
