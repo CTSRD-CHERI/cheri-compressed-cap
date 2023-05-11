@@ -61,6 +61,7 @@
 typedef uint64_t cc64_length_t;
 typedef int64_t cc64_offset_t;
 typedef uint32_t cc64_addr_t;
+typedef int32_t cc64_saddr_t;
 #include "cheri_compressed_cap_macros.h"
 
 /* ignore ISO C restricts enumerator values to range of 'int' */
