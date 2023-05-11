@@ -688,15 +688,10 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
  *   where Imid = i<E+19, E>, Amid = a<E+19, E>, R = B - 2^12 and a =
  *   base + offset.
  */
-static inline bool _cc_N(is_representable_new_addr)(bool sealed, _cc_addr_t base, _cc_length_t length,
-                                                    _cc_addr_t cursor, _cc_addr_t new_cursor) {
-    _cc_length_t top = (_cc_length_t)base + length;
-
-    cursor &= _CC_CURSOR_MASK;
-    new_cursor &= _CC_CURSOR_MASK;
-
+static inline bool _cc_N(is_representable_with_addr_impl)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
+    uint64_t extended_cursor = cc64_cap_bounds_address(new_cursor);
     // in-bounds capabilities are always representable
-    if (__builtin_expect(new_cursor >= base && new_cursor < top, true)) {
+    if (__builtin_expect(extended_cursor >= oldcap->cr_base && extended_cursor < oldcap->_cr_top, true)) {
         return true;
     }
 
@@ -707,27 +702,13 @@ static inline bool _cc_N(is_representable_new_addr)(bool sealed, _cc_addr_t base
 #endif
 
     if (slow_representable_check) {
-        /* Simply compress and uncompress to check. */
-        _cc_cap_t c;
-        memset(&c, 0, sizeof(c));
-        c.cr_base = base;
-        c._cr_top = top;
-        c._cr_cursor = cursor;
-        // important to set as compress assumes this is in bounds
-        c.cr_pesbt = _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) | _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) |
-                     _CC_ENCODE_FIELD(sealed ? 42 : _CC_N(OTYPE_UNSEALED), OTYPE);
-        /* Get an EBT */
-        bool exact_input = false;
-        _cc_N(update_ebt)(&c, _cc_N(compute_ebt)(base, top, NULL, &exact_input));
-        // Looks like this assert gets hit by negative length capabilities. Probably the "exact input" return is wrong.
-        if (top > (_cc_length_t)base)
-            _cc_debug_assert(exact_input &&
-                             "Input capability bounds not representable? They should have been rounded before!");
-        /* Check with new cursor */
-        c._cr_cursor = new_cursor;
-        return _cc_N(is_representable_cap_exact)(&c);
+        /* Simply compress and uncompress with new cursor to check representability. */
+        _cc_cap_t newcap = *oldcap;
+        newcap._cr_cursor = new_cursor;
+        return _cc_N(is_representable_cap_exact)(&newcap);
     } else {
-        return _cc_N(fast_is_representable_new_addr)(sealed, base, length, cursor, new_cursor);
+        return _cc_N(fast_is_representable_new_addr)(_cc_N(is_cap_sealed)(oldcap), oldcap->cr_base,
+                                                     oldcap->_cr_top - oldcap->cr_base, oldcap->_cr_cursor, new_cursor);
     }
 }
 
@@ -754,7 +735,6 @@ static inline bool _cc_N(cap_sign_change_causes_unrepresentability)(const _cc_ca
 }
 
 static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
-    new_addr &= _CC_CURSOR_MASK;
 #ifdef CC_IS_MORELLO
     // If the top bit is changed on morello this can change bounds
     if (_cc_N(cap_sign_change_causes_unrepresentability)(cap, new_addr, cap->_cr_cursor)) {
@@ -763,8 +743,7 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
     if (!cap->cr_bounds_valid)
         return false;
 #endif
-    const _cc_length_t length = cap->_cr_top - cap->cr_base;
-    return _cc_N(is_representable_new_addr)(_cc_N(is_cap_sealed)(cap), cap->cr_base, length, cap->_cr_cursor, new_addr);
+    return _cc_N(is_representable_with_addr_impl)(cap, new_addr);
 }
 
 static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
