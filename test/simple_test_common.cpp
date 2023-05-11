@@ -144,7 +144,7 @@ TEST_CASE("Check make_max_perms_cap() sets cr_exp correctly", "[sail]") {
 // TODO: Implement sail_null_pesbt_128
 #ifndef TEST_CC_IS_MORELLO
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
-    CHECK(_cc_sail_null_pesbt() == _CC_N(NULL_PESBT));
-    CHECK(_cc_sail_null_pesbt() == _CC_N(NULL_XOR_MASK));
+    CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_PESBT));
+    CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_XOR_MASK));
 }
 #endif

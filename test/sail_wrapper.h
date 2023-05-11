@@ -71,13 +71,9 @@ cc128m_cap_t sail_reset_capability_128m(void);
 
 #define _cc_sail_decode_mem _CC_CONCAT(_CC_CONCAT(sail_decode_, CC_FORMAT_LOWER), _mem)
 #define _cc_sail_decode_raw _CC_CONCAT(_CC_CONCAT(sail_decode_, CC_FORMAT_LOWER), _raw)
-#define _cc_sail_extract_bounds_bits _CC_CONCAT(sail_extract_bounds_bits_, CC_FORMAT_LOWER)
 #define _cc_sail_compress_raw _CC_CONCAT(_CC_CONCAT(sail_compress_, CC_FORMAT_LOWER), _raw)
 #define _cc_sail_compress_mem _CC_CONCAT(_CC_CONCAT(sail_compress_, CC_FORMAT_LOWER), _mem)
-#define _cc_sail_null_pesbt _CC_CONCAT(sail_null_pesbt_, CC_FORMAT_LOWER)
-#define _cc_sail_representable_mask _CC_CONCAT(sail_representable_mask_, CC_FORMAT_LOWER)
-#define _cc_sail_representable_length _CC_CONCAT(sail_representable_length_, CC_FORMAT_LOWER)
-#define _cc_sail_setbounds _CC_CONCAT(sail_setbounds_, CC_FORMAT_LOWER)
+#define _cc_sail(name) _CC_CONCAT(sail_, _CC_CONCAT(name, _CC_CONCAT(_, CC_FORMAT_LOWER)))
 
 #ifdef __cplusplus
 }
