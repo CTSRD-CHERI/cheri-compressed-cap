@@ -24,10 +24,13 @@ keep_required_functions=(
   -c_preserve CapGetBounds
   -c_preserve CapSetBounds
   -c_preserve CapGetExponent
-  -c_preserve CapGetValue
   -c_preserve CapGetPermissions
   -c_preserve CapGetObjectType
-  -c_preserve CapGetTag)
+  -c_preserve CapGetTag
+  -c_preserve CapGetValue
+  -c_preserve CapIsRepresentable
+  -c_preserve CapIsRepresentableFast
+  )
 output_dir=${SCRIPT_DIR}
 
 cd "$SAIL_MORELLO_DIR/src" || exit 1
