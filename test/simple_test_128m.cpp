@@ -53,3 +53,37 @@ TEST_CASE("Fast representability zero length no sign change", "[fuzz]") {
     CHECK(cap.base() == 7);
     CHECK(cap.top() == 7);
 }
+
+TEST_CASE("Fuzzer-detected fast representability mismatch 1", "[fuzz]") {
+    TestAPICC::cap_t cap;
+    TestAPICC::decompress_raw(0x81000100ffeeffd2, 0x0045000000000000, false, &cap);
+    CHECK(cap.base() == 0xff40000000000000);
+    CHECK(cap.top() == 0x0ffa0000000000000);
+    TestAPICC::addr_t new_addr = 0;
+    bool sail_fast_rep = TestAPICC::sail_fast_is_representable(&cap, new_addr);
+    bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    CHECK(sail_fast_rep == cc_fast_rep);
+    CHECK(cc_fast_rep);
+    // It should also not be representable if we do the full check since the bounds interpretation changes.
+    CHECK(_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
+    _cc_N(set_addr)(&cap, new_addr);
+    CHECK(cap.base() == 0xff40000000000000);
+    CHECK(cap.top() == 0x0ffa0000000000000);
+}
+
+TEST_CASE("Fast representability mismatch 2", "[fuzz]") {
+    TestAPICC::cap_t cap;
+    TestAPICC::decompress_raw(0x9a9a656665659a9a, 0x00100a9a9a9a9a9a, false, &cap);
+    CHECK(cap.base() == 0xfe6a600000000000);
+    CHECK(cap.top() == 0xff95800000000000);
+    TestAPICC::addr_t new_addr = 0;
+    bool sail_fast_rep = TestAPICC::sail_fast_is_representable(&cap, new_addr);
+    bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    CHECK(sail_fast_rep == cc_fast_rep);
+    CHECK(cc_fast_rep);
+    // It should also not be representable if we do the full check since the bounds interpretation changes.
+    CHECK(_cc_N(is_representable_with_addr_impl)(&cap, new_addr, /*slow_representable_check=*/true));
+    _cc_N(set_addr)(&cap, new_addr);
+    CHECK(cap.base() == 0xfe6a600000000000);
+    CHECK(cap.top() == 0xff95800000000000);
+}
