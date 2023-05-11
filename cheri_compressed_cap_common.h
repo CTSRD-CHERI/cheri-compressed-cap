@@ -473,36 +473,6 @@ static inline _cc_addr_t _cc_N(compress_mem)(const _cc_cap_t* csp) {
     return _cc_N(compress_raw)(csp) ^ _CC_N(NULL_XOR_MASK);
 }
 
-/*
- * Define the following to do the is_representable() check by simply
- * compressing and decompressing the capability and checking to
- * see if it is the same.
- */
-// #define SIMPLE_REPRESENT_CHECK
-
-#ifndef SIMPLE_REPRESENT_CHECK
-static inline bool _cc_N(all_ones)(uint64_t offset, uint32_t e, uint32_t bwidth) {
-    uint64_t Itop;
-    uint32_t shift = e + bwidth;
-
-    if (shift >= 63)
-        return false;
-    Itop = offset >> shift;
-    return Itop == (0xfffffffffffffffful >> shift);
-}
-
-static inline bool _cc_N(all_zeroes)(uint64_t offset, uint32_t e, uint32_t bwidth) {
-    uint32_t shift = e + bwidth;
-    uint64_t Itop;
-
-    if (shift >= 63)
-        Itop = 0ul;
-    else
-        Itop = offset >> shift;
-    return Itop == 0ul;
-}
-#endif /* ! SIMPLE_REPRESENT_CHECK */
-
 static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr);
 
 /// Check that a capability is representable by compressing and recompressing
@@ -743,48 +713,36 @@ static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
 }
 
 static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
-    uint32_t bwidth = _CC_MANTISSA_WIDTH;
-
-    _cc_addr_t base = cap->cr_base;
-    _cc_length_t top = cap->_cr_top;
-    _cc_length_t length = top - base;
-
-    uint32_t highest_exp = (_CC_ADDR_WIDTH - bwidth + 2);
-
-    if (top == _CC_MAX_TOP && base == 0) {
+    if (cap->_cr_top == _CC_MAX_TOP && cap->cr_base == 0) {
         return true; // 1 << 65 is always representable
     }
 
-    uint32_t e = _cc_N(get_exponent)(length);
-
-    int64_t b, r, Imid, Amid;
-    bool inRange, inLimits;
+    _cc_bounds_bits bounds = _cc_N(extract_bounds_bits)(cap->cr_pesbt);
     // For Morello this computation uses the sig-extended bounds value.
-    int64_t inc = _cc_N(cap_bounds_address)(new_addr - cap->_cr_cursor);
+    _cc_addr_t inc = _cc_N(cap_bounds_address)(new_addr - cap->_cr_cursor);
     _cc_addr_t cursor = _cc_N(cap_bounds_address)(cap->_cr_cursor);
 
-#define MOD_MASK ((UINT64_C(1) << bwidth) - UINT64_C(1))
-
-    /* Check for the boundary cases. */
-
-    b = (int64_t)((base >> e) & MOD_MASK);
-    Imid = (int64_t)((uint64_t)(inc >> e) & MOD_MASK);
-    Amid = (int64_t)(((cursor) >> e) & MOD_MASK);
-
-    r = (int64_t)(((uint64_t)((b >> (bwidth - 3)) - 1) << (bwidth - 3)) & MOD_MASK);
-
-    /* inRange, test if bits are all the same */
-    inRange = _cc_N(all_ones)((uint64_t)inc, e, bwidth) || _cc_N(all_zeroes)((uint64_t)inc, e, bwidth);
-
-    /* inLimits */
-    if (inc >= 0) {
-        inLimits = ((uint64_t)Imid < (((uint64_t)(r - Amid - 1l)) & MOD_MASK));
+    // i_top uses an arithmetic shift, i_mid and a_mid use logic shifts.
+    _cc_addr_t i_top = (int64_t)inc >> (bounds.E + _CC_MANTISSA_WIDTH);
+    _cc_addr_t i_mid = _cc_N(truncate64)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
+    _cc_addr_t a_mid = _cc_N(truncate64)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
+    _cc_addr_t B3 = (_cc_addr_t)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
+    _cc_addr_t R3 = (_cc_addr_t)_cc_N(truncate64)(B3 - 1, 3); // B3 == 0 ? 7 : B3 - 1;
+    _cc_addr_t R = R3 << (_CC_MANTISSA_WIDTH - 3);
+    _cc_addr_t diff = R - a_mid;
+    _cc_addr_t diff1 = diff - 1;
+    // i_top determines: (1) whether the increment is inRange i.e. less than the size of the representable region
+    // (2**(E+MW)) (2) whether it is positive or negative. To satisfy (1) all top bits must be the same so we are
+    // interested in the cases where i_top is 0 or -1.
+    bool inLimits;
+    if (i_top == 0) {
+        inLimits = i_mid < diff1;
+    } else if (i_top == ~(_cc_addr_t)0) {
+        inLimits = i_mid >= diff && R != a_mid;
     } else {
-        inLimits = ((uint64_t)Imid >= (((uint64_t)(r - Amid)) & MOD_MASK)) && (r != Amid);
+        inLimits = false;
     }
-#undef MOD_MASK
-
-    return ((inRange && inLimits) || (e >= highest_exp - 2));
+    return inLimits || bounds.E >= _CC_MAX_EXPONENT - 2;
 }
 
 /* @return whether the operation was able to set precise bounds precise or not */
