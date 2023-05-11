@@ -722,9 +722,13 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     _cc_addr_t cursor = _cc_N(cap_bounds_address)(cap->_cr_cursor);
 
     // i_top uses an arithmetic shift, i_mid and a_mid use logic shifts.
-    _cc_saddr_t i_top = (_cc_saddr_t)inc >> (bounds.E + _CC_MANTISSA_WIDTH);
-    _cc_addr_t i_mid = _cc_N(truncate64)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
-    _cc_addr_t a_mid = _cc_N(truncate64)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
+    size_t i_top_shift = bounds.E + _CC_MANTISSA_WIDTH;
+    if (i_top_shift >= _CC_ADDR_WIDTH) {
+        i_top_shift = _CC_ADDR_WIDTH - 1; // Avoid UBSan errors for shifts > signed bitwidth.
+    }
+    _cc_saddr_t i_top = (_cc_saddr_t)inc >> i_top_shift;
+    _cc_addr_t i_mid = _cc_N(truncate_addr)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
+    _cc_addr_t a_mid = _cc_N(truncate_addr)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
     _cc_addr_t B3 = (_cc_addr_t)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
     _cc_addr_t R3 = _cc_N(truncate_addr)(B3 - 1, 3);
     _cc_addr_t R = _cc_N(truncate_addr)(R3 << (_CC_MANTISSA_WIDTH - 3), _CC_MANTISSA_WIDTH);
