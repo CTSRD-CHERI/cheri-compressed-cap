@@ -746,15 +746,20 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
 
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _cc_addr_t* alignment_mask) {
-    // TODO: this is not quite right for Morello
     uint64_t req_base = cap->_cr_cursor;
-    _cc_length_t req_top = (_cc_length_t)req_base + req_len;
 #ifdef CC_IS_MORELLO
     if (!cap->cr_bounds_valid) {
         cap->cr_tag = 0;
     }
     bool from_large = !_cc_N(cap_bounds_uses_value)(cap);
+    if (!from_large) {
+        // Mask and sign-extend if any of the address bits are used for bounds.
+        // Note: Not doing the masking for large (E>50) capabilities means that some bounds with flag bits set that
+        // could be representable end up being detagged, but we have to match the taped-out chip here.
+        req_base = _cc_N(cap_bounds_address)(req_base);
+    }
 #endif
+    _cc_length_t req_top = (_cc_length_t)req_base + req_len;
     _cc_debug_assert(req_base <= req_top && "Cannot invert base and top");
     /*
      * With compressed capabilities we may need to increase the range of
@@ -799,6 +804,9 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         _cc_debug_assert((new_base != req_base || new_top != req_top) &&
                          "Was inexact, but neither base nor top different?");
     }
+    if (new_base < cap->cr_base || new_top > cap->_cr_top) {
+        cap->cr_tag = 0;
+    }
 
     if (cap->cr_tag) {
         // For invalid inputs, new_top could have been larger than max_top and if it is sufficiently larger, it
@@ -815,7 +823,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
 #ifdef CC_IS_MORELLO
     bool to_small = _cc_N(cap_bounds_uses_value)(cap);
     // On morello we may end up with a length that could have been exact, but has changed the flag bits.
-    if ((from_large && to_small) && ((new_base ^ req_base) >> (64 - MORELLO_FLAG_BITS))) {
+    if ((from_large && to_small) && _cc_N(cap_bounds_address)(cap->_cr_cursor) != cap->_cr_cursor) {
         cap->cr_tag = 0;
     }
 #endif
