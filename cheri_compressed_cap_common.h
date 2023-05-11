@@ -628,38 +628,11 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
            _CC_ENCODE_EBT_FIELD(Be, BOTTOM_ENCODED);
 }
 
-/*
- * Check to see if a memory region is representable by a compressed
- * capability. It is representable if:
- *
- *   representable = (inRange && inLimits) || (E >= 44)
- *
- * where:
- *
- *   E = compression exponent (see _cc_N(compute_e)() above)
- *
- *   inRange = -s < i < s  where i is the increment (or offset)
- *   (In other words, all the bits of i<63, E+20> are the same.)
- *
- *   inLimits = (i < 0) ? (Imid >= (R - Amid)) && (R != Amid) : (R - Amid - 1)
- *   where Imid = i<E+19, E>, Amid = a<E+19, E>, R = B - 2^12 and a =
- *   base + offset.
- */
-static inline bool _cc_N(is_representable_with_addr_impl)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor,
-                                                          bool slow_representable_check) {
-    uint64_t extended_cursor = cc64_cap_bounds_address(new_cursor);
-    // in-bounds capabilities are always representable
-    if (__builtin_expect(extended_cursor >= oldcap->cr_base && extended_cursor < oldcap->_cr_top, true)) {
-        return true;
-    }
-    if (slow_representable_check) {
-        /* Simply compress and uncompress with new cursor to check representability. */
-        _cc_cap_t newcap = *oldcap;
-        newcap._cr_cursor = new_cursor;
-        return _cc_N(is_representable_cap_exact)(&newcap);
-    } else {
-        return _cc_N(fast_is_representable_new_addr)(oldcap, new_cursor);
-    }
+static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
+    /* Simply compress and uncompress with new cursor to check representability. */
+    _cc_cap_t newcap = *oldcap;
+    newcap._cr_cursor = new_cursor;
+    return _cc_N(is_representable_cap_exact)(&newcap);
 }
 
 /// Returns whether the capability bounds depend on any of the cursor bits or if they can be fully derived from E/B/T.
@@ -684,21 +657,29 @@ static inline bool _cc_N(cap_sign_change_causes_unrepresentability)(const _cc_ca
     return _cc_N(cap_sign_change)(addr1, addr2) && _cc_N(cap_bounds_uses_value)(cap);
 }
 
-static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
+static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr,
+                                                     bool precise_representable_check) {
 #ifdef CC_IS_MORELLO
     // If the top bit is changed on morello this can change bounds
-    if (_cc_N(cap_sign_change_causes_unrepresentability)(cap, new_addr, cap->_cr_cursor)) {
+    if (__builtin_expect(_cc_N(cap_sign_change_causes_unrepresentability)(cap, new_addr, cap->_cr_cursor), false)) {
         return false;
     }
-    if (!cap->cr_bounds_valid)
+    // If the exponent is out-of-range (i.e. E>50 && E!=63), all capability address changes will detag.
+    // This can happen for underivable capabilities that were created with the settag instruction.
+    if (__builtin_expect(!cap->cr_bounds_valid, false)) {
         return false;
+    }
 #endif
-#if defined(_CC_USE_FAST_REP_CHECK)
-    const bool slow_representable_check = false;
-#else
-    const bool slow_representable_check = true;
-#endif
-    return _cc_N(is_representable_with_addr_impl)(cap, new_addr, slow_representable_check);
+    _cc_addr_t extended_cursor = _cc_N(cap_bounds_address)(new_addr);
+    // In-bounds capabilities are always representable.
+    if (__builtin_expect(extended_cursor >= cap->cr_base && extended_cursor < cap->_cr_top, true)) {
+        return true;
+    }
+    if (precise_representable_check) {
+        return _cc_N(precise_is_representable_new_addr)(cap, new_addr);
+    } else {
+        return _cc_N(fast_is_representable_new_addr)(cap, new_addr);
+    }
 }
 
 /// Updates the address of a capability using semantics that match the hardware (i.e. using a fast approximate
@@ -707,7 +688,7 @@ static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
     if (cap->cr_tag && _cc_N(is_cap_sealed)(cap)) {
         cap->cr_tag = false;
     }
-    if (!_cc_N(fast_is_representable_new_addr)(cap, new_addr) || !cap->cr_bounds_valid) {
+    if (!_cc_N(is_representable_with_addr)(cap, new_addr, /*precise_representable_check=*/false)) {
         // Detag and recompute the new bounds if the capability became unrepresentable.
         cap->cr_tag = false;
         _cc_N(decompress_raw)(cap->cr_pesbt, new_addr, false, cap);
