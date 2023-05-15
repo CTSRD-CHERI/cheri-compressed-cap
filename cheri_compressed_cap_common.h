@@ -831,9 +831,12 @@ static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
         _cc_debug_assert(cap->_cr_top <= old_top && "cannot remain tagged if top was increased");
         _cc_debug_assert(cap->_cr_top <= _CC_MAX_TOP && "cannot remain tagged if new top greater 1 << 65");
     }
+    // For Morello, we have to compare the sign-extended base and top as the exact check does not cover sign change.
     if (exact) {
-        _cc_debug_assert(cap->cr_base == req_base && "base changed but still reported exact");
-        _cc_debug_assert(cap->_cr_top == req_top && "top changed but still reported exact");
+        _cc_debug_assert(_cc_N(cap_bounds_address)(cap->cr_base) == _cc_N(cap_bounds_address)(req_base) &&
+                         "base changed but still reported exact");
+        _cc_debug_assert(_cc_N(cap_bounds_address)(cap->_cr_top) == _cc_N(cap_bounds_address)(req_top) &&
+                         "top changed but still reported exact");
     } else {
         _cc_debug_assert((cap->_cr_top != req_top || cap->cr_base != req_base) &&
                          "result is exact but reported inexact");

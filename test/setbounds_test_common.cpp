@@ -28,13 +28,22 @@ static inline void check_csetbounds_invariants(const typename Handler::cap_t& in
                                                typename Handler::length_t requested_len) {
     CAPTURE(initial_cap, with_bounds, was_exact);
     // Strip the high bits and sign extend to compute the requested base.
-    typename Handler::addr_t requested_base = _cc_N(cap_bounds_address)(initial_cap.address());
+    typename Handler::addr_t requested_base = _cc_N(cap_bounds_uses_value)(&initial_cap)
+                                                  ? _cc_N(cap_bounds_address)(initial_cap.address())
+                                                  : initial_cap.address();
     typename Handler::length_t requested_top = requested_base + requested_len;
     // Address should be the same!
     REQUIRE(with_bounds.address() == initial_cap.address());
     if (was_exact) {
+#ifdef TEST_CC_IS_MORELLO
+        // For Morello the API could still report that the result was exact even if the bounds changed due to the high
+        // bits changing. Relax this check to only look at the lower 56 bits
+        REQUIRE(_cc_N(cap_bounds_address)(with_bounds.base()) == _cc_N(cap_bounds_address)(requested_base));
+        REQUIRE(_cc_N(cap_bounds_address)(with_bounds.top()) == _cc_N(cap_bounds_address)(requested_top));
+#else
         REQUIRE(with_bounds.base() == requested_base);
         REQUIRE(with_bounds.top() == requested_top);
+#endif
     } else {
         REQUIRE(with_bounds.base() <= requested_base); // base must not be greater than what we asked for
         if (requested_top > _CC_N(MAX_LENGTH)) {
