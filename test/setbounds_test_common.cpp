@@ -216,3 +216,26 @@ TEST_CASE("Setbounds API misuse", "[regression]") {
     CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, 8), std::invalid_argument);
 #endif
 }
+
+TEST_CASE("Setbounds API misuse (creating larger cap)", "[regression]") {
+    // root@cheribsd-morello-purecap:~ # /bin/cheribsdtest-mt-c18n -a -x
+    // qemu-system-morello: ../../qemu/target/cheri-common/cheri-compressed-cap/cheri_compressed_cap_common.h:833:
+    // _Bool cc128m_setbounds(cc128m_cap_t *, cc128m_length_t): Assertion `(req_top <= cap->_cr_top) &&
+    //     "cannot increase top on tagged capabilities"' failed.
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(/*base=*/0x00000000401bd000, /*cursor=*/0x00000000401bdfe0,
+                                                         /*top=*/0x00000000401be000);
+    uint64_t req_len = 0xc0;
+    CHECK(cap.base() == 0x00000000401bd000);
+    CHECK(cap.top() == 0x00000000401be000);
+    // Capabilities that end up being larger than the input should be detagged by the caller.
+#ifndef NDEBUG
+    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument);
+#endif
+    TestAPICC::cap_t cap2 = cap;
+    CHECK(cap2.cr_tag);
+    bool was_exact = _cc_N(setbounds)(&cap2, req_len);
+    CHECK(was_exact);
+    CHECK(!cap2.cr_tag);
+    CHECK(cap2.base() == 0x00000000401bdfe0);
+    CHECK(cap2.top() == cap2.base() + req_len);
+}
