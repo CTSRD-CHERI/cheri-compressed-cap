@@ -13,5 +13,7 @@ function main () : unit -> unit = {
       let bits6 = CapGetBounds(TestCap);
       let exp = CapGetExponent(TestCap);
       let rep = CapIsRepresentableFast(TestCap, Zeros(64));
+      // New API from https://github.com/CTSRD-CHERI/sail-morello/pull/4
+      let (bounded, exact) = CapSetBoundsAndGetExact(TestCap, Zeros(65), true);
   /* } */
 }
