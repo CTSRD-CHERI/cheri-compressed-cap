@@ -32,3 +32,19 @@ TEST_CASE("Fuzzer generated behaviour difference 1", "[fuzz]") {
     CHECK(result.cr_exp == 50);
     CHECK(!was_exact);
 }
+
+TEST_CASE("Fuzzer incorrect exact result 1", "[fuzz]") {
+    TestAPICC::cap_t cap;
+    TestAPICC::decompress_raw(/*pesbt=*/0x27ff00007ff6fe00, /*cursor=*/0xfe00000000000000, /*tag=*/true, &cap);
+    uint64_t req_len = 0x2300000000000000;
+    CHECK(cap.base() == 0xfe00000000000000);
+    CHECK(cap.top() == (_CC_MAX_TOP | 0x3ff0000000000000));
+    bool was_exact = false;
+    auto result = do_csetbounds<TestAPICC>(cap, &was_exact, req_len);
+    // Top is > MAX_TOP so tag should be cleared
+    CHECK(was_exact);
+    CHECK(!result.cr_tag);
+    CHECK(result.base() == 0xfe00000000000000);
+    CHECK(result.top() == (CC128M_MAX_ADDRESS_PLUS_ONE | 0x2100000000000000));
+    CHECK(result.top() - req_len == result.base());
+}
