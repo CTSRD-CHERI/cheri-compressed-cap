@@ -94,17 +94,22 @@ bool sail_setbounds_128m(cc128m_cap_t* cap, cc128m_length_t req_len) {
     lbits sail_len;
     CREATE(sail_cap_bits)(&sail_len);
     cc_length_t_to_sail_cap_bits(&sail_len, req_len);
-    cc128_addr_t req_base = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)(cap->_cr_cursor);
-    cc128_length_t req_top = (cc128_length_t)req_base + req_len;
     lbits sail_result;
     CREATE(lbits)(&sail_result);
     lbits capbits = cap_t_to_sail_cap(cap);
     _CC_CONCAT(MORELLO_SAIL_PREFIX, CapSetBounds)(&sail_result, capbits, sail_len, false);
     KILL(lbits)(&sail_len);
     KILL(lbits)(&capbits);
-    // Update cap in-place and check if the resulting bounds were exact.
-    *cap = from_sail_cap(&sail_result);
-    bool exact = cap->_cr_top == req_top && cap->cr_base == req_base;
+    _cc_cap_t tmp = from_sail_cap(&sail_result);
+    // Check if the resulting bounds were exact. The sail code does not return the value of lostBot/Top, so we check the
+    // resulting bounds against the expected values. NB: We have to compare the low 56 bits of base and top since the
+    // high bits and change of sign are not included in the exactness check.
+    cc128_length_t req_base = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)(cap->_cr_cursor);
+    cc128_length_t req_top =
+        _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)((cc128_length_t)cap->_cr_cursor + req_len);
+    bool exact = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)(tmp._cr_top) == req_top &&
+                 _CC_CONCAT(MORELLO_SAIL_PREFIX, CapBoundsAddress)(tmp.cr_base) == req_base;
+    *cap = tmp;
     KILL(lbits)(&sail_result);
     return exact;
 }
