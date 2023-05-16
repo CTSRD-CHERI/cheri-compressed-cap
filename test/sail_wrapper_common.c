@@ -320,6 +320,11 @@ bool _cc_sail(fast_is_representable)(const _cc_cap_t* cap, _cc_addr_t new_addr) 
     return sailgen_fastRepCheck(sailcap, increment);
 }
 
+bool _cc_sail(precise_is_representable)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
+    struct zCapability sailcap = cap_t_to_sail_cap(cap);
+    return sailgen_setCapAddr(sailcap, new_addr).ztup0;
+}
+
 _cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
     // NULL CAP BITS:
     _cc_addr_t null_pesbt = _compress_sailcap_raw(znull_cap);

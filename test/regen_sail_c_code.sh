@@ -28,6 +28,7 @@ keep_required_functions=(-c_preserve capToBits
 	-c_preserve capBitsToCapability
 	-c_preserve memBitsToCapability
 	-c_preserve fastRepCheck
+	-c_preserve setCapAddr
 	-c_preserve setCapBounds
 	-c_preserve getCapBounds
 	-c_preserve getCapFlags
