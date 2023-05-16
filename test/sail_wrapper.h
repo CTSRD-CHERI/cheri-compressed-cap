@@ -42,6 +42,7 @@ struct cc64_bounds_bits sail_extract_bounds_bits_64(uint32_t pesbt);
 cc64_addr_t sail_compress_64_raw(const cc64_cap_t* csp);
 cc64_addr_t sail_compress_64_mem(const cc64_cap_t* csp);
 bool sail_fast_is_representable_64(const cc64_cap_t* cap, cc64_addr_t new_addr);
+bool sail_precise_is_representable_64(const cc64_cap_t* cap, cc64_addr_t new_addr);
 cc64_addr_t sail_null_pesbt_64(void);
 cc64_addr_t sail_representable_mask_64(cc64_addr_t len);
 cc64_addr_t sail_representable_length_64(cc64_addr_t len);
@@ -54,6 +55,7 @@ struct cc128_bounds_bits sail_extract_bounds_bits_128(cc128_addr_t pesbt);
 cc128_addr_t sail_compress_128_raw(const cc128_cap_t* csp);
 cc128_addr_t sail_compress_128_mem(const cc128_cap_t* csp);
 bool sail_fast_is_representable_128(const cc128_cap_t* cap, cc128_addr_t new_addr);
+bool sail_precise_is_representable_128(const cc128_cap_t* cap, cc128_addr_t new_addr);
 cc128_addr_t sail_null_pesbt_128(void);
 cc128_addr_t sail_representable_mask_128(cc128_addr_t len);
 cc128_addr_t sail_representable_length_128(cc128_addr_t len);
@@ -66,6 +68,7 @@ struct cc128m_bounds_bits sail_extract_bounds_bits_128m(cc128m_addr_t pesbt);
 cc128m_addr_t sail_compress_128m_raw(const cc128m_cap_t* csp);
 cc128m_addr_t sail_compress_128m_mem(const cc128m_cap_t* csp);
 bool sail_fast_is_representable_128m(const cc128m_cap_t* cap, cc128m_addr_t new_addr);
+bool sail_precise_is_representable_128m(const cc128m_cap_t* cap, cc128m_addr_t new_addr);
 cc128m_addr_t sail_null_pesbt_128m(void);
 cc128m_addr_t sail_representable_mask_128m(cc128m_addr_t len);
 cc128m_addr_t sail_representable_length_128m(cc128m_addr_t len);
@@ -95,6 +98,9 @@ public:
     static inline bool sail_fast_is_representable(const cap_t* cap, addr_t new_addr) {
         return sail_fast_is_representable_64(cap, new_addr);
     }
+    static inline bool sail_precise_is_representable(const cap_t* cap, addr_t new_addr) {
+        return sail_precise_is_representable_64(cap, new_addr);
+    }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_64(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_64(len); }
     static inline addr_t sail_representable_length(addr_t len) { return sail_representable_length_64(len); }
@@ -118,6 +124,9 @@ public:
     static inline bool sail_fast_is_representable(const cap_t* cap, addr_t new_addr) {
         return sail_fast_is_representable_128(cap, new_addr);
     }
+    static inline bool sail_precise_is_representable(const cap_t* cap, addr_t new_addr) {
+        return sail_precise_is_representable_128(cap, new_addr);
+    }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_128(len); }
     static inline addr_t sail_representable_length(addr_t len) { return sail_representable_length_128(len); }
@@ -140,6 +149,9 @@ public:
     static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_128m_mem(csp); }
     static inline bool sail_fast_is_representable(const cap_t* cap, addr_t new_addr) {
         return sail_fast_is_representable_128m(cap, new_addr);
+    }
+    static inline bool sail_precise_is_representable(const cap_t* cap, addr_t new_addr) {
+        return sail_precise_is_representable_128m(cap, new_addr);
     }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128m(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_128m(len); }

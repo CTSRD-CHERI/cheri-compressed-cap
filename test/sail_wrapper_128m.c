@@ -100,6 +100,13 @@ bool sail_fast_is_representable_128m(const cc128m_cap_t* cap, cc128m_addr_t new_
     return result;
 }
 
+bool sail_precise_is_representable_128m(const cc128m_cap_t* cap, cc128m_addr_t new_addr) {
+    lbits sailcap = cap_t_to_sail_cap(cap);
+    bool result = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapIsRepresentable)(sailcap, new_addr);
+    KILL(lbits)(&sailcap);
+    return result;
+}
+
 _cc_cap_t sail_reset_capability_128m(void) {
     _cc_cap_t result;
     return from_sail_cap(&zCMAX);
