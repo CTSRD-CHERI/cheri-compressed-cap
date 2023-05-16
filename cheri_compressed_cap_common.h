@@ -634,8 +634,8 @@ static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* old
     newcap._cr_cursor = new_cursor;
     _cc_bounds_bits new_bounds_bits = _cc_N(extract_bounds_bits)(_cc_N(compress_raw)(&newcap));
     newcap.cr_bounds_valid = _cc_N(compute_base_top)(new_bounds_bits, new_cursor, &newcap.cr_base, &newcap._cr_top);
-    return newcap.cr_base == oldcap->cr_base && newcap._cr_top == oldcap->_cr_top &&
-           newcap.cr_bounds_valid == oldcap->cr_bounds_valid;
+    return newcap.cr_base == oldcap->cr_base && newcap._cr_top == oldcap->_cr_top && newcap.cr_bounds_valid &&
+           oldcap->cr_bounds_valid;
 }
 
 /// Returns whether the capability bounds depend on any of the cursor bits or if they can be fully derived from E/B/T.

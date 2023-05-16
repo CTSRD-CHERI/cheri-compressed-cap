@@ -154,7 +154,10 @@ static inline TestAPICC::cap_t checkFastRepCheckSucceeds(const _cc_cap_t& cap, _
     CHECK(sail_fast_rep == cc_fast_rep);
     CHECK(cc_fast_rep);
     // It should also be representable if we do the full check since the bounds interpretation does not change.
-    CHECK(TestAPICC::precise_is_representable_new_addr(cap, new_addr));
+    // NB: Unlike precise_is_representable_new_addr, fast_is_representable_new_addr does not look at cr_bounds_valid.
+    if (cap.cr_bounds_valid) {
+        CHECK(TestAPICC::precise_is_representable_new_addr(cap, new_addr));
+    }
     // Check that creating a new capability with same pesbt and new address decodes to the same bounds
     TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(cap.cr_pesbt, new_addr, false);
     CHECK(new_cap_with_other_cursor.base() == cap.base());
