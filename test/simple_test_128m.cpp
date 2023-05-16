@@ -69,3 +69,21 @@ TEST_CASE("UBSan signed shift out-of-range in fast rep check", "[fuzz]") {
                                          /*new_addr=*/0xffffffffffffffff);
     CHECK(cap.cr_exp == 48);
 }
+
+TEST_CASE("Invalid exponent caps should never be representable", "[fuzz]") {
+    // For Morello the representability check should always fail if the input had an invalid exponent.
+    // NB: calling the fast representability check directly succeeds since it does not take this into account, but the
+    // overall check for IncOffset/SetAddr should fail.
+    auto cap =
+        checkFastRepCheckSucceeds(/*pesbt=*/0x00000040070003, /*addr=*/0, /*expected_base=*/0,
+                                  /*expected_top=*/_CC_MAX_TOP, /*new_addr=*/0, /*set_addr_should_retain_tag=*/false);
+    CHECK(cap.cr_exp == 59);
+    CHECK(!cap.cr_bounds_valid);
+    // The precise check should also fail:
+    CHECK(!TestAPICC::sail_precise_is_representable(cap, 0));
+    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, 0));
+    CHECK(!cc128m_is_representable_with_addr(&cap, 0, /*precise_representable_check=*/true));
+    // Calling cc128m_is_representable_with_addr should fail since it checks the exponent validity in addition to the
+    // doing the fast representability check.
+    CHECK(!cc128m_is_representable_with_addr(&cap, 0, /*precise_representable_check=*/false));
+}
