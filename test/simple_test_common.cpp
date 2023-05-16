@@ -113,7 +113,7 @@ static void check_representable(_cc_addr_t base, _cc_length_t length, _cc_addr_t
 
 static inline bool check_repr(bool sealed, _cc_addr_t base, _cc_addr_t length, _cc_addr_t offset) {
     (void)sealed;
-    auto cap = make_max_perms_cap(base, base + offset, base + length);
+    auto cap = TestAPICC::make_max_perms_cap(base, base + offset, base + length);
     return _cc_N(is_representable_cap_exact)(&cap);
 }
 

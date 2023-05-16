@@ -96,10 +96,6 @@ __attribute__((used)) static _cc_cap_t decompress_representable(_cc_addr_t pesbt
     CHECK(cursor == result.address());
     return result;
 }
-
-inline _cc_cap_t make_max_perms_cap(_cc_addr_t base, _cc_addr_t offset, _cc_length_t length) {
-    return _cc_N(make_max_perms_cap)(base, offset, length);
-}
 #endif
 
 #define CHECK_FIELD_RAW(value, expected) CHECK(value == expected)

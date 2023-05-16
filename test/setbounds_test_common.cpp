@@ -135,10 +135,10 @@ TEST_CASE("setbounds test cases from sail", "[bounds]") {
     for (size_t index = 0; index < array_lengthof(setbounds_inputs); index++) {
         CAPTURE(index);
         const setbounds_input& input = setbounds_inputs[index];
-        auto first_input = make_max_perms_cap(0, input.base1, _CC_N(MAX_LENGTH));
+        auto first_input = TestAPICC::make_max_perms_cap(0, input.base1, _CC_MAX_TOP);
         REQUIRE(first_input.address() == input.base1);
         REQUIRE(first_input.base() == 0);
-        REQUIRE(first_input.top() == _CC_N(MAX_LENGTH));
+        REQUIRE(first_input.top() == _CC_MAX_TOP);
         bool first_exact = false;
         const _cc_cap_t first_bounds = do_csetbounds<Handler>(first_input, input.top1, &first_exact);
         CHECK(first_bounds.base() == input.sail_cc_base1);

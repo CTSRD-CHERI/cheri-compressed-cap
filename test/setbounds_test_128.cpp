@@ -23,7 +23,7 @@ TEST_CASE("regression from cheritest", "[bounds]") {
     //    Write C01|v:1 s:0 p:00078fff b:ffffffffff000000 l:0000000000ffffff
     //             |o:0000000000000000 t:3ffff
 
-    cc128_cap_t initial = make_max_perms_cap(0, 0xFFFFFFFFFF000000, CC128_MAX_LENGTH);
+    cc128_cap_t initial = TestAPICC::make_max_perms_cap(0, 0xFFFFFFFFFF000000, _CC_MAX_TOP);
     cc128_cap_t with_bounds = check_bounds_exact<TestAPI128>(initial, 0xffffff, false);
     CHECK(with_bounds.cr_base == 0xFFFFFFFFFF000000);
     CHECK(with_bounds.offset() == 0x0000000000000000);
@@ -38,7 +38,7 @@ TEST_CASE("Old format setbounds regression with new format", "[old]") {
     //    Write a0 = 0000000010000000
     // 0x9000000040000fe4:  csetbounds	c3,c3,a0
     //  -> crash
-    auto cap = make_max_perms_cap(0, 7, CC128_MAX_LENGTH);
+    auto cap = TestAPICC::make_max_perms_cap(0, 7, _CC_MAX_TOP);
     uint64_t requested_length = 0x0000000010000000;
     cc128_cap_t with_bounds = check_bounds_exact<TestAPI128>(cap, requested_length, false);
     CHECK(with_bounds.cr_base == 0x0000000000000000);
@@ -53,7 +53,7 @@ TEST_CASE("Cheritest regression case", "[regression]") {
     // csetoffset $c1, $c1, $t0
     // dli	$t1, 0x300000
     // csetbounds $c1, $c1, $t1
-    auto cap = make_max_perms_cap(0, 0x160600000, CC128_MAX_LENGTH);
+    auto cap = TestAPICC::make_max_perms_cap(0, 0x160600000, _CC_MAX_TOP);
     cc128_cap_t with_bounds = check_bounds_exact<TestAPI128>(cap, 0x300000, true);
     CHECK(with_bounds.cr_base == 0x160600000);
     CHECK(with_bounds.offset() == 0);
