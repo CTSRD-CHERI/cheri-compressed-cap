@@ -183,12 +183,21 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     fuzz_representable(result, random_base);
     fuzz_representable(tagged_result, random_base);
 
-    // Try running setbounds (on an untagged capability) and compare to sail.
+    // Try running setbounds and compare to sail.
     fuzz_setbounds(result, new_len);
-    _cc_N(set_addr)(&result, result.base());
-    fuzz_setbounds(result, new_len);
-    _cc_N(set_addr)(&result, random_base);
-    fuzz_setbounds(result, new_len);
+    fuzz_setbounds(tagged_result, new_len);
+    {
+        _cc_cap_t tmp = result;
+        _cc_N(set_addr)(&tmp, result.base());
+        fuzz_setbounds(tmp, new_len);
+        _cc_cap_t tmp_tagged = make_tagged_cap(tmp);
+        fuzz_setbounds(tmp_tagged, new_len);
+
+        _cc_N(set_addr)(&tmp, random_base);
+        fuzz_setbounds(tmp, new_len);
+        tmp_tagged = make_tagged_cap(tmp);
+        fuzz_setbounds(tmp_tagged, new_len);
+    }
 
     return 0; // Non-zero return values are reserved for future use.
 }
