@@ -642,7 +642,7 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
            _CC_ENCODE_EBT_FIELD(Be, BOTTOM_ENCODED);
 }
 
-static inline bool _cc_N(slow_is_representable_with_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
+static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
     /* Simply compress and uncompress with new cursor to check representability. */
     _cc_cap_t newcap = *oldcap;
     newcap._cr_cursor = new_cursor;
@@ -690,7 +690,7 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
         return true;
     }
     if (slow_representable_check) {
-        return _cc_N(slow_is_representable_with_addr)(cap, new_addr);
+        return _cc_N(precise_is_representable_new_addr)(cap, new_addr);
     } else {
         return _cc_N(fast_is_representable_new_addr)(cap, new_addr);
     }
