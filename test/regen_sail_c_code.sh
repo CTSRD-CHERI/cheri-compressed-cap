@@ -42,6 +42,6 @@ sail -c -c_no_main -c_prefix sailgen_ -c_specialize "${keep_required_functions[@
 sail -c -c_no_main -c_prefix sailgen_ -c_specialize "${keep_required_functions[@]}" -verbose=2 -o "$output_dir/sail_compression_64" $sail64_srcs "${SCRIPT_DIR}/compression_test.sail" -static
 cd "$output_dir"
 
-for i in sail.h sail.c sail_failure.c sail_failure.h; do
+for i in sail.h sail.c sail_failure.c sail_failure.h elf.h rts.h; do
   cp "${SAIL_DIR}/lib/${i}" .
 done

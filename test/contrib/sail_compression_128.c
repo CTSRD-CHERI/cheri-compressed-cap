@@ -356,6 +356,8 @@ end_block_exception_11: ;
 
 
 
+
+
 static void sailgen_EXTS(lbits *rop, sail_int, lbits);
 
 static void sailgen_EXTZ(lbits *rop, sail_int, lbits);
