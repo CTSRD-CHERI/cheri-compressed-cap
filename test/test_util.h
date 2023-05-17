@@ -11,12 +11,15 @@
 #define STRINGIFY(x) DO_STRINGIFY1(x)
 
 static const char* otype_suffix(uint32_t otype) {
+    // clang-format off
     switch (otype) {
 #define OTYPE_CASE(Name, ...)                                                                                          \
     case _CC_N(Name): return " (" STRINGIFY(_CC_N(Name)) ")";
         _CC_N(LS_SPECIAL_OTYPES)(OTYPE_CASE, )
     default: return "";
+#undef OTYPE_CASE
     }
+    // clang-format on
 }
 
 #ifndef TEST_CC_IS_CHERI256
@@ -79,8 +82,7 @@ std::ostream& operator<<(std::ostream& os, const cc128_length_t& value) {
     return os << buf;
 }
 
-#include <catch2/catch_test_macros.hpp>
-
+#ifdef CHECK
 #ifndef TEST_CC_IS_CHERI256
 __attribute__((used)) static _cc_cap_t decompress_representable(_cc_addr_t pesbt_already_xored, _cc_addr_t cursor) {
     _cc_cap_t result;
@@ -101,6 +103,7 @@ inline _cc_cap_t make_max_perms_cap(_cc_addr_t base, _cc_addr_t offset, _cc_leng
 
 #define CHECK_FIELD_RAW(value, expected) CHECK(value == expected)
 #define CHECK_FIELD(cap, field, expected) CHECK((uint64_t)expected == cap.field())
+#endif
 
 enum {
 #ifdef CC128_OLD_FORMAT

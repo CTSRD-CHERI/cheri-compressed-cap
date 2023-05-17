@@ -35,6 +35,7 @@
 #include "../cheri_compressed_cap.h"
 #include "FuzzedDataProvider.h"
 #include "sail_wrapper.h"
+#include "test_util.h"
 #include <cinttypes>
 #include <cstdio>
 
@@ -45,33 +46,8 @@
 #define DO_STRINGIFY1(x) DO_STRINGIFY2(x)
 #define STRINGIFY(x) DO_STRINGIFY1(x)
 
-static const char* otype_suffix(uint32_t otype) {
-    switch (otype) {
-#define OTYPE_CASE(Name, ...)                                                                                          \
-    case _CC_N(Name): return " (" STRINGIFY(_CC_N(Name)) ")";
-        _CC_N(LS_SPECIAL_OTYPES)(OTYPE_CASE, )
-    default: return "";
-    }
-}
-
 static void dump_cap_fields(const _cc_cap_t& result) {
-    fprintf(stderr, "Permissions: 0x%" PRIx32 "\n", result.permissions()); // TODO: decode perms
-    fprintf(stderr, "User Perms:  0x%" PRIx32 "\n", result.software_permissions());
-    fprintf(stderr, "Base:        0x%016" PRIx64 "\n", (uint64_t)result.base());
-    fprintf(stderr, "Offset:      0x%016" PRIx64 "\n", (uint64_t)result.offset());
-    fprintf(stderr, "Cursor:      0x%016" PRIx64 "\n", (uint64_t)result.address());
-    unsigned __int128 len_full = result.length();
-    fprintf(stderr, "Length:      0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(len_full >> 64), (uint64_t)len_full,
-            len_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
-    unsigned __int128 top_full = result.top();
-    fprintf(stderr, "Top:         0x%" PRIx64 "%016" PRIx64 " %s\n", (uint64_t)(top_full >> 64), (uint64_t)top_full,
-            top_full > UINT64_MAX ? " (greater than UINT64_MAX)" : "");
-    fprintf(stderr, "Flags:       %d\n", (int)result.flags());
-    fprintf(stderr, "Reserved:    %d\n", (int)result.reserved_bits());
-    fprintf(stderr, "Sealed:      %d\n", (int)result.is_sealed());
-    fprintf(stderr, "OType:       0x%" PRIx32 "%s\n", result.type(), otype_suffix(result.type()));
-    fprintf(stderr, "Exponent:    %d\n", result.cr_exp);
-    fprintf(stderr, "\n");
+    dump_cap_fields(stderr, result);
 }
 
 static bool compare_caps(const char* context, const _cc_cap_t& result, const _cc_cap_t& sail_result) {
