@@ -105,11 +105,3 @@ inline _cc_cap_t make_max_perms_cap(_cc_addr_t base, _cc_addr_t offset, _cc_leng
 #define CHECK_FIELD_RAW(value, expected) CHECK(value == expected)
 #define CHECK_FIELD(cap, field, expected) CHECK((uint64_t)expected == cap.field())
 #endif
-
-enum {
-#ifdef CC128_OLD_FORMAT
-    TESTING_OLD_FORMAT = 1
-#else
-    TESTING_OLD_FORMAT = 0
-#endif
-};

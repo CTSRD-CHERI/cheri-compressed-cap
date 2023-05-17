@@ -43,8 +43,7 @@ TEST_CASE("Old format setbounds regression with new format", "[old]") {
     cc128_cap_t with_bounds = check_bounds_exact<TestAPI128>(cap, requested_length, false);
     CHECK(with_bounds.cr_base == 0x0000000000000000);
     CHECK(with_bounds.offset() == 0x0000000000000007);
-    // Higher precision in old format -> more exact bounds
-    uint64_t expected_length = TESTING_OLD_FORMAT ? 0x0000000010000400 : 0x00000000010080000;
+    uint64_t expected_length = 0x00000000010080000;
     CHECK(with_bounds.length() == expected_length);
 }
 
