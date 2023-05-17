@@ -67,8 +67,7 @@ TEST_CASE("Fuzzer assertion exact untagged", "[fuzz]") {
     constexpr uint64_t base = UINT64_C(0xff80000000000000);
     constexpr uint64_t addr = UINT64_C(0xf806ffffffff3e0a);
     constexpr TestAPICC::length_t top = base;
-    TestAPICC::cap_t decoded;
-    TestAPICC::decompress_raw(pesbt, addr, false, &decoded);
+    TestAPICC::cap_t decoded = TestAPICC::decompress_raw(pesbt, addr, false);
     REQUIRE(decoded.base() == base);
     REQUIRE(decoded.top() == top);
     REQUIRE(decoded.address() == addr);

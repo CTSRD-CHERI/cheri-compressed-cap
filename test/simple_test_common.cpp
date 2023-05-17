@@ -50,9 +50,7 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
 }
 
 TEST_CASE("Zeroes decode to NULL cap", "[nullcap]") {
-    _cc_cap_t result;
-    memset(&result, 'a', sizeof(result));
-    CompressedCapCC::decompress_mem(0, 0, false, &result);
+    _cc_cap_t result = CompressedCapCC::decompress_mem(0, 0, false);
     fprintf(stderr, "Decompressed NULL cap:\n");
     dump_cap_fields(stderr, result);
     fprintf(stderr, "\n");

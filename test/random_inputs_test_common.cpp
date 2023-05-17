@@ -80,10 +80,8 @@ static bool check_fields_match(const typename Handler::cap_t& result, const test
 
 template <class Handler, typename test_input> static bool test_one_entry(const test_input& ti) {
     // decompress_representable(ti.input.pesbt, ti.input.cursor);
-    typename Handler::cap_t result;
-    memset(&result, 0, sizeof(result));
     // The inputs already have the NULL xor mask removed -> Handler::decompress_raw()
-    Handler::decompress_raw(ti.pesbt, ti.cursor, false, &result);
+    typename Handler::cap_t result = Handler::decompress_raw(ti.pesbt, ti.cursor, false);
     CAPTURE(ti.pesbt, ti.cursor);
 
     bool success = check_fields_match<Handler>(result, ti, "");
@@ -96,7 +94,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
     typename Handler::length_t top_full = result.top();
     // Also don't attempt to recompress massively out-of-bounds caps since that might not work:
     if (top_full >= result.cr_base && top_full <= _CC_N(MAX_TOP) && result.address() <= result.length()) {
-        typename Handler::addr_t recompressed_pesbt = Handler::compress_raw(&result);
+        typename Handler::addr_t recompressed_pesbt = Handler::compress_raw(result);
         // TODO: Implement sail_compress_raw/sail_decode_raw for Morello
 #ifndef TEST_CC_IS_MORELLO
         typename Handler::addr_t sail_recompressed_pesbt = Handler::sail_compress_raw(result);
@@ -112,10 +110,8 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
             // exponents
         }
         // But even if it didn't compress the same at least all fields decompressed from the new pesbt must be the same:
-        typename Handler::cap_t result_recompressed;
-        memset(&result_recompressed, 0, sizeof(result_recompressed));
         // The inputs already have the NULL xor mask removed -> Handler::decompress_raw()
-        Handler::decompress_raw(recompressed_pesbt, ti.cursor, false, &result_recompressed);
+        typename Handler::cap_t result_recompressed = Handler::decompress_raw(recompressed_pesbt, ti.cursor, false);
         success = success && check_fields_match<Handler>(result_recompressed, ti, "Recompressed pesbt: ");
         // Sanity check: recompress with sail
         result_recompressed = Handler::sail_decode_raw(recompressed_pesbt, ti.cursor, false);
@@ -126,7 +122,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
             fprintf(stderr, "\nRecompressed decoded:\n");
             dump_cap_fields(stderr, result_recompressed);
         }
-        _cc_addr_t recompressed_pesbt_after_normalize = Handler::compress_raw(&result_recompressed);
+        _cc_addr_t recompressed_pesbt_after_normalize = Handler::compress_raw(result_recompressed);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == recompressed_pesbt_after_normalize);
 #ifndef TEST_CC_IS_MORELLO
         _cc_addr_t sail_recompressed_pesbt_after_normalize = Handler::sail_compress_raw(result_recompressed);
