@@ -30,11 +30,11 @@
  * SUCH DAMAGE.
  */
 
-#include "sail.h"
+#include "contrib/sail.h"
 
 /* Provide the 128-specific APIs for sail_wrapper_common.c */
 
-#define SAIL_COMPRESSION_GENERATED_C_FILE "sail_compression_128.c"
+#define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_128.c"
 #define sail_bounds_tuple ztuple_z8z5bv64zCz0z5bvz9
 
 #define SAIL_WRAPPER_CC_FORMAT_LOWER 128

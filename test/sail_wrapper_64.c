@@ -30,10 +30,10 @@
  * SUCH DAMAGE.
  */
 
-#include "sail.h"
+#include "contrib/sail.h"
 
 /* Provide the 64-specific APIs for sail_wrapper_common.c */
-#define SAIL_COMPRESSION_GENERATED_C_FILE "sail_compression_64.c"
+#define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_64.c"
 // Would be nice to have a stable name for this tuple:
 #define sail_bounds_tuple ztuple_z8z5bv32zCz0z5bv33z9
 

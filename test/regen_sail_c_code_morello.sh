@@ -28,8 +28,8 @@ keep_required_functions=(
   -c_preserve CapGetPermissions
   -c_preserve CapGetObjectType
   -c_preserve CapGetTag)
-output_dir=${SCRIPT_DIR}
+output_dir=${SCRIPT_DIR}/contrib
 
 cd "$SAIL_MORELLO_DIR/src" || exit 1
-sail -c -O -undefined_gen -non_lexical_flow -no_warn -c_no_main -c_prefix sailgen_ -c_specialize "${keep_required_functions[@]}" -verbose=2 -o "$output_dir/sail_compression_128m" $sail128_srcs "$output_dir/compression_test_morello.sail" -static
+sail -c -O -undefined_gen -non_lexical_flow -no_warn -c_no_main -c_prefix sailgen_ -c_specialize "${keep_required_functions[@]}" -verbose=2 -o "$output_dir/sail_compression_128m" $sail128_srcs "${SCRIPT_DIR}/compression_test_morello.sail" -static
 cd "$output_dir"

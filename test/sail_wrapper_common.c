@@ -29,8 +29,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include "sail.h"
-#include "sail_failure.h"
+#include "contrib/sail.h"
+#include "contrib/sail_failure.h"
 #include "sail_wrapper.h"
 
 #ifdef __clang__
