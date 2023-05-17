@@ -60,6 +60,26 @@
 __attribute__((constructor, used)) static void sail_startup(void) { model_init(); }
 __attribute__((destructor, used)) static void sail_cleanup(void) { model_fini(); }
 
+int process_arguments(int argc, char** argv) { abort(); }
+
+void setup_rts(void) {
+    // Avoid double initialization of sail.c data
+    static int done_setup = false;
+    if (!done_setup) {
+        setup_library();
+        done_setup = true;
+    }
+}
+
+void cleanup_rts(void) {
+    // Avoid double free of sail.c data
+    static int done_cleanup = false;
+    if (!done_cleanup) {
+        cleanup_library();
+        done_cleanup = true;
+    }
+}
+
 static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
     sail_int start_sail;
     CREATE_OF(sail_int, mach_int)(&start_sail, start);
