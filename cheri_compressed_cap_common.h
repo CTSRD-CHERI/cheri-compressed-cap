@@ -110,12 +110,13 @@ _CC_STATIC_ASSERT(_CC_N(MIN_RESERVED_OTYPE) <= _CC_N(MAX_REPRESENTABLE_OTYPE), "
 _CC_STATIC_ASSERT(_CC_N(MAX_RESERVED_OTYPE) <= _CC_N(MAX_REPRESENTABLE_OTYPE), "MAX_RESERVED_OTYPE out of range?");
 
 // Forward-declare the accessors since we use them inside the struct body:
-struct _cc_N(cap);
-static inline uint8_t _cc_N(get_flags)(const struct _cc_N(cap)* cap);
-static inline uint32_t _cc_N(get_otype)(const struct _cc_N(cap)* cap);
-static inline uint32_t _cc_N(get_perms)(const struct _cc_N(cap)* cap);
-static inline uint8_t _cc_N(get_reserved)(const struct _cc_N(cap)* cap);
-static inline uint32_t _cc_N(get_uperms)(const struct _cc_N(cap)* cap);
+typedef struct _cc_N(cap) _cc_N(cap_t);
+#define _cc_cap_t _cc_N(cap_t)
+static inline uint8_t _cc_N(get_flags)(const _cc_cap_t* cap);
+static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
+static inline uint32_t _cc_N(get_perms)(const _cc_cap_t* cap);
+static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
+static inline uint32_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
 struct _cc_N(cap) {
@@ -158,8 +159,6 @@ struct _cc_N(cap) {
     inline bool operator==(const _cc_N(cap) & other) const;
 #endif
 };
-typedef struct _cc_N(cap) _cc_N(cap_t);
-#define _cc_cap_t _cc_N(cap_t)
 
 static inline bool _cc_N(exactly_equal)(const _cc_cap_t* a, const _cc_cap_t* b) {
     return a->cr_tag == b->cr_tag && a->_cr_cursor == b->_cr_cursor && a->cr_pesbt == b->cr_pesbt;
