@@ -30,12 +30,12 @@
  * SUCH DAMAGE.
  */
 
-#include "sail.h"
+#include "contrib/sail.h"
 
 /* Provide the Morello-specific APIs for sail_wrapper_common.c */
 
 #define MORELLO_SAIL_PREFIX sailgen_
-#define SAIL_COMPRESSION_GENERATED_C_FILE "sail_compression_128m.c"
+#define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_128m.c"
 // Two 65-bit bounds and a bool (for exactness)
 #define sail_bounds_tuple ztuple_z8z5bvzCz0z5bvzCz0z5boolz9
 
