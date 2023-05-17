@@ -99,7 +99,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
         typename Handler::addr_t recompressed_pesbt = Handler::compress_raw(&result);
         // TODO: Implement sail_compress_raw/sail_decode_raw for Morello
 #ifndef TEST_CC_IS_MORELLO
-        typename Handler::addr_t sail_recompressed_pesbt = Handler::sail_compress_raw(&result);
+        typename Handler::addr_t sail_recompressed_pesbt = Handler::sail_compress_raw(result);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == sail_recompressed_pesbt);
 #endif
         CAPTURE(recompressed_pesbt);
@@ -129,7 +129,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
         _cc_addr_t recompressed_pesbt_after_normalize = Handler::compress_raw(&result_recompressed);
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt == recompressed_pesbt_after_normalize);
 #ifndef TEST_CC_IS_MORELLO
-        _cc_addr_t sail_recompressed_pesbt_after_normalize = Handler::sail_compress_raw(&result_recompressed);
+        _cc_addr_t sail_recompressed_pesbt_after_normalize = Handler::sail_compress_raw(result_recompressed);
         // Should match the sail values:
         CHECK_AND_SAVE_SUCCESS(recompressed_pesbt_after_normalize == sail_recompressed_pesbt_after_normalize);
 #endif

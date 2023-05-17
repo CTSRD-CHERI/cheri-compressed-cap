@@ -91,8 +91,8 @@ public:
         return sail_decode_64_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_64(pesbt); }
-    static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_64_raw(csp); }
-    static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_64_mem(csp); }
+    static inline addr_t sail_compress_raw(const cap_t& csp) { return sail_compress_64_raw(&csp); }
+    static inline addr_t sail_compress_mem(const cap_t& csp) { return sail_compress_64_mem(&csp); }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_64(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_64(len); }
     static inline addr_t sail_representable_length(addr_t len) { return sail_representable_length_64(len); }
@@ -111,8 +111,8 @@ public:
         return sail_decode_128_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_128(pesbt); }
-    static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_128_raw(csp); }
-    static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_128_mem(csp); }
+    static inline addr_t sail_compress_raw(const cap_t& csp) { return sail_compress_128_raw(&csp); }
+    static inline addr_t sail_compress_mem(const cap_t& csp) { return sail_compress_128_mem(&csp); }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_128(len); }
     static inline addr_t sail_representable_length(addr_t len) { return sail_representable_length_128(len); }
@@ -131,8 +131,8 @@ public:
         return sail_decode_128m_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_128m(pesbt); }
-    static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_128m_raw(csp); }
-    static inline addr_t sail_compress_mem(const cap_t* csp) { return sail_compress_128m_mem(csp); }
+    static inline addr_t sail_compress_raw(const cap_t& csp) { return sail_compress_128m_raw(&csp); }
+    static inline addr_t sail_compress_mem(const cap_t& csp) { return sail_compress_128m_mem(&csp); }
     static inline addr_t sail_null_pesbt() { return sail_null_pesbt_128m(); }
     static inline addr_t sail_representable_mask(addr_t len) { return sail_representable_mask_128m(len); }
     static inline addr_t sail_representable_length(addr_t len) { return sail_representable_length_128m(len); }
