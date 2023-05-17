@@ -96,9 +96,7 @@ void sail_decode_128_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc12
 void sail_decode_128_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128_cap_t* cdp) {
     sail_decode_common_raw(mem_pesbt, mem_cursor, tag, cdp);
 }
-struct cc128_bounds_bits sail_extract_bounds_bits_128(uint64_t pesbt) {
-    return sail_extract_bounds_bits_common(pesbt);
-}
+struct cc128_bounds_bits sail_extract_bounds_bits_128(uint64_t pesbt) { return sail_extract_bounds_bits_common(pesbt); }
 uint64_t sail_compress_128_raw(const cc128_cap_t* csp) { return sail_compress_common_raw(csp); }
 uint64_t sail_compress_128_mem(const cc128_cap_t* csp) { return sail_compress_common_mem(csp); }
 

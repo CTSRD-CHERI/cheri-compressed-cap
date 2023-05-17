@@ -45,12 +45,14 @@
 #endif
 
 static const char* otype_suffix(uint32_t otype) {
+    // clang-format off
     switch (otype) {
 #define OTYPE_CASE(Name, ...)                                                                                          \
     case CC128_##Name: return " (CC128_" #Name ")";
     CC128_LS_SPECIAL_OTYPES(OTYPE_CASE, )
     default: return "";
     }
+    // clang-format on
 }
 
 static void dump_cap_fields(const cc128_cap_t* result) {
@@ -75,8 +77,8 @@ static void dump_cap_fields(const cc128_cap_t* result) {
 }
 
 int main(int argc, char** argv) {
-    //fprintf(stderr, "CC128_NULL_XOR_MASK=0x%llx\n", (long long)CC128_NULL_XOR_MASK);
-    //fprintf(stderr, "CC128_NULL_PESBT   =0x%llx\n", (long long)CC128_NULL_PESBT);
+    // fprintf(stderr, "CC128_NULL_XOR_MASK=0x%llx\n", (long long)CC128_NULL_XOR_MASK);
+    // fprintf(stderr, "CC128_NULL_PESBT   =0x%llx\n", (long long)CC128_NULL_PESBT);
     if (argc < 3) {
         fprintf(stderr, "Usage: %s PESBT CURSOR\n", argv[0]);
         return EXIT_FAILURE;

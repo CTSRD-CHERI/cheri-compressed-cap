@@ -196,7 +196,7 @@ uint64_t sail_compress_common_raw(const _cc_cap_t* csp) {
     return sail_compress_common_mem(csp) ^ _CC_N(NULL_XOR_MASK);
 }
 
-static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) {  abort(); }
+static _cc_bounds_bits sail_extract_bounds_bits_common(_cc_addr_t pesbt) { abort(); }
 
 #else
 
@@ -321,7 +321,8 @@ _cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
     return null_pesbt;
 }
 
-bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_length_t req_top) {
+bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _cc_addr_t req_base,
+                                                               _cc_length_t req_top) {
     struct zCapability sailcap = cap_t_to_sail_cap(cap);
     sail_cap_bits sailtop;
     CREATE(sail_cap_bits)(&sailtop);

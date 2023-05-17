@@ -86,7 +86,8 @@ std::ostream& operator<<(std::ostream& os, const cc128_length_t& value) {
 #ifndef TEST_CC_IS_CHERI256
 __attribute__((used)) static _cc_cap_t decompress_representable(_cc_addr_t pesbt_already_xored, _cc_addr_t cursor) {
     _cc_cap_t result;
-    printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", (uint64_t)pesbt_already_xored, (uint64_t)cursor);
+    printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", (uint64_t)pesbt_already_xored,
+           (uint64_t)cursor);
     _cc_N(decompress_raw)(pesbt_already_xored, cursor, false, &result);
     dump_cap_fields(stderr, result);
     // Check that the result is the same again when compressed

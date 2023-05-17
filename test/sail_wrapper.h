@@ -36,7 +36,7 @@
 extern "C" {
 #endif
 
-void sail_decode_64_mem(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t * cdp);
+void sail_decode_64_mem(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t* cdp);
 void sail_decode_64_raw(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t* cdp);
 struct cc64_bounds_bits sail_extract_bounds_bits_64(uint32_t pesbt);
 cc64_addr_t sail_compress_64_raw(const cc64_cap_t* csp);
