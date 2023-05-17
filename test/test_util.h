@@ -23,14 +23,14 @@ static const char* otype_suffix(uint32_t otype) {
 }
 
 #ifndef TEST_CC_IS_CHERI256
-std::ostream& operator<<(std::ostream& os, const _cc_N(bounds_bits)& value);
-std::ostream& operator<<(std::ostream& os, const _cc_N(bounds_bits)& value) {
+std::ostream& operator<<(std::ostream& os, const _cc_bounds_bits& value);
+std::ostream& operator<<(std::ostream& os, const _cc_bounds_bits& value) {
     os << "{ B: " << (unsigned)value.B << " T: " << (unsigned)value.T << " E: " << (unsigned)value.E
        << " IE: " << (unsigned)value.IE << " }";
     return os;
 }
 
-static inline bool operator==(const _cc_N(bounds_bits)& a, const _cc_N(bounds_bits)& b) {
+static inline bool operator==(const _cc_bounds_bits& a, const _cc_bounds_bits& b) {
     return a.B == b.B && a.E == b.E && a.T == b.T && a.IE == b.IE;
 }
 #endif
