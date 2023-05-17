@@ -23,9 +23,7 @@
 template <class Handler, typename test_input>
 static bool check_fields_match(const typename Handler::cap_t& result, const test_input& input,
                                const std::string& prefix) {
-    typename Handler::cap_t sail_result;
-    memset(&sail_result, 0, sizeof(sail_result));
-    Handler::sail_decode_raw(input.pesbt, input.cursor, false, &sail_result);
+    typename Handler::cap_t sail_result = Handler::sail_decode_raw(input.pesbt, input.cursor, false);
 
     typename Handler::bounds_bits bounds_bits = Handler::extract_bounds_bits(input.pesbt);
     // TODO: Implement sail_extract_bounds_bits for Morello
@@ -120,8 +118,7 @@ template <class Handler, typename test_input> static bool test_one_entry(const t
         Handler::decompress_raw(recompressed_pesbt, ti.cursor, false, &result_recompressed);
         success = success && check_fields_match<Handler>(result_recompressed, ti, "Recompressed pesbt: ");
         // Sanity check: recompress with sail
-        memset(&result_recompressed, 0, sizeof(result_recompressed));
-        Handler::sail_decode_raw(recompressed_pesbt, ti.cursor, false, &result_recompressed);
+        result_recompressed = Handler::sail_decode_raw(recompressed_pesbt, ti.cursor, false);
         success = success && check_fields_match<Handler>(result_recompressed, ti, "Sail recompressed pesbt: ");
         if (!success) {
             fprintf(stderr, "\nOriginal decoded:\n");

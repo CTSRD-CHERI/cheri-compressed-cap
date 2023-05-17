@@ -101,11 +101,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     _cc_addr_t random_base = fuzzData.ConsumeIntegral<_cc_addr_t>();
 
     _cc_cap_t result;
-    _cc_cap_t sail_result;
     memset(&result, 0, sizeof(result));
-    memset(&sail_result, 0, sizeof(sail_result));
     _cc_N(decompress_mem)(pesbt, cursor, false, &result);
-    _cc_sail_decode_mem(pesbt, cursor, false, &sail_result);
+    _cc_cap_t sail_result = TestAPICC::sail_decode_mem(pesbt, cursor, false);
     if (!compare_caps("DECODE FROM MEM", result, sail_result)) {
         abort();
     }
@@ -116,9 +114,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 #endif
 
     memset(&result, 0, sizeof(result));
-    memset(&sail_result, 0, sizeof(sail_result));
     _cc_N(decompress_raw)(pesbt, cursor, false, &result);
-    _cc_sail_decode_raw(pesbt, cursor, false, &sail_result);
+    sail_result = _cc_sail_decode_raw(pesbt, cursor, false);
     if (!compare_caps("DECODE ALREADY XORED", result, sail_result)) {
         abort();
     }

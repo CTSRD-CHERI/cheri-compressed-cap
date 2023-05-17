@@ -93,12 +93,12 @@ int main(int argc, char** argv) {
     if (errno != 0 || !end || *end != '\0') {
         err(EX_DATAERR, "cursor not a valid hex number: %s", argv[2]);
     }
-    cc128_cap_t result;
-    memset(&result, 0, sizeof(result));
     printf("Decompressing pesbt = %016" PRIx64 ", cursor = %016" PRIx64 "\n", pesbt, cursor);
 #ifdef DECOMPRESS_WITH_SAIL_GENERATED_CODE
-    sail_decode_128_mem(pesbt, cursor, false, &result);
+    cc128_cap_t result = sail_decode_128_mem(pesbt, cursor, false);
 #else
+    cc128_cap_t result;
+    memset(&result, 0, sizeof(result));
     cc128_decompress_mem(pesbt, cursor, false, &result);
 #endif
     dump_cap_fields(&result);

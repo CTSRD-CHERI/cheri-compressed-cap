@@ -61,12 +61,6 @@ static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_ca
 }
 
 /* Exported API */
-void sail_decode_64_mem(cc64_addr_t mem_pesbt, cc64_addr_t mem_cursor, bool tag, cc64_cap_t* cdp) {
-    sail_decode_common_mem(mem_pesbt, mem_cursor, tag, cdp);
-}
-void sail_decode_64_raw(cc64_addr_t mem_pesbt, cc64_addr_t mem_cursor, bool tag, cc64_cap_t* cdp) {
-    sail_decode_common_raw(mem_pesbt, mem_cursor, tag, cdp);
-}
 struct cc64_bounds_bits sail_extract_bounds_bits_64(cc64_addr_t pesbt) {
     return sail_extract_bounds_bits_common(pesbt);
 }

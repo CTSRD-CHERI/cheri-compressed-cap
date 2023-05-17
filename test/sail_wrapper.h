@@ -36,8 +36,8 @@
 extern "C" {
 #endif
 
-void sail_decode_64_mem(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t* cdp);
-void sail_decode_64_raw(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag, cc64_cap_t* cdp);
+cc64_cap_t sail_decode_64_mem(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag);
+cc64_cap_t sail_decode_64_raw(cc64_addr_t pesbt, cc64_addr_t cursor, bool tag);
 struct cc64_bounds_bits sail_extract_bounds_bits_64(uint32_t pesbt);
 cc64_addr_t sail_compress_64_raw(const cc64_cap_t* csp);
 cc64_addr_t sail_compress_64_mem(const cc64_cap_t* csp);
@@ -47,8 +47,8 @@ cc64_addr_t sail_representable_length_64(cc64_addr_t len);
 bool sail_setbounds_64(cc64_cap_t* cap, cc64_addr_t req_base, cc64_length_t req_top);
 cc64_cap_t sail_reset_capability_64(void);
 
-void sail_decode_128_mem(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag, cc128_cap_t* cdp);
-void sail_decode_128_raw(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag, cc128_cap_t* cdp);
+cc128_cap_t sail_decode_128_mem(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag);
+cc128_cap_t sail_decode_128_raw(cc128_addr_t pesbt, cc128_addr_t cursor, bool tag);
 struct cc128_bounds_bits sail_extract_bounds_bits_128(cc128_addr_t pesbt);
 cc128_addr_t sail_compress_128_raw(const cc128_cap_t* csp);
 cc128_addr_t sail_compress_128_mem(const cc128_cap_t* csp);
@@ -58,8 +58,8 @@ cc128_addr_t sail_representable_length_128(cc128_addr_t len);
 bool sail_setbounds_128(cc128_cap_t* cap, cc128_addr_t req_base, cc128_length_t req_top);
 cc128_cap_t sail_reset_capability_128(void);
 
-void sail_decode_128m_mem(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag, cc128m_cap_t* cdp);
-void sail_decode_128m_raw(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag, cc128m_cap_t* cdp);
+cc128m_cap_t sail_decode_128m_mem(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag);
+cc128m_cap_t sail_decode_128m_raw(cc128m_addr_t pesbt, cc128m_addr_t cursor, bool tag);
 struct cc128m_bounds_bits sail_extract_bounds_bits_128m(cc128m_addr_t pesbt);
 cc128m_addr_t sail_compress_128m_raw(const cc128m_cap_t* csp);
 cc128m_addr_t sail_compress_128m_mem(const cc128m_cap_t* csp);
@@ -84,11 +84,11 @@ cc128m_cap_t sail_reset_capability_128m(void);
 
 class TestAPI64 : public CompressedCap64 {
 public:
-    static inline void sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_64_mem(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_64_mem(pesbt, cursor, tag);
     }
-    static inline void sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_64_raw(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_64_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_64(pesbt); }
     static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_64_raw(csp); }
@@ -104,11 +104,11 @@ public:
 
 class TestAPI128 : public CompressedCap128 {
 public:
-    static inline void sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_128_mem(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_128_mem(pesbt, cursor, tag);
     }
-    static inline void sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_128_raw(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_128_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_128(pesbt); }
     static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_128_raw(csp); }
@@ -124,11 +124,11 @@ public:
 
 class TestAPI128m : public CompressedCap128m {
 public:
-    static inline void sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_128m_mem(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_mem(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_128m_mem(pesbt, cursor, tag);
     }
-    static inline void sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag, cap_t* cdp) {
-        return sail_decode_128m_raw(pesbt, cursor, tag, cdp);
+    static inline cap_t sail_decode_raw(addr_t pesbt, addr_t cursor, bool tag) {
+        return sail_decode_128m_raw(pesbt, cursor, tag);
     }
     static inline bounds_bits sail_extract_bounds_bits(addr_t pesbt) { return sail_extract_bounds_bits_128m(pesbt); }
     static inline addr_t sail_compress_raw(const cap_t* csp) { return sail_compress_128m_raw(csp); }

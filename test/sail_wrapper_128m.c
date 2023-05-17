@@ -76,12 +76,6 @@ static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start
 #include "sail_wrapper_common.c"
 
 /* Exported API */
-void sail_decode_128m_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128m_cap_t* cdp) {
-    sail_decode_common_mem(mem_pesbt, mem_cursor, tag, cdp);
-}
-void sail_decode_128m_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag, cc128m_cap_t* cdp) {
-    sail_decode_common_raw(mem_pesbt, mem_cursor, tag, cdp);
-}
 struct cc128m_bounds_bits sail_extract_bounds_bits_128m(uint64_t pesbt) {
     return sail_extract_bounds_bits_common(pesbt);
 }
