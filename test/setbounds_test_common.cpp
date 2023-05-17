@@ -173,8 +173,7 @@ TEST_CASE("setbounds test cases from sail", "[bounds]") {
         }
         // Check that calling setbounds with the same target top yields the same result
         bool second_again_exact = false;
-        const _cc_cap_t second_bounds_again =
-            do_csetbounds<Handler>(second_bounds, input.top2, &second_again_exact);
+        const _cc_cap_t second_bounds_again = do_csetbounds<Handler>(second_bounds, input.top2, &second_again_exact);
         CHECK(second_again_exact == second_exact);
         CHECK(second_bounds.base() == second_bounds_again.base());
         CHECK(second_bounds.top() == second_bounds_again.top());

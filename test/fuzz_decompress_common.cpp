@@ -46,9 +46,7 @@
 #define DO_STRINGIFY1(x) DO_STRINGIFY2(x)
 #define STRINGIFY(x) DO_STRINGIFY1(x)
 
-static void dump_cap_fields(const _cc_cap_t& result) {
-    dump_cap_fields(stderr, result);
-}
+static void dump_cap_fields(const _cc_cap_t& result) { dump_cap_fields(stderr, result); }
 
 static bool compare_caps(const char* context, const _cc_cap_t& result, const _cc_cap_t& sail_result) {
     if (memcmp(&result, &sail_result, sizeof(result)) == 0)
@@ -65,15 +63,15 @@ static inline void check_crrl_and_cram(_cc_addr_t value) {
     _cc_addr_t sail_crrl = _cc_sail_representable_length(value);
     _cc_addr_t clib_crrl = _cc_N(get_representable_length)(value);
     if (sail_crrl != clib_crrl) {
-        fprintf(stderr, "CRRL(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n",
-                (uint64_t)value, (uint64_t)sail_crrl, (uint64_t)clib_crrl);
+        fprintf(stderr, "CRRL(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n", (uint64_t)value,
+                (uint64_t)sail_crrl, (uint64_t)clib_crrl);
         abort();
     }
     _cc_addr_t sail_cram = _cc_sail_representable_mask(value);
     _cc_addr_t clib_cram = _cc_N(get_alignment_mask)(value);
     if (sail_cram != clib_cram) {
-        fprintf(stderr, "CRAM(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n",
-                (uint64_t)value, (uint64_t)sail_cram, (uint64_t)clib_cram);
+        fprintf(stderr, "CRAM(0x%" PRIx64 ") mismatch: sail=0x%" PRIx64 ", C lib=0x%" PRIx64 "\n", (uint64_t)value,
+                (uint64_t)sail_cram, (uint64_t)clib_cram);
         abort();
     }
 }
@@ -92,7 +90,7 @@ void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t 
 }
 #endif
 
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     if (size < 2 * sizeof(_cc_addr_t) || size > 4 * sizeof(_cc_addr_t)) {
         return 0; // Need two to four words of data
     }
@@ -132,5 +130,5 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     fuzz_setbounds(result, /*req_base=*/result.address(), /*req_len=*/new_len);
     fuzz_setbounds(result, /*req_base=*/random_base, /*req_len=*/new_len);
 #endif
-    return 0;  // Non-zero return values are reserved for future use.
+    return 0; // Non-zero return values are reserved for future use.
 }
