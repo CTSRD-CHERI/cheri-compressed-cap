@@ -72,8 +72,10 @@ TEST_CASE("Fuzzer assertion exact untagged", "[fuzz]") {
     REQUIRE(decoded.top() == top);
     REQUIRE(decoded.address() == addr);
     {
-        auto sail_setbounds_base_top = decoded;
-        auto cc_setbounds_base_top = decoded;
+        TestAPICC::cap_t tmp = decoded;
+        _cc_N(set_addr)(&tmp, base);
+        TestAPICC::cap_t sail_setbounds_base_top = tmp;
+        TestAPICC::cap_t cc_setbounds_base_top = tmp;
         TestAPICC::sail_setbounds(&sail_setbounds_base_top, base, top);
         TestAPICC::setbounds(&cc_setbounds_base_top, base, top);
         CHECK(sail_setbounds_base_top == cc_setbounds_base_top);

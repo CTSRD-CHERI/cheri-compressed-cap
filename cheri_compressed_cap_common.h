@@ -777,7 +777,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
     const _cc_addr_t pesbt = _CC_ENCODE_FIELD(0, UPERMS) | _CC_ENCODE_FIELD(0, HWPERMS) |
                              _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE) | _CC_ENCODE_FIELD(new_ebt, EBT);
     _cc_cap_t new_cap;
-    _cc_N(decompress_raw)(pesbt, req_base, cap->cr_tag, &new_cap);
+    _cc_N(decompress_raw)(pesbt, cap->_cr_cursor, cap->cr_tag, &new_cap);
     _cc_addr_t new_base = new_cap.cr_base;
     _cc_length_t new_top = new_cap._cr_top;
 
@@ -802,7 +802,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
         _cc_debug_assert(new_top >= new_base);
         _cc_debug_assert(_cc_N(get_reserved)(cap) == 0 && "Unknown reserved bits set in tagged capability");
     }
-    cap->_cr_cursor = req_base;
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
     _cc_N(update_ebt)(cap, new_ebt);
@@ -822,6 +821,8 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_addr_t req_base, _c
 
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_addr_t req_base, _cc_length_t req_top) {
+    _cc_debug_assert(_cc_N(cap_bounds_address)(req_base) == _cc_N(cap_bounds_address)(cap->_cr_cursor) &&
+                     "API misuse detected");
     return _cc_N(setbounds_impl)(cap, req_base, req_top, NULL);
 }
 
