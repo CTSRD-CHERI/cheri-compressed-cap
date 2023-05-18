@@ -12,5 +12,6 @@ function main () : unit -> unit = {
       let bits5 = CapSetBounds (TestCap, Zeros(65), true);
       let bits6 = CapGetBounds(TestCap);
       let exp = CapGetExponent(TestCap);
+      let rep = CapIsRepresentableFast(TestCap, Zeros(64));
   /* } */
 }
