@@ -120,6 +120,16 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
         abort();
     }
 
+    // Compare the fast representability check to sail.
+    bool cc_rep = _cc_N(fast_is_representable_new_addr)(&result, random_base);
+    bool sail_rep = _cc_sail(fast_is_representable)(&result, random_base);
+    if (cc_rep != sail_rep) {
+        fprintf(stderr, "Fast rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
+                sail_rep, cc_rep, random_base);
+        dump_cap_fields(result);
+        abort();
+    }
+
 // TODO: Implement for Morello
 #ifndef TEST_CC_IS_MORELLO
     // Try running setbounds (on an untagged capability) and compare to sail.
