@@ -7,8 +7,7 @@
 TEST_CASE("Assertion failure during set_addr found by fuzzer", "[fuzz]") {
     uint64_t pesbt = 0xa98aa9a9ff7ea9a9;
     uint64_t cursor = 0xada9a9a9a9e9a9f4;
-    TestAPICC::cap_t cap;
-    TestAPICC::decompress_raw(pesbt, cursor, false, &cap);
+    TestAPICC::cap_t cap = TestAPICC::decompress_raw(pesbt, cursor, false);
     // NB: flag bits for base and top are not a sign-extensio of the 56-bit address.
     uint64_t expected_base = 0x5350000000000000;
     TestAPICC::length_t expected_top = _CC_MAX_TOP | 0xfef0000000000000;

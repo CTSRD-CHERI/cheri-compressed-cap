@@ -30,6 +30,8 @@ keep_required_functions=(
   -c_preserve CapGetTop
   -c_preserve CapGetValue
   -c_preserve CapIsInternalExponent
+  -c_preserve CapIsRepresentable
+  -c_preserve CapIsRepresentableFast
   -c_preserve CapSetBounds
 )
 output_dir=${SCRIPT_DIR}
