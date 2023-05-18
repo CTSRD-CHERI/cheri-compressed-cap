@@ -916,6 +916,12 @@ public:
     static inline cap_t make_null_derived_cap(addr_t addr) { return _cc_N(make_null_derived_cap)(addr); }
     static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
     static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }
+    static inline bool fast_is_representable_new_addr(const cap_t& cap, addr_t new_addr) {
+        return _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    }
+    static inline bool precise_is_representable_new_addr(const cap_t& cap, addr_t new_addr) {
+        return _cc_N(precise_is_representable_new_addr)(&cap, new_addr);
+    }
 };
 #define CompressedCapCC _CC_CONCAT(CompressedCap, CC_FORMAT_LOWER)
 #endif

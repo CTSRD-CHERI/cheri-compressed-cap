@@ -150,11 +150,11 @@ TEST_CASE("Check NULL mask matches sail", "[sail]") {
 static inline TestAPICC::cap_t checkFastRepCheckSucceeds(const _cc_cap_t& cap, _cc_addr_t new_addr,
                                                          bool set_addr_should_retain_tag = true) {
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(cap, new_addr);
-    bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    bool cc_fast_rep = TestAPICC::fast_is_representable_new_addr(cap, new_addr);
     CHECK(sail_fast_rep == cc_fast_rep);
     CHECK(cc_fast_rep);
     // It should also be representable if we do the full check since the bounds interpretation does not change.
-    CHECK(_cc_N(precise_is_representable_new_addr)(&cap, new_addr));
+    CHECK(TestAPICC::precise_is_representable_new_addr(cap, new_addr));
     // Check that creating a new capability with same pesbt and new address decodes to the same bounds
     TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(cap.cr_pesbt, new_addr, false);
     CHECK(new_cap_with_other_cursor.base() == cap.base());
@@ -192,11 +192,11 @@ static inline void checkRepCheckFails(_cc_addr_t pesbt, _cc_addr_t addr, _cc_add
     CHECK(cap.base() == expected_base);
     CHECK(cap.top() == expected_top);
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(cap, new_addr);
-    bool cc_fast_rep = _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
+    bool cc_fast_rep = TestAPICC::fast_is_representable_new_addr(cap, new_addr);
     CHECK(sail_fast_rep == cc_fast_rep);
     CHECK(!cc_fast_rep);
     // It should also not be representable if we do the full check since the bounds interpretation changes.
-    CHECK(!_cc_N(precise_is_representable_new_addr)(&cap, new_addr));
+    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, new_addr));
     // Check that creating a new capability with same pesbt and new address decodes to different bounds
     TestAPICC::cap_t new_cap_with_other_cursor = TestAPICC::decompress_raw(pesbt, new_addr, false);
     CHECK((new_cap_with_other_cursor.base() != expected_base || new_cap_with_other_cursor.top() != expected_top));
