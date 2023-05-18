@@ -5,6 +5,9 @@
 
 #include "test_common.cpp"
 
+// FIXME: sail_setbounds not yet implemented for Morello.
+#ifndef TEST_CC_IS_MORELLO
+
 #if 0
 struct setbounds_regressions {
     uint64_t base1;
@@ -181,4 +184,6 @@ TEST_CASE("setbounds test cases from sail", "[bounds]") {
         check_cram_matches_setbounds(input.top2, second_bounds, second_bounds_again);
     }
 }
+#endif
+
 #endif
