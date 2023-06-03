@@ -90,6 +90,34 @@ void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_base, _cc_addr_t 
 }
 #endif
 
+void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
+    bool cc_fast_rep = TestAPICC::fast_is_representable_new_addr(input_cap, new_addr);
+    bool sail_fast_rep = TestAPICC::sail_fast_is_representable(input_cap, new_addr);
+    if (cc_fast_rep != sail_fast_rep) {
+        fprintf(stderr, "Fast rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
+                sail_fast_rep, cc_fast_rep, (uint64_t)new_addr);
+        dump_cap_fields(input_cap);
+        abort();
+    }
+    bool cc_full_rep = TestAPICC::precise_is_representable_new_addr(input_cap, new_addr);
+    bool sail_full_rep = TestAPICC::sail_precise_is_representable(input_cap, new_addr);
+    if (cc_full_rep != sail_full_rep) {
+        fprintf(stderr, "Precise rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
+                sail_full_rep, cc_full_rep, new_addr);
+        dump_cap_fields(input_cap);
+        abort();
+    }
+}
+
+/// Create a tagged version of the input capability (if there are no reserved bits set)
+/// NB: This may not be possible to create at runtime (unless you have SetTag), but our library should handle them
+/// correctly by detagging.
+_cc_cap_t make_tagged_cap(const _cc_cap_t& c) {
+    _cc_cap_t result = c;
+    result.cr_tag = c.reserved_bits() == 0;
+    return result;
+}
+
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     if (size < 2 * sizeof(_cc_addr_t) || size > 4 * sizeof(_cc_addr_t)) {
         return 0; // Need two to four words of data
@@ -107,6 +135,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     if (!compare_caps("DECODE FROM MEM", result, sail_result)) {
         abort();
     }
+    const _cc_cap_t tagged_result = make_tagged_cap(result);
 
 #ifndef TEST_CC_IS_MORELLO
     check_crrl_and_cram(pesbt);
@@ -120,15 +149,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
         abort();
     }
 
-    // Compare the fast representability check to sail.
-    bool cc_rep = _cc_N(fast_is_representable_new_addr)(&result, random_base);
-    bool sail_rep = _cc_sail(fast_is_representable)(&result, random_base);
-    if (cc_rep != sail_rep) {
-        fprintf(stderr, "Fast rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
-                sail_rep, cc_rep, random_base);
-        dump_cap_fields(result);
-        abort();
-    }
+    // Compare the fast and full representability check to sail.
+    fuzz_representable(result, random_base);
+    fuzz_representable(tagged_result, random_base);
 
 // TODO: Implement for Morello
 #ifndef TEST_CC_IS_MORELLO
