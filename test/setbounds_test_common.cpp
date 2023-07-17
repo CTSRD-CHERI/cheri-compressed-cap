@@ -239,3 +239,22 @@ TEST_CASE("Setbounds API misuse (creating larger cap)", "[regression]") {
     CHECK(cap2.base() == 0x00000000401bdfe0);
     CHECK(cap2.top() == cap2.base() + req_len);
 }
+
+TEST_CASE("Setbounds detag sealed inputs", "[regression]") {
+    // Calling setbounds on a sealed input did not de-tag the result, triggering an assertion
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(/*base=*/0, /*cursor=*/16, /*top=*/_CC_MAX_TOP);
+    _cc_N(update_otype(&cap, _CC_N(OTYPE_SENTRY)));
+    CHECK(cap.is_sealed());
+    uint64_t req_len = 0x20;
+#ifndef NDEBUG
+    // Sealed, tagged input capabilities should be rejected.
+    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument);
+#endif
+    TestAPICC::cap_t cap2 = cap;
+    CHECK(cap2.cr_tag);
+    bool was_exact = _cc_N(setbounds)(&cap2, req_len);
+    CHECK(was_exact);
+    CHECK(!cap2.cr_tag);
+    CHECK(cap2.base() == 16);
+    CHECK(cap2.top() == cap2.base() + req_len);
+}

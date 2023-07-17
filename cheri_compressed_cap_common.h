@@ -740,6 +740,9 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
 /* @return whether the operation was able to set precise bounds precise or not */
 static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _cc_addr_t* alignment_mask) {
     uint64_t req_base = cap->_cr_cursor;
+    if (_cc_N(is_cap_sealed)(cap)) {
+        cap->cr_tag = 0; // Detag sealed inputs to maintain invariants
+    }
 #ifdef CC_IS_MORELLO
     if (!cap->cr_bounds_valid) {
         cap->cr_tag = 0;
