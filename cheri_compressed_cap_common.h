@@ -757,6 +757,10 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
 #endif
     _cc_length_t req_top = (_cc_length_t)req_base + req_len;
     _cc_debug_assert(req_base <= req_top && "Cannot invert base and top");
+    // Clear the tag if the requested base or top are outside the bounds of the input capability.
+    if (req_base < cap->cr_base || req_top > cap->_cr_top) {
+        cap->cr_tag = 0;
+    }
     /*
      * With compressed capabilities we may need to increase the range of
      * memory addresses to be wider than requested so it is
@@ -787,10 +791,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         _cc_debug_assert((new_base != req_base || new_top != req_top) &&
                          "Was inexact, but neither base nor top different?");
     }
-    // Clear the tag if the new base or top are outside the bounds of the input capability.
-    if (new_base < cap->cr_base || new_top > cap->_cr_top) {
-        cap->cr_tag = 0;
-    }
 
     if (cap->cr_tag) {
         // For invalid inputs, new_top could have been larger than max_top and if it is sufficiently larger, it
@@ -799,6 +799,8 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         // this invariant for any input.
         _cc_debug_assert(new_top >= new_base);
         _cc_debug_assert(_cc_N(get_reserved)(cap) == 0 && "Unknown reserved bits set in tagged capability");
+        _cc_debug_assert(new_base >= cap->cr_base && "Cannot reduce base on tagged capabilities");
+        _cc_debug_assert(new_top <= cap->_cr_top && "Cannot increase top on tagged capabilities");
     }
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
