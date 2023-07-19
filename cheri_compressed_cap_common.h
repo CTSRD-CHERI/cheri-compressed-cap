@@ -770,15 +770,10 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
     _CC_STATIC_ASSERT(_CC_EXP_HIGH_WIDTH == 3, "expected 3 bits to be used by"); // expected 3 bits to
     bool exact = false;
     uint32_t new_ebt = _cc_N(compute_ebt)(req_base, req_top, alignment_mask, &exact);
-
-    // TODO: find a faster way to compute top and bot:
-    const _cc_addr_t pesbt = _CC_ENCODE_FIELD(0, UPERMS) | _CC_ENCODE_FIELD(0, HWPERMS) |
-                             _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE) | _CC_ENCODE_FIELD(new_ebt, EBT);
-    _cc_cap_t new_cap;
-    _cc_N(decompress_raw)(pesbt, cap->_cr_cursor, cap->cr_tag, &new_cap);
-    _cc_addr_t new_base = new_cap.cr_base;
-    _cc_length_t new_top = new_cap._cr_top;
-
+    _cc_addr_t new_base;
+    _cc_length_t new_top;
+    bool new_bounds_valid = _cc_N(compute_base_top)(_cc_N(extract_bounds_bits)(_CC_ENCODE_FIELD(new_ebt, EBT)),
+                                                    cap->_cr_cursor, &new_base, &new_top);
     if (exact) {
 #ifndef CC_IS_MORELLO
         // Morello considers a setbounds that takes a capability from "large" (non-sign extended bounds) to "small"
@@ -805,7 +800,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
     cap->cr_base = new_base;
     cap->_cr_top = new_top;
     _cc_N(update_ebt)(cap, new_ebt);
-    cap->cr_bounds_valid = new_cap.cr_bounds_valid;
+    cap->cr_bounds_valid = new_bounds_valid;
 #ifdef CC_IS_MORELLO
     bool to_small = _cc_N(cap_bounds_uses_value)(cap);
     // On morello we may end up with a length that could have been exact, but has changed the flag bits.
