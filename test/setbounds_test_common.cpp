@@ -282,3 +282,22 @@ TEST_CASE("Setbounds length overflow", "[fuzz]") {
     CHECK(result.base() < _CC_MAX_ADDR);
     CHECK(result.top() == 0);
 }
+
+TEST_CASE("Setbounds base reduction", "[fuzz]") {
+    // Calling setbounds that reduces the base should detag and not assert
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(/*base=*/8, /*cursor=*/2, /*top=*/11);
+    TestAPICC::addr_t req_len = 1;
+#ifndef NDEBUG
+    // Overflowing cursor+base should be rejected.
+    CHECK_THROWS_MATCHES(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument,
+                         Message("cannot decrease base on tagged capabilities"));
+#endif
+    // The result should be detagged since we are setting bounds to start at less than base top.
+    bool was_exact;
+    TestAPICC::cap_t result = do_csetbounds<TestAPICC>(cap, &was_exact, req_len);
+    CHECK(!result.cr_tag);
+    CHECK(was_exact);
+    CHECK(result.base() == 2);
+    CHECK(result.address() == 2);
+    CHECK(result.top() == result.base() + req_len);
+}
