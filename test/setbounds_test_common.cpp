@@ -4,6 +4,9 @@
 #include <cstring>
 
 #include "test_common.cpp"
+#include <catch2/matchers/catch_matchers_exception.hpp>
+
+using Catch::Matchers::Message;
 
 #if 0
 struct setbounds_regressions {
@@ -213,7 +216,8 @@ TEST_CASE("Setbounds API misuse", "[regression]") {
     CHECK(with_bounds_greater_top.base() == cap.base());
     CHECK(with_bounds_greater_top.top() == cap.top() + 8);
 #ifndef NDEBUG
-    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, 8), std::invalid_argument);
+    CHECK_THROWS_MATCHES(_cc_N(checked_setbounds)(&cap, 8), std::invalid_argument,
+                         Message("cannot increase top on tagged capabilities"));
 #endif
 }
 
@@ -229,7 +233,8 @@ TEST_CASE("Setbounds API misuse (creating larger cap)", "[regression]") {
     CHECK(cap.top() == 0x00000000401be000);
     // Capabilities that end up being larger than the input should be detagged by the caller.
 #ifndef NDEBUG
-    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument);
+    CHECK_THROWS_MATCHES(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument,
+                         Message("cannot increase top on tagged capabilities"));
 #endif
     TestAPICC::cap_t cap2 = cap;
     CHECK(cap2.cr_tag);
@@ -248,7 +253,8 @@ TEST_CASE("Setbounds detag sealed inputs", "[regression]") {
     uint64_t req_len = 0x20;
 #ifndef NDEBUG
     // Sealed, tagged input capabilities should be rejected.
-    CHECK_THROWS_AS(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument);
+    CHECK_THROWS_MATCHES(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument,
+                         Message("cannot be used on tagged sealed capabilities"));
 #endif
     TestAPICC::cap_t cap2 = cap;
     CHECK(cap2.cr_tag);

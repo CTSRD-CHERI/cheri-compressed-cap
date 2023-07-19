@@ -854,7 +854,7 @@ static inline bool _cc_N(checked_setbounds)(_cc_cap_t* cap, _cc_length_t req_len
     __attribute__((unused)) _cc_length_t req_top = req_len + req_base;
     if (cap->cr_tag) {
         // Assertions to detect API misuse - those checks should have been performed before calling setbounds.
-        _cc_api_requirement(!_cc_N(is_cap_sealed)(cap), "Cannot be used on tagged sealed capabilities");
+        _cc_api_requirement(!_cc_N(is_cap_sealed)(cap), "cannot be used on tagged sealed capabilities");
         _cc_api_requirement(req_base >= cap->cr_base, "cannot decrease base on tagged capabilities");
         _cc_api_requirement(req_top <= cap->_cr_top, "cannot increase top on tagged capabilities");
         _cc_api_requirement(req_len < _CC_MAX_TOP, "requested length must be smaller than max length");
