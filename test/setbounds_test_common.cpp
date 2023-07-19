@@ -264,3 +264,21 @@ TEST_CASE("Setbounds detag sealed inputs", "[regression]") {
     CHECK(cap2.base() == 16);
     CHECK(cap2.top() == cap2.base() + req_len);
 }
+
+TEST_CASE("Setbounds length overflow", "[fuzz]") {
+    // Calling setbounds with cursor+length overflowing previously resulted in an assertion
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(/*base=*/0, /*cursor=*/_CC_MAX_ADDR, /*top=*/_CC_MAX_TOP);
+    TestAPICC::addr_t req_len = _CC_MAX_ADDR;
+#ifndef NDEBUG
+    // Overflowing cursor+base should be rejected.
+    CHECK_THROWS_MATCHES(_cc_N(checked_setbounds)(&cap, req_len), std::invalid_argument,
+                         Message("cannot increase top on tagged capabilities"));
+#endif
+    bool was_exact;
+    // The result should be detagged since we are setting bounds beyond top.
+    TestAPICC::cap_t result = do_csetbounds<TestAPICC>(cap, &was_exact, req_len);
+    CHECK(!was_exact);
+    CHECK(!result.cr_tag);
+    CHECK(result.base() < _CC_MAX_ADDR);
+    CHECK(result.top() == 0);
+}
