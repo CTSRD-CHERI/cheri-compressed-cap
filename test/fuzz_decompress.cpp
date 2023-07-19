@@ -104,7 +104,7 @@ void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
     bool sail_full_rep = TestAPICC::sail_precise_is_representable(input_cap, new_addr);
     if (cc_full_rep != sail_full_rep) {
         fprintf(stderr, "Precise rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
-                sail_full_rep, cc_full_rep, new_addr);
+                sail_full_rep, cc_full_rep, (uint64_t)new_addr);
         dump_cap_fields(input_cap);
         abort();
     }
