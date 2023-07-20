@@ -848,7 +848,10 @@ static inline bool _cc_N(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
                          "length must be smaller than 1 << 65");
         _cc_debug_assert(cap->cr_base >= old_base && "cannot remain tagged if base was decreased");
         _cc_debug_assert(cap->_cr_top <= old_top && "cannot remain tagged if top was increased");
-        _cc_debug_assert(cap->_cr_top <= _CC_MAX_TOP && "cannot remain tagged if new top greater 1 << 65");
+        // For compatibility with hardware, we keep the tag valid if the input was an underivable tagged capability,
+        // but in all other cases it should be impossible to end up with a new top greater than MAX_TOP.
+        _cc_debug_assert((cap->_cr_top <= _CC_MAX_TOP || old_top > _CC_MAX_TOP) &&
+                         "cannot remain tagged if new top greater 1 << 65");
     }
     // For Morello, we have to compare the sign-extended base and top as the exact check does not cover sign change.
     if (exact) {
@@ -875,6 +878,7 @@ static inline bool _cc_N(checked_setbounds)(_cc_cap_t* cap, _cc_length_t req_len
         _cc_api_requirement(req_top <= cap->_cr_top, "cannot increase top on tagged capabilities");
         _cc_api_requirement(req_len < _CC_MAX_TOP, "requested length must be smaller than max length");
         _cc_api_requirement(req_top < _CC_MAX_TOP, "new top must be smaller than max length");
+        _cc_api_requirement(cap->_cr_top <= _CC_MAX_TOP, "input capability top must be less than max top");
     }
     return _cc_N(setbounds)(cap, req_len);
 }
