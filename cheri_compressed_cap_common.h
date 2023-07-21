@@ -424,7 +424,9 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
     return true;
 }
 
-static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
+/// Expand a PESBT+address+tag input to a _cc_cap_t, but don't check that the tagged value is derivable.
+/// This is an internal helper and should not not be used outside of this header.
+static inline void _cc_N(unsafe_decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
     memset(cdp, 0, sizeof(*cdp));
     cdp->cr_tag = tag;
     cdp->_cr_cursor = cursor;
@@ -434,6 +436,10 @@ static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bo
     bool valid = _cc_N(compute_base_top)(bounds, cursor, &cdp->cr_base, &cdp->_cr_top);
     cdp->cr_bounds_valid = valid;
     cdp->cr_exp = bounds.E;
+}
+
+static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag, _cc_cap_t* cdp) {
+    _cc_N(unsafe_decompress_raw)(pesbt, cursor, tag, cdp);
     if (tag) {
         _cc_debug_assert(cdp->cr_base <= _CC_N(MAX_ADDR));
 #ifndef CC_IS_MORELLO
@@ -454,6 +460,17 @@ static inline void _cc_N(decompress_mem)(uint64_t pesbt, uint64_t cursor, bool t
 
 static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_otype)(cp) != _CC_N(OTYPE_UNSEALED); }
 
+/// Check that the expanded bounds match the compressed cr_pesbt value.
+static inline bool _cc_N(pesbt_is_correct)(const _cc_cap_t* csp) {
+    _cc_cap_t tmp;
+    // NB: We use the unsafe decompression function here to handle non-derivable caps without asserting.
+    _cc_N(unsafe_decompress_raw)(csp->cr_pesbt, csp->_cr_cursor, csp->cr_tag, &tmp);
+    if (!_cc_N(raw_equal)(&tmp, csp)) {
+        return false;
+    }
+    return true;
+}
+
 // Update ebt bits in pesbt
 static inline void _cc_N(update_ebt)(_cc_cap_t* csp, _cc_addr_t new_ebt) {
     csp->cr_pesbt = (csp->cr_pesbt & ~_CC_N(FIELD_EBT_MASK64)) | new_ebt;
@@ -468,6 +485,7 @@ static inline void _cc_N(update_ebt)(_cc_cap_t* csp, _cc_addr_t new_ebt) {
 static inline _cc_addr_t _cc_N(compress_raw)(const _cc_cap_t* csp) {
     _cc_debug_assert((!csp->cr_tag || _cc_N(get_reserved)(csp) == 0) &&
                      "Unknown reserved bits set it tagged capability");
+    _cc_debug_assert(_cc_N(pesbt_is_correct)(csp) && "capability bounds were modified without updating pesbt");
     return csp->cr_pesbt;
 }
 
@@ -481,7 +499,8 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
 static inline bool _cc_N(is_representable_cap_exact)(const _cc_cap_t* cap) {
     _cc_addr_t pesbt = _cc_N(compress_raw)(cap);
     _cc_cap_t decompressed_cap;
-    _cc_N(decompress_raw)(pesbt, cap->_cr_cursor, cap->cr_tag, &decompressed_cap);
+    // NB: We use the unsafe decompression function here to handle non-derivable caps without asserting.
+    _cc_N(unsafe_decompress_raw)(pesbt, cap->_cr_cursor, cap->cr_tag, &decompressed_cap);
     // These fields must not change:
     _cc_debug_assert(decompressed_cap._cr_cursor == cap->_cr_cursor);
     _cc_debug_assert(decompressed_cap.cr_pesbt == cap->cr_pesbt);
@@ -632,8 +651,8 @@ static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* old
     // If the decoded bounds are the same with an updated cursor then the capability is representable.
     _cc_cap_t newcap = *oldcap;
     newcap._cr_cursor = new_cursor;
-    _cc_bounds_bits new_bounds_bits = _cc_N(extract_bounds_bits)(_cc_N(compress_raw)(&newcap));
-    newcap.cr_bounds_valid = _cc_N(compute_base_top)(new_bounds_bits, new_cursor, &newcap.cr_base, &newcap._cr_top);
+    _cc_bounds_bits old_bounds_bits = _cc_N(extract_bounds_bits)(_cc_N(compress_raw)(oldcap));
+    newcap.cr_bounds_valid = _cc_N(compute_base_top)(old_bounds_bits, new_cursor, &newcap.cr_base, &newcap._cr_top);
     return newcap.cr_base == oldcap->cr_base && newcap._cr_top == oldcap->_cr_top && newcap.cr_bounds_valid &&
            oldcap->cr_bounds_valid;
 }
@@ -641,7 +660,7 @@ static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* old
 /// Returns whether the capability bounds depend on any of the cursor bits or if they can be fully derived from E/B/T.
 static inline bool _cc_N(cap_bounds_uses_value)(const _cc_cap_t* cap) {
     // This should only be used on decompressed caps, as it relies on the exp field
-    _cc_debug_assert(_cc_N(extract_bounds_bits)(cap->cr_pesbt).E == cap->cr_exp);
+    _cc_debug_assert(_cc_N(pesbt_is_correct)(cap));
     return cap->cr_exp < (sizeof(_cc_addr_t) * 8) - _CC_N(FIELD_BOTTOM_ENCODED_SIZE);
 }
 
