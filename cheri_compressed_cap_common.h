@@ -734,9 +734,10 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     if (i_top_shift >= _CC_ADDR_WIDTH) {
         i_top_shift = _CC_ADDR_WIDTH - 1; // Avoid UBSan errors for shifts > signed bitwidth.
     }
+    size_t e_shift = bounds.E >= _CC_ADDR_WIDTH ? _CC_ADDR_WIDTH - 1 : bounds.E;
     _cc_saddr_t i_top = (_cc_saddr_t)inc >> i_top_shift;
-    _cc_addr_t i_mid = _cc_N(truncate_addr)((_cc_addr_t)inc >> bounds.E, _CC_MANTISSA_WIDTH);
-    _cc_addr_t a_mid = _cc_N(truncate_addr)((_cc_addr_t)cursor >> bounds.E, _CC_MANTISSA_WIDTH);
+    _cc_addr_t i_mid = _cc_N(truncate_addr)((_cc_addr_t)inc >> e_shift, _CC_MANTISSA_WIDTH);
+    _cc_addr_t a_mid = _cc_N(truncate_addr)((_cc_addr_t)cursor >> e_shift, _CC_MANTISSA_WIDTH);
     _cc_addr_t B3 = (_cc_addr_t)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
     _cc_addr_t R3 = _cc_N(truncate_addr)(B3 - 1, 3);
     _cc_addr_t R = _cc_N(truncate_addr)(R3 << (_CC_MANTISSA_WIDTH - 3), _CC_MANTISSA_WIDTH);
