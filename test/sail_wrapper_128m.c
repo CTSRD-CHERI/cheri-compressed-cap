@@ -96,7 +96,7 @@ bool sail_setbounds_128m(cc128m_cap_t* cap, cc128m_length_t req_len) {
     lbits sail_result;
     CREATE(lbits)(&sail_result);
     lbits capbits = cap_t_to_sail_cap(cap);
-    sailgen_CapSetBounds(&sail_result, capbits, sail_len, false);
+    sailgen_doCSetBounds(&sail_result, capbits, sail_len);
     KILL(lbits)(&sail_len);
     KILL(lbits)(&capbits);
     _cc_cap_t tmp = from_sail_cap(&sail_result);

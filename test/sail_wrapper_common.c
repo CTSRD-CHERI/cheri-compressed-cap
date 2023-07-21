@@ -334,15 +334,12 @@ _cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
 }
 
 bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _cc_length_t req_len) {
-    _cc_addr_t req_base = cap->_cr_cursor;
-    _cc_length_t req_top = (_cc_length_t)cap->_cr_cursor + req_len;
     struct zCapability sailcap = cap_t_to_sail_cap(cap);
-    sail_cap_bits sailtop;
-    CREATE(sail_cap_bits)(&sailtop);
-    cc_length_t_to_sail_cap_bits(&sailtop, req_top);
-    __typeof__(sailgen_setCapBounds(sailcap, req_base, sailtop)) result =
-        sailgen_setCapBounds(sailcap, req_base, sailtop);
-    KILL(sail_cap_bits)(&sailtop);
+    sail_cap_bits sail_req_len;
+    CREATE(sail_cap_bits)(&sail_req_len);
+    cc_length_t_to_sail_cap_bits(&sail_req_len, req_len);
+    __typeof__(sailgen_doCSetBounds(sailcap, sail_req_len)) result = sailgen_doCSetBounds(sailcap, sail_req_len);
+    KILL(sail_cap_bits)(&sail_req_len);
     bool exact = result.ztup0;
     *cap = sail_cap_to_cap_t(&result.ztup1);
     return exact;
