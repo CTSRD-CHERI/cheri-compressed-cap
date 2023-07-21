@@ -48,7 +48,8 @@ static inline void check_csetbounds_invariants(const typename Handler::cap_t& in
         REQUIRE(with_bounds.top() == requested_top);
 #endif
     } else {
-        REQUIRE(with_bounds.base() <= requested_base); // base must not be greater than what we asked for
+        // base must not be greater than what we asked for
+        REQUIRE(_cc_N(cap_bounds_address)(with_bounds.base()) <= _cc_N(cap_bounds_address)(requested_base));
         if (requested_top > _CC_N(MAX_LENGTH)) {
             REQUIRE(!with_bounds.cr_tag);
         } else {
