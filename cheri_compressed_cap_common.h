@@ -657,11 +657,15 @@ static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* old
            oldcap->cr_bounds_valid;
 }
 
+static inline bool _cc_N(cap_bounds_uses_value_for_exp)(uint8_t exponent) {
+    return exponent < (sizeof(_cc_addr_t) * 8) - _CC_N(FIELD_BOTTOM_ENCODED_SIZE);
+}
+
 /// Returns whether the capability bounds depend on any of the cursor bits or if they can be fully derived from E/B/T.
 static inline bool _cc_N(cap_bounds_uses_value)(const _cc_cap_t* cap) {
     // This should only be used on decompressed caps, as it relies on the exp field
     _cc_debug_assert(_cc_N(pesbt_is_correct)(cap));
-    return cap->cr_exp < (sizeof(_cc_addr_t) * 8) - _CC_N(FIELD_BOTTOM_ENCODED_SIZE);
+    return _cc_N(cap_bounds_uses_value_for_exp)(cap->cr_exp);
 }
 
 static inline bool _cc_N(cap_sign_change)(_cc_addr_t addr1, _cc_addr_t addr2) {
@@ -806,7 +810,13 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         _cc_debug_assert((new_base != req_base || new_top != req_top) &&
                          "Was inexact, but neither base nor top different?");
     }
-
+#ifdef CC_IS_MORELLO
+    bool to_small = _cc_N(cap_bounds_uses_value_for_exp)(_cc_N(extract_bounds_bits)(new_ebt).E);
+    // On morello we may end up with a length that could have been exact, but has changed the flag bits.
+    if ((from_large && to_small) && _cc_N(cap_bounds_address)(cap->_cr_cursor) != cap->_cr_cursor) {
+        cap->cr_tag = 0;
+    }
+#endif
     if (cap->cr_tag) {
         // For invalid inputs, new_top could have been larger than max_top and if it is sufficiently larger, it
         // will be truncated to zero, so we can only assert that we get top > base for tagged, valid inputs.
@@ -821,16 +831,6 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
     cap->_cr_top = new_top;
     _cc_N(update_ebt)(cap, new_ebt);
     cap->cr_bounds_valid = new_bounds_valid;
-#ifdef CC_IS_MORELLO
-    bool to_small = _cc_N(cap_bounds_uses_value)(cap);
-    // On morello we may end up with a length that could have been exact, but has changed the flag bits.
-    if ((from_large && to_small) && _cc_N(cap_bounds_address)(cap->_cr_cursor) != cap->_cr_cursor) {
-        cap->cr_tag = 0;
-    }
-#endif
-
-    //  let newCap = {cap with address=base, E=to_bits(6, if incE then e + 1 else e), B=Bbits, T=Tbits, internal_e=ie};
-    //  (exact, newCap)
     return exact;
 }
 
