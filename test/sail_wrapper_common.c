@@ -143,7 +143,7 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     // Bounds (base and top) and exponent
     struct sail_bounds_tuple bounds;
     _CC_CONCAT(create_, sail_bounds_tuple)(&bounds);
-    _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetBounds)(&bounds, *sail_cap);
+    sailgen_CapGetBounds(&bounds, *sail_cap);
 
     check_length(bounds.ztup0, 65);
     check_length(bounds.ztup1, 65);
@@ -155,13 +155,13 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     _CC_CONCAT(kill_, sail_bounds_tuple)(&bounds);
 
     result.cr_bounds_valid = bounds.ztup2;
-    result.cr_exp = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetExponent)(*sail_cap);
+    result.cr_exp = sailgen_CapGetExponent(*sail_cap);
 
     // Address including flag bits
-    result._cr_cursor = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetValue)(*sail_cap);
-    _cc_N(update_perms)(&result, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetPermissions)(*sail_cap));
-    _cc_N(update_otype)(&result, _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetObjectType)(*sail_cap));
-    result.cr_tag = _CC_CONCAT(MORELLO_SAIL_PREFIX, CapGetTag)(*sail_cap);
+    result._cr_cursor = sailgen_CapGetValue(*sail_cap);
+    _cc_N(update_perms)(&result, sailgen_CapGetPermissions(*sail_cap));
+    _cc_N(update_otype)(&result, sailgen_CapGetObjectType(*sail_cap));
+    result.cr_tag = sailgen_CapGetTag(*sail_cap);
 
     // Fix these extra fields not really present in sail
     _cc_N(update_reserved)(&result, 0);
