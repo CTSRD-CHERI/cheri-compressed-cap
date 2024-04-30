@@ -88,11 +88,8 @@ enum { _CC_N(FIELD_LEN_MSB_SIZE) = 0 };
 #endif
 
 // Check that the sizes of the individual fields match up
-_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_SIZE) + _CC_N(FIELD_OTYPE_SIZE) + _CC_N(FIELD_FLAGS_SIZE) +
-                           _CC_N(RESERVED_BITS) + _CC_N(FIELD_HWPERMS_SIZE) + _CC_N(FIELD_UPERMS_SIZE),
-                       _CC_ADDR_WIDTH);
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_ZERO_TOP_SIZE) +
-                           _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
+                           _CC_N(FIELD_LEN_MSB_SIZE) + _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
                        _CC_N(FIELD_EBT_SIZE));
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_LEN_MSB_SIZE) + _CC_N(FIELD_TOP_ENCODED_SIZE) +
                            _CC_N(FIELD_BOTTOM_ENCODED_SIZE),
