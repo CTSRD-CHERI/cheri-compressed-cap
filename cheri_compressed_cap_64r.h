@@ -115,12 +115,19 @@ enum {
 #define CC64R_PERM_EXECUTE (1 << 17)
 #define CC64R_PERM_READ (1 << 18)
 
-#define CC64R_PERMS_ALL (0x9)  // See Infinite Capability in the spec: 0x8 or 0x9 depending on mode.
 #define CC64R_UPERMS_ALL (0x3) // 2 bits
 _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
 #define CC64R_UPERMS_SHFT (6)
 #define CC64R_UPERMS_MEM_SHFT (0)
 #define CC64R_MAX_UPERM (1)
+#define CC64R_AP_Q_MASK ((uint8_t)(3 << 3))
+#define CC64R_AP_Q0 ((uint8_t)(0 << 3))
+#define CC64R_AP_Q1 ((uint8_t)(1 << 3))
+#define CC64R_AP_Q2 ((uint8_t)(2 << 3))
+#define CC64R_AP_Q3 ((uint8_t)(3 << 3))
+// The infinite cap has mode = 1 (if hybrid is supported) and is the first value in quadrant 1 (0x8 or 0x9)
+#define CC64R_ENCODED_INFINITE_PERMS()                                                                                 \
+    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), HWPERMS))
 
 // Currently, only one type (sentry) is defined.
 // However, other extensions (e.g. CHERIoT) define additional otypes beyond this.
@@ -156,12 +163,6 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
-
-#define CC64R_AP_Q_MASK ((uint8_t)(3 << 3))
-#define CC64R_AP_Q0 ((uint8_t)(0 << 3))
-#define CC64R_AP_Q1 ((uint8_t)(1 << 3))
-#define CC64R_AP_Q2 ((uint8_t)(2 << 3))
-#define CC64R_AP_Q3 ((uint8_t)(3 << 3))
 
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     uint8_t raw_perms = _cc_N(get_perms)(cap);

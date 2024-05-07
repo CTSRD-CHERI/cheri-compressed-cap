@@ -56,8 +56,8 @@ enum {
 #endif
     _CC_N(RESET_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(RESET_EXP)) |
                        _CC_ENCODE_FIELD(_CC_N(RESET_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM),
-    _CC_N(RESET_PESBT) = _CC_N(RESET_EBT) | _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) |
-                         _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
+    _CC_N(RESET_PESBT) =
+        _CC_N(RESET_EBT) | _CC_N(ENCODED_INFINITE_PERMS)() | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
     _CC_N(NULL_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(NULL_EXP)) |
                       _CC_ENCODE_FIELD(_CC_N(NULL_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM),
     _CC_N(NULL_PESBT) = _CC_N(NULL_EBT) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
@@ -932,8 +932,7 @@ static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cu
     creg._cr_cursor = cursor;
     creg.cr_bounds_valid = true;
     creg._cr_top = top;
-    creg.cr_pesbt = _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) | _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) |
-                    _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE);
+    creg.cr_pesbt = _CC_N(ENCODED_INFINITE_PERMS)() | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE);
     creg.cr_tag = true;
     creg.cr_exp = _CC_N(RESET_EXP);
     bool exact_input = false;
