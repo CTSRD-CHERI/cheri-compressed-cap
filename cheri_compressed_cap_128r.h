@@ -119,6 +119,8 @@ _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
 #define CC128R_UPERMS_SHFT (6)
 #define CC128R_UPERMS_MEM_SHFT (0)
 #define CC128R_MAX_UPERM (3)
+#define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
+    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC128R_PERMS_ALL, HWPERMS))
 
 // Currently, only one type (sentry) is defined.
 // However, other extensions (e.g. CHERIoT) define additional otypes beyond this.

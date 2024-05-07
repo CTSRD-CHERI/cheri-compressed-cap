@@ -116,7 +116,7 @@ template <size_t a, size_t b> static constexpr bool check_same() {
     static_assert(a == b, "");
     return true;
 }
-#define _CC_STATIC_ASSERT_SAME(a, b) static_assert(check_same<a, b>(), "")
+#define _CC_STATIC_ASSERT_SAME(a, b) static_assert(check_same<(a), (b)>(), "")
 #else
 #define _CC_STATIC_ASSERT_SAME(a, b) _Static_assert((a) == (b), "")
 #endif

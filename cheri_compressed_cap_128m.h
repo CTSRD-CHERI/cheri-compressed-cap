@@ -149,10 +149,13 @@ enum {
 _CC_STATIC_ASSERT(CC128M_HIGHEST_PERM < CC128M_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
 _CC_STATIC_ASSERT((CC128M_HIGHEST_PERM << 1) > CC128M_FIELD_HWPERMS_MAX_VALUE, "all permission bits should be used");
 
-#define CC128M_PERMS_ALL (0x3FFFF) /* [0...1,6..17] */
-#define CC128M_UPERMS_ALL (0x0)    /* [15...18] */
-#define CC128M_UPERMS_SHFT (0)
-#define CC128M_MAX_UPERM (3)
+#define CC128M_PERMS_ALL UINT64_C(0x3FFFF) /* [0...1,6..17] */
+#define CC128M_UPERMS_ALL UINT64_C(0x0)    /* [15...18] */
+#define CC128M_UPERMS_SHFT UINT64_C(0)
+#define CC128M_MAX_UPERM UINT64_C(3)
+#define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_ALL, HWPERMS)
+_CC_STATIC_ASSERT_SAME(CC128M_PERMS_ALL, CC128M_FIELD_HWPERMS_MAX_VALUE);
+_CC_STATIC_ASSERT_SAME(CC128M_ENCODED_INFINITE_PERMS(), CC128M_PERMS_ALL << 46);
 
 /* Morello calls the special otypes LB, LPB and RB.
  * LPB is "load pair branch". It loads the first two caps pointed to and ccalls them.
