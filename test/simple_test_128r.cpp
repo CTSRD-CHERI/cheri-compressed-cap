@@ -53,3 +53,21 @@ TEST_CASE("Malformed bounds return zero", "[bounds]") {
     CHECK(cap.top() == 0);
     CHECK(cap.cr_exp == 51);
 }
+
+TEST_CASE("bounds encoding exponent 0", "[bounds]") {
+    /* params are base, cursor, top */
+    _cc_cap_t cap = CompressedCap128r::make_max_perms_cap(0x0, 0x10, 0x20);
+
+    /*
+     * EF == 1 -> exponent 0
+     * { T, TE } == 0b0000_0010_0000
+     * { B, BE } == 0
+     * all of LCout, LMSB, c_t, c_b are 0
+     *
+     * top == 0x20, base == 0x0
+     */
+    CHECK(cap.cr_pesbt == 0x01f3f00004080000);
+    cc128r_update_perms(&cap, 0);
+    cc128r_update_uperms(&cap, 0);
+    CHECK(cap.cr_pesbt == 0x0000000004080000);
+}
