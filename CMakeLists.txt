@@ -80,7 +80,7 @@ function(add_decompress_cap _format)
     install(TARGETS decompress_cap_${_format} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
 
-# TODO: add_decompress_cap(64)
+add_decompress_cap(64)
 add_decompress_cap(128)
 add_decompress_cap(128m)
 
