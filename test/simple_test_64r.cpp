@@ -66,7 +66,8 @@ TEST_CASE_M_AP_COMP(LVB_1, 0, CAP_AP_R | CAP_AP_C | CAP_AP_LM | CAP_AP_EL, CC64R
 TEST_CASE_M_AP_COMP(LVB_1, 0, CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_EL | CAP_AP_SL, CC64R_AP_Q3 | 6)
 TEST_CASE_M_AP_COMP(LVB_1, 0, CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_EL, CC64R_AP_Q3 | 7)
 // --- lvbits = 1, invalid permission set ---
-// TODO: add test cases
+// SL without W does not exist
+TEST_CASE_M_AP_COMP_INVALID(LVB_1, 0, CAP_AP_R | CAP_AP_C | CAP_AP_LM | CAP_AP_EL | CAP_AP_SL, 0);
 
 //
 // AP decompression
