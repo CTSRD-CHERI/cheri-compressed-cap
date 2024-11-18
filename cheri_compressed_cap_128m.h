@@ -34,6 +34,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+// This file defines the CHERI compressed capability format for the Arm Morello architecture.
 
 /* Notes on Morello Vs Other CHERI platforms:
  * The Morello Psuedo-code thinks of fields as inverted on each use, rather than being
@@ -57,10 +58,8 @@
  */
 #define CC_IS_MORELLO
 
-// The following macros are expected to be defined
 #define CC_FORMAT_LOWER 128m
 #define CC_FORMAT_UPPER 128M
-/* These should match the definitions in sail! */
 #define CC128M_CAP_SIZE 16
 #define CC128M_CAP_BITS 128
 #define CC128M_ADDR_WIDTH 64

@@ -34,11 +34,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+// This file defines the 32-bit CHERI compressed capability format for the CHERI ISA version 9.
 
-// The following macros are expected to be defined
 #define CC_FORMAT_LOWER 64
 #define CC_FORMAT_UPPER 64
-/* These should match the definitions in sail! */
 #define CC64_CAP_SIZE 8
 #define CC64_CAP_BITS 64
 #define CC64_ADDR_WIDTH 32
