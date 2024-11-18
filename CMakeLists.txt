@@ -10,6 +10,7 @@ endif()
 include(CMakePushCheckState)
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
 
 macro(check_sanitizer_flag _flag _var)
     cmake_push_check_state()
@@ -74,16 +75,6 @@ endif()
 # TODO: -Weverything
 add_library(cheri_compressed_cap14 cheri_compressed_cap.c cheri_compressed_cap.h)
 
-function(add_decompress_cap _format)
-    add_executable(decompress_cap_${_format} decompress_cap_${_format}.c)
-    include(GNUInstallDirs)
-    install(TARGETS decompress_cap_${_format} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endfunction()
-
-# TODO: add_decompress_cap(64)
-add_decompress_cap(128)
-add_decompress_cap(128m)
-
 # Test against sail generated C code:
 # This needs GMP (and CMake doesn't include a find module)
 find_package(PkgConfig)
@@ -132,17 +123,27 @@ add_sail_wrappers(64)
 add_sail_wrappers(128)
 add_sail_wrappers(128m)
 
-# Add test exes for sail generated code
 
-function(add_test_sail_wrapper _format)
-    add_executable(test_sail_wrapper_${_format} decompress_cap_${_format}.c)
-    target_compile_definitions(test_sail_wrapper_${_format} PRIVATE DECOMPRESS_WITH_SAIL_GENERATED_CODE=1)
-    target_link_libraries(test_sail_wrapper_${_format} PRIVATE sail_wrapper_${_format})
+function(add_decompress_cap _format)
+    string(TOUPPER ${_format} _format_upper)
+    add_executable(decompress_cap_${_format} decompress_cap_common.cpp)
+    target_compile_definitions(decompress_cap_${_format} PRIVATE
+            CAP_FORMAT=${_format}
+            CAP_FORMAT_UPPER=${_format_upper}
+    )
+    install(TARGETS decompress_cap_${_format} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    add_executable(decompress_cap_sail_${_format} decompress_cap_common.cpp)
+    target_compile_definitions(decompress_cap_sail_${_format} PRIVATE
+            DECOMPRESS_WITH_SAIL_GENERATED_CODE=1
+            CAP_FORMAT=${_format}
+            CAP_FORMAT_UPPER=${_format_upper}
+    )
+    target_link_libraries(decompress_cap_sail_${_format} PRIVATE sail_wrapper_${_format})
 endfunction()
 
-# TODO: add_test_sail_wrapper(64)
-add_test_sail_wrapper(128)
-add_test_sail_wrapper(128m)
+add_decompress_cap(64)
+add_decompress_cap(128)
+add_decompress_cap(128m)
 
 enable_testing()
 

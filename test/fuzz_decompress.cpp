@@ -42,10 +42,6 @@
 #define CC_FORMAT_LOWER TEST_CC_FORMAT_LOWER
 #define CC_FORMAT_UPPER TEST_CC_FORMAT_UPPER
 
-#define DO_STRINGIFY2(x) #x
-#define DO_STRINGIFY1(x) DO_STRINGIFY2(x)
-#define STRINGIFY(x) DO_STRINGIFY1(x)
-
 static void dump_cap_fields(const _cc_cap_t& result) { dump_cap_fields(stderr, result); }
 
 static bool compare_caps(const char* context, const _cc_cap_t& result, const _cc_cap_t& sail_result) {
