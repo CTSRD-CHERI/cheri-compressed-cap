@@ -60,6 +60,8 @@
 #define _CC_CONCAT(x, y) _CC_CONCAT1(x, y)
 #define _CC_EXPAND1(x) x
 #define _CC_EXPAND(x) _CC_EXPAND1(x)
+#define _CC_STRINGIFY1(x) #x
+#define _CC_STRINGIFY(x) _CC_STRINGIFY1(_CC_EXPAND(x))
 
 #ifdef __cplusplus
 // Some versions of GCC dont't like _Static_assert() in C++ mode
