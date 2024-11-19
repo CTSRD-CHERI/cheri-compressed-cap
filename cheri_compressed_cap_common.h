@@ -61,14 +61,15 @@ enum {
         _CC_ENCODE_EBT_FIELD(0, EXP_NONZERO_BOTTOM) |
         _CC_ENCODE_EBT_FIELD(_CC_N(RESET_EXP) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |
         _CC_ENCODE_EBT_FIELD(_CC_N(RESET_EXP) & _CC_N(FIELD_EXPONENT_LOW_PART_MAX_VALUE), EXPONENT_LOW_PART),
+    _CC_N(RESET_PESBT) = _CC_N(RESET_EBT) | _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) |
+                         _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
     _CC_N(NULL_PESBT) = _CC_ENCODE_FIELD(0, UPERMS) | _CC_ENCODE_FIELD(0, HWPERMS) | _CC_ENCODE_FIELD(0, RESERVED) |
                         _CC_ENCODE_FIELD(0, FLAGS) | _CC_ENCODE_FIELD(1, INTERNAL_EXPONENT) |
                         _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE) |
                         _CC_ENCODE_FIELD(_CC_N(NULL_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM) |
                         _CC_ENCODE_FIELD(_CC_N(NULL_EXP) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |
                         _CC_ENCODE_FIELD(_CC_N(NULL_EXP) & _CC_N(FIELD_EXPONENT_LOW_PART_MAX_VALUE), EXPONENT_LOW_PART),
-    // We mask on store/load so this invisibly keeps null 0 whatever we choose
-    // it to be.
+    // We mask on store/load so this invisibly keeps null 0 whatever we choose it to be.
     _CC_N(NULL_XOR_MASK) = _CC_N(NULL_PESBT),
 };
 #pragma GCC diagnostic pop

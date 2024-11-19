@@ -131,3 +131,9 @@ _cc_cap_t sail_reset_capability_128m(void) {
     return from_sail_cap(&zCMAX);
     return result;
 }
+
+_cc_addr_t sail_null_pesbt_128m(void) {
+    return 0; // Morello does not invert capabilities when loading/storing to/from memory
+}
+
+_cc_addr_t sail_reset_pesbt_128m(void) { return extract_bits(zCMAX, 64, 64); }

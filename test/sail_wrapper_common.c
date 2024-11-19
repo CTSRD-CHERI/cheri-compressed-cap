@@ -325,12 +325,10 @@ bool _cc_sail(precise_is_representable)(const _cc_cap_t* cap, _cc_addr_t new_add
     return sailgen_setCapAddr(sailcap, new_addr).ztup0;
 }
 
-_cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
-    // NULL CAP BITS:
-    _cc_addr_t null_pesbt = _compress_sailcap_raw(znull_cap);
-    sail_dump_cap("null cap", znull_cap);
-    fprintf(stderr, "Sail%d null pesbt 0x%jx\n", SAIL_WRAPPER_CC_FORMAT_LOWER, (uintmax_t)null_pesbt);
-    return null_pesbt;
+_cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) { return _compress_sailcap_raw(znull_cap); }
+
+_cc_addr_t _CC_CONCAT(sail_reset_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
+    return _compress_sailcap_raw(zdefault_cap);
 }
 
 bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _cc_length_t req_len) {
