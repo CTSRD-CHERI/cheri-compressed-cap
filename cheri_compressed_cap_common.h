@@ -70,7 +70,8 @@ enum {
                         _CC_ENCODE_FIELD(_CC_N(NULL_EXP) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |
                         _CC_ENCODE_FIELD(_CC_N(NULL_EXP) & _CC_N(FIELD_EXPONENT_LOW_PART_MAX_VALUE), EXPONENT_LOW_PART),
     // We mask on store/load so this invisibly keeps null 0 whatever we choose it to be.
-    _CC_N(NULL_XOR_MASK) = _CC_N(NULL_PESBT),
+    _CC_N(MEM_XOR_MASK) = _CC_N(NULL_PESBT),
+    _CC_N(NULL_XOR_MASK) __attribute__((deprecated("Use _MEM_XOR_MASK instead"))) = _CC_N(MEM_XOR_MASK),
 };
 #pragma GCC diagnostic pop
 
@@ -291,7 +292,7 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         // So, I cheated by inverting E on memory load (to match the rest of CHERI), which Morello does not do.
         // This means parts of B and T are incorrectly inverted. So invert back again.
 #ifdef CC_IS_MORELLO
-        pesbt ^= _CC_N(NULL_XOR_MASK);
+        pesbt ^= _CC_N(MEM_XOR_MASK);
 #endif
         result.E = 0;
         L_msb = 0;
@@ -456,7 +457,7 @@ static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bo
  * Decompress a 128-bit capability.
  */
 static inline void _cc_N(decompress_mem)(uint64_t pesbt, uint64_t cursor, bool tag, _cc_cap_t* cdp) {
-    _cc_N(decompress_raw)(pesbt ^ _CC_N(NULL_XOR_MASK), cursor, tag, cdp);
+    _cc_N(decompress_raw)(pesbt ^ _CC_N(MEM_XOR_MASK), cursor, tag, cdp);
 }
 
 static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_otype)(cp) != _CC_N(OTYPE_UNSEALED); }
@@ -492,7 +493,7 @@ static inline _cc_addr_t _cc_N(compress_raw)(const _cc_cap_t* csp) {
 }
 
 static inline _cc_addr_t _cc_N(compress_mem)(const _cc_cap_t* csp) {
-    return _cc_N(compress_raw)(csp) ^ _CC_N(NULL_XOR_MASK);
+    return _cc_N(compress_raw)(csp) ^ _CC_N(MEM_XOR_MASK);
 }
 
 static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr);

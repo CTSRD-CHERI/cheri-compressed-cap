@@ -136,7 +136,7 @@ _CC_STATIC_ASSERT_SAME(CC64_MANTISSA_WIDTH, CC64_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_common.h"
 
 // Sanity-check mask is the expected NULL encoding
-_CC_STATIC_ASSERT_SAME(CC64_NULL_XOR_MASK, UINT32_C(0x7c302));
+_CC_STATIC_ASSERT_SAME(CC64_MEM_XOR_MASK, UINT32_C(0x7c302));
 
 #define CC64_FIELD(name, last, start) _CC_FIELD(name, last, start)
 #define CC64_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)

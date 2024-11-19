@@ -182,7 +182,7 @@ _CC_STATIC_ASSERT_SAME(CC128M_MANTISSA_WIDTH, CC128M_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #include "cheri_compressed_cap_common.h"
 
 // Sanity-check mask is the expected NULL encoding
-_CC_STATIC_ASSERT_SAME(CC128M_NULL_XOR_MASK, UINT64_C(0x0000000040070007));
+_CC_STATIC_ASSERT_SAME(CC128M_MEM_XOR_MASK, UINT64_C(0x0000000040070007));
 
 #define CC128M_FIELD(name, last, start) _CC_FIELD(name, last, start)
 #define CC128M_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)

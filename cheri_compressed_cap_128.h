@@ -148,7 +148,7 @@ _CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_common.h"
 
 // Sanity-check mask is the expected NULL encoding
-_CC_STATIC_ASSERT_SAME(CC128_NULL_XOR_MASK, UINT64_C(0x00001ffffc018004));
+_CC_STATIC_ASSERT_SAME(CC128_MEM_XOR_MASK, UINT64_C(0x00001ffffc018004));
 
 __attribute__((deprecated("Use cc128_compress_raw"))) static inline uint64_t
 compress_128cap_without_xor(const cc128_cap_t* csp) {

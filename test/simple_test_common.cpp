@@ -29,7 +29,7 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     auto pesbt_from_sail_without_xor = _cc_sail_compress_raw(&null_cap);
     CHECK(pesbt_without_xor == pesbt_from_sail_without_xor);
     fprintf(stderr, "NULL ENCODED: 0x%llx\n", (long long)pesbt_without_xor);
-    CHECK(pesbt_without_xor == _CC_N(NULL_XOR_MASK));
+    CHECK(pesbt_without_xor == _CC_N(MEM_XOR_MASK));
     check(pesbt, (_cc_addr_t)0, "compressing NULL should result in zero pesbt");
     _cc_cap_t decompressed;
     memset(&decompressed, 'b', sizeof(decompressed));
@@ -121,7 +121,7 @@ TEST_CASE("Check make_max_perms_cap() sets cr_exp correctly", "[sail]") {
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
 #ifndef TEST_CC_IS_MORELLO // TODO: currently incorrectly inverted in the C code
     CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_PESBT));
-    CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_XOR_MASK));
+    CHECK(_cc_sail(null_pesbt)() == _CC_N(MEM_XOR_MASK));
 #endif
 }
 
@@ -131,7 +131,7 @@ TEST_CASE("Check reset PESBT matches sail", "[sail]") {
 #ifndef TEST_CC_IS_MORELLO // TODO: currently incorrectly inverted in the C code
     // reset_pesbt returns the internal "raw" pesbt value rather than the in-memory representation
     CHECK(_cc_sail(reset_pesbt)() == _CC_N(RESET_PESBT));
-    CHECK(TestAPICC::compress_mem(reset_cap) == (_CC_N(RESET_PESBT) ^ _CC_N(NULL_XOR_MASK)));
+    CHECK(TestAPICC::compress_mem(reset_cap) == (_CC_N(RESET_PESBT) ^ _CC_N(MEM_XOR_MASK)));
 #endif
     fprintf(stderr, "Decompressed reset cap:\n");
     dump_cap_fields(stderr, reset_cap);
