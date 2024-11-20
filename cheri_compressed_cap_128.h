@@ -145,6 +145,13 @@ enum _CC_N(OTypes) {
 
 _CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
+// CHERI ISA v9 uses the "internal exponent" bit.
+#define CC128_ENCODE_IE(IE) _CC_ENCODE_FIELD(IE, INTERNAL_EXPONENT)
+#define CC128_EXTRACT_IE(pesbt) _CC_EXTRACT_FIELD(pesbt, INTERNAL_EXPONENT)
+// The exponent bits in memory are xored on load/store, so we encode the raw exponent value.
+#define CC128_ENCODE_EXPONENT(E) _CC_ENCODE_SPLIT_EXPONENT(E)
+#define CC128_EXTRACT_EXPONENT(pesbt) _CC_EXTRACT_SPLIT_EXPONENT(pesbt)
+
 #include "cheri_compressed_cap_common.h"
 
 // Sanity-check mask is the expected NULL encoding

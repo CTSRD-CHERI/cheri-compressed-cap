@@ -76,8 +76,7 @@ static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start
 
 /* Exported API */
 struct cc128m_bounds_bits sail_extract_bounds_bits_128m(uint64_t pesbt) {
-    // We have to XOR the pesbt bits here since the Morello sail model does not invert on load/store.
-    lbits sailcap = to_sail_cap(pesbt ^ CC128M_MEM_XOR_MASK, 0, false);
+    lbits sailcap = to_sail_cap(pesbt, 0, false);
     struct cc128m_bounds_bits result = {.E = sailgen_CapGetExponent(sailcap),
                                         .B = sailgen_CapGetBottom(sailcap),
                                         .T = sailgen_CapGetTop(sailcap),
