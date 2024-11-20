@@ -130,9 +130,7 @@ static lbits to_sail_cap(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
     return capbits;
 }
 
-static lbits cap_t_to_sail_cap(const _cc_cap_t* c) {
-    return to_sail_cap(c->cr_pesbt ^ _CC_N(MEM_XOR_MASK), c->_cr_cursor, c->cr_tag);
-}
+static lbits cap_t_to_sail_cap(const _cc_cap_t* c) { return to_sail_cap(c->cr_pesbt, c->_cr_cursor, c->cr_tag); }
 
 /* Exported API */
 static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
@@ -167,8 +165,7 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     _cc_N(update_reserved)(&result, 0);
     _cc_N(update_flags)(&result, 0);
     _cc_N(update_uperms)(&result, 0);
-    // Morello sail does not include the XOR, so we have to apply it here to match the C compression library.
-    result.cr_pesbt = extract_bits(*sail_cap, 64, 64) ^ _CC_N(MEM_XOR_MASK);
+    result.cr_pesbt = extract_bits(*sail_cap, 64, 64);
     return result;
 }
 
@@ -179,9 +176,9 @@ _cc_cap_t _cc_sail_decode_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag)
     return result;
 }
 
-_cc_cap_t _cc_sail_decode_raw(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
-    // Morello RAW has no mask. If this has been masked, undo it.
-    return _cc_sail_decode_mem(mem_pesbt ^ _CC_N(MEM_XOR_MASK), mem_cursor, tag);
+_cc_cap_t _cc_sail_decode_raw(uint64_t pesbt, uint64_t cursor, bool tag) {
+    // There is no difference between raw and memory format for Morello
+    return _cc_sail_decode_mem(pesbt, cursor, tag);
 }
 
 uint64_t sail_compress_common_mem(const _cc_cap_t* csp) {
@@ -193,8 +190,8 @@ uint64_t sail_compress_common_mem(const _cc_cap_t* csp) {
 }
 
 uint64_t sail_compress_common_raw(const _cc_cap_t* csp) {
-    // Morello sail does not include the XOR, so we have to apply it here to match the C compression library.
-    return sail_compress_common_mem(csp) ^ _CC_N(MEM_XOR_MASK);
+    // There is no difference between raw and memory format for Morello
+    return sail_compress_common_mem(csp);
 }
 
 #else

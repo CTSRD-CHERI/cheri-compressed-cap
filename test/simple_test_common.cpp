@@ -119,20 +119,16 @@ TEST_CASE("Check make_max_perms_cap() sets cr_exp correctly", "[sail]") {
 }
 
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
-#ifndef TEST_CC_IS_MORELLO // TODO: currently incorrectly inverted in the C code
     CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_PESBT));
     CHECK(_cc_sail(null_pesbt)() == _CC_N(MEM_XOR_MASK));
-#endif
 }
 
 TEST_CASE("Check reset PESBT matches sail", "[sail]") {
     TestAPICC::cap_t reset_cap = _cc_sail(reset_capability)();
     CHECK(TestAPICC::compress_raw(reset_cap) == _CC_N(RESET_PESBT));
-#ifndef TEST_CC_IS_MORELLO // TODO: currently incorrectly inverted in the C code
     // reset_pesbt returns the internal "raw" pesbt value rather than the in-memory representation
     CHECK(_cc_sail(reset_pesbt)() == _CC_N(RESET_PESBT));
     CHECK(TestAPICC::compress_mem(reset_cap) == (_CC_N(RESET_PESBT) ^ _CC_N(MEM_XOR_MASK)));
-#endif
     fprintf(stderr, "Decompressed reset cap:\n");
     dump_cap_fields(stderr, reset_cap);
     fprintf(stderr, "\n");

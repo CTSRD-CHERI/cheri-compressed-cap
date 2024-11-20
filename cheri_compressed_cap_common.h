@@ -46,9 +46,8 @@ enum {
     _CC_N(RESET_EXP) = _CC_N(MAX_EXPONENT),
     _CC_N(RESET_T) = 1u << (_CC_N(ADDR_WIDTH) - _CC_N(RESET_EXP) - _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE)),
 #ifdef CC_IS_MORELLO
-    // Due to magic constant XOR aversion (i.e. fields are either entirely
-    // inverted or not at all, rather than select bits within them like in
-    // normal CHERI Concentrate), NULL is special in Morello.
+    // In order to have an all-zeroes memory representation, Morello encodes NULL as internal exponent with an
+    // "all-ones" exponent (a value larger than the maximum exponent). Therefore NULL and reset have different EBT.
     _CC_N(NULL_EXP) = _CC_N(MAX_ENCODABLE_EXPONENT),
     _CC_N(NULL_T) = 0,
 #else
@@ -56,19 +55,14 @@ enum {
     _CC_N(NULL_EXP) = _CC_N(RESET_EXP),
     _CC_N(NULL_T) = _CC_N(RESET_T),
 #endif
-    _CC_N(RESET_EBT) =
-        _CC_ENCODE_EBT_FIELD(1, INTERNAL_EXPONENT) | _CC_ENCODE_EBT_FIELD(_CC_N(RESET_T), EXP_NONZERO_TOP) |
-        _CC_ENCODE_EBT_FIELD(0, EXP_NONZERO_BOTTOM) |
-        _CC_ENCODE_EBT_FIELD(_CC_N(RESET_EXP) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |
-        _CC_ENCODE_EBT_FIELD(_CC_N(RESET_EXP) & _CC_N(FIELD_EXPONENT_LOW_PART_MAX_VALUE), EXPONENT_LOW_PART),
+    _CC_N(RESET_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(RESET_EXP)) |
+                       _CC_ENCODE_EBT_FIELD(_CC_N(RESET_T), EXP_NONZERO_TOP) |
+                       _CC_ENCODE_EBT_FIELD(0, EXP_NONZERO_BOTTOM),
     _CC_N(RESET_PESBT) = _CC_N(RESET_EBT) | _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) |
                          _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
-    _CC_N(NULL_PESBT) = _CC_ENCODE_FIELD(0, UPERMS) | _CC_ENCODE_FIELD(0, HWPERMS) | _CC_ENCODE_FIELD(0, RESERVED) |
-                        _CC_ENCODE_FIELD(0, FLAGS) | _CC_ENCODE_FIELD(1, INTERNAL_EXPONENT) |
-                        _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE) |
-                        _CC_ENCODE_FIELD(_CC_N(NULL_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM) |
-                        _CC_ENCODE_FIELD(_CC_N(NULL_EXP) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |
-                        _CC_ENCODE_FIELD(_CC_N(NULL_EXP) & _CC_N(FIELD_EXPONENT_LOW_PART_MAX_VALUE), EXPONENT_LOW_PART),
+    _CC_N(NULL_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(NULL_EXP)) |
+                      _CC_ENCODE_FIELD(_CC_N(NULL_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM),
+    _CC_N(NULL_PESBT) = _CC_N(NULL_EBT) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
     // We mask on store/load so this invisibly keeps null 0 whatever we choose it to be.
     _CC_N(MEM_XOR_MASK) = _CC_N(NULL_PESBT),
     _CC_N(NULL_XOR_MASK) __attribute__((deprecated("Use _MEM_XOR_MASK instead"))) = _CC_N(MEM_XOR_MASK),
@@ -240,7 +234,7 @@ TRUNCATE_LSB_FUNC(64)
 #define _cc_truncateLSB(type_width) _cc_N(_CC_CONCAT(truncateLSB_, type_width))
 
 struct _cc_N(bounds_bits) {
-    uint16_t B; // bottom bits (currently 14 bits)
+    uint16_t B; // bottom bits (currently 14 bits, 16 for Morello)
     uint16_t T; // top bits (12 bits plus two implied bits)
     uint8_t E;  // exponent
     bool IE;    // internal exponent flag
@@ -277,11 +271,10 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
     _CC_STATIC_ASSERT(sizeof(result.E) * __CHAR_BIT__ >=
                           _CC_N(FIELD_EXPONENT_LOW_PART_SIZE) + _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE),
                       "E field too small");
-    result.IE = (bool)(uint32_t)_CC_EXTRACT_FIELD(pesbt, INTERNAL_EXPONENT);
+    result.IE = (bool)_CC_N(EXTRACT_IE)(pesbt);
     uint8_t L_msb;
     if (result.IE) {
-        result.E = (uint8_t)(_CC_EXTRACT_FIELD(pesbt, EXPONENT_LOW_PART) |
-                             (_CC_EXTRACT_FIELD(pesbt, EXPONENT_HIGH_PART) << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE)));
+        result.E = (uint8_t)_CC_N(EXTRACT_EXPONENT)(pesbt);
         // Do not offset by 1! We also need to encode E=0 even with IE
         // Also allow nonsense values over 64 - BWidth + 2: this is expected by sail-generated tests
         // E = MIN(64 - BWidth + 2, E);
@@ -289,11 +282,6 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         result.T = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_NONZERO_TOP) << _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE);
         L_msb = 1;
     } else {
-        // So, I cheated by inverting E on memory load (to match the rest of CHERI), which Morello does not do.
-        // This means parts of B and T are incorrectly inverted. So invert back again.
-#ifdef CC_IS_MORELLO
-        pesbt ^= _CC_N(MEM_XOR_MASK);
-#endif
         result.E = 0;
         L_msb = 0;
         result.B = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
@@ -554,13 +542,8 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
         //  lostSignificantTop  : bool = false;
         //  lostSignificantBase : bool = false;
         //  incE : bool = false;
-        uint32_t ebt_bits = _CC_ENCODE_EBT_FIELD(0, INTERNAL_EXPONENT) | _CC_ENCODE_EBT_FIELD(req_top, EXP_ZERO_TOP) |
+        uint32_t ebt_bits = _CC_N(ENCODE_IE)(false) | _CC_ENCODE_EBT_FIELD(req_top, EXP_ZERO_TOP) |
                             _CC_ENCODE_EBT_FIELD(req_base, EXP_ZERO_BOTTOM);
-#ifdef CC_IS_MORELLO
-        // Due to morello conditionally inverting bits, we need to invert the bits that would be an internal exponent
-        // here
-        ebt_bits ^= _CC_ENCODE_EBT_FIELD(~0, EXPONENT_HIGH_PART) | _CC_ENCODE_EBT_FIELD(~0, EXPONENT_LOW_PART);
-#endif
         if (alignment_mask)
             *alignment_mask = _CC_MAX_ADDR; // no adjustment to base required
         *exact = true;
@@ -630,24 +613,13 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
             top_ie = _cc_N(truncate64)(top_ie + 1, _CC_BOT_INTERNAL_EXP_WIDTH);
         }
     }
-    //
-    //    Bbits = B_ie @ 0b000;
-    //    Tbits = T_ie @ 0b000;
-    const _cc_addr_t Bbits = bot_ie << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE);
-    const _cc_addr_t Tbits = top_ie << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE);
     const uint8_t newE = E + (incE ? 1 : 0);
-
-    //  };
     //  let exact = not(lostSignificantBase | lostSignificantTop);
     *exact = !lostSignificantBase && !lostSignificantTop;
-    // Split E between T and B
-    const _cc_addr_t expHighBits =
-        _cc_N(getbits)(newE >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), 0, _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE));
-    const _cc_addr_t expLowBits = _cc_N(getbits)(newE, 0, _CC_N(FIELD_EXPONENT_LOW_PART_SIZE));
-    const _cc_addr_t Te = Tbits | expHighBits;
-    const _cc_addr_t Be = Bbits | expLowBits;
-    return _CC_ENCODE_EBT_FIELD(1, INTERNAL_EXPONENT) | _CC_ENCODE_EBT_FIELD(Te, TOP_ENCODED) |
-           _CC_ENCODE_EBT_FIELD(Be, BOTTOM_ENCODED);
+    // Split E between T and B, use the remaining bits to encode Bbits/TBits
+    const _cc_addr_t expBits = _CC_N(ENCODE_EXPONENT)(newE);
+    return expBits | _CC_N(ENCODE_IE)(true) | _CC_ENCODE_FIELD(top_ie, EXP_NONZERO_TOP) |
+           _CC_ENCODE_FIELD(bot_ie, EXP_NONZERO_BOTTOM);
 }
 
 static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
