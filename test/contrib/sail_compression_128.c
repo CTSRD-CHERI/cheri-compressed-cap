@@ -385,11 +385,11 @@ end_block_exception_11: ;
 
 
 
-static void sailgen_EXTS(lbits *rop, sail_int, lbits);
+static void sailgen_sign_extend(lbits *rop, sail_int, lbits);
 
-static void sailgen_EXTZ(lbits *rop, sail_int, lbits);
+static void sailgen_zzero_extend(lbits *rop, sail_int, lbits);
 
-static void sailgen_EXTS(lbits *zcbz34, sail_int zm, lbits zv)
+static void sailgen_sign_extend(lbits *zcbz34, sail_int zm, lbits zv)
 {
   __label__ end_function_13, end_block_exception_14, end_function_207;
 
@@ -401,7 +401,7 @@ end_block_exception_14: ;
 end_function_207: ;
 }
 
-static void sailgen_EXTZ(lbits *zcbz35, sail_int zm, lbits zv)
+static void sailgen_zzero_extend(lbits *zcbz35, sail_int zm, lbits zv)
 {
   __label__ end_function_16, end_block_exception_17, end_function_206;
 
@@ -638,8 +638,6 @@ static void finish_sailgen_MAX(void)
   KILL(sail_int)(&zghz37);
   KILL(sail_int)(&zghz36);
 }
-
-
 
 static int64_t zreserved_otypes;
 static void create_letbind_0(void) {
@@ -3784,7 +3782,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           CONVERT_OF(sail_int, mach_int)(&zghz3231, INT64_C(65));
           RECREATE(lbits)(&zghz3232);
           CONVERT_OF(lbits, sbits)(&zghz3232, zgaz3229, true);
-          sailgen_EXTZ(&zghz3199, zghz3231, zghz3232);
+          sailgen_zzero_extend(&zghz3199, zghz3231, zghz3232);
         }
       }
       {
@@ -4136,7 +4134,7 @@ static uint64_t sailgen_getCapPerms(struct zCapability zcap)
       RECREATE(lbits)(&zghz3276);
       CONVERT_OF(lbits, fbits)(&zghz3276, zgaz3246, UINT64_C(12) , true);
       RECREATE(lbits)(&zghz3277);
-      sailgen_EXTZ(&zghz3277, zghz3275, zghz3276);
+      sailgen_zzero_extend(&zghz3277, zghz3275, zghz3276);
       zperms = CONVERT_OF(fbits, lbits)(zghz3277, true);
     }
   }
@@ -5189,7 +5187,7 @@ static void sailgen_capToString(sail_string *zcbz340, struct zCapability zcap)
         RECREATE(lbits)(&zghz3355);
         CONVERT_OF(lbits, fbits)(&zghz3355, zgaz3333, UINT64_C(18) , true);
         RECREATE(lbits)(&zghz3356);
-        sailgen_EXTS(&zghz3356, zghz3354, zghz3355);
+        sailgen_sign_extend(&zghz3356, zghz3354, zghz3355);
         zotype64 = CONVERT_OF(fbits, lbits)(zghz3356, true);
       }
     } else {
@@ -5201,7 +5199,7 @@ static void sailgen_capToString(sail_string *zcbz340, struct zCapability zcap)
         RECREATE(lbits)(&zghz3352);
         CONVERT_OF(lbits, fbits)(&zghz3352, zgaz3334, UINT64_C(18) , true);
         RECREATE(lbits)(&zghz3353);
-        sailgen_EXTZ(&zghz3353, zghz3351, zghz3352);
+        sailgen_zzero_extend(&zghz3353, zghz3351, zghz3352);
         zotype64 = CONVERT_OF(fbits, lbits)(zghz3353, true);
       }
     }
@@ -5598,7 +5596,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(s
       CONVERT_OF(sail_int, mach_int)(&zghz3381, INT64_C(65));
       RECREATE(lbits)(&zghz3382);
       CONVERT_OF(lbits, fbits)(&zghz3382, znewBase, UINT64_C(64) , true);
-      sailgen_EXTZ(&zghz3380, zghz3381, zghz3382);
+      sailgen_zzero_extend(&zghz3380, zghz3381, zghz3382);
     }
     add_bits(&zghz3375, zghz3380, zreq_len);
   }

@@ -17,7 +17,7 @@ register TestLen : CapLenBits
 /* like execute(CSetBoundsExact(...)) but without the global accesses. */
 function doCSetBounds(input: Capability, req_len: CapLenBits) -> (bool, Capability) = {
   let newBase = input.address;
-  let newTop : CapLenBits = EXTZ(newBase) + req_len;
+  let newTop : CapLenBits = zero_extend(newBase) + req_len;
   let inBounds = inCapBounds(input, newBase, unsigned(req_len));
 
   let inCap = clearTagIfSealed(input);
@@ -28,18 +28,18 @@ function doCSetBounds(input: Capability, req_len: CapLenBits) -> (bool, Capabili
 function main () : unit -> unit = {
   TestCap = null_cap;
   /* while (true) do { */
-      bits1 = capToBits(TestCap);
-      bits2 = capToMemBits(TestCap);
-      cap1 = capBitsToCapability(TestCap.tag, bits1);
-      cap2 = memBitsToCapability(TestCap.tag, bits2);
-      rep = fastRepCheck(TestCap, TestAddr);
+      let bits1 = capToBits(TestCap);
+      let bits2 = capToMemBits(TestCap);
+      let cap1 = capBitsToCapability(TestCap.tag, bits1);
+      let cap2 = memBitsToCapability(TestCap.tag, bits2);
+      let rep = fastRepCheck(TestCap, TestAddr);
       let (exact, cap) = doCSetBounds(TestCap, TestLen);
       let (representable, cap) = setCapAddr(TestCap, TestAddr);
       let (base, top) = getCapBounds(TestCap);
-      flags = getCapFlags(TestCap);
-      new_cap = setCapPerms(TestCap, ones()); /* rt_val[30..0] */
-      cap_str = capToString(TestCap);
-      len = getRepresentableLength(TestAddr);
-      mask = getRepresentableAlignmentMask(TestAddr);
+      let flags = getCapFlags(TestCap);
+      let new_cap = setCapPerms(TestCap, ones()); /* rt_val[30..0] */
+      let cap_str = capToString(TestCap);
+      let len = getRepresentableLength(TestAddr);
+      let mask = getRepresentableAlignmentMask(TestAddr);
   /* } */
 }
