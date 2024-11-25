@@ -227,8 +227,6 @@ static enum zCPtrCmpOp UNDEFINED(zCPtrCmpOp)(unit u) { return zCEQ; }
 
 
 
-
-
 static bool sailgen_neq_int(sail_int, sail_int);
 
 static bool sailgen_neq_int(sail_int zx, sail_int zy)
@@ -323,20 +321,30 @@ end_block_exception_5: ;
 
 static void sailgen_sail_ones(lbits *rop, sail_int);
 
+lbits zghz30;
+
+static void startup_sailgen_sail_ones(void)
+{    CREATE(lbits)(&zghz30);
+}
+
 static void sailgen_sail_ones(lbits *zcbz32, sail_int zn)
 {
   __label__ end_function_7, end_block_exception_8, end_function_208;
 
-  lbits zgaz32;
-  CREATE(lbits)(&zgaz32);
-  zeros(&zgaz32, zn);
-  not_bits((*(&zcbz32)), zgaz32);
-  KILL(lbits)(&zgaz32);
+  RECREATE(lbits)(&zghz30);
+  zeros(&zghz30, zn);
+  not_bits((*(&zcbz32)), zghz30);
 end_function_7: ;
   goto end_function_208;
 end_block_exception_8: ;
   goto end_function_208;
 end_function_208: ;
+}
+
+
+
+static void finish_sailgen_sail_ones(void)
+{    KILL(lbits)(&zghz30);
 }
 
 
@@ -455,7 +463,6 @@ static bool sailgen_bit_to_bool(fbits zb)
   __label__ case_30, case_29, finish_match_28, end_function_31, end_block_exception_32;
 
   bool zcbz39;
-  bool zgsz30;
   {
     fbits zp0z3;
     zp0z3 = zb;
@@ -465,7 +472,7 @@ static bool sailgen_bit_to_bool(fbits zb)
 
       goto case_30;
     }
-    zgsz30 = true;
+    zcbz39 = true;
     goto finish_match_28;
   }
 case_30: ;
@@ -478,14 +485,12 @@ case_30: ;
 
       goto case_29;
     }
-    zgsz30 = false;
+    zcbz39 = false;
     goto finish_match_28;
   }
 case_29: ;
   sail_match_failure("bit_to_bool");
 finish_match_28: ;
-  zcbz39 = zgsz30;
-
 end_function_31: ;
   return zcbz39;
 end_block_exception_32: ;
@@ -495,16 +500,20 @@ end_block_exception_32: ;
 
 static void sailgen_to_bits(lbits *rop, sail_int, sail_int);
 
+sail_int zghz31;
+
+static void startup_sailgen_to_bits(void)
+{    CREATE(sail_int)(&zghz31);
+}
+
 static void sailgen_to_bits(lbits *zcbz310, sail_int zl, sail_int zn)
 {
   __label__ end_function_34, end_block_exception_35, end_function_203;
 
   {
-    sail_int zgsz3106;
-    CREATE(sail_int)(&zgsz3106);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3106, INT64_C(0));
-    get_slice_int((*(&zcbz310)), zl, zn, zgsz3106);
-    KILL(sail_int)(&zgsz3106);
+    RECREATE(sail_int)(&zghz31);
+    CONVERT_OF(sail_int, mach_int)(&zghz31, INT64_C(0));
+    get_slice_int((*(&zcbz310)), zl, zn, zghz31);
   }
 end_function_34: ;
   goto end_function_203;
@@ -513,24 +522,35 @@ end_block_exception_35: ;
 end_function_203: ;
 }
 
+
+
+static void finish_sailgen_to_bits(void)
+{    KILL(sail_int)(&zghz31);
+}
+
 static bool sailgen_z8operatorz0zI_uz9(lbits, lbits);
 
 static bool sailgen_z8operatorz0zKzJ_uz9(lbits, lbits);
+
+sail_int zghz32;
+sail_int zghz33;
+
+static void startup_sailgen_z8operatorz0zI_uz9(void)
+{
+  CREATE(sail_int)(&zghz32);
+  CREATE(sail_int)(&zghz33);
+}
 
 static bool sailgen_z8operatorz0zI_uz9(lbits zx, lbits zy)
 {
   __label__ end_function_37, end_block_exception_38;
 
   bool zcbz311;
-  sail_int zgaz34;
-  CREATE(sail_int)(&zgaz34);
-  sail_unsigned(&zgaz34, zx);
-  sail_int zgaz35;
-  CREATE(sail_int)(&zgaz35);
-  sail_unsigned(&zgaz35, zy);
-  zcbz311 = lt(zgaz34, zgaz35);
-  KILL(sail_int)(&zgaz35);
-  KILL(sail_int)(&zgaz34);
+  RECREATE(sail_int)(&zghz32);
+  sail_unsigned(&zghz32, zx);
+  RECREATE(sail_int)(&zghz33);
+  sail_unsigned(&zghz33, zy);
+  zcbz311 = lt(zghz32, zghz33);
 end_function_37: ;
   return zcbz311;
 end_block_exception_38: ;
@@ -538,20 +558,33 @@ end_block_exception_38: ;
   return false;
 }
 
+
+
+static void finish_sailgen_z8operatorz0zI_uz9(void)
+{
+  KILL(sail_int)(&zghz33);
+  KILL(sail_int)(&zghz32);
+}
+
+sail_int zghz34;
+sail_int zghz35;
+
+static void startup_sailgen_z8operatorz0zKzJ_uz9(void)
+{
+  CREATE(sail_int)(&zghz34);
+  CREATE(sail_int)(&zghz35);
+}
+
 static bool sailgen_z8operatorz0zKzJ_uz9(lbits zx, lbits zy)
 {
   __label__ end_function_40, end_block_exception_41;
 
   bool zcbz312;
-  sail_int zgaz36;
-  CREATE(sail_int)(&zgaz36);
-  sail_unsigned(&zgaz36, zx);
-  sail_int zgaz37;
-  CREATE(sail_int)(&zgaz37);
-  sail_unsigned(&zgaz37, zy);
-  zcbz312 = gteq(zgaz36, zgaz37);
-  KILL(sail_int)(&zgaz37);
-  KILL(sail_int)(&zgaz36);
+  RECREATE(sail_int)(&zghz34);
+  sail_unsigned(&zghz34, zx);
+  RECREATE(sail_int)(&zghz35);
+  sail_unsigned(&zghz35, zy);
+  zcbz312 = gteq(zghz34, zghz35);
 end_function_40: ;
   return zcbz312;
 end_block_exception_41: ;
@@ -561,28 +594,49 @@ end_block_exception_41: ;
 
 
 
+static void finish_sailgen_z8operatorz0zKzJ_uz9(void)
+{
+  KILL(sail_int)(&zghz35);
+  KILL(sail_int)(&zghz34);
+}
+
+
+
 static void sailgen_MAX(sail_int *rop, sail_int);
+
+sail_int zghz36;
+sail_int zghz37;
+
+static void startup_sailgen_MAX(void)
+{
+  CREATE(sail_int)(&zghz36);
+  CREATE(sail_int)(&zghz37);
+}
 
 static void sailgen_MAX(sail_int *zcbz313, sail_int zn)
 {
   __label__ end_function_43, end_block_exception_44, end_function_202;
 
-  sail_int zgaz38;
-  CREATE(sail_int)(&zgaz38);
-  pow2(&zgaz38, zn);
+  RECREATE(sail_int)(&zghz36);
+  pow2(&zghz36, zn);
   {
-    sail_int zgsz3107;
-    CREATE(sail_int)(&zgsz3107);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3107, INT64_C(1));
-    sub_int((*(&zcbz313)), zgaz38, zgsz3107);
-    KILL(sail_int)(&zgsz3107);
+    RECREATE(sail_int)(&zghz37);
+    CONVERT_OF(sail_int, mach_int)(&zghz37, INT64_C(1));
+    sub_int((*(&zcbz313)), zghz36, zghz37);
   }
-  KILL(sail_int)(&zgaz38);
 end_function_43: ;
   goto end_function_202;
 end_block_exception_44: ;
   goto end_function_202;
 end_function_202: ;
+}
+
+
+
+static void finish_sailgen_MAX(void)
+{
+  KILL(sail_int)(&zghz37);
+  KILL(sail_int)(&zghz36);
 }
 
 
@@ -823,142 +877,146 @@ static void kill_letbind_17(void) {
 
 static struct zEncCapability sailgen_capBitsToEncCapability(lbits);
 
+struct zEncCapability zghz38;
+sail_int zghz39;
+sail_int zghz310;
+lbits zghz311;
+sail_int zghz312;
+sail_int zghz313;
+lbits zghz314;
+sail_int zghz315;
+sail_int zghz316;
+lbits zghz317;
+sail_int zghz318;
+sail_int zghz319;
+sail_int zghz320;
+lbits zghz321;
+sail_int zghz322;
+sail_int zghz323;
+lbits zghz324;
+sail_int zghz325;
+sail_int zghz326;
+lbits zghz327;
+sail_int zghz328;
+sail_int zghz329;
+lbits zghz330;
+
+static void startup_sailgen_capBitsToEncCapability(void)
+{
+
+  CREATE(sail_int)(&zghz39);
+  CREATE(sail_int)(&zghz310);
+  CREATE(lbits)(&zghz311);
+  CREATE(sail_int)(&zghz312);
+  CREATE(sail_int)(&zghz313);
+  CREATE(lbits)(&zghz314);
+  CREATE(sail_int)(&zghz315);
+  CREATE(sail_int)(&zghz316);
+  CREATE(lbits)(&zghz317);
+  CREATE(sail_int)(&zghz318);
+  CREATE(sail_int)(&zghz319);
+  CREATE(sail_int)(&zghz320);
+  CREATE(lbits)(&zghz321);
+  CREATE(sail_int)(&zghz322);
+  CREATE(sail_int)(&zghz323);
+  CREATE(lbits)(&zghz324);
+  CREATE(sail_int)(&zghz325);
+  CREATE(sail_int)(&zghz326);
+  CREATE(lbits)(&zghz327);
+  CREATE(sail_int)(&zghz328);
+  CREATE(sail_int)(&zghz329);
+  CREATE(lbits)(&zghz330);
+}
+
 static struct zEncCapability sailgen_capBitsToEncCapability(lbits zc)
 {
   __label__ end_function_64, end_block_exception_65;
 
-  struct zEncCapability zcbz314;
+  struct zEncCapability zghz38;
   uint64_t zgaz39;
   {
-    sail_int zgsz3127;
-    CREATE(sail_int)(&zgsz3127);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3127, INT64_C(127));
-    sail_int zgsz3128;
-    CREATE(sail_int)(&zgsz3128);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3128, INT64_C(112));
-    lbits zgsz3129;
-    CREATE(lbits)(&zgsz3129);
-    vector_subrange_lbits(&zgsz3129, zc, zgsz3127, zgsz3128);
-    zgaz39 = CONVERT_OF(fbits, lbits)(zgsz3129, true);
-    KILL(lbits)(&zgsz3129);
-    KILL(sail_int)(&zgsz3128);
-    KILL(sail_int)(&zgsz3127);
+    RECREATE(sail_int)(&zghz328);
+    CONVERT_OF(sail_int, mach_int)(&zghz328, INT64_C(127));
+    RECREATE(sail_int)(&zghz329);
+    CONVERT_OF(sail_int, mach_int)(&zghz329, INT64_C(112));
+    RECREATE(lbits)(&zghz330);
+    vector_subrange_lbits(&zghz330, zc, zghz328, zghz329);
+    zgaz39 = CONVERT_OF(fbits, lbits)(zghz330, true);
   }
   uint64_t zgaz310;
   {
-    sail_int zgsz3124;
-    CREATE(sail_int)(&zgsz3124);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3124, INT64_C(111));
-    sail_int zgsz3125;
-    CREATE(sail_int)(&zgsz3125);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3125, INT64_C(110));
-    lbits zgsz3126;
-    CREATE(lbits)(&zgsz3126);
-    vector_subrange_lbits(&zgsz3126, zc, zgsz3124, zgsz3125);
-    zgaz310 = CONVERT_OF(fbits, lbits)(zgsz3126, true);
-    KILL(lbits)(&zgsz3126);
-    KILL(sail_int)(&zgsz3125);
-    KILL(sail_int)(&zgsz3124);
+    RECREATE(sail_int)(&zghz325);
+    CONVERT_OF(sail_int, mach_int)(&zghz325, INT64_C(111));
+    RECREATE(sail_int)(&zghz326);
+    CONVERT_OF(sail_int, mach_int)(&zghz326, INT64_C(110));
+    RECREATE(lbits)(&zghz327);
+    vector_subrange_lbits(&zghz327, zc, zghz325, zghz326);
+    zgaz310 = CONVERT_OF(fbits, lbits)(zghz327, true);
   }
   uint64_t zgaz311;
   {
-    sail_int zgsz3121;
-    CREATE(sail_int)(&zgsz3121);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3121, INT64_C(109));
-    sail_int zgsz3122;
-    CREATE(sail_int)(&zgsz3122);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3122, INT64_C(109));
-    lbits zgsz3123;
-    CREATE(lbits)(&zgsz3123);
-    vector_subrange_lbits(&zgsz3123, zc, zgsz3121, zgsz3122);
-    zgaz311 = CONVERT_OF(fbits, lbits)(zgsz3123, true);
-    KILL(lbits)(&zgsz3123);
-    KILL(sail_int)(&zgsz3122);
-    KILL(sail_int)(&zgsz3121);
+    RECREATE(sail_int)(&zghz322);
+    CONVERT_OF(sail_int, mach_int)(&zghz322, INT64_C(109));
+    RECREATE(sail_int)(&zghz323);
+    CONVERT_OF(sail_int, mach_int)(&zghz323, INT64_C(109));
+    RECREATE(lbits)(&zghz324);
+    vector_subrange_lbits(&zghz324, zc, zghz322, zghz323);
+    zgaz311 = CONVERT_OF(fbits, lbits)(zghz324, true);
   }
   uint64_t zgaz312;
   {
-    sail_int zgsz3118;
-    CREATE(sail_int)(&zgsz3118);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3118, INT64_C(108));
-    sail_int zgsz3119;
-    CREATE(sail_int)(&zgsz3119);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3119, INT64_C(91));
-    lbits zgsz3120;
-    CREATE(lbits)(&zgsz3120);
-    vector_subrange_lbits(&zgsz3120, zc, zgsz3118, zgsz3119);
-    zgaz312 = CONVERT_OF(fbits, lbits)(zgsz3120, true);
-    KILL(lbits)(&zgsz3120);
-    KILL(sail_int)(&zgsz3119);
-    KILL(sail_int)(&zgsz3118);
+    RECREATE(sail_int)(&zghz319);
+    CONVERT_OF(sail_int, mach_int)(&zghz319, INT64_C(108));
+    RECREATE(sail_int)(&zghz320);
+    CONVERT_OF(sail_int, mach_int)(&zghz320, INT64_C(91));
+    RECREATE(lbits)(&zghz321);
+    vector_subrange_lbits(&zghz321, zc, zghz319, zghz320);
+    zgaz312 = CONVERT_OF(fbits, lbits)(zghz321, true);
   }
   fbits zgaz313;
   {
-    sail_int zgsz3117;
-    CREATE(sail_int)(&zgsz3117);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3117, INT64_C(90));
-    zgaz313 = bitvector_access(zc, zgsz3117);
-    KILL(sail_int)(&zgsz3117);
+    RECREATE(sail_int)(&zghz318);
+    CONVERT_OF(sail_int, mach_int)(&zghz318, INT64_C(90));
+    zgaz313 = bitvector_access(zc, zghz318);
   }
   uint64_t zgaz314;
   {
-    sail_int zgsz3114;
-    CREATE(sail_int)(&zgsz3114);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3114, INT64_C(89));
-    sail_int zgsz3115;
-    CREATE(sail_int)(&zgsz3115);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3115, INT64_C(78));
-    lbits zgsz3116;
-    CREATE(lbits)(&zgsz3116);
-    vector_subrange_lbits(&zgsz3116, zc, zgsz3114, zgsz3115);
-    zgaz314 = CONVERT_OF(fbits, lbits)(zgsz3116, true);
-    KILL(lbits)(&zgsz3116);
-    KILL(sail_int)(&zgsz3115);
-    KILL(sail_int)(&zgsz3114);
+    RECREATE(sail_int)(&zghz315);
+    CONVERT_OF(sail_int, mach_int)(&zghz315, INT64_C(89));
+    RECREATE(sail_int)(&zghz316);
+    CONVERT_OF(sail_int, mach_int)(&zghz316, INT64_C(78));
+    RECREATE(lbits)(&zghz317);
+    vector_subrange_lbits(&zghz317, zc, zghz315, zghz316);
+    zgaz314 = CONVERT_OF(fbits, lbits)(zghz317, true);
   }
   uint64_t zgaz315;
   {
-    sail_int zgsz3111;
-    CREATE(sail_int)(&zgsz3111);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3111, INT64_C(77));
-    sail_int zgsz3112;
-    CREATE(sail_int)(&zgsz3112);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3112, INT64_C(64));
-    lbits zgsz3113;
-    CREATE(lbits)(&zgsz3113);
-    vector_subrange_lbits(&zgsz3113, zc, zgsz3111, zgsz3112);
-    zgaz315 = CONVERT_OF(fbits, lbits)(zgsz3113, true);
-    KILL(lbits)(&zgsz3113);
-    KILL(sail_int)(&zgsz3112);
-    KILL(sail_int)(&zgsz3111);
+    RECREATE(sail_int)(&zghz312);
+    CONVERT_OF(sail_int, mach_int)(&zghz312, INT64_C(77));
+    RECREATE(sail_int)(&zghz313);
+    CONVERT_OF(sail_int, mach_int)(&zghz313, INT64_C(64));
+    RECREATE(lbits)(&zghz314);
+    vector_subrange_lbits(&zghz314, zc, zghz312, zghz313);
+    zgaz315 = CONVERT_OF(fbits, lbits)(zghz314, true);
   }
   uint64_t zgaz316;
   {
-    sail_int zgsz3108;
-    CREATE(sail_int)(&zgsz3108);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3108, INT64_C(63));
-    sail_int zgsz3109;
-    CREATE(sail_int)(&zgsz3109);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3109, INT64_C(0));
-    lbits zgsz3110;
-    CREATE(lbits)(&zgsz3110);
-    vector_subrange_lbits(&zgsz3110, zc, zgsz3108, zgsz3109);
-    zgaz316 = CONVERT_OF(fbits, lbits)(zgsz3110, true);
-    KILL(lbits)(&zgsz3110);
-    KILL(sail_int)(&zgsz3109);
-    KILL(sail_int)(&zgsz3108);
+    RECREATE(sail_int)(&zghz39);
+    CONVERT_OF(sail_int, mach_int)(&zghz39, INT64_C(63));
+    RECREATE(sail_int)(&zghz310);
+    CONVERT_OF(sail_int, mach_int)(&zghz310, INT64_C(0));
+    RECREATE(lbits)(&zghz311);
+    vector_subrange_lbits(&zghz311, zc, zghz39, zghz310);
+    zgaz316 = CONVERT_OF(fbits, lbits)(zghz311, true);
   }
-  struct zEncCapability zgsz321;
-  zgsz321.zB = zgaz315;
-  zgsz321.zT = zgaz314;
-  zgsz321.zaddress = zgaz316;
-  zgsz321.zflags = zgaz311;
-  zgsz321.zinternal_E = zgaz313;
-  zgsz321.zotype = zgaz312;
-  zgsz321.zperms = zgaz39;
-  zgsz321.zreserved = zgaz310;
-  zcbz314 = zgsz321;
-
+  zghz38.zB = zgaz315;
+  zghz38.zT = zgaz314;
+  zghz38.zaddress = zgaz316;
+  zghz38.zflags = zgaz311;
+  zghz38.zinternal_E = zgaz313;
+  zghz38.zotype = zgaz312;
+  zghz38.zperms = zgaz39;
+  zghz38.zreserved = zgaz310;
 
 
 
@@ -968,13 +1026,75 @@ static struct zEncCapability sailgen_capBitsToEncCapability(lbits zc)
 
 
 end_function_64: ;
-  return zcbz314;
+  return zghz38;
 end_block_exception_65: ;
   struct zEncCapability zcbz346 = { .zB = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zflags = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zotype = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zreserved = UINT64_C(0xdeadc0de) };
   return zcbz346;
 }
 
+
+
+static void finish_sailgen_capBitsToEncCapability(void)
+{
+  KILL(lbits)(&zghz330);
+  KILL(sail_int)(&zghz329);
+  KILL(sail_int)(&zghz328);
+  KILL(lbits)(&zghz327);
+  KILL(sail_int)(&zghz326);
+  KILL(sail_int)(&zghz325);
+  KILL(lbits)(&zghz324);
+  KILL(sail_int)(&zghz323);
+  KILL(sail_int)(&zghz322);
+  KILL(lbits)(&zghz321);
+  KILL(sail_int)(&zghz320);
+  KILL(sail_int)(&zghz319);
+  KILL(sail_int)(&zghz318);
+  KILL(lbits)(&zghz317);
+  KILL(sail_int)(&zghz316);
+  KILL(sail_int)(&zghz315);
+  KILL(lbits)(&zghz314);
+  KILL(sail_int)(&zghz313);
+  KILL(sail_int)(&zghz312);
+  KILL(lbits)(&zghz311);
+  KILL(sail_int)(&zghz310);
+  KILL(sail_int)(&zghz39);
+
+}
+
 static void sailgen_encCapToBits(lbits *rop, struct zEncCapability);
+
+lbits zghz331;
+lbits zghz332;
+lbits zghz333;
+lbits zghz334;
+lbits zghz335;
+lbits zghz336;
+lbits zghz337;
+lbits zghz338;
+lbits zghz339;
+lbits zghz340;
+lbits zghz341;
+lbits zghz342;
+lbits zghz343;
+lbits zghz344;
+
+static void startup_sailgen_encCapToBits(void)
+{
+  CREATE(lbits)(&zghz331);
+  CREATE(lbits)(&zghz332);
+  CREATE(lbits)(&zghz333);
+  CREATE(lbits)(&zghz334);
+  CREATE(lbits)(&zghz335);
+  CREATE(lbits)(&zghz336);
+  CREATE(lbits)(&zghz337);
+  CREATE(lbits)(&zghz338);
+  CREATE(lbits)(&zghz339);
+  CREATE(lbits)(&zghz340);
+  CREATE(lbits)(&zghz341);
+  CREATE(lbits)(&zghz342);
+  CREATE(lbits)(&zghz343);
+  CREATE(lbits)(&zghz344);
+}
 
 static void sailgen_encCapToBits(lbits *zcbz315, struct zEncCapability zcap)
 {
@@ -982,116 +1102,106 @@ static void sailgen_encCapToBits(lbits *zcbz315, struct zEncCapability zcap)
 
   uint64_t zgaz330;
   zgaz330 = zcap.zperms;
-  lbits zgaz331;
-  CREATE(lbits)(&zgaz331);
+  RECREATE(lbits)(&zghz331);
   {
     uint64_t zgaz328;
     zgaz328 = zcap.zreserved;
-    lbits zgaz329;
-    CREATE(lbits)(&zgaz329);
+    RECREATE(lbits)(&zghz333);
     {
       uint64_t zgaz326;
       zgaz326 = zcap.zflags;
-      lbits zgaz327;
-      CREATE(lbits)(&zgaz327);
+      RECREATE(lbits)(&zghz335);
       {
         uint64_t zgaz324;
         zgaz324 = zcap.zotype;
-        lbits zgaz325;
-        CREATE(lbits)(&zgaz325);
+        RECREATE(lbits)(&zghz337);
         {
           uint64_t zgaz322;
           {
             fbits zgaz317;
             zgaz317 = zcap.zinternal_E;
-            uint64_t zgsz322;
-            zgsz322 = UINT64_C(0b0);
-            zgsz322 = update_fbits(zgsz322, INT64_C(0), zgaz317);
-            zgaz322 = zgsz322;
+            zgaz322 = UINT64_C(0b0);
+            zgaz322 = update_fbits(zgaz322, INT64_C(0), zgaz317);
           }
-          lbits zgaz323;
-          CREATE(lbits)(&zgaz323);
+          RECREATE(lbits)(&zghz339);
           {
             uint64_t zgaz320;
             zgaz320 = zcap.zT;
-            lbits zgaz321;
-            CREATE(lbits)(&zgaz321);
+            RECREATE(lbits)(&zghz341);
             {
               uint64_t zgaz318;
               zgaz318 = zcap.zB;
               uint64_t zgaz319;
               zgaz319 = zcap.zaddress;
               {
-                lbits zgsz3130;
-                CREATE(lbits)(&zgsz3130);
-                CONVERT_OF(lbits, fbits)(&zgsz3130, zgaz318, UINT64_C(14) , true);
-                lbits zgsz3131;
-                CREATE(lbits)(&zgsz3131);
-                CONVERT_OF(lbits, fbits)(&zgsz3131, zgaz319, UINT64_C(64) , true);
-                append(&zgaz321, zgsz3130, zgsz3131);
-                KILL(lbits)(&zgsz3131);
-                KILL(lbits)(&zgsz3130);
+                RECREATE(lbits)(&zghz343);
+                CONVERT_OF(lbits, fbits)(&zghz343, zgaz318, UINT64_C(14) , true);
+                RECREATE(lbits)(&zghz344);
+                CONVERT_OF(lbits, fbits)(&zghz344, zgaz319, UINT64_C(64) , true);
+                append(&zghz341, zghz343, zghz344);
               }
             }
             {
-              lbits zgsz3132;
-              CREATE(lbits)(&zgsz3132);
-              CONVERT_OF(lbits, fbits)(&zgsz3132, zgaz320, UINT64_C(12) , true);
-              append(&zgaz323, zgsz3132, zgaz321);
-              KILL(lbits)(&zgsz3132);
+              RECREATE(lbits)(&zghz342);
+              CONVERT_OF(lbits, fbits)(&zghz342, zgaz320, UINT64_C(12) , true);
+              append(&zghz339, zghz342, zghz341);
             }
-            KILL(lbits)(&zgaz321);
           }
           {
-            lbits zgsz3133;
-            CREATE(lbits)(&zgsz3133);
-            CONVERT_OF(lbits, fbits)(&zgsz3133, zgaz322, UINT64_C(1) , true);
-            append(&zgaz325, zgsz3133, zgaz323);
-            KILL(lbits)(&zgsz3133);
+            RECREATE(lbits)(&zghz340);
+            CONVERT_OF(lbits, fbits)(&zghz340, zgaz322, UINT64_C(1) , true);
+            append(&zghz337, zghz340, zghz339);
           }
-          KILL(lbits)(&zgaz323);
         }
         {
-          lbits zgsz3134;
-          CREATE(lbits)(&zgsz3134);
-          CONVERT_OF(lbits, fbits)(&zgsz3134, zgaz324, UINT64_C(18) , true);
-          append(&zgaz327, zgsz3134, zgaz325);
-          KILL(lbits)(&zgsz3134);
+          RECREATE(lbits)(&zghz338);
+          CONVERT_OF(lbits, fbits)(&zghz338, zgaz324, UINT64_C(18) , true);
+          append(&zghz335, zghz338, zghz337);
         }
-        KILL(lbits)(&zgaz325);
       }
       {
-        lbits zgsz3135;
-        CREATE(lbits)(&zgsz3135);
-        CONVERT_OF(lbits, fbits)(&zgsz3135, zgaz326, UINT64_C(1) , true);
-        append(&zgaz329, zgsz3135, zgaz327);
-        KILL(lbits)(&zgsz3135);
+        RECREATE(lbits)(&zghz336);
+        CONVERT_OF(lbits, fbits)(&zghz336, zgaz326, UINT64_C(1) , true);
+        append(&zghz333, zghz336, zghz335);
       }
-      KILL(lbits)(&zgaz327);
     }
     {
-      lbits zgsz3136;
-      CREATE(lbits)(&zgsz3136);
-      CONVERT_OF(lbits, fbits)(&zgsz3136, zgaz328, UINT64_C(2) , true);
-      append(&zgaz331, zgsz3136, zgaz329);
-      KILL(lbits)(&zgsz3136);
+      RECREATE(lbits)(&zghz334);
+      CONVERT_OF(lbits, fbits)(&zghz334, zgaz328, UINT64_C(2) , true);
+      append(&zghz331, zghz334, zghz333);
     }
-    KILL(lbits)(&zgaz329);
   }
   {
-    lbits zgsz3137;
-    CREATE(lbits)(&zgsz3137);
-    CONVERT_OF(lbits, fbits)(&zgsz3137, zgaz330, UINT64_C(16) , true);
-    append((*(&zcbz315)), zgsz3137, zgaz331);
-    KILL(lbits)(&zgsz3137);
+    RECREATE(lbits)(&zghz332);
+    CONVERT_OF(lbits, fbits)(&zghz332, zgaz330, UINT64_C(16) , true);
+    append((*(&zcbz315)), zghz332, zghz331);
   }
-  KILL(lbits)(&zgaz331);
 
 end_function_67: ;
   goto end_function_201;
 end_block_exception_68: ;
   goto end_function_201;
 end_function_201: ;
+}
+
+
+
+static void finish_sailgen_encCapToBits(void)
+{
+  KILL(lbits)(&zghz344);
+  KILL(lbits)(&zghz343);
+  KILL(lbits)(&zghz342);
+  KILL(lbits)(&zghz341);
+  KILL(lbits)(&zghz340);
+  KILL(lbits)(&zghz339);
+  KILL(lbits)(&zghz338);
+  KILL(lbits)(&zghz337);
+  KILL(lbits)(&zghz336);
+  KILL(lbits)(&zghz335);
+  KILL(lbits)(&zghz334);
+  KILL(lbits)(&zghz333);
+  KILL(lbits)(&zghz332);
+  KILL(lbits)(&zghz331);
 }
 
 static sail_int zcap_max_addr;
@@ -1101,11 +1211,11 @@ static void create_letbind_18(void) {    CREATE(sail_int)(&zcap_max_addr);
   sail_int zgsz323;
   CREATE(sail_int)(&zgsz323);
   {
-    sail_int zgsz3138;
-    CREATE(sail_int)(&zgsz3138);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3138, zcap_addr_width);
-    sailgen_MAX(&zgsz323, zgsz3138);
-    KILL(sail_int)(&zgsz3138);
+    sail_int zgsz3141;
+    CREATE(sail_int)(&zgsz3141);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3141, zcap_addr_width);
+    sailgen_MAX(&zgsz323, zgsz3141);
+    KILL(sail_int)(&zgsz3141);
   }
   COPY(sail_int)(&zcap_max_addr, zgsz323);
   KILL(sail_int)(&zgsz323);
@@ -1121,30 +1231,30 @@ static void create_letbind_19(void) {
   int64_t zgsz324;
   int64_t zgaz332;
   {
-    sail_int zgsz3142;
-    CREATE(sail_int)(&zgsz3142);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3142, zcap_otype_width);
-    sail_int zgsz3143;
-    CREATE(sail_int)(&zgsz3143);
-    sailgen_MAX(&zgsz3143, zgsz3142);
-    zgaz332 = CONVERT_OF(mach_int, sail_int)(zgsz3143);
-    KILL(sail_int)(&zgsz3143);
-    KILL(sail_int)(&zgsz3142);
+    sail_int zgsz3145;
+    CREATE(sail_int)(&zgsz3145);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3145, zcap_otype_width);
+    sail_int zgsz3146;
+    CREATE(sail_int)(&zgsz3146);
+    sailgen_MAX(&zgsz3146, zgsz3145);
+    zgaz332 = CONVERT_OF(mach_int, sail_int)(zgsz3146);
+    KILL(sail_int)(&zgsz3146);
+    KILL(sail_int)(&zgsz3145);
   }
   {
-    sail_int zgsz3139;
-    CREATE(sail_int)(&zgsz3139);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3139, zgaz332);
-    sail_int zgsz3140;
-    CREATE(sail_int)(&zgsz3140);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3140, zreserved_otypes);
-    sail_int zgsz3141;
-    CREATE(sail_int)(&zgsz3141);
-    sub_int(&zgsz3141, zgsz3139, zgsz3140);
-    zgsz324 = CONVERT_OF(mach_int, sail_int)(zgsz3141);
-    KILL(sail_int)(&zgsz3141);
-    KILL(sail_int)(&zgsz3140);
-    KILL(sail_int)(&zgsz3139);
+    sail_int zgsz3142;
+    CREATE(sail_int)(&zgsz3142);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3142, zgaz332);
+    sail_int zgsz3143;
+    CREATE(sail_int)(&zgsz3143);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3143, zreserved_otypes);
+    sail_int zgsz3144;
+    CREATE(sail_int)(&zgsz3144);
+    sub_int(&zgsz3144, zgsz3142, zgsz3143);
+    zgsz324 = CONVERT_OF(mach_int, sail_int)(zgsz3144);
+    KILL(sail_int)(&zgsz3144);
+    KILL(sail_int)(&zgsz3143);
+    KILL(sail_int)(&zgsz3142);
   }
 
   zcap_max_otype = zgsz324;
@@ -1201,21 +1311,7 @@ static void create_letbind_22(void) {
     KILL(sail_int)(&zgsz3148);
     KILL(sail_int)(&zgsz3147);
   }
-  {
-    sail_int zgsz3144;
-    CREATE(sail_int)(&zgsz3144);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3144, zgaz333);
-    sail_int zgsz3145;
-    CREATE(sail_int)(&zgsz3145);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3145, INT64_C(1));
-    sail_int zgsz3146;
-    CREATE(sail_int)(&zgsz3146);
-    add_int(&zgsz3146, zgsz3144, zgsz3145);
-    zgsz327 = CONVERT_OF(mach_int, sail_int)(zgsz3146);
-    KILL(sail_int)(&zgsz3146);
-    KILL(sail_int)(&zgsz3145);
-    KILL(sail_int)(&zgsz3144);
-  }
+  zgsz327 = (zgaz333 + INT64_C(1));
 
   zcap_max_E = zgsz327;
 
@@ -1286,21 +1382,7 @@ static void create_letbind_24(void) {
       KILL(sail_int)(&zgsz3153);
     }
   }
-  {
-    lbits zgsz3158;
-    CREATE(lbits)(&zgsz3158);
-    CONVERT_OF(lbits, fbits)(&zgsz3158, UINT64_C(0b01), UINT64_C(2) , true);
-    lbits zgsz3159;
-    CREATE(lbits)(&zgsz3159);
-    CONVERT_OF(lbits, fbits)(&zgsz3159, zgaz335, UINT64_C(12) , true);
-    lbits zgsz3160;
-    CREATE(lbits)(&zgsz3160);
-    append(&zgsz3160, zgsz3158, zgsz3159);
-    zgsz329 = CONVERT_OF(fbits, lbits)(zgsz3160, true);
-    KILL(lbits)(&zgsz3160);
-    KILL(lbits)(&zgsz3159);
-    KILL(lbits)(&zgsz3158);
-  }
+  zgsz329 = (UINT64_C(0b01) << 12) | zgaz335;
 
   zcap_reset_T = zgsz329;
 
@@ -1311,177 +1393,50 @@ static void kill_letbind_24(void) {
 
 static struct zCapability sailgen_undefined_Capability(unit);
 
+struct zCapability zghz345;
+
+static void startup_sailgen_undefined_Capability(void)
+{
+}
+
 static struct zCapability sailgen_undefined_Capability(unit zgsz330)
 {
   __label__ end_function_77, end_block_exception_78;
 
-  struct zCapability zcbz316;
-  bool zgaz336;
-  zgaz336 = undefined_bool(UNIT);
-  uint64_t zgaz337;
-  {
-    sail_int zgsz3173;
-    CREATE(sail_int)(&zgsz3173);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3173, INT64_C(4));
-    lbits zgsz3174;
-    CREATE(lbits)(&zgsz3174);
-    UNDEFINED(lbits)(&zgsz3174, zgsz3173);
-    zgaz337 = CONVERT_OF(fbits, lbits)(zgsz3174, true);
-    KILL(lbits)(&zgsz3174);
-    KILL(sail_int)(&zgsz3173);
-  }
-  bool zgaz338;
-  zgaz338 = undefined_bool(UNIT);
-  bool zgaz339;
-  zgaz339 = undefined_bool(UNIT);
-  bool zgaz340;
-  zgaz340 = undefined_bool(UNIT);
-  bool zgaz341;
-  zgaz341 = undefined_bool(UNIT);
-  bool zgaz342;
-  zgaz342 = undefined_bool(UNIT);
-  bool zgaz343;
-  zgaz343 = undefined_bool(UNIT);
-  bool zgaz344;
-  zgaz344 = undefined_bool(UNIT);
-  bool zgaz345;
-  zgaz345 = undefined_bool(UNIT);
-  bool zgaz346;
-  zgaz346 = undefined_bool(UNIT);
-  bool zgaz347;
-  zgaz347 = undefined_bool(UNIT);
-  bool zgaz348;
-  zgaz348 = undefined_bool(UNIT);
-  bool zgaz349;
-  zgaz349 = undefined_bool(UNIT);
-  uint64_t zgaz350;
-  {
-    sail_int zgsz3171;
-    CREATE(sail_int)(&zgsz3171);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3171, INT64_C(2));
-    lbits zgsz3172;
-    CREATE(lbits)(&zgsz3172);
-    UNDEFINED(lbits)(&zgsz3172, zgsz3171);
-    zgaz350 = CONVERT_OF(fbits, lbits)(zgsz3172, true);
-    KILL(lbits)(&zgsz3172);
-    KILL(sail_int)(&zgsz3171);
-  }
-  bool zgaz351;
-  zgaz351 = undefined_bool(UNIT);
-  bool zgaz352;
-  zgaz352 = undefined_bool(UNIT);
-  uint64_t zgaz353;
-  {
-    sail_int zgsz3169;
-    CREATE(sail_int)(&zgsz3169);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3169, INT64_C(6));
-    lbits zgsz3170;
-    CREATE(lbits)(&zgsz3170);
-    UNDEFINED(lbits)(&zgsz3170, zgsz3169);
-    zgaz353 = CONVERT_OF(fbits, lbits)(zgsz3170, true);
-    KILL(lbits)(&zgsz3170);
-    KILL(sail_int)(&zgsz3169);
-  }
-  uint64_t zgaz354;
-  {
-    sail_int zgsz3167;
-    CREATE(sail_int)(&zgsz3167);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3167, INT64_C(14));
-    lbits zgsz3168;
-    CREATE(lbits)(&zgsz3168);
-    UNDEFINED(lbits)(&zgsz3168, zgsz3167);
-    zgaz354 = CONVERT_OF(fbits, lbits)(zgsz3168, true);
-    KILL(lbits)(&zgsz3168);
-    KILL(sail_int)(&zgsz3167);
-  }
-  uint64_t zgaz355;
-  {
-    sail_int zgsz3165;
-    CREATE(sail_int)(&zgsz3165);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3165, INT64_C(14));
-    lbits zgsz3166;
-    CREATE(lbits)(&zgsz3166);
-    UNDEFINED(lbits)(&zgsz3166, zgsz3165);
-    zgaz355 = CONVERT_OF(fbits, lbits)(zgsz3166, true);
-    KILL(lbits)(&zgsz3166);
-    KILL(sail_int)(&zgsz3165);
-  }
-  uint64_t zgaz356;
-  {
-    sail_int zgsz3163;
-    CREATE(sail_int)(&zgsz3163);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3163, INT64_C(18));
-    lbits zgsz3164;
-    CREATE(lbits)(&zgsz3164);
-    UNDEFINED(lbits)(&zgsz3164, zgsz3163);
-    zgaz356 = CONVERT_OF(fbits, lbits)(zgsz3164, true);
-    KILL(lbits)(&zgsz3164);
-    KILL(sail_int)(&zgsz3163);
-  }
-  uint64_t zgaz357;
-  {
-    sail_int zgsz3161;
-    CREATE(sail_int)(&zgsz3161);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3161, INT64_C(64));
-    lbits zgsz3162;
-    CREATE(lbits)(&zgsz3162);
-    UNDEFINED(lbits)(&zgsz3162, zgsz3161);
-    zgaz357 = CONVERT_OF(fbits, lbits)(zgsz3162, true);
-    KILL(lbits)(&zgsz3162);
-    KILL(sail_int)(&zgsz3161);
-  }
-  struct zCapability zgsz331;
-  zgsz331.zB = zgaz354;
-  zgsz331.zE = zgaz353;
-  zgsz331.zT = zgaz355;
-  zgsz331.zaccess_system_regs = zgaz339;
-  zgsz331.zaddress = zgaz357;
-  zgsz331.zflag_cap_mode = zgaz351;
-  zgsz331.zglobal = zgaz349;
-  zgsz331.zinternal_E = zgaz352;
-  zgsz331.zotype = zgaz356;
-  zgsz331.zpermit_cinvoke = zgaz341;
-  zgsz331.zpermit_execute = zgaz348;
-  zgsz331.zpermit_load = zgaz347;
-  zgsz331.zpermit_load_cap = zgaz345;
-  zgsz331.zpermit_seal = zgaz342;
-  zgsz331.zpermit_set_CID = zgaz338;
-  zgsz331.zpermit_store = zgaz346;
-  zgsz331.zpermit_store_cap = zgaz344;
-  zgsz331.zpermit_store_local_cap = zgaz343;
-  zgsz331.zpermit_unseal = zgaz340;
-  zgsz331.zreserved = zgaz350;
-  zgsz331.ztag = zgaz336;
-  zgsz331.zuperms = zgaz337;
-  zcbz316 = zgsz331;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  struct zCapability zghz345;
+  zghz345.zB = UINT64_C(0b00000000000000);
+  zghz345.zE = UINT64_C(0b000000);
+  zghz345.zT = UINT64_C(0b00000000000000);
+  zghz345.zaccess_system_regs = false;
+  zghz345.zaddress = UINT64_C(0x0000000000000000);
+  zghz345.zflag_cap_mode = false;
+  zghz345.zglobal = false;
+  zghz345.zinternal_E = false;
+  zghz345.zotype = UINT64_C(0b000000000000000000);
+  zghz345.zpermit_cinvoke = false;
+  zghz345.zpermit_execute = false;
+  zghz345.zpermit_load = false;
+  zghz345.zpermit_load_cap = false;
+  zghz345.zpermit_seal = false;
+  zghz345.zpermit_set_CID = false;
+  zghz345.zpermit_store = false;
+  zghz345.zpermit_store_cap = false;
+  zghz345.zpermit_store_local_cap = false;
+  zghz345.zpermit_unseal = false;
+  zghz345.zreserved = UINT64_C(0b00);
+  zghz345.ztag = false;
+  zghz345.zuperms = UINT64_C(0x0);
 end_function_77: ;
-  return zcbz316;
+  return zghz345;
 end_block_exception_78: ;
   struct zCapability zcbz347 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz347;
+}
+
+
+
+static void finish_sailgen_undefined_Capability(void)
+{
 }
 
 static struct zCapability znull_cap;
@@ -1489,80 +1444,32 @@ static void create_letbind_25(void) {
 
 
   struct zCapability zgsz333;
-  uint64_t zgaz358;
+  uint64_t zgaz336;
   {
-    sail_int zgsz3184;
-    CREATE(sail_int)(&zgsz3184);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3184, INT64_C(4));
-    lbits zgsz3185;
-    CREATE(lbits)(&zgsz3185);
-    sailgen_zzeros_implicit(&zgsz3185, zgsz3184);
-    zgaz358 = CONVERT_OF(fbits, lbits)(zgsz3185, true);
-    KILL(lbits)(&zgsz3185);
-    KILL(sail_int)(&zgsz3184);
-  }
-  uint64_t zgaz359;
-  {
-    sail_int zgsz3182;
-    CREATE(sail_int)(&zgsz3182);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3182, INT64_C(2));
-    lbits zgsz3183;
-    CREATE(lbits)(&zgsz3183);
-    sailgen_zzeros_implicit(&zgsz3183, zgsz3182);
-    zgaz359 = CONVERT_OF(fbits, lbits)(zgsz3183, true);
-    KILL(lbits)(&zgsz3183);
-    KILL(sail_int)(&zgsz3182);
-  }
-  uint64_t zgaz360;
-  {
-    sail_int zgsz3180;
-    CREATE(sail_int)(&zgsz3180);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3180, INT64_C(14));
-    lbits zgsz3181;
-    CREATE(lbits)(&zgsz3181);
-    sailgen_zzeros_implicit(&zgsz3181, zgsz3180);
-    zgaz360 = CONVERT_OF(fbits, lbits)(zgsz3181, true);
-    KILL(lbits)(&zgsz3181);
-    KILL(sail_int)(&zgsz3180);
-  }
-  uint64_t zgaz361;
-  {
-    sail_int zgsz3177;
-    CREATE(sail_int)(&zgsz3177);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3177, zcap_otype_width);
-    sail_int zgsz3178;
-    CREATE(sail_int)(&zgsz3178);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3178, zotype_unsealed);
-    lbits zgsz3179;
-    CREATE(lbits)(&zgsz3179);
-    sailgen_to_bits(&zgsz3179, zgsz3177, zgsz3178);
-    zgaz361 = CONVERT_OF(fbits, lbits)(zgsz3179, true);
-    KILL(lbits)(&zgsz3179);
-    KILL(sail_int)(&zgsz3178);
-    KILL(sail_int)(&zgsz3177);
-  }
-  uint64_t zgaz362;
-  {
-    sail_int zgsz3175;
-    CREATE(sail_int)(&zgsz3175);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3175, INT64_C(64));
-    lbits zgsz3176;
-    CREATE(lbits)(&zgsz3176);
-    sailgen_zzeros_implicit(&zgsz3176, zgsz3175);
-    zgaz362 = CONVERT_OF(fbits, lbits)(zgsz3176, true);
-    KILL(lbits)(&zgsz3176);
-    KILL(sail_int)(&zgsz3175);
+    sail_int zgsz3158;
+    CREATE(sail_int)(&zgsz3158);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3158, zcap_otype_width);
+    sail_int zgsz3159;
+    CREATE(sail_int)(&zgsz3159);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3159, zotype_unsealed);
+    lbits zgsz3160;
+    CREATE(lbits)(&zgsz3160);
+    sailgen_to_bits(&zgsz3160, zgsz3158, zgsz3159);
+    zgaz336 = CONVERT_OF(fbits, lbits)(zgsz3160, true);
+    KILL(lbits)(&zgsz3160);
+    KILL(sail_int)(&zgsz3159);
+    KILL(sail_int)(&zgsz3158);
   }
   struct zCapability zgsz332;
-  zgsz332.zB = zgaz360;
+  zgsz332.zB = UINT64_C(0b00000000000000);
   zgsz332.zE = zcap_reset_E;
   zgsz332.zT = zcap_reset_T;
   zgsz332.zaccess_system_regs = false;
-  zgsz332.zaddress = zgaz362;
+  zgsz332.zaddress = UINT64_C(0x0000000000000000);
   zgsz332.zflag_cap_mode = false;
   zgsz332.zglobal = false;
   zgsz332.zinternal_E = true;
-  zgsz332.zotype = zgaz361;
+  zgsz332.zotype = zgaz336;
   zgsz332.zpermit_cinvoke = false;
   zgsz332.zpermit_execute = false;
   zgsz332.zpermit_load = false;
@@ -1573,14 +1480,10 @@ static void create_letbind_25(void) {
   zgsz332.zpermit_store_cap = false;
   zgsz332.zpermit_store_local_cap = false;
   zgsz332.zpermit_unseal = false;
-  zgsz332.zreserved = zgaz359;
+  zgsz332.zreserved = UINT64_C(0b00);
   zgsz332.ztag = false;
-  zgsz332.zuperms = zgaz358;
+  zgsz332.zuperms = UINT64_C(0x0);
   zgsz333 = zgsz332;
-
-
-
-
 
 
   znull_cap = zgsz333;
@@ -1595,80 +1498,32 @@ static void create_letbind_26(void) {
 
 
   struct zCapability zgsz335;
-  uint64_t zgaz363;
+  uint64_t zgaz337;
   {
-    sail_int zgsz3195;
-    CREATE(sail_int)(&zgsz3195);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3195, INT64_C(4));
-    lbits zgsz3196;
-    CREATE(lbits)(&zgsz3196);
-    sailgen_ones(&zgsz3196, zgsz3195);
-    zgaz363 = CONVERT_OF(fbits, lbits)(zgsz3196, true);
-    KILL(lbits)(&zgsz3196);
-    KILL(sail_int)(&zgsz3195);
-  }
-  uint64_t zgaz364;
-  {
-    sail_int zgsz3193;
-    CREATE(sail_int)(&zgsz3193);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3193, INT64_C(2));
-    lbits zgsz3194;
-    CREATE(lbits)(&zgsz3194);
-    sailgen_zzeros_implicit(&zgsz3194, zgsz3193);
-    zgaz364 = CONVERT_OF(fbits, lbits)(zgsz3194, true);
-    KILL(lbits)(&zgsz3194);
-    KILL(sail_int)(&zgsz3193);
-  }
-  uint64_t zgaz365;
-  {
-    sail_int zgsz3191;
-    CREATE(sail_int)(&zgsz3191);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3191, INT64_C(14));
-    lbits zgsz3192;
-    CREATE(lbits)(&zgsz3192);
-    sailgen_zzeros_implicit(&zgsz3192, zgsz3191);
-    zgaz365 = CONVERT_OF(fbits, lbits)(zgsz3192, true);
-    KILL(lbits)(&zgsz3192);
-    KILL(sail_int)(&zgsz3191);
-  }
-  uint64_t zgaz366;
-  {
-    sail_int zgsz3188;
-    CREATE(sail_int)(&zgsz3188);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3188, zcap_otype_width);
-    sail_int zgsz3189;
-    CREATE(sail_int)(&zgsz3189);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3189, zotype_unsealed);
-    lbits zgsz3190;
-    CREATE(lbits)(&zgsz3190);
-    sailgen_to_bits(&zgsz3190, zgsz3188, zgsz3189);
-    zgaz366 = CONVERT_OF(fbits, lbits)(zgsz3190, true);
-    KILL(lbits)(&zgsz3190);
-    KILL(sail_int)(&zgsz3189);
-    KILL(sail_int)(&zgsz3188);
-  }
-  uint64_t zgaz367;
-  {
-    sail_int zgsz3186;
-    CREATE(sail_int)(&zgsz3186);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3186, INT64_C(64));
-    lbits zgsz3187;
-    CREATE(lbits)(&zgsz3187);
-    sailgen_zzeros_implicit(&zgsz3187, zgsz3186);
-    zgaz367 = CONVERT_OF(fbits, lbits)(zgsz3187, true);
-    KILL(lbits)(&zgsz3187);
-    KILL(sail_int)(&zgsz3186);
+    sail_int zgsz3161;
+    CREATE(sail_int)(&zgsz3161);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3161, zcap_otype_width);
+    sail_int zgsz3162;
+    CREATE(sail_int)(&zgsz3162);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3162, zotype_unsealed);
+    lbits zgsz3163;
+    CREATE(lbits)(&zgsz3163);
+    sailgen_to_bits(&zgsz3163, zgsz3161, zgsz3162);
+    zgaz337 = CONVERT_OF(fbits, lbits)(zgsz3163, true);
+    KILL(lbits)(&zgsz3163);
+    KILL(sail_int)(&zgsz3162);
+    KILL(sail_int)(&zgsz3161);
   }
   struct zCapability zgsz334;
-  zgsz334.zB = zgaz365;
+  zgsz334.zB = UINT64_C(0b00000000000000);
   zgsz334.zE = zcap_reset_E;
   zgsz334.zT = zcap_reset_T;
   zgsz334.zaccess_system_regs = true;
-  zgsz334.zaddress = zgaz367;
+  zgsz334.zaddress = UINT64_C(0x0000000000000000);
   zgsz334.zflag_cap_mode = false;
   zgsz334.zglobal = true;
   zgsz334.zinternal_E = true;
-  zgsz334.zotype = zgaz366;
+  zgsz334.zotype = zgaz337;
   zgsz334.zpermit_cinvoke = true;
   zgsz334.zpermit_execute = true;
   zgsz334.zpermit_load = true;
@@ -1679,14 +1534,10 @@ static void create_letbind_26(void) {
   zgsz334.zpermit_store_cap = true;
   zgsz334.zpermit_store_local_cap = true;
   zgsz334.zpermit_unseal = true;
-  zgsz334.zreserved = zgaz364;
+  zgsz334.zreserved = UINT64_C(0b00);
   zgsz334.ztag = true;
-  zgsz334.zuperms = zgaz363;
+  zgsz334.zuperms = UINT64_C(0xF);
   zgsz335 = zgsz334;
-
-
-
-
 
 
   zdefault_cap = zgsz335;
@@ -1703,273 +1554,119 @@ static uint64_t sailgen_getCapHardPerms(struct zCapability zcap)
   __label__ end_function_82, end_block_exception_83;
 
   uint64_t zcbz317;
-  uint64_t zgaz3100;
+  uint64_t zgaz370;
   {
-    bool zgaz368;
-    zgaz368 = zcap.zpermit_set_CID;
-    zgaz3100 = sailgen_bool_to_bits(zgaz368);
+    bool zgaz338;
+    zgaz338 = zcap.zpermit_set_CID;
+    zgaz370 = sailgen_bool_to_bits(zgaz338);
   }
-  uint64_t zgaz3101;
+  uint64_t zgaz371;
   {
-    uint64_t zgaz398;
+    uint64_t zgaz368;
     {
-      bool zgaz369;
-      zgaz369 = zcap.zaccess_system_regs;
-      zgaz398 = sailgen_bool_to_bits(zgaz369);
+      bool zgaz339;
+      zgaz339 = zcap.zaccess_system_regs;
+      zgaz368 = sailgen_bool_to_bits(zgaz339);
     }
-    uint64_t zgaz399;
+    uint64_t zgaz369;
     {
-      uint64_t zgaz396;
+      uint64_t zgaz366;
       {
-        bool zgaz370;
-        zgaz370 = zcap.zpermit_unseal;
-        zgaz396 = sailgen_bool_to_bits(zgaz370);
+        bool zgaz340;
+        zgaz340 = zcap.zpermit_unseal;
+        zgaz366 = sailgen_bool_to_bits(zgaz340);
       }
-      uint64_t zgaz397;
+      uint64_t zgaz367;
       {
-        uint64_t zgaz394;
+        uint64_t zgaz364;
         {
-          bool zgaz371;
-          zgaz371 = zcap.zpermit_cinvoke;
-          zgaz394 = sailgen_bool_to_bits(zgaz371);
+          bool zgaz341;
+          zgaz341 = zcap.zpermit_cinvoke;
+          zgaz364 = sailgen_bool_to_bits(zgaz341);
         }
-        uint64_t zgaz395;
+        uint64_t zgaz365;
         {
-          uint64_t zgaz392;
+          uint64_t zgaz362;
           {
-            bool zgaz372;
-            zgaz372 = zcap.zpermit_seal;
-            zgaz392 = sailgen_bool_to_bits(zgaz372);
+            bool zgaz342;
+            zgaz342 = zcap.zpermit_seal;
+            zgaz362 = sailgen_bool_to_bits(zgaz342);
           }
-          uint64_t zgaz393;
+          uint64_t zgaz363;
           {
-            uint64_t zgaz390;
+            uint64_t zgaz360;
             {
-              bool zgaz373;
-              zgaz373 = zcap.zpermit_store_local_cap;
-              zgaz390 = sailgen_bool_to_bits(zgaz373);
+              bool zgaz343;
+              zgaz343 = zcap.zpermit_store_local_cap;
+              zgaz360 = sailgen_bool_to_bits(zgaz343);
             }
-            uint64_t zgaz391;
+            uint64_t zgaz361;
             {
-              uint64_t zgaz388;
+              uint64_t zgaz358;
               {
-                bool zgaz374;
-                zgaz374 = zcap.zpermit_store_cap;
-                zgaz388 = sailgen_bool_to_bits(zgaz374);
+                bool zgaz344;
+                zgaz344 = zcap.zpermit_store_cap;
+                zgaz358 = sailgen_bool_to_bits(zgaz344);
               }
-              uint64_t zgaz389;
+              uint64_t zgaz359;
               {
-                uint64_t zgaz386;
+                uint64_t zgaz356;
                 {
-                  bool zgaz375;
-                  zgaz375 = zcap.zpermit_load_cap;
-                  zgaz386 = sailgen_bool_to_bits(zgaz375);
+                  bool zgaz345;
+                  zgaz345 = zcap.zpermit_load_cap;
+                  zgaz356 = sailgen_bool_to_bits(zgaz345);
                 }
-                uint64_t zgaz387;
+                uint64_t zgaz357;
                 {
-                  uint64_t zgaz384;
+                  uint64_t zgaz354;
                   {
-                    bool zgaz376;
-                    zgaz376 = zcap.zpermit_store;
-                    zgaz384 = sailgen_bool_to_bits(zgaz376);
+                    bool zgaz346;
+                    zgaz346 = zcap.zpermit_store;
+                    zgaz354 = sailgen_bool_to_bits(zgaz346);
                   }
-                  uint64_t zgaz385;
+                  uint64_t zgaz355;
                   {
-                    uint64_t zgaz382;
+                    uint64_t zgaz352;
                     {
-                      bool zgaz377;
-                      zgaz377 = zcap.zpermit_load;
-                      zgaz382 = sailgen_bool_to_bits(zgaz377);
+                      bool zgaz347;
+                      zgaz347 = zcap.zpermit_load;
+                      zgaz352 = sailgen_bool_to_bits(zgaz347);
                     }
-                    uint64_t zgaz383;
+                    uint64_t zgaz353;
                     {
-                      uint64_t zgaz380;
+                      uint64_t zgaz350;
                       {
-                        bool zgaz378;
-                        zgaz378 = zcap.zpermit_execute;
-                        zgaz380 = sailgen_bool_to_bits(zgaz378);
+                        bool zgaz348;
+                        zgaz348 = zcap.zpermit_execute;
+                        zgaz350 = sailgen_bool_to_bits(zgaz348);
                       }
-                      uint64_t zgaz381;
+                      uint64_t zgaz351;
                       {
-                        bool zgaz379;
-                        zgaz379 = zcap.zglobal;
-                        zgaz381 = sailgen_bool_to_bits(zgaz379);
+                        bool zgaz349;
+                        zgaz349 = zcap.zglobal;
+                        zgaz351 = sailgen_bool_to_bits(zgaz349);
                       }
-                      {
-                        lbits zgsz3197;
-                        CREATE(lbits)(&zgsz3197);
-                        CONVERT_OF(lbits, fbits)(&zgsz3197, zgaz380, UINT64_C(1) , true);
-                        lbits zgsz3198;
-                        CREATE(lbits)(&zgsz3198);
-                        CONVERT_OF(lbits, fbits)(&zgsz3198, zgaz381, UINT64_C(1) , true);
-                        lbits zgsz3199;
-                        CREATE(lbits)(&zgsz3199);
-                        append(&zgsz3199, zgsz3197, zgsz3198);
-                        zgaz383 = CONVERT_OF(fbits, lbits)(zgsz3199, true);
-                        KILL(lbits)(&zgsz3199);
-                        KILL(lbits)(&zgsz3198);
-                        KILL(lbits)(&zgsz3197);
-                      }
+                      zgaz353 = (zgaz350 << 1) | zgaz351;
                     }
-                    {
-                      lbits zgsz3200;
-                      CREATE(lbits)(&zgsz3200);
-                      CONVERT_OF(lbits, fbits)(&zgsz3200, zgaz382, UINT64_C(1) , true);
-                      lbits zgsz3201;
-                      CREATE(lbits)(&zgsz3201);
-                      CONVERT_OF(lbits, fbits)(&zgsz3201, zgaz383, UINT64_C(2) , true);
-                      lbits zgsz3202;
-                      CREATE(lbits)(&zgsz3202);
-                      append(&zgsz3202, zgsz3200, zgsz3201);
-                      zgaz385 = CONVERT_OF(fbits, lbits)(zgsz3202, true);
-                      KILL(lbits)(&zgsz3202);
-                      KILL(lbits)(&zgsz3201);
-                      KILL(lbits)(&zgsz3200);
-                    }
+                    zgaz355 = (zgaz352 << 2) | zgaz353;
                   }
-                  {
-                    lbits zgsz3203;
-                    CREATE(lbits)(&zgsz3203);
-                    CONVERT_OF(lbits, fbits)(&zgsz3203, zgaz384, UINT64_C(1) , true);
-                    lbits zgsz3204;
-                    CREATE(lbits)(&zgsz3204);
-                    CONVERT_OF(lbits, fbits)(&zgsz3204, zgaz385, UINT64_C(3) , true);
-                    lbits zgsz3205;
-                    CREATE(lbits)(&zgsz3205);
-                    append(&zgsz3205, zgsz3203, zgsz3204);
-                    zgaz387 = CONVERT_OF(fbits, lbits)(zgsz3205, true);
-                    KILL(lbits)(&zgsz3205);
-                    KILL(lbits)(&zgsz3204);
-                    KILL(lbits)(&zgsz3203);
-                  }
+                  zgaz357 = (zgaz354 << 3) | zgaz355;
                 }
-                {
-                  lbits zgsz3206;
-                  CREATE(lbits)(&zgsz3206);
-                  CONVERT_OF(lbits, fbits)(&zgsz3206, zgaz386, UINT64_C(1) , true);
-                  lbits zgsz3207;
-                  CREATE(lbits)(&zgsz3207);
-                  CONVERT_OF(lbits, fbits)(&zgsz3207, zgaz387, UINT64_C(4) , true);
-                  lbits zgsz3208;
-                  CREATE(lbits)(&zgsz3208);
-                  append(&zgsz3208, zgsz3206, zgsz3207);
-                  zgaz389 = CONVERT_OF(fbits, lbits)(zgsz3208, true);
-                  KILL(lbits)(&zgsz3208);
-                  KILL(lbits)(&zgsz3207);
-                  KILL(lbits)(&zgsz3206);
-                }
+                zgaz359 = (zgaz356 << 4) | zgaz357;
               }
-              {
-                lbits zgsz3209;
-                CREATE(lbits)(&zgsz3209);
-                CONVERT_OF(lbits, fbits)(&zgsz3209, zgaz388, UINT64_C(1) , true);
-                lbits zgsz3210;
-                CREATE(lbits)(&zgsz3210);
-                CONVERT_OF(lbits, fbits)(&zgsz3210, zgaz389, UINT64_C(5) , true);
-                lbits zgsz3211;
-                CREATE(lbits)(&zgsz3211);
-                append(&zgsz3211, zgsz3209, zgsz3210);
-                zgaz391 = CONVERT_OF(fbits, lbits)(zgsz3211, true);
-                KILL(lbits)(&zgsz3211);
-                KILL(lbits)(&zgsz3210);
-                KILL(lbits)(&zgsz3209);
-              }
+              zgaz361 = (zgaz358 << 5) | zgaz359;
             }
-            {
-              lbits zgsz3212;
-              CREATE(lbits)(&zgsz3212);
-              CONVERT_OF(lbits, fbits)(&zgsz3212, zgaz390, UINT64_C(1) , true);
-              lbits zgsz3213;
-              CREATE(lbits)(&zgsz3213);
-              CONVERT_OF(lbits, fbits)(&zgsz3213, zgaz391, UINT64_C(6) , true);
-              lbits zgsz3214;
-              CREATE(lbits)(&zgsz3214);
-              append(&zgsz3214, zgsz3212, zgsz3213);
-              zgaz393 = CONVERT_OF(fbits, lbits)(zgsz3214, true);
-              KILL(lbits)(&zgsz3214);
-              KILL(lbits)(&zgsz3213);
-              KILL(lbits)(&zgsz3212);
-            }
+            zgaz363 = (zgaz360 << 6) | zgaz361;
           }
-          {
-            lbits zgsz3215;
-            CREATE(lbits)(&zgsz3215);
-            CONVERT_OF(lbits, fbits)(&zgsz3215, zgaz392, UINT64_C(1) , true);
-            lbits zgsz3216;
-            CREATE(lbits)(&zgsz3216);
-            CONVERT_OF(lbits, fbits)(&zgsz3216, zgaz393, UINT64_C(7) , true);
-            lbits zgsz3217;
-            CREATE(lbits)(&zgsz3217);
-            append(&zgsz3217, zgsz3215, zgsz3216);
-            zgaz395 = CONVERT_OF(fbits, lbits)(zgsz3217, true);
-            KILL(lbits)(&zgsz3217);
-            KILL(lbits)(&zgsz3216);
-            KILL(lbits)(&zgsz3215);
-          }
+          zgaz365 = (zgaz362 << 7) | zgaz363;
         }
-        {
-          lbits zgsz3218;
-          CREATE(lbits)(&zgsz3218);
-          CONVERT_OF(lbits, fbits)(&zgsz3218, zgaz394, UINT64_C(1) , true);
-          lbits zgsz3219;
-          CREATE(lbits)(&zgsz3219);
-          CONVERT_OF(lbits, fbits)(&zgsz3219, zgaz395, UINT64_C(8) , true);
-          lbits zgsz3220;
-          CREATE(lbits)(&zgsz3220);
-          append(&zgsz3220, zgsz3218, zgsz3219);
-          zgaz397 = CONVERT_OF(fbits, lbits)(zgsz3220, true);
-          KILL(lbits)(&zgsz3220);
-          KILL(lbits)(&zgsz3219);
-          KILL(lbits)(&zgsz3218);
-        }
+        zgaz367 = (zgaz364 << 8) | zgaz365;
       }
-      {
-        lbits zgsz3221;
-        CREATE(lbits)(&zgsz3221);
-        CONVERT_OF(lbits, fbits)(&zgsz3221, zgaz396, UINT64_C(1) , true);
-        lbits zgsz3222;
-        CREATE(lbits)(&zgsz3222);
-        CONVERT_OF(lbits, fbits)(&zgsz3222, zgaz397, UINT64_C(9) , true);
-        lbits zgsz3223;
-        CREATE(lbits)(&zgsz3223);
-        append(&zgsz3223, zgsz3221, zgsz3222);
-        zgaz399 = CONVERT_OF(fbits, lbits)(zgsz3223, true);
-        KILL(lbits)(&zgsz3223);
-        KILL(lbits)(&zgsz3222);
-        KILL(lbits)(&zgsz3221);
-      }
+      zgaz369 = (zgaz366 << 9) | zgaz367;
     }
-    {
-      lbits zgsz3224;
-      CREATE(lbits)(&zgsz3224);
-      CONVERT_OF(lbits, fbits)(&zgsz3224, zgaz398, UINT64_C(1) , true);
-      lbits zgsz3225;
-      CREATE(lbits)(&zgsz3225);
-      CONVERT_OF(lbits, fbits)(&zgsz3225, zgaz399, UINT64_C(10) , true);
-      lbits zgsz3226;
-      CREATE(lbits)(&zgsz3226);
-      append(&zgsz3226, zgsz3224, zgsz3225);
-      zgaz3101 = CONVERT_OF(fbits, lbits)(zgsz3226, true);
-      KILL(lbits)(&zgsz3226);
-      KILL(lbits)(&zgsz3225);
-      KILL(lbits)(&zgsz3224);
-    }
+    zgaz371 = (zgaz368 << 10) | zgaz369;
   }
-  {
-    lbits zgsz3227;
-    CREATE(lbits)(&zgsz3227);
-    CONVERT_OF(lbits, fbits)(&zgsz3227, zgaz3100, UINT64_C(1) , true);
-    lbits zgsz3228;
-    CREATE(lbits)(&zgsz3228);
-    CONVERT_OF(lbits, fbits)(&zgsz3228, zgaz3101, UINT64_C(11) , true);
-    lbits zgsz3229;
-    CREATE(lbits)(&zgsz3229);
-    append(&zgsz3229, zgsz3227, zgsz3228);
-    zcbz317 = CONVERT_OF(fbits, lbits)(zgsz3229, true);
-    KILL(lbits)(&zgsz3229);
-    KILL(lbits)(&zgsz3228);
-    KILL(lbits)(&zgsz3227);
-  }
+  zcbz317 = (zgaz370 << 11) | zgaz371;
 
 
 end_function_82: ;
@@ -1981,164 +1678,131 @@ end_block_exception_83: ;
 
 static struct zCapability sailgen_encCapabilityToCapability(bool, struct zEncCapability);
 
+struct zCapability zghz346;
+struct zCapability zghz347;
+sail_int zghz348;
+sail_int zghz349;
+sail_int zghz350;
+sail_int zghz351;
+sail_int zghz352;
+sail_int zghz353;
+sail_int zghz354;
+sail_int zghz355;
+sail_int zghz356;
+lbits zghz357;
+lbits zghz358;
+sail_int zghz359;
+sail_int zghz360;
+sail_int zghz361;
+sail_int zghz362;
+lbits zghz363;
+sail_int zghz364;
+sail_int zghz365;
+sail_int zghz366;
+sail_int zghz367;
+lbits zghz368;
+sail_int zghz369;
+sail_int zghz370;
+sail_int zghz371;
+sail_int zghz372;
+sail_int zghz373;
+sail_int zghz374;
+sail_int zghz375;
+sail_int zghz376;
+sail_int zghz377;
+
+static void startup_sailgen_encCapabilityToCapability(void)
+{
+
+
+  CREATE(sail_int)(&zghz348);
+  CREATE(sail_int)(&zghz349);
+  CREATE(sail_int)(&zghz350);
+  CREATE(sail_int)(&zghz351);
+  CREATE(sail_int)(&zghz352);
+  CREATE(sail_int)(&zghz353);
+  CREATE(sail_int)(&zghz354);
+  CREATE(sail_int)(&zghz355);
+  CREATE(sail_int)(&zghz356);
+  CREATE(lbits)(&zghz357);
+  CREATE(lbits)(&zghz358);
+  CREATE(sail_int)(&zghz359);
+  CREATE(sail_int)(&zghz360);
+  CREATE(sail_int)(&zghz361);
+  CREATE(sail_int)(&zghz362);
+  CREATE(lbits)(&zghz363);
+  CREATE(sail_int)(&zghz364);
+  CREATE(sail_int)(&zghz365);
+  CREATE(sail_int)(&zghz366);
+  CREATE(sail_int)(&zghz367);
+  CREATE(lbits)(&zghz368);
+  CREATE(sail_int)(&zghz369);
+  CREATE(sail_int)(&zghz370);
+  CREATE(sail_int)(&zghz371);
+  CREATE(sail_int)(&zghz372);
+  CREATE(sail_int)(&zghz373);
+  CREATE(sail_int)(&zghz374);
+  CREATE(sail_int)(&zghz375);
+  CREATE(sail_int)(&zghz376);
+  CREATE(sail_int)(&zghz377);
+}
+
 static struct zCapability sailgen_encCapabilityToCapability(bool zt, struct zEncCapability zc)
 {
   __label__ cleanup_86, end_cleanup_87, end_function_85, end_block_exception_88;
 
-  struct zCapability zcbz318;
+  struct zCapability zghz346;
   bool zinternal_E;
   {
-    fbits zgaz3172;
-    zgaz3172 = zc.zinternal_E;
-    zinternal_E = sailgen_bit_to_bool(zgaz3172);
+    fbits zgaz3142;
+    zgaz3142 = zc.zinternal_E;
+    zinternal_E = sailgen_bit_to_bool(zgaz3142);
   }
   uint64_t zE;
-  {
-    sail_int zgsz3343;
-    CREATE(sail_int)(&zgsz3343);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3343, INT64_C(6));
-    lbits zgsz3344;
-    CREATE(lbits)(&zgsz3344);
-    sailgen_zzeros_implicit(&zgsz3344, zgsz3343);
-    zE = CONVERT_OF(fbits, lbits)(zgsz3344, true);
-    KILL(lbits)(&zgsz3344);
-    KILL(sail_int)(&zgsz3343);
-  }
+  zE = UINT64_C(0b000000);
   uint64_t zBs;
-  {
-    sail_int zgsz3341;
-    CREATE(sail_int)(&zgsz3341);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3341, INT64_C(14));
-    lbits zgsz3342;
-    CREATE(lbits)(&zgsz3342);
-    sailgen_zzeros_implicit(&zgsz3342, zgsz3341);
-    zBs = CONVERT_OF(fbits, lbits)(zgsz3342, true);
-    KILL(lbits)(&zgsz3342);
-    KILL(sail_int)(&zgsz3341);
-  }
+  zBs = UINT64_C(0b00000000000000);
   uint64_t zT;
-  {
-    sail_int zgsz3339;
-    CREATE(sail_int)(&zgsz3339);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3339, INT64_C(12));
-    lbits zgsz3340;
-    CREATE(lbits)(&zgsz3340);
-    sailgen_zzeros_implicit(&zgsz3340, zgsz3339);
-    zT = CONVERT_OF(fbits, lbits)(zgsz3340, true);
-    KILL(lbits)(&zgsz3340);
-    KILL(sail_int)(&zgsz3339);
-  }
+  zT = UINT64_C(0x000);
   uint64_t zlenMSBs;
-  {
-    sail_int zgsz3337;
-    CREATE(sail_int)(&zgsz3337);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3337, INT64_C(2));
-    lbits zgsz3338;
-    CREATE(lbits)(&zgsz3338);
-    sailgen_zzeros_implicit(&zgsz3338, zgsz3337);
-    zlenMSBs = CONVERT_OF(fbits, lbits)(zgsz3338, true);
-    KILL(lbits)(&zgsz3338);
-    KILL(sail_int)(&zgsz3337);
-  }
+  zlenMSBs = UINT64_C(0b00);
   {
     unit zgsz336;
     if (zinternal_E) {
       {
-        uint64_t zgaz3106;
+        uint64_t zgaz376;
         {
-          uint64_t zgaz3102;
-          zgaz3102 = zc.zT;
-          int64_t zgaz3103;
+          uint64_t zgaz372;
+          zgaz372 = zc.zT;
+          int64_t zgaz373;
           {
-            sail_int zgsz3234;
-            CREATE(sail_int)(&zgsz3234);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3234, zinternal_E_take_bits);
-            sail_int zgsz3235;
-            CREATE(sail_int)(&zgsz3235);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3235, INT64_C(1));
-            sail_int zgsz3236;
-            CREATE(sail_int)(&zgsz3236);
-            sub_int(&zgsz3236, zgsz3234, zgsz3235);
-            zgaz3103 = CONVERT_OF(mach_int, sail_int)(zgsz3236);
-            KILL(sail_int)(&zgsz3236);
-            KILL(sail_int)(&zgsz3235);
-            KILL(sail_int)(&zgsz3234);
+            RECREATE(sail_int)(&zghz375);
+            CONVERT_OF(sail_int, mach_int)(&zghz375, zinternal_E_take_bits);
+            RECREATE(sail_int)(&zghz376);
+            CONVERT_OF(sail_int, mach_int)(&zghz376, INT64_C(1));
+            RECREATE(sail_int)(&zghz377);
+            sub_int(&zghz377, zghz375, zghz376);
+            zgaz373 = CONVERT_OF(mach_int, sail_int)(zghz377);
           }
-          {
-            lbits zgsz3230;
-            CREATE(lbits)(&zgsz3230);
-            CONVERT_OF(lbits, fbits)(&zgsz3230, zgaz3102, UINT64_C(12) , true);
-            sail_int zgsz3231;
-            CREATE(sail_int)(&zgsz3231);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3231, zgaz3103);
-            sail_int zgsz3232;
-            CREATE(sail_int)(&zgsz3232);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3232, INT64_C(0));
-            lbits zgsz3233;
-            CREATE(lbits)(&zgsz3233);
-            vector_subrange_lbits(&zgsz3233, zgsz3230, zgsz3231, zgsz3232);
-            zgaz3106 = CONVERT_OF(fbits, lbits)(zgsz3233, true);
-            KILL(lbits)(&zgsz3233);
-            KILL(sail_int)(&zgsz3232);
-            KILL(sail_int)(&zgsz3231);
-            KILL(lbits)(&zgsz3230);
-          }
+          zgaz376 = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz372 >> INT64_C(0)));
         }
-        uint64_t zgaz3107;
+        uint64_t zgaz377;
         {
-          uint64_t zgaz3104;
-          zgaz3104 = zc.zB;
-          int64_t zgaz3105;
+          uint64_t zgaz374;
+          zgaz374 = zc.zB;
+          int64_t zgaz375;
           {
-            sail_int zgsz3241;
-            CREATE(sail_int)(&zgsz3241);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3241, zinternal_E_take_bits);
-            sail_int zgsz3242;
-            CREATE(sail_int)(&zgsz3242);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3242, INT64_C(1));
-            sail_int zgsz3243;
-            CREATE(sail_int)(&zgsz3243);
-            sub_int(&zgsz3243, zgsz3241, zgsz3242);
-            zgaz3105 = CONVERT_OF(mach_int, sail_int)(zgsz3243);
-            KILL(sail_int)(&zgsz3243);
-            KILL(sail_int)(&zgsz3242);
-            KILL(sail_int)(&zgsz3241);
+            RECREATE(sail_int)(&zghz372);
+            CONVERT_OF(sail_int, mach_int)(&zghz372, zinternal_E_take_bits);
+            RECREATE(sail_int)(&zghz373);
+            CONVERT_OF(sail_int, mach_int)(&zghz373, INT64_C(1));
+            RECREATE(sail_int)(&zghz374);
+            sub_int(&zghz374, zghz372, zghz373);
+            zgaz375 = CONVERT_OF(mach_int, sail_int)(zghz374);
           }
-          {
-            lbits zgsz3237;
-            CREATE(lbits)(&zgsz3237);
-            CONVERT_OF(lbits, fbits)(&zgsz3237, zgaz3104, UINT64_C(14) , true);
-            sail_int zgsz3238;
-            CREATE(sail_int)(&zgsz3238);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3238, zgaz3105);
-            sail_int zgsz3239;
-            CREATE(sail_int)(&zgsz3239);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3239, INT64_C(0));
-            lbits zgsz3240;
-            CREATE(lbits)(&zgsz3240);
-            vector_subrange_lbits(&zgsz3240, zgsz3237, zgsz3238, zgsz3239);
-            zgaz3107 = CONVERT_OF(fbits, lbits)(zgsz3240, true);
-            KILL(lbits)(&zgsz3240);
-            KILL(sail_int)(&zgsz3239);
-            KILL(sail_int)(&zgsz3238);
-            KILL(lbits)(&zgsz3237);
-          }
+          zgaz377 = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz374 >> INT64_C(0)));
         }
-        {
-          lbits zgsz3244;
-          CREATE(lbits)(&zgsz3244);
-          CONVERT_OF(lbits, fbits)(&zgsz3244, zgaz3106, UINT64_C(3) , true);
-          lbits zgsz3245;
-          CREATE(lbits)(&zgsz3245);
-          CONVERT_OF(lbits, fbits)(&zgsz3245, zgaz3107, UINT64_C(3) , true);
-          lbits zgsz3246;
-          CREATE(lbits)(&zgsz3246);
-          append(&zgsz3246, zgsz3244, zgsz3245);
-          zE = CONVERT_OF(fbits, lbits)(zgsz3246, true);
-          KILL(lbits)(&zgsz3246);
-          KILL(lbits)(&zgsz3245);
-          KILL(lbits)(&zgsz3244);
-        }
+        zE = (zgaz376 << 3) | zgaz377;
         unit zgsz341;
         zgsz341 = UNIT;
       }
@@ -2148,143 +1812,59 @@ static struct zCapability sailgen_encCapabilityToCapability(bool zt, struct zEnc
         zgsz340 = UNIT;
       }
       {
-        uint64_t zgaz3110;
+        uint64_t zgaz380;
         {
-          uint64_t zgaz3108;
-          zgaz3108 = zc.zT;
-          int64_t zgaz3109;
+          uint64_t zgaz378;
+          zgaz378 = zc.zT;
+          int64_t zgaz379;
           {
-            sail_int zgsz3251;
-            CREATE(sail_int)(&zgsz3251);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3251, zcap_mantissa_width);
-            sail_int zgsz3252;
-            CREATE(sail_int)(&zgsz3252);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3252, INT64_C(3));
-            sail_int zgsz3253;
-            CREATE(sail_int)(&zgsz3253);
-            sub_int(&zgsz3253, zgsz3251, zgsz3252);
-            zgaz3109 = CONVERT_OF(mach_int, sail_int)(zgsz3253);
-            KILL(sail_int)(&zgsz3253);
-            KILL(sail_int)(&zgsz3252);
-            KILL(sail_int)(&zgsz3251);
+            RECREATE(sail_int)(&zghz369);
+            CONVERT_OF(sail_int, mach_int)(&zghz369, zcap_mantissa_width);
+            RECREATE(sail_int)(&zghz370);
+            CONVERT_OF(sail_int, mach_int)(&zghz370, INT64_C(3));
+            RECREATE(sail_int)(&zghz371);
+            sub_int(&zghz371, zghz369, zghz370);
+            zgaz379 = CONVERT_OF(mach_int, sail_int)(zghz371);
           }
-          {
-            lbits zgsz3247;
-            CREATE(lbits)(&zgsz3247);
-            CONVERT_OF(lbits, fbits)(&zgsz3247, zgaz3108, UINT64_C(12) , true);
-            sail_int zgsz3248;
-            CREATE(sail_int)(&zgsz3248);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3248, zgaz3109);
-            sail_int zgsz3249;
-            CREATE(sail_int)(&zgsz3249);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3249, INT64_C(3));
-            lbits zgsz3250;
-            CREATE(lbits)(&zgsz3250);
-            vector_subrange_lbits(&zgsz3250, zgsz3247, zgsz3248, zgsz3249);
-            zgaz3110 = CONVERT_OF(fbits, lbits)(zgsz3250, true);
-            KILL(lbits)(&zgsz3250);
-            KILL(sail_int)(&zgsz3249);
-            KILL(sail_int)(&zgsz3248);
-            KILL(lbits)(&zgsz3247);
-          }
+          zgaz380 = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz378 >> INT64_C(3)));
         }
-        uint64_t zgaz3111;
+        uint64_t zgaz381;
         {
-          sail_int zgsz3257;
-          CREATE(sail_int)(&zgsz3257);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3257, zinternal_E_take_bits);
-          lbits zgsz3258;
-          CREATE(lbits)(&zgsz3258);
-          sailgen_zzeros_implicit(&zgsz3258, zgsz3257);
-          zgaz3111 = CONVERT_OF(fbits, lbits)(zgsz3258, true);
-          KILL(lbits)(&zgsz3258);
-          KILL(sail_int)(&zgsz3257);
+          RECREATE(sail_int)(&zghz367);
+          CONVERT_OF(sail_int, mach_int)(&zghz367, zinternal_E_take_bits);
+          RECREATE(lbits)(&zghz368);
+          sailgen_zzeros_implicit(&zghz368, zghz367);
+          zgaz381 = CONVERT_OF(fbits, lbits)(zghz368, true);
         }
-        {
-          lbits zgsz3254;
-          CREATE(lbits)(&zgsz3254);
-          CONVERT_OF(lbits, fbits)(&zgsz3254, zgaz3110, UINT64_C(9) , true);
-          lbits zgsz3255;
-          CREATE(lbits)(&zgsz3255);
-          CONVERT_OF(lbits, fbits)(&zgsz3255, zgaz3111, UINT64_C(3) , true);
-          lbits zgsz3256;
-          CREATE(lbits)(&zgsz3256);
-          append(&zgsz3256, zgsz3254, zgsz3255);
-          zT = CONVERT_OF(fbits, lbits)(zgsz3256, true);
-          KILL(lbits)(&zgsz3256);
-          KILL(lbits)(&zgsz3255);
-          KILL(lbits)(&zgsz3254);
-        }
+        zT = (zgaz380 << 3) | zgaz381;
         unit zgsz339;
         zgsz339 = UNIT;
       }
-      uint64_t zgaz3114;
+      uint64_t zgaz384;
       {
-        uint64_t zgaz3112;
-        zgaz3112 = zc.zB;
-        int64_t zgaz3113;
+        uint64_t zgaz382;
+        zgaz382 = zc.zB;
+        int64_t zgaz383;
         {
-          sail_int zgsz3263;
-          CREATE(sail_int)(&zgsz3263);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3263, zcap_mantissa_width);
-          sail_int zgsz3264;
-          CREATE(sail_int)(&zgsz3264);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3264, INT64_C(1));
-          sail_int zgsz3265;
-          CREATE(sail_int)(&zgsz3265);
-          sub_int(&zgsz3265, zgsz3263, zgsz3264);
-          zgaz3113 = CONVERT_OF(mach_int, sail_int)(zgsz3265);
-          KILL(sail_int)(&zgsz3265);
-          KILL(sail_int)(&zgsz3264);
-          KILL(sail_int)(&zgsz3263);
+          RECREATE(sail_int)(&zghz364);
+          CONVERT_OF(sail_int, mach_int)(&zghz364, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz365);
+          CONVERT_OF(sail_int, mach_int)(&zghz365, INT64_C(1));
+          RECREATE(sail_int)(&zghz366);
+          sub_int(&zghz366, zghz364, zghz365);
+          zgaz383 = CONVERT_OF(mach_int, sail_int)(zghz366);
         }
-        {
-          lbits zgsz3259;
-          CREATE(lbits)(&zgsz3259);
-          CONVERT_OF(lbits, fbits)(&zgsz3259, zgaz3112, UINT64_C(14) , true);
-          sail_int zgsz3260;
-          CREATE(sail_int)(&zgsz3260);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3260, zgaz3113);
-          sail_int zgsz3261;
-          CREATE(sail_int)(&zgsz3261);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3261, INT64_C(3));
-          lbits zgsz3262;
-          CREATE(lbits)(&zgsz3262);
-          vector_subrange_lbits(&zgsz3262, zgsz3259, zgsz3260, zgsz3261);
-          zgaz3114 = CONVERT_OF(fbits, lbits)(zgsz3262, true);
-          KILL(lbits)(&zgsz3262);
-          KILL(sail_int)(&zgsz3261);
-          KILL(sail_int)(&zgsz3260);
-          KILL(lbits)(&zgsz3259);
-        }
+        zgaz384 = (safe_rshift(UINT64_MAX, 64 - 11) & (zgaz382 >> INT64_C(3)));
       }
-      uint64_t zgaz3115;
+      uint64_t zgaz385;
       {
-        sail_int zgsz3269;
-        CREATE(sail_int)(&zgsz3269);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3269, zinternal_E_take_bits);
-        lbits zgsz3270;
-        CREATE(lbits)(&zgsz3270);
-        sailgen_zzeros_implicit(&zgsz3270, zgsz3269);
-        zgaz3115 = CONVERT_OF(fbits, lbits)(zgsz3270, true);
-        KILL(lbits)(&zgsz3270);
-        KILL(sail_int)(&zgsz3269);
+        RECREATE(sail_int)(&zghz362);
+        CONVERT_OF(sail_int, mach_int)(&zghz362, zinternal_E_take_bits);
+        RECREATE(lbits)(&zghz363);
+        sailgen_zzeros_implicit(&zghz363, zghz362);
+        zgaz385 = CONVERT_OF(fbits, lbits)(zghz363, true);
       }
-      {
-        lbits zgsz3266;
-        CREATE(lbits)(&zgsz3266);
-        CONVERT_OF(lbits, fbits)(&zgsz3266, zgaz3114, UINT64_C(11) , true);
-        lbits zgsz3267;
-        CREATE(lbits)(&zgsz3267);
-        CONVERT_OF(lbits, fbits)(&zgsz3267, zgaz3115, UINT64_C(3) , true);
-        lbits zgsz3268;
-        CREATE(lbits)(&zgsz3268);
-        append(&zgsz3268, zgsz3266, zgsz3267);
-        zBs = CONVERT_OF(fbits, lbits)(zgsz3268, true);
-        KILL(lbits)(&zgsz3268);
-        KILL(lbits)(&zgsz3267);
-        KILL(lbits)(&zgsz3266);
-      }
+      zBs = (zgaz384 << 3) | zgaz385;
       zgsz336 = UNIT;
     } else {
       {
@@ -2303,221 +1883,186 @@ static struct zCapability sailgen_encCapabilityToCapability(bool zt, struct zEnc
   }
   uint64_t zcarry_out;
   {
-    bool zgaz3171;
+    bool zgaz3141;
     {
-      uint64_t zgaz3170;
+      uint64_t zgaz3140;
       {
-        int64_t zgaz3169;
+        int64_t zgaz3139;
         {
-          sail_int zgsz3275;
-          CREATE(sail_int)(&zgsz3275);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3275, zcap_mantissa_width);
-          sail_int zgsz3276;
-          CREATE(sail_int)(&zgsz3276);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3276, INT64_C(3));
-          sail_int zgsz3277;
-          CREATE(sail_int)(&zgsz3277);
-          sub_int(&zgsz3277, zgsz3275, zgsz3276);
-          zgaz3169 = CONVERT_OF(mach_int, sail_int)(zgsz3277);
-          KILL(sail_int)(&zgsz3277);
-          KILL(sail_int)(&zgsz3276);
-          KILL(sail_int)(&zgsz3275);
+          RECREATE(sail_int)(&zghz359);
+          CONVERT_OF(sail_int, mach_int)(&zghz359, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz360);
+          CONVERT_OF(sail_int, mach_int)(&zghz360, INT64_C(3));
+          RECREATE(sail_int)(&zghz361);
+          sub_int(&zghz361, zghz359, zghz360);
+          zgaz3139 = CONVERT_OF(mach_int, sail_int)(zghz361);
         }
-        {
-          lbits zgsz3271;
-          CREATE(lbits)(&zgsz3271);
-          CONVERT_OF(lbits, fbits)(&zgsz3271, zBs, UINT64_C(14) , true);
-          sail_int zgsz3272;
-          CREATE(sail_int)(&zgsz3272);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3272, zgaz3169);
-          sail_int zgsz3273;
-          CREATE(sail_int)(&zgsz3273);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3273, INT64_C(0));
-          lbits zgsz3274;
-          CREATE(lbits)(&zgsz3274);
-          vector_subrange_lbits(&zgsz3274, zgsz3271, zgsz3272, zgsz3273);
-          zgaz3170 = CONVERT_OF(fbits, lbits)(zgsz3274, true);
-          KILL(lbits)(&zgsz3274);
-          KILL(sail_int)(&zgsz3273);
-          KILL(sail_int)(&zgsz3272);
-          KILL(lbits)(&zgsz3271);
-        }
+        zgaz3140 = (safe_rshift(UINT64_MAX, 64 - 12) & (zBs >> INT64_C(0)));
       }
       {
-        lbits zgsz3278;
-        CREATE(lbits)(&zgsz3278);
-        CONVERT_OF(lbits, fbits)(&zgsz3278, zT, UINT64_C(12) , true);
-        lbits zgsz3279;
-        CREATE(lbits)(&zgsz3279);
-        CONVERT_OF(lbits, fbits)(&zgsz3279, zgaz3170, UINT64_C(12) , true);
-        zgaz3171 = sailgen_z8operatorz0zI_uz9(zgsz3278, zgsz3279);
-        KILL(lbits)(&zgsz3279);
-        KILL(lbits)(&zgsz3278);
+        RECREATE(lbits)(&zghz357);
+        CONVERT_OF(lbits, fbits)(&zghz357, zT, UINT64_C(12) , true);
+        RECREATE(lbits)(&zghz358);
+        CONVERT_OF(lbits, fbits)(&zghz358, zgaz3140, UINT64_C(12) , true);
+        zgaz3141 = sailgen_z8operatorz0zI_uz9(zghz357, zghz358);
       }
     }
-    if (zgaz3171) {  zcarry_out = UINT64_C(0b01);  } else {  zcarry_out = UINT64_C(0b00);  }
+    if (zgaz3141) {  zcarry_out = UINT64_C(0b01);  } else {  zcarry_out = UINT64_C(0b00);  }
   }
   uint64_t zTtop2;
   {
-    uint64_t zgaz3168;
+    uint64_t zgaz3138;
     {
-      uint64_t zgaz3167;
+      uint64_t zgaz3137;
       {
-        int64_t zgaz3165;
+        int64_t zgaz3135;
         {
-          sail_int zgsz3287;
-          CREATE(sail_int)(&zgsz3287);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3287, zcap_mantissa_width);
-          sail_int zgsz3288;
-          CREATE(sail_int)(&zgsz3288);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3288, INT64_C(1));
-          sail_int zgsz3289;
-          CREATE(sail_int)(&zgsz3289);
-          sub_int(&zgsz3289, zgsz3287, zgsz3288);
-          zgaz3165 = CONVERT_OF(mach_int, sail_int)(zgsz3289);
-          KILL(sail_int)(&zgsz3289);
-          KILL(sail_int)(&zgsz3288);
-          KILL(sail_int)(&zgsz3287);
+          RECREATE(sail_int)(&zghz354);
+          CONVERT_OF(sail_int, mach_int)(&zghz354, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz355);
+          CONVERT_OF(sail_int, mach_int)(&zghz355, INT64_C(1));
+          RECREATE(sail_int)(&zghz356);
+          sub_int(&zghz356, zghz354, zghz355);
+          zgaz3135 = CONVERT_OF(mach_int, sail_int)(zghz356);
         }
-        int64_t zgaz3166;
+        int64_t zgaz3136;
         {
-          sail_int zgsz3284;
-          CREATE(sail_int)(&zgsz3284);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3284, zcap_mantissa_width);
-          sail_int zgsz3285;
-          CREATE(sail_int)(&zgsz3285);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3285, INT64_C(2));
-          sail_int zgsz3286;
-          CREATE(sail_int)(&zgsz3286);
-          sub_int(&zgsz3286, zgsz3284, zgsz3285);
-          zgaz3166 = CONVERT_OF(mach_int, sail_int)(zgsz3286);
-          KILL(sail_int)(&zgsz3286);
-          KILL(sail_int)(&zgsz3285);
-          KILL(sail_int)(&zgsz3284);
+          RECREATE(sail_int)(&zghz351);
+          CONVERT_OF(sail_int, mach_int)(&zghz351, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz352);
+          CONVERT_OF(sail_int, mach_int)(&zghz352, INT64_C(2));
+          RECREATE(sail_int)(&zghz353);
+          sub_int(&zghz353, zghz351, zghz352);
+          zgaz3136 = CONVERT_OF(mach_int, sail_int)(zghz353);
         }
-        {
-          lbits zgsz3280;
-          CREATE(lbits)(&zgsz3280);
-          CONVERT_OF(lbits, fbits)(&zgsz3280, zBs, UINT64_C(14) , true);
-          sail_int zgsz3281;
-          CREATE(sail_int)(&zgsz3281);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3281, zgaz3165);
-          sail_int zgsz3282;
-          CREATE(sail_int)(&zgsz3282);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3282, zgaz3166);
-          lbits zgsz3283;
-          CREATE(lbits)(&zgsz3283);
-          vector_subrange_lbits(&zgsz3283, zgsz3280, zgsz3281, zgsz3282);
-          zgaz3167 = CONVERT_OF(fbits, lbits)(zgsz3283, true);
-          KILL(lbits)(&zgsz3283);
-          KILL(sail_int)(&zgsz3282);
-          KILL(sail_int)(&zgsz3281);
-          KILL(lbits)(&zgsz3280);
-        }
+        zgaz3137 = (safe_rshift(UINT64_MAX, 64 - 2) & (zBs >> zgaz3136));
       }
-      {
-        lbits zgsz3290;
-        CREATE(lbits)(&zgsz3290);
-        CONVERT_OF(lbits, fbits)(&zgsz3290, zgaz3167, UINT64_C(2) , true);
-        lbits zgsz3291;
-        CREATE(lbits)(&zgsz3291);
-        CONVERT_OF(lbits, fbits)(&zgsz3291, zlenMSBs, UINT64_C(2) , true);
-        lbits zgsz3292;
-        CREATE(lbits)(&zgsz3292);
-        add_bits(&zgsz3292, zgsz3290, zgsz3291);
-        zgaz3168 = CONVERT_OF(fbits, lbits)(zgsz3292, true);
-        KILL(lbits)(&zgsz3292);
-        KILL(lbits)(&zgsz3291);
-        KILL(lbits)(&zgsz3290);
-      }
+      zgaz3138 = ((zgaz3137 + zlenMSBs) & UINT64_C(0b11));
     }
-    {
-      lbits zgsz3293;
-      CREATE(lbits)(&zgsz3293);
-      CONVERT_OF(lbits, fbits)(&zgsz3293, zgaz3168, UINT64_C(2) , true);
-      lbits zgsz3294;
-      CREATE(lbits)(&zgsz3294);
-      CONVERT_OF(lbits, fbits)(&zgsz3294, zcarry_out, UINT64_C(2) , true);
-      lbits zgsz3295;
-      CREATE(lbits)(&zgsz3295);
-      add_bits(&zgsz3295, zgsz3293, zgsz3294);
-      zTtop2 = CONVERT_OF(fbits, lbits)(zgsz3295, true);
-      KILL(lbits)(&zgsz3295);
-      KILL(lbits)(&zgsz3294);
-      KILL(lbits)(&zgsz3293);
-    }
+    zTtop2 = ((zgaz3138 + zcarry_out) & UINT64_C(0b11));
   }
-  struct zCapability zgaz3164;
   {
-    uint64_t zgaz3120;
+    uint64_t zgaz390;
     {
-      bool zgaz3116;
+      bool zgaz386;
+      zgaz386 = (zcap_uperms_width > INT64_C(0));
+      uint64_t zgaz388;
+      zgaz388 = zc.zperms;
+      int64_t zgaz389;
       {
-        sail_int zgsz3306;
-        CREATE(sail_int)(&zgsz3306);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3306, zcap_uperms_width);
-        sail_int zgsz3307;
-        CREATE(sail_int)(&zgsz3307);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3307, INT64_C(0));
-        zgaz3116 = gt(zgsz3306, zgsz3307);
-        KILL(sail_int)(&zgsz3307);
-        KILL(sail_int)(&zgsz3306);
-      }
-      uint64_t zgaz3118;
-      zgaz3118 = zc.zperms;
-      int64_t zgaz3119;
-      {
-        int64_t zgaz3117;
+        int64_t zgaz387;
+        zgaz387 = (zcap_hperms_width + zcap_uperms_width);
         {
-          sail_int zgsz3299;
-          CREATE(sail_int)(&zgsz3299);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3299, zcap_hperms_width);
-          sail_int zgsz3300;
-          CREATE(sail_int)(&zgsz3300);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3300, zcap_uperms_width);
-          sail_int zgsz3301;
-          CREATE(sail_int)(&zgsz3301);
-          add_int(&zgsz3301, zgsz3299, zgsz3300);
-          zgaz3117 = CONVERT_OF(mach_int, sail_int)(zgsz3301);
-          KILL(sail_int)(&zgsz3301);
-          KILL(sail_int)(&zgsz3300);
-          KILL(sail_int)(&zgsz3299);
-        }
-        {
-          sail_int zgsz3296;
-          CREATE(sail_int)(&zgsz3296);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3296, zgaz3117);
-          sail_int zgsz3297;
-          CREATE(sail_int)(&zgsz3297);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3297, INT64_C(1));
-          sail_int zgsz3298;
-          CREATE(sail_int)(&zgsz3298);
-          sub_int(&zgsz3298, zgsz3296, zgsz3297);
-          zgaz3119 = CONVERT_OF(mach_int, sail_int)(zgsz3298);
-          KILL(sail_int)(&zgsz3298);
-          KILL(sail_int)(&zgsz3297);
-          KILL(sail_int)(&zgsz3296);
+          RECREATE(sail_int)(&zghz348);
+          CONVERT_OF(sail_int, mach_int)(&zghz348, zgaz387);
+          RECREATE(sail_int)(&zghz349);
+          CONVERT_OF(sail_int, mach_int)(&zghz349, INT64_C(1));
+          RECREATE(sail_int)(&zghz350);
+          sub_int(&zghz350, zghz348, zghz349);
+          zgaz389 = CONVERT_OF(mach_int, sail_int)(zghz350);
         }
       }
+      zgaz390 = (safe_rshift(UINT64_MAX, 64 - 4) & (zgaz388 >> zcap_hperms_width));
+    }
+    bool zgaz393;
+    {
+      fbits zgaz392;
       {
-        lbits zgsz3302;
-        CREATE(lbits)(&zgsz3302);
-        CONVERT_OF(lbits, fbits)(&zgsz3302, zgaz3118, UINT64_C(16) , true);
-        sail_int zgsz3303;
-        CREATE(sail_int)(&zgsz3303);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3303, zgaz3119);
-        sail_int zgsz3304;
-        CREATE(sail_int)(&zgsz3304);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3304, zcap_hperms_width);
-        lbits zgsz3305;
-        CREATE(lbits)(&zgsz3305);
-        vector_subrange_lbits(&zgsz3305, zgsz3302, zgsz3303, zgsz3304);
-        zgaz3120 = CONVERT_OF(fbits, lbits)(zgsz3305, true);
-        KILL(lbits)(&zgsz3305);
-        KILL(sail_int)(&zgsz3304);
-        KILL(sail_int)(&zgsz3303);
-        KILL(lbits)(&zgsz3302);
+        uint64_t zgaz391;
+        zgaz391 = zc.zperms;
+        zgaz392 = (UINT64_C(1) & (zgaz391 >> INT64_C(11)));
       }
+      zgaz393 = sailgen_bit_to_bool(zgaz392);
+    }
+    bool zgaz396;
+    {
+      fbits zgaz395;
+      {
+        uint64_t zgaz394;
+        zgaz394 = zc.zperms;
+        zgaz395 = (UINT64_C(1) & (zgaz394 >> INT64_C(10)));
+      }
+      zgaz396 = sailgen_bit_to_bool(zgaz395);
+    }
+    bool zgaz399;
+    {
+      fbits zgaz398;
+      {
+        uint64_t zgaz397;
+        zgaz397 = zc.zperms;
+        zgaz398 = (UINT64_C(1) & (zgaz397 >> INT64_C(9)));
+      }
+      zgaz399 = sailgen_bit_to_bool(zgaz398);
+    }
+    bool zgaz3102;
+    {
+      fbits zgaz3101;
+      {
+        uint64_t zgaz3100;
+        zgaz3100 = zc.zperms;
+        zgaz3101 = (UINT64_C(1) & (zgaz3100 >> INT64_C(8)));
+      }
+      zgaz3102 = sailgen_bit_to_bool(zgaz3101);
+    }
+    bool zgaz3105;
+    {
+      fbits zgaz3104;
+      {
+        uint64_t zgaz3103;
+        zgaz3103 = zc.zperms;
+        zgaz3104 = (UINT64_C(1) & (zgaz3103 >> INT64_C(7)));
+      }
+      zgaz3105 = sailgen_bit_to_bool(zgaz3104);
+    }
+    bool zgaz3108;
+    {
+      fbits zgaz3107;
+      {
+        uint64_t zgaz3106;
+        zgaz3106 = zc.zperms;
+        zgaz3107 = (UINT64_C(1) & (zgaz3106 >> INT64_C(6)));
+      }
+      zgaz3108 = sailgen_bit_to_bool(zgaz3107);
+    }
+    bool zgaz3111;
+    {
+      fbits zgaz3110;
+      {
+        uint64_t zgaz3109;
+        zgaz3109 = zc.zperms;
+        zgaz3110 = (UINT64_C(1) & (zgaz3109 >> INT64_C(5)));
+      }
+      zgaz3111 = sailgen_bit_to_bool(zgaz3110);
+    }
+    bool zgaz3114;
+    {
+      fbits zgaz3113;
+      {
+        uint64_t zgaz3112;
+        zgaz3112 = zc.zperms;
+        zgaz3113 = (UINT64_C(1) & (zgaz3112 >> INT64_C(4)));
+      }
+      zgaz3114 = sailgen_bit_to_bool(zgaz3113);
+    }
+    bool zgaz3117;
+    {
+      fbits zgaz3116;
+      {
+        uint64_t zgaz3115;
+        zgaz3115 = zc.zperms;
+        zgaz3116 = (UINT64_C(1) & (zgaz3115 >> INT64_C(3)));
+      }
+      zgaz3117 = sailgen_bit_to_bool(zgaz3116);
+    }
+    bool zgaz3120;
+    {
+      fbits zgaz3119;
+      {
+        uint64_t zgaz3118;
+        zgaz3118 = zc.zperms;
+        zgaz3119 = (UINT64_C(1) & (zgaz3118 >> INT64_C(2)));
+      }
+      zgaz3120 = sailgen_bit_to_bool(zgaz3119);
     }
     bool zgaz3123;
     {
@@ -2525,17 +2070,7 @@ static struct zCapability sailgen_encCapabilityToCapability(bool zt, struct zEnc
       {
         uint64_t zgaz3121;
         zgaz3121 = zc.zperms;
-        {
-          lbits zgsz3308;
-          CREATE(lbits)(&zgsz3308);
-          CONVERT_OF(lbits, fbits)(&zgsz3308, zgaz3121, UINT64_C(16) , true);
-          sail_int zgsz3309;
-          CREATE(sail_int)(&zgsz3309);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3309, INT64_C(11));
-          zgaz3122 = bitvector_access(zgsz3308, zgsz3309);
-          KILL(sail_int)(&zgsz3309);
-          KILL(lbits)(&zgsz3308);
-        }
+        zgaz3122 = (UINT64_C(1) & (zgaz3121 >> INT64_C(1)));
       }
       zgaz3123 = sailgen_bit_to_bool(zgaz3122);
     }
@@ -2545,291 +2080,55 @@ static struct zCapability sailgen_encCapabilityToCapability(bool zt, struct zEnc
       {
         uint64_t zgaz3124;
         zgaz3124 = zc.zperms;
-        {
-          lbits zgsz3310;
-          CREATE(lbits)(&zgsz3310);
-          CONVERT_OF(lbits, fbits)(&zgsz3310, zgaz3124, UINT64_C(16) , true);
-          sail_int zgsz3311;
-          CREATE(sail_int)(&zgsz3311);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3311, INT64_C(10));
-          zgaz3125 = bitvector_access(zgsz3310, zgsz3311);
-          KILL(sail_int)(&zgsz3311);
-          KILL(lbits)(&zgsz3310);
-        }
+        zgaz3125 = (UINT64_C(1) & (zgaz3124 >> INT64_C(0)));
       }
       zgaz3126 = sailgen_bit_to_bool(zgaz3125);
     }
-    bool zgaz3129;
+    uint64_t zgaz3127;
+    zgaz3127 = zc.zreserved;
+    bool zgaz3130;
     {
-      fbits zgaz3128;
+      fbits zgaz3129;
       {
-        uint64_t zgaz3127;
-        zgaz3127 = zc.zperms;
-        {
-          lbits zgsz3312;
-          CREATE(lbits)(&zgsz3312);
-          CONVERT_OF(lbits, fbits)(&zgsz3312, zgaz3127, UINT64_C(16) , true);
-          sail_int zgsz3313;
-          CREATE(sail_int)(&zgsz3313);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3313, INT64_C(9));
-          zgaz3128 = bitvector_access(zgsz3312, zgsz3313);
-          KILL(sail_int)(&zgsz3313);
-          KILL(lbits)(&zgsz3312);
-        }
+        uint64_t zgaz3128;
+        zgaz3128 = zc.zflags;
+        zgaz3129 = (UINT64_C(1) & (zgaz3128 >> INT64_C(0)));
       }
-      zgaz3129 = sailgen_bit_to_bool(zgaz3128);
+      zgaz3130 = sailgen_bit_to_bool(zgaz3129);
     }
-    bool zgaz3132;
-    {
-      fbits zgaz3131;
-      {
-        uint64_t zgaz3130;
-        zgaz3130 = zc.zperms;
-        {
-          lbits zgsz3314;
-          CREATE(lbits)(&zgsz3314);
-          CONVERT_OF(lbits, fbits)(&zgsz3314, zgaz3130, UINT64_C(16) , true);
-          sail_int zgsz3315;
-          CREATE(sail_int)(&zgsz3315);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3315, INT64_C(8));
-          zgaz3131 = bitvector_access(zgsz3314, zgsz3315);
-          KILL(sail_int)(&zgsz3315);
-          KILL(lbits)(&zgsz3314);
-        }
-      }
-      zgaz3132 = sailgen_bit_to_bool(zgaz3131);
-    }
-    bool zgaz3135;
-    {
-      fbits zgaz3134;
-      {
-        uint64_t zgaz3133;
-        zgaz3133 = zc.zperms;
-        {
-          lbits zgsz3316;
-          CREATE(lbits)(&zgsz3316);
-          CONVERT_OF(lbits, fbits)(&zgsz3316, zgaz3133, UINT64_C(16) , true);
-          sail_int zgsz3317;
-          CREATE(sail_int)(&zgsz3317);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3317, INT64_C(7));
-          zgaz3134 = bitvector_access(zgsz3316, zgsz3317);
-          KILL(sail_int)(&zgsz3317);
-          KILL(lbits)(&zgsz3316);
-        }
-      }
-      zgaz3135 = sailgen_bit_to_bool(zgaz3134);
-    }
-    bool zgaz3138;
-    {
-      fbits zgaz3137;
-      {
-        uint64_t zgaz3136;
-        zgaz3136 = zc.zperms;
-        {
-          lbits zgsz3318;
-          CREATE(lbits)(&zgsz3318);
-          CONVERT_OF(lbits, fbits)(&zgsz3318, zgaz3136, UINT64_C(16) , true);
-          sail_int zgsz3319;
-          CREATE(sail_int)(&zgsz3319);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3319, INT64_C(6));
-          zgaz3137 = bitvector_access(zgsz3318, zgsz3319);
-          KILL(sail_int)(&zgsz3319);
-          KILL(lbits)(&zgsz3318);
-        }
-      }
-      zgaz3138 = sailgen_bit_to_bool(zgaz3137);
-    }
-    bool zgaz3141;
-    {
-      fbits zgaz3140;
-      {
-        uint64_t zgaz3139;
-        zgaz3139 = zc.zperms;
-        {
-          lbits zgsz3320;
-          CREATE(lbits)(&zgsz3320);
-          CONVERT_OF(lbits, fbits)(&zgsz3320, zgaz3139, UINT64_C(16) , true);
-          sail_int zgsz3321;
-          CREATE(sail_int)(&zgsz3321);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3321, INT64_C(5));
-          zgaz3140 = bitvector_access(zgsz3320, zgsz3321);
-          KILL(sail_int)(&zgsz3321);
-          KILL(lbits)(&zgsz3320);
-        }
-      }
-      zgaz3141 = sailgen_bit_to_bool(zgaz3140);
-    }
-    bool zgaz3144;
-    {
-      fbits zgaz3143;
-      {
-        uint64_t zgaz3142;
-        zgaz3142 = zc.zperms;
-        {
-          lbits zgsz3322;
-          CREATE(lbits)(&zgsz3322);
-          CONVERT_OF(lbits, fbits)(&zgsz3322, zgaz3142, UINT64_C(16) , true);
-          sail_int zgsz3323;
-          CREATE(sail_int)(&zgsz3323);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3323, INT64_C(4));
-          zgaz3143 = bitvector_access(zgsz3322, zgsz3323);
-          KILL(sail_int)(&zgsz3323);
-          KILL(lbits)(&zgsz3322);
-        }
-      }
-      zgaz3144 = sailgen_bit_to_bool(zgaz3143);
-    }
-    bool zgaz3147;
-    {
-      fbits zgaz3146;
-      {
-        uint64_t zgaz3145;
-        zgaz3145 = zc.zperms;
-        {
-          lbits zgsz3324;
-          CREATE(lbits)(&zgsz3324);
-          CONVERT_OF(lbits, fbits)(&zgsz3324, zgaz3145, UINT64_C(16) , true);
-          sail_int zgsz3325;
-          CREATE(sail_int)(&zgsz3325);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3325, INT64_C(3));
-          zgaz3146 = bitvector_access(zgsz3324, zgsz3325);
-          KILL(sail_int)(&zgsz3325);
-          KILL(lbits)(&zgsz3324);
-        }
-      }
-      zgaz3147 = sailgen_bit_to_bool(zgaz3146);
-    }
-    bool zgaz3150;
-    {
-      fbits zgaz3149;
-      {
-        uint64_t zgaz3148;
-        zgaz3148 = zc.zperms;
-        {
-          lbits zgsz3326;
-          CREATE(lbits)(&zgsz3326);
-          CONVERT_OF(lbits, fbits)(&zgsz3326, zgaz3148, UINT64_C(16) , true);
-          sail_int zgsz3327;
-          CREATE(sail_int)(&zgsz3327);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3327, INT64_C(2));
-          zgaz3149 = bitvector_access(zgsz3326, zgsz3327);
-          KILL(sail_int)(&zgsz3327);
-          KILL(lbits)(&zgsz3326);
-        }
-      }
-      zgaz3150 = sailgen_bit_to_bool(zgaz3149);
-    }
-    bool zgaz3153;
-    {
-      fbits zgaz3152;
-      {
-        uint64_t zgaz3151;
-        zgaz3151 = zc.zperms;
-        {
-          lbits zgsz3328;
-          CREATE(lbits)(&zgsz3328);
-          CONVERT_OF(lbits, fbits)(&zgsz3328, zgaz3151, UINT64_C(16) , true);
-          sail_int zgsz3329;
-          CREATE(sail_int)(&zgsz3329);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3329, INT64_C(1));
-          zgaz3152 = bitvector_access(zgsz3328, zgsz3329);
-          KILL(sail_int)(&zgsz3329);
-          KILL(lbits)(&zgsz3328);
-        }
-      }
-      zgaz3153 = sailgen_bit_to_bool(zgaz3152);
-    }
-    bool zgaz3156;
-    {
-      fbits zgaz3155;
-      {
-        uint64_t zgaz3154;
-        zgaz3154 = zc.zperms;
-        {
-          lbits zgsz3330;
-          CREATE(lbits)(&zgsz3330);
-          CONVERT_OF(lbits, fbits)(&zgsz3330, zgaz3154, UINT64_C(16) , true);
-          sail_int zgsz3331;
-          CREATE(sail_int)(&zgsz3331);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3331, INT64_C(0));
-          zgaz3155 = bitvector_access(zgsz3330, zgsz3331);
-          KILL(sail_int)(&zgsz3331);
-          KILL(lbits)(&zgsz3330);
-        }
-      }
-      zgaz3156 = sailgen_bit_to_bool(zgaz3155);
-    }
-    uint64_t zgaz3157;
-    zgaz3157 = zc.zreserved;
-    bool zgaz3160;
-    {
-      fbits zgaz3159;
-      {
-        uint64_t zgaz3158;
-        zgaz3158 = zc.zflags;
-        {
-          lbits zgsz3332;
-          CREATE(lbits)(&zgsz3332);
-          CONVERT_OF(lbits, fbits)(&zgsz3332, zgaz3158, UINT64_C(1) , true);
-          sail_int zgsz3333;
-          CREATE(sail_int)(&zgsz3333);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3333, INT64_C(0));
-          zgaz3159 = bitvector_access(zgsz3332, zgsz3333);
-          KILL(sail_int)(&zgsz3333);
-          KILL(lbits)(&zgsz3332);
-        }
-      }
-      zgaz3160 = sailgen_bit_to_bool(zgaz3159);
-    }
-    uint64_t zgaz3161;
-    {
-      lbits zgsz3334;
-      CREATE(lbits)(&zgsz3334);
-      CONVERT_OF(lbits, fbits)(&zgsz3334, zTtop2, UINT64_C(2) , true);
-      lbits zgsz3335;
-      CREATE(lbits)(&zgsz3335);
-      CONVERT_OF(lbits, fbits)(&zgsz3335, zT, UINT64_C(12) , true);
-      lbits zgsz3336;
-      CREATE(lbits)(&zgsz3336);
-      append(&zgsz3336, zgsz3334, zgsz3335);
-      zgaz3161 = CONVERT_OF(fbits, lbits)(zgsz3336, true);
-      KILL(lbits)(&zgsz3336);
-      KILL(lbits)(&zgsz3335);
-      KILL(lbits)(&zgsz3334);
-    }
-    uint64_t zgaz3162;
-    zgaz3162 = zc.zotype;
-    uint64_t zgaz3163;
-    zgaz3163 = zc.zaddress;
-    struct zCapability zgsz342;
-    zgsz342.zB = zBs;
-    zgsz342.zE = zE;
-    zgsz342.zT = zgaz3161;
-    zgsz342.zaccess_system_regs = zgaz3126;
-    zgsz342.zaddress = zgaz3163;
-    zgsz342.zflag_cap_mode = zgaz3160;
-    zgsz342.zglobal = zgaz3156;
-    zgsz342.zinternal_E = zinternal_E;
-    zgsz342.zotype = zgaz3162;
-    zgsz342.zpermit_cinvoke = zgaz3132;
-    zgsz342.zpermit_execute = zgaz3153;
-    zgsz342.zpermit_load = zgaz3150;
-    zgsz342.zpermit_load_cap = zgaz3144;
-    zgsz342.zpermit_seal = zgaz3135;
-    zgsz342.zpermit_set_CID = zgaz3123;
-    zgsz342.zpermit_store = zgaz3147;
-    zgsz342.zpermit_store_cap = zgaz3141;
-    zgsz342.zpermit_store_local_cap = zgaz3138;
-    zgsz342.zpermit_unseal = zgaz3129;
-    zgsz342.zreserved = zgaz3157;
-    zgsz342.ztag = zt;
-    zgsz342.zuperms = zgaz3120;
-    zgaz3164 = zgsz342;
+    uint64_t zgaz3131;
+    zgaz3131 = (zTtop2 << 12) | zT;
+    uint64_t zgaz3132;
+    zgaz3132 = zc.zotype;
+    uint64_t zgaz3133;
+    zgaz3133 = zc.zaddress;
+    struct zCapability zghz347;
+    zghz347.zB = zBs;
+    zghz347.zE = zE;
+    zghz347.zT = zgaz3131;
+    zghz347.zaccess_system_regs = zgaz396;
+    zghz347.zaddress = zgaz3133;
+    zghz347.zflag_cap_mode = zgaz3130;
+    zghz347.zglobal = zgaz3126;
+    zghz347.zinternal_E = zinternal_E;
+    zghz347.zotype = zgaz3132;
+    zghz347.zpermit_cinvoke = zgaz3102;
+    zghz347.zpermit_execute = zgaz3123;
+    zghz347.zpermit_load = zgaz3120;
+    zghz347.zpermit_load_cap = zgaz3114;
+    zghz347.zpermit_seal = zgaz3105;
+    zghz347.zpermit_set_CID = zgaz393;
+    zghz347.zpermit_store = zgaz3117;
+    zghz347.zpermit_store_cap = zgaz3111;
+    zghz347.zpermit_store_local_cap = zgaz3108;
+    zghz347.zpermit_unseal = zgaz399;
+    zghz347.zreserved = zgaz3127;
+    zghz347.ztag = zt;
+    zghz347.zuperms = zgaz390;
+    zghz346 = zghz347;
   }
-  zcbz318 = zgaz3164;
   goto cleanup_86;
   /* unreachable after return */
-
 
 
 
@@ -2846,408 +2145,307 @@ cleanup_86: ;
 
 
 
-
   goto end_function_85;
 end_cleanup_87: ;
 end_function_85: ;
-  return zcbz318;
+  return zghz346;
 end_block_exception_88: ;
   struct zCapability zcbz348 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz348;
 }
 
+
+
+static void finish_sailgen_encCapabilityToCapability(void)
+{
+  KILL(sail_int)(&zghz377);
+  KILL(sail_int)(&zghz376);
+  KILL(sail_int)(&zghz375);
+  KILL(sail_int)(&zghz374);
+  KILL(sail_int)(&zghz373);
+  KILL(sail_int)(&zghz372);
+  KILL(sail_int)(&zghz371);
+  KILL(sail_int)(&zghz370);
+  KILL(sail_int)(&zghz369);
+  KILL(lbits)(&zghz368);
+  KILL(sail_int)(&zghz367);
+  KILL(sail_int)(&zghz366);
+  KILL(sail_int)(&zghz365);
+  KILL(sail_int)(&zghz364);
+  KILL(lbits)(&zghz363);
+  KILL(sail_int)(&zghz362);
+  KILL(sail_int)(&zghz361);
+  KILL(sail_int)(&zghz360);
+  KILL(sail_int)(&zghz359);
+  KILL(lbits)(&zghz358);
+  KILL(lbits)(&zghz357);
+  KILL(sail_int)(&zghz356);
+  KILL(sail_int)(&zghz355);
+  KILL(sail_int)(&zghz354);
+  KILL(sail_int)(&zghz353);
+  KILL(sail_int)(&zghz352);
+  KILL(sail_int)(&zghz351);
+  KILL(sail_int)(&zghz350);
+  KILL(sail_int)(&zghz349);
+  KILL(sail_int)(&zghz348);
+
+
+}
+
 static struct zCapability sailgen_capBitsToCapability(bool, lbits);
+
+struct zCapability zghz378;
+struct zEncCapability zghz379;
+
+static void startup_sailgen_capBitsToCapability(void)
+{
+
+
+}
 
 static struct zCapability sailgen_capBitsToCapability(bool zt, lbits zc)
 {
   __label__ end_function_90, end_block_exception_91;
 
-  struct zCapability zcbz319;
-  struct zEncCapability zgaz3173;
-  zgaz3173 = sailgen_capBitsToEncCapability(zc);
-  zcbz319 = sailgen_encCapabilityToCapability(zt, zgaz3173);
-
+  struct zCapability zghz378;
+  struct zEncCapability zghz379;
+  zghz379 = sailgen_capBitsToEncCapability(zc);
+  zghz378 = sailgen_encCapabilityToCapability(zt, zghz379);
 end_function_90: ;
-  return zcbz319;
+  return zghz378;
 end_block_exception_91: ;
   struct zCapability zcbz349 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz349;
 }
 
+
+
+static void finish_sailgen_capBitsToCapability(void)
+{
+
+
+}
+
 static struct zEncCapability sailgen_capToEncCap(struct zCapability);
+
+struct zEncCapability zghz380;
+struct zEncCapability zghz381;
+sail_int zghz382;
+sail_int zghz383;
+sail_int zghz384;
+sail_int zghz385;
+sail_int zghz386;
+sail_int zghz387;
+sail_int zghz388;
+sail_int zghz389;
+sail_int zghz390;
+sail_int zghz391;
+sail_int zghz392;
+sail_int zghz393;
+sail_int zghz394;
+sail_int zghz395;
+sail_int zghz396;
+sail_int zghz397;
+sail_int zghz398;
+sail_int zghz399;
+sail_int zghz3100;
+sail_int zghz3101;
+sail_int zghz3102;
+
+static void startup_sailgen_capToEncCap(void)
+{
+
+
+  CREATE(sail_int)(&zghz382);
+  CREATE(sail_int)(&zghz383);
+  CREATE(sail_int)(&zghz384);
+  CREATE(sail_int)(&zghz385);
+  CREATE(sail_int)(&zghz386);
+  CREATE(sail_int)(&zghz387);
+  CREATE(sail_int)(&zghz388);
+  CREATE(sail_int)(&zghz389);
+  CREATE(sail_int)(&zghz390);
+  CREATE(sail_int)(&zghz391);
+  CREATE(sail_int)(&zghz392);
+  CREATE(sail_int)(&zghz393);
+  CREATE(sail_int)(&zghz394);
+  CREATE(sail_int)(&zghz395);
+  CREATE(sail_int)(&zghz396);
+  CREATE(sail_int)(&zghz397);
+  CREATE(sail_int)(&zghz398);
+  CREATE(sail_int)(&zghz399);
+  CREATE(sail_int)(&zghz3100);
+  CREATE(sail_int)(&zghz3101);
+  CREATE(sail_int)(&zghz3102);
+}
 
 static struct zEncCapability sailgen_capToEncCap(struct zCapability zcap)
 {
   __label__ cleanup_94, end_cleanup_95, end_function_93, end_block_exception_96;
 
-  struct zEncCapability zcbz320;
+  struct zEncCapability zghz380;
   uint64_t zt_hi;
   {
-    uint64_t zgaz3200;
-    zgaz3200 = zcap.zT;
-    int64_t zgaz3201;
+    uint64_t zgaz3170;
+    zgaz3170 = zcap.zT;
+    int64_t zgaz3171;
     {
-      sail_int zgsz3349;
-      CREATE(sail_int)(&zgsz3349);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3349, zcap_mantissa_width);
-      sail_int zgsz3350;
-      CREATE(sail_int)(&zgsz3350);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3350, INT64_C(3));
-      sail_int zgsz3351;
-      CREATE(sail_int)(&zgsz3351);
-      sub_int(&zgsz3351, zgsz3349, zgsz3350);
-      zgaz3201 = CONVERT_OF(mach_int, sail_int)(zgsz3351);
-      KILL(sail_int)(&zgsz3351);
-      KILL(sail_int)(&zgsz3350);
-      KILL(sail_int)(&zgsz3349);
+      RECREATE(sail_int)(&zghz3100);
+      CONVERT_OF(sail_int, mach_int)(&zghz3100, zcap_mantissa_width);
+      RECREATE(sail_int)(&zghz3101);
+      CONVERT_OF(sail_int, mach_int)(&zghz3101, INT64_C(3));
+      RECREATE(sail_int)(&zghz3102);
+      sub_int(&zghz3102, zghz3100, zghz3101);
+      zgaz3171 = CONVERT_OF(mach_int, sail_int)(zghz3102);
     }
-    {
-      lbits zgsz3345;
-      CREATE(lbits)(&zgsz3345);
-      CONVERT_OF(lbits, fbits)(&zgsz3345, zgaz3200, UINT64_C(14) , true);
-      sail_int zgsz3346;
-      CREATE(sail_int)(&zgsz3346);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3346, zgaz3201);
-      sail_int zgsz3347;
-      CREATE(sail_int)(&zgsz3347);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3347, zinternal_E_take_bits);
-      lbits zgsz3348;
-      CREATE(lbits)(&zgsz3348);
-      vector_subrange_lbits(&zgsz3348, zgsz3345, zgsz3346, zgsz3347);
-      zt_hi = CONVERT_OF(fbits, lbits)(zgsz3348, true);
-      KILL(lbits)(&zgsz3348);
-      KILL(sail_int)(&zgsz3347);
-      KILL(sail_int)(&zgsz3346);
-      KILL(lbits)(&zgsz3345);
-    }
+    zt_hi = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz3170 >> zinternal_E_take_bits));
   }
   uint64_t zt_lo;
   {
-    uint64_t zgaz3198;
-    zgaz3198 = zcap.zT;
-    int64_t zgaz3199;
+    uint64_t zgaz3168;
+    zgaz3168 = zcap.zT;
+    int64_t zgaz3169;
     {
-      sail_int zgsz3356;
-      CREATE(sail_int)(&zgsz3356);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3356, zinternal_E_take_bits);
-      sail_int zgsz3357;
-      CREATE(sail_int)(&zgsz3357);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3357, INT64_C(1));
-      sail_int zgsz3358;
-      CREATE(sail_int)(&zgsz3358);
-      sub_int(&zgsz3358, zgsz3356, zgsz3357);
-      zgaz3199 = CONVERT_OF(mach_int, sail_int)(zgsz3358);
-      KILL(sail_int)(&zgsz3358);
-      KILL(sail_int)(&zgsz3357);
-      KILL(sail_int)(&zgsz3356);
+      RECREATE(sail_int)(&zghz397);
+      CONVERT_OF(sail_int, mach_int)(&zghz397, zinternal_E_take_bits);
+      RECREATE(sail_int)(&zghz398);
+      CONVERT_OF(sail_int, mach_int)(&zghz398, INT64_C(1));
+      RECREATE(sail_int)(&zghz399);
+      sub_int(&zghz399, zghz397, zghz398);
+      zgaz3169 = CONVERT_OF(mach_int, sail_int)(zghz399);
     }
-    {
-      lbits zgsz3352;
-      CREATE(lbits)(&zgsz3352);
-      CONVERT_OF(lbits, fbits)(&zgsz3352, zgaz3198, UINT64_C(14) , true);
-      sail_int zgsz3353;
-      CREATE(sail_int)(&zgsz3353);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3353, zgaz3199);
-      sail_int zgsz3354;
-      CREATE(sail_int)(&zgsz3354);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3354, INT64_C(0));
-      lbits zgsz3355;
-      CREATE(lbits)(&zgsz3355);
-      vector_subrange_lbits(&zgsz3355, zgsz3352, zgsz3353, zgsz3354);
-      zt_lo = CONVERT_OF(fbits, lbits)(zgsz3355, true);
-      KILL(lbits)(&zgsz3355);
-      KILL(sail_int)(&zgsz3354);
-      KILL(sail_int)(&zgsz3353);
-      KILL(lbits)(&zgsz3352);
-    }
+    zt_lo = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz3168 >> INT64_C(0)));
   }
   uint64_t zb_hi;
   {
-    uint64_t zgaz3196;
-    zgaz3196 = zcap.zB;
-    int64_t zgaz3197;
+    uint64_t zgaz3166;
+    zgaz3166 = zcap.zB;
+    int64_t zgaz3167;
     {
-      sail_int zgsz3363;
-      CREATE(sail_int)(&zgsz3363);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3363, zcap_mantissa_width);
-      sail_int zgsz3364;
-      CREATE(sail_int)(&zgsz3364);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3364, INT64_C(1));
-      sail_int zgsz3365;
-      CREATE(sail_int)(&zgsz3365);
-      sub_int(&zgsz3365, zgsz3363, zgsz3364);
-      zgaz3197 = CONVERT_OF(mach_int, sail_int)(zgsz3365);
-      KILL(sail_int)(&zgsz3365);
-      KILL(sail_int)(&zgsz3364);
-      KILL(sail_int)(&zgsz3363);
+      RECREATE(sail_int)(&zghz394);
+      CONVERT_OF(sail_int, mach_int)(&zghz394, zcap_mantissa_width);
+      RECREATE(sail_int)(&zghz395);
+      CONVERT_OF(sail_int, mach_int)(&zghz395, INT64_C(1));
+      RECREATE(sail_int)(&zghz396);
+      sub_int(&zghz396, zghz394, zghz395);
+      zgaz3167 = CONVERT_OF(mach_int, sail_int)(zghz396);
     }
-    {
-      lbits zgsz3359;
-      CREATE(lbits)(&zgsz3359);
-      CONVERT_OF(lbits, fbits)(&zgsz3359, zgaz3196, UINT64_C(14) , true);
-      sail_int zgsz3360;
-      CREATE(sail_int)(&zgsz3360);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3360, zgaz3197);
-      sail_int zgsz3361;
-      CREATE(sail_int)(&zgsz3361);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3361, zinternal_E_take_bits);
-      lbits zgsz3362;
-      CREATE(lbits)(&zgsz3362);
-      vector_subrange_lbits(&zgsz3362, zgsz3359, zgsz3360, zgsz3361);
-      zb_hi = CONVERT_OF(fbits, lbits)(zgsz3362, true);
-      KILL(lbits)(&zgsz3362);
-      KILL(sail_int)(&zgsz3361);
-      KILL(sail_int)(&zgsz3360);
-      KILL(lbits)(&zgsz3359);
-    }
+    zb_hi = (safe_rshift(UINT64_MAX, 64 - 11) & (zgaz3166 >> zinternal_E_take_bits));
   }
   uint64_t zb_lo;
   {
-    uint64_t zgaz3194;
-    zgaz3194 = zcap.zB;
-    int64_t zgaz3195;
+    uint64_t zgaz3164;
+    zgaz3164 = zcap.zB;
+    int64_t zgaz3165;
     {
-      sail_int zgsz3370;
-      CREATE(sail_int)(&zgsz3370);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3370, zinternal_E_take_bits);
-      sail_int zgsz3371;
-      CREATE(sail_int)(&zgsz3371);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3371, INT64_C(1));
-      sail_int zgsz3372;
-      CREATE(sail_int)(&zgsz3372);
-      sub_int(&zgsz3372, zgsz3370, zgsz3371);
-      zgaz3195 = CONVERT_OF(mach_int, sail_int)(zgsz3372);
-      KILL(sail_int)(&zgsz3372);
-      KILL(sail_int)(&zgsz3371);
-      KILL(sail_int)(&zgsz3370);
+      RECREATE(sail_int)(&zghz391);
+      CONVERT_OF(sail_int, mach_int)(&zghz391, zinternal_E_take_bits);
+      RECREATE(sail_int)(&zghz392);
+      CONVERT_OF(sail_int, mach_int)(&zghz392, INT64_C(1));
+      RECREATE(sail_int)(&zghz393);
+      sub_int(&zghz393, zghz391, zghz392);
+      zgaz3165 = CONVERT_OF(mach_int, sail_int)(zghz393);
     }
-    {
-      lbits zgsz3366;
-      CREATE(lbits)(&zgsz3366);
-      CONVERT_OF(lbits, fbits)(&zgsz3366, zgaz3194, UINT64_C(14) , true);
-      sail_int zgsz3367;
-      CREATE(sail_int)(&zgsz3367);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3367, zgaz3195);
-      sail_int zgsz3368;
-      CREATE(sail_int)(&zgsz3368);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3368, INT64_C(0));
-      lbits zgsz3369;
-      CREATE(lbits)(&zgsz3369);
-      vector_subrange_lbits(&zgsz3369, zgsz3366, zgsz3367, zgsz3368);
-      zb_lo = CONVERT_OF(fbits, lbits)(zgsz3369, true);
-      KILL(lbits)(&zgsz3369);
-      KILL(sail_int)(&zgsz3368);
-      KILL(sail_int)(&zgsz3367);
-      KILL(lbits)(&zgsz3366);
-    }
+    zb_lo = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz3164 >> INT64_C(0)));
   }
   {
-    bool zgaz3174;
-    zgaz3174 = zcap.zinternal_E;
+    bool zgaz3144;
+    zgaz3144 = zcap.zinternal_E;
     unit zgsz343;
-    if (zgaz3174) {
+    if (zgaz3144) {
       {
-        uint64_t zgaz3176;
-        zgaz3176 = zcap.zE;
-        int64_t zgaz3177;
+        uint64_t zgaz3146;
+        zgaz3146 = zcap.zE;
+        int64_t zgaz3147;
         {
-          int64_t zgaz3175;
+          int64_t zgaz3145;
           {
-            sail_int zgsz3376;
-            CREATE(sail_int)(&zgsz3376);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3376, INT64_C(2));
-            sail_int zgsz3377;
-            CREATE(sail_int)(&zgsz3377);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3377, zinternal_E_take_bits);
-            sail_int zgsz3378;
-            CREATE(sail_int)(&zgsz3378);
-            mult_int(&zgsz3378, zgsz3376, zgsz3377);
-            zgaz3175 = CONVERT_OF(mach_int, sail_int)(zgsz3378);
-            KILL(sail_int)(&zgsz3378);
-            KILL(sail_int)(&zgsz3377);
-            KILL(sail_int)(&zgsz3376);
+            RECREATE(sail_int)(&zghz388);
+            CONVERT_OF(sail_int, mach_int)(&zghz388, INT64_C(2));
+            RECREATE(sail_int)(&zghz389);
+            CONVERT_OF(sail_int, mach_int)(&zghz389, zinternal_E_take_bits);
+            RECREATE(sail_int)(&zghz390);
+            mult_int(&zghz390, zghz388, zghz389);
+            zgaz3145 = CONVERT_OF(mach_int, sail_int)(zghz390);
           }
           {
-            sail_int zgsz3373;
-            CREATE(sail_int)(&zgsz3373);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3373, zgaz3175);
-            sail_int zgsz3374;
-            CREATE(sail_int)(&zgsz3374);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3374, INT64_C(1));
-            sail_int zgsz3375;
-            CREATE(sail_int)(&zgsz3375);
-            sub_int(&zgsz3375, zgsz3373, zgsz3374);
-            zgaz3177 = CONVERT_OF(mach_int, sail_int)(zgsz3375);
-            KILL(sail_int)(&zgsz3375);
-            KILL(sail_int)(&zgsz3374);
-            KILL(sail_int)(&zgsz3373);
+            RECREATE(sail_int)(&zghz385);
+            CONVERT_OF(sail_int, mach_int)(&zghz385, zgaz3145);
+            RECREATE(sail_int)(&zghz386);
+            CONVERT_OF(sail_int, mach_int)(&zghz386, INT64_C(1));
+            RECREATE(sail_int)(&zghz387);
+            sub_int(&zghz387, zghz385, zghz386);
+            zgaz3147 = CONVERT_OF(mach_int, sail_int)(zghz387);
           }
         }
-        {
-          lbits zgsz3379;
-          CREATE(lbits)(&zgsz3379);
-          CONVERT_OF(lbits, fbits)(&zgsz3379, zgaz3176, UINT64_C(6) , true);
-          sail_int zgsz3380;
-          CREATE(sail_int)(&zgsz3380);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3380, zgaz3177);
-          sail_int zgsz3381;
-          CREATE(sail_int)(&zgsz3381);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3381, zinternal_E_take_bits);
-          lbits zgsz3382;
-          CREATE(lbits)(&zgsz3382);
-          vector_subrange_lbits(&zgsz3382, zgsz3379, zgsz3380, zgsz3381);
-          zt_lo = CONVERT_OF(fbits, lbits)(zgsz3382, true);
-          KILL(lbits)(&zgsz3382);
-          KILL(sail_int)(&zgsz3381);
-          KILL(sail_int)(&zgsz3380);
-          KILL(lbits)(&zgsz3379);
-        }
+        zt_lo = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz3146 >> zinternal_E_take_bits));
         unit zgsz344;
         zgsz344 = UNIT;
       }
-      uint64_t zgaz3178;
-      zgaz3178 = zcap.zE;
-      int64_t zgaz3179;
+      uint64_t zgaz3148;
+      zgaz3148 = zcap.zE;
+      int64_t zgaz3149;
       {
-        sail_int zgsz3387;
-        CREATE(sail_int)(&zgsz3387);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3387, zinternal_E_take_bits);
-        sail_int zgsz3388;
-        CREATE(sail_int)(&zgsz3388);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3388, INT64_C(1));
-        sail_int zgsz3389;
-        CREATE(sail_int)(&zgsz3389);
-        sub_int(&zgsz3389, zgsz3387, zgsz3388);
-        zgaz3179 = CONVERT_OF(mach_int, sail_int)(zgsz3389);
-        KILL(sail_int)(&zgsz3389);
-        KILL(sail_int)(&zgsz3388);
-        KILL(sail_int)(&zgsz3387);
+        RECREATE(sail_int)(&zghz382);
+        CONVERT_OF(sail_int, mach_int)(&zghz382, zinternal_E_take_bits);
+        RECREATE(sail_int)(&zghz383);
+        CONVERT_OF(sail_int, mach_int)(&zghz383, INT64_C(1));
+        RECREATE(sail_int)(&zghz384);
+        sub_int(&zghz384, zghz382, zghz383);
+        zgaz3149 = CONVERT_OF(mach_int, sail_int)(zghz384);
       }
-      {
-        lbits zgsz3383;
-        CREATE(lbits)(&zgsz3383);
-        CONVERT_OF(lbits, fbits)(&zgsz3383, zgaz3178, UINT64_C(6) , true);
-        sail_int zgsz3384;
-        CREATE(sail_int)(&zgsz3384);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3384, zgaz3179);
-        sail_int zgsz3385;
-        CREATE(sail_int)(&zgsz3385);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3385, INT64_C(0));
-        lbits zgsz3386;
-        CREATE(lbits)(&zgsz3386);
-        vector_subrange_lbits(&zgsz3386, zgsz3383, zgsz3384, zgsz3385);
-        zb_lo = CONVERT_OF(fbits, lbits)(zgsz3386, true);
-        KILL(lbits)(&zgsz3386);
-        KILL(sail_int)(&zgsz3385);
-        KILL(sail_int)(&zgsz3384);
-        KILL(lbits)(&zgsz3383);
-      }
+      zb_lo = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz3148 >> INT64_C(0)));
       zgsz343 = UNIT;
     } else {  zgsz343 = UNIT;  }
   }
-  struct zEncCapability zgaz3193;
   {
-    uint64_t zgaz3182;
+    uint64_t zgaz3152;
     {
-      uint64_t zgaz3180;
-      zgaz3180 = zcap.zuperms;
-      uint64_t zgaz3181;
-      zgaz3181 = sailgen_getCapHardPerms(zcap);
+      uint64_t zgaz3150;
+      zgaz3150 = zcap.zuperms;
+      uint64_t zgaz3151;
+      zgaz3151 = sailgen_getCapHardPerms(zcap);
+      zgaz3152 = (zgaz3150 << 12) | zgaz3151;
+    }
+    uint64_t zgaz3153;
+    zgaz3153 = zcap.zreserved;
+    uint64_t zgaz3155;
+    {
+      bool zgaz3154;
+      zgaz3154 = zcap.zflag_cap_mode;
+      zgaz3155 = sailgen_bool_to_bits(zgaz3154);
+    }
+    uint64_t zgaz3156;
+    zgaz3156 = zcap.zotype;
+    fbits zgaz3159;
+    {
+      uint64_t zgaz3158;
       {
-        lbits zgsz3390;
-        CREATE(lbits)(&zgsz3390);
-        CONVERT_OF(lbits, fbits)(&zgsz3390, zgaz3180, UINT64_C(4) , true);
-        lbits zgsz3391;
-        CREATE(lbits)(&zgsz3391);
-        CONVERT_OF(lbits, fbits)(&zgsz3391, zgaz3181, UINT64_C(12) , true);
-        lbits zgsz3392;
-        CREATE(lbits)(&zgsz3392);
-        append(&zgsz3392, zgsz3390, zgsz3391);
-        zgaz3182 = CONVERT_OF(fbits, lbits)(zgsz3392, true);
-        KILL(lbits)(&zgsz3392);
-        KILL(lbits)(&zgsz3391);
-        KILL(lbits)(&zgsz3390);
+        bool zgaz3157;
+        zgaz3157 = zcap.zinternal_E;
+        zgaz3158 = sailgen_bool_to_bits(zgaz3157);
       }
+      zgaz3159 = (UINT64_C(1) & (zgaz3158 >> INT64_C(0)));
     }
-    uint64_t zgaz3183;
-    zgaz3183 = zcap.zreserved;
-    uint64_t zgaz3185;
-    {
-      bool zgaz3184;
-      zgaz3184 = zcap.zflag_cap_mode;
-      zgaz3185 = sailgen_bool_to_bits(zgaz3184);
-    }
-    uint64_t zgaz3186;
-    zgaz3186 = zcap.zotype;
-    fbits zgaz3189;
-    {
-      uint64_t zgaz3188;
-      {
-        bool zgaz3187;
-        zgaz3187 = zcap.zinternal_E;
-        zgaz3188 = sailgen_bool_to_bits(zgaz3187);
-      }
-      {
-        lbits zgsz3393;
-        CREATE(lbits)(&zgsz3393);
-        CONVERT_OF(lbits, fbits)(&zgsz3393, zgaz3188, UINT64_C(1) , true);
-        sail_int zgsz3394;
-        CREATE(sail_int)(&zgsz3394);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3394, INT64_C(0));
-        zgaz3189 = bitvector_access(zgsz3393, zgsz3394);
-        KILL(sail_int)(&zgsz3394);
-        KILL(lbits)(&zgsz3393);
-      }
-    }
-    uint64_t zgaz3190;
-    {
-      lbits zgsz3398;
-      CREATE(lbits)(&zgsz3398);
-      CONVERT_OF(lbits, fbits)(&zgsz3398, zt_hi, UINT64_C(9) , true);
-      lbits zgsz3399;
-      CREATE(lbits)(&zgsz3399);
-      CONVERT_OF(lbits, fbits)(&zgsz3399, zt_lo, UINT64_C(3) , true);
-      lbits zgsz3400;
-      CREATE(lbits)(&zgsz3400);
-      append(&zgsz3400, zgsz3398, zgsz3399);
-      zgaz3190 = CONVERT_OF(fbits, lbits)(zgsz3400, true);
-      KILL(lbits)(&zgsz3400);
-      KILL(lbits)(&zgsz3399);
-      KILL(lbits)(&zgsz3398);
-    }
-    uint64_t zgaz3191;
-    {
-      lbits zgsz3395;
-      CREATE(lbits)(&zgsz3395);
-      CONVERT_OF(lbits, fbits)(&zgsz3395, zb_hi, UINT64_C(11) , true);
-      lbits zgsz3396;
-      CREATE(lbits)(&zgsz3396);
-      CONVERT_OF(lbits, fbits)(&zgsz3396, zb_lo, UINT64_C(3) , true);
-      lbits zgsz3397;
-      CREATE(lbits)(&zgsz3397);
-      append(&zgsz3397, zgsz3395, zgsz3396);
-      zgaz3191 = CONVERT_OF(fbits, lbits)(zgsz3397, true);
-      KILL(lbits)(&zgsz3397);
-      KILL(lbits)(&zgsz3396);
-      KILL(lbits)(&zgsz3395);
-    }
-    uint64_t zgaz3192;
-    zgaz3192 = zcap.zaddress;
-    struct zEncCapability zgsz345;
-    zgsz345.zB = zgaz3191;
-    zgsz345.zT = zgaz3190;
-    zgsz345.zaddress = zgaz3192;
-    zgsz345.zflags = zgaz3185;
-    zgsz345.zinternal_E = zgaz3189;
-    zgsz345.zotype = zgaz3186;
-    zgsz345.zperms = zgaz3182;
-    zgsz345.zreserved = zgaz3183;
-    zgaz3193 = zgsz345;
+    uint64_t zgaz3160;
+    zgaz3160 = (zt_hi << 3) | zt_lo;
+    uint64_t zgaz3161;
+    zgaz3161 = (zb_hi << 3) | zb_lo;
+    uint64_t zgaz3162;
+    zgaz3162 = zcap.zaddress;
+    struct zEncCapability zghz381;
+    zghz381.zB = zgaz3161;
+    zghz381.zT = zgaz3160;
+    zghz381.zaddress = zgaz3162;
+    zghz381.zflags = zgaz3155;
+    zghz381.zinternal_E = zgaz3159;
+    zghz381.zotype = zgaz3156;
+    zghz381.zperms = zgaz3152;
+    zghz381.zreserved = zgaz3153;
+    zghz380 = zghz381;
   }
-  zcbz320 = zgaz3193;
   goto cleanup_94;
   /* unreachable after return */
-
 
 
 
@@ -3258,31 +2456,70 @@ cleanup_94: ;
 
 
 
-
   goto end_function_93;
 end_cleanup_95: ;
 end_function_93: ;
-  return zcbz320;
+  return zghz380;
 end_block_exception_96: ;
   struct zEncCapability zcbz350 = { .zB = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaddress = UINT64_C(0xdeadc0de), .zflags = UINT64_C(0xdeadc0de), .zinternal_E = UINT64_C(0), .zotype = UINT64_C(0xdeadc0de), .zperms = UINT64_C(0xdeadc0de), .zreserved = UINT64_C(0xdeadc0de) };
   return zcbz350;
 }
 
+
+
+static void finish_sailgen_capToEncCap(void)
+{
+  KILL(sail_int)(&zghz3102);
+  KILL(sail_int)(&zghz3101);
+  KILL(sail_int)(&zghz3100);
+  KILL(sail_int)(&zghz399);
+  KILL(sail_int)(&zghz398);
+  KILL(sail_int)(&zghz397);
+  KILL(sail_int)(&zghz396);
+  KILL(sail_int)(&zghz395);
+  KILL(sail_int)(&zghz394);
+  KILL(sail_int)(&zghz393);
+  KILL(sail_int)(&zghz392);
+  KILL(sail_int)(&zghz391);
+  KILL(sail_int)(&zghz390);
+  KILL(sail_int)(&zghz389);
+  KILL(sail_int)(&zghz388);
+  KILL(sail_int)(&zghz387);
+  KILL(sail_int)(&zghz386);
+  KILL(sail_int)(&zghz385);
+  KILL(sail_int)(&zghz384);
+  KILL(sail_int)(&zghz383);
+  KILL(sail_int)(&zghz382);
+
+
+}
+
 static void sailgen_capToBits(lbits *rop, struct zCapability);
+
+struct zEncCapability zghz3103;
+
+static void startup_sailgen_capToBits(void)
+{
+}
 
 static void sailgen_capToBits(lbits *zcbz321, struct zCapability zcap)
 {
   __label__ end_function_98, end_block_exception_99, end_function_200;
 
-  struct zEncCapability zgaz3202;
-  zgaz3202 = sailgen_capToEncCap(zcap);
-  sailgen_encCapToBits((*(&zcbz321)), zgaz3202);
-
+  struct zEncCapability zghz3103;
+  zghz3103 = sailgen_capToEncCap(zcap);
+  sailgen_encCapToBits((*(&zcbz321)), zghz3103);
 end_function_98: ;
   goto end_function_200;
 end_block_exception_99: ;
   goto end_function_200;
 end_function_200: ;
+}
+
+
+
+static void finish_sailgen_capToBits(void)
+{
 }
 
 static lbits znull_cap_bits;
@@ -3301,15 +2538,19 @@ static void kill_letbind_27(void) {    KILL(lbits)(&znull_cap_bits);
 
 static void sailgen_capToMemBits(lbits *rop, struct zCapability);
 
+lbits zghz3104;
+
+static void startup_sailgen_capToMemBits(void)
+{    CREATE(lbits)(&zghz3104);
+}
+
 static void sailgen_capToMemBits(lbits *zcbz322, struct zCapability zcap)
 {
   __label__ end_function_102, end_block_exception_103, end_function_199;
 
-  lbits zgaz3203;
-  CREATE(lbits)(&zgaz3203);
-  sailgen_capToBits(&zgaz3203, zcap);
-  xor_bits((*(&zcbz322)), zgaz3203, znull_cap_bits);
-  KILL(lbits)(&zgaz3203);
+  RECREATE(lbits)(&zghz3104);
+  sailgen_capToBits(&zghz3104, zcap);
+  xor_bits((*(&zcbz322)), zghz3104, znull_cap_bits);
 end_function_102: ;
   goto end_function_199;
 end_block_exception_103: ;
@@ -3317,23 +2558,44 @@ end_block_exception_103: ;
 end_function_199: ;
 }
 
+
+
+static void finish_sailgen_capToMemBits(void)
+{    KILL(lbits)(&zghz3104);
+}
+
 static struct zCapability sailgen_memBitsToCapability(bool, lbits);
+
+struct zCapability zghz3105;
+lbits zghz3106;
+
+static void startup_sailgen_memBitsToCapability(void)
+{
+
+  CREATE(lbits)(&zghz3106);
+}
 
 static struct zCapability sailgen_memBitsToCapability(bool ztag, lbits zb)
 {
   __label__ end_function_105, end_block_exception_106;
 
-  struct zCapability zcbz323;
-  lbits zgaz3204;
-  CREATE(lbits)(&zgaz3204);
-  xor_bits(&zgaz3204, zb, znull_cap_bits);
-  zcbz323 = sailgen_capBitsToCapability(ztag, zgaz3204);
-  KILL(lbits)(&zgaz3204);
+  struct zCapability zghz3105;
+  RECREATE(lbits)(&zghz3106);
+  xor_bits(&zghz3106, zb, znull_cap_bits);
+  zghz3105 = sailgen_capBitsToCapability(ztag, zghz3106);
 end_function_105: ;
-  return zcbz323;
+  return zghz3105;
 end_block_exception_106: ;
   struct zCapability zcbz351 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz351;
+}
+
+
+
+static void finish_sailgen_memBitsToCapability(void)
+{
+  KILL(lbits)(&zghz3106);
+
 }
 
 // struct tuple_(%bv64, %bv)
@@ -3365,657 +2627,570 @@ static bool EQUAL(ztuple_z8z5bv64zCz0z5bvz9)(struct ztuple_z8z5bv64zCz0z5bvz9 op
 
 static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *rop, struct zCapability);
 
+lbits zghz3107;
+lbits zghz3108;
+sail_int zghz3109;
+sail_int zghz3110;
+lbits zghz3111;
+sail_int zghz3112;
+sail_int zghz3113;
+sail_int zghz3114;
+sail_int zghz3115;
+sail_int zghz3116;
+lbits zghz3117;
+sail_int zghz3118;
+sail_int zghz3119;
+sail_int zghz3120;
+sail_int zghz3121;
+sail_int zghz3122;
+sail_int zghz3123;
+lbits zghz3124;
+sail_int zghz3125;
+sail_int zghz3126;
+sail_int zghz3127;
+sail_int zghz3128;
+sail_int zghz3129;
+sail_int zghz3130;
+sail_int zghz3131;
+lbits zghz3132;
+sail_int zghz3133;
+lbits zghz3134;
+lbits zghz3135;
+lbits zghz3136;
+lbits zghz3137;
+sail_int zghz3138;
+lbits zghz3139;
+lbits zghz3140;
+sail_int zghz3141;
+lbits zghz3142;
+lbits zghz3143;
+sail_int zghz3144;
+lbits zghz3145;
+lbits zghz3146;
+lbits zghz3147;
+lbits zghz3148;
+sail_int zghz3149;
+lbits zghz3150;
+lbits zghz3151;
+sail_int zghz3152;
+lbits zghz3153;
+lbits zghz3154;
+sail_int zghz3155;
+lbits zghz3156;
+sail_int zghz3157;
+sail_int zghz3158;
+sail_int zghz3159;
+sail_int zghz3160;
+sail_int zghz3161;
+sail_int zghz3162;
+lbits zghz3163;
+lbits zghz3164;
+lbits zghz3165;
+lbits zghz3166;
+lbits zghz3167;
+lbits zghz3168;
+lbits zghz3169;
+sail_int zghz3170;
+lbits zghz3171;
+lbits zghz3172;
+sail_int zghz3173;
+lbits zghz3174;
+lbits zghz3175;
+sail_int zghz3176;
+lbits zghz3177;
+lbits zghz3178;
+sail_int zghz3179;
+lbits zghz3180;
+sail_int zghz3181;
+sail_int zghz3182;
+sail_int zghz3183;
+sail_int zghz3184;
+sail_int zghz3185;
+sail_int zghz3186;
+lbits zghz3187;
+sail_int zghz3188;
+
+static void startup_sailgen_getCapBoundsBits(void)
+{
+  CREATE(lbits)(&zghz3107);
+  CREATE(lbits)(&zghz3108);
+  CREATE(sail_int)(&zghz3109);
+  CREATE(sail_int)(&zghz3110);
+  CREATE(lbits)(&zghz3111);
+  CREATE(sail_int)(&zghz3112);
+  CREATE(sail_int)(&zghz3113);
+  CREATE(sail_int)(&zghz3114);
+  CREATE(sail_int)(&zghz3115);
+  CREATE(sail_int)(&zghz3116);
+  CREATE(lbits)(&zghz3117);
+  CREATE(sail_int)(&zghz3118);
+  CREATE(sail_int)(&zghz3119);
+  CREATE(sail_int)(&zghz3120);
+  CREATE(sail_int)(&zghz3121);
+  CREATE(sail_int)(&zghz3122);
+  CREATE(sail_int)(&zghz3123);
+  CREATE(lbits)(&zghz3124);
+  CREATE(sail_int)(&zghz3125);
+  CREATE(sail_int)(&zghz3126);
+  CREATE(sail_int)(&zghz3127);
+  CREATE(sail_int)(&zghz3128);
+  CREATE(sail_int)(&zghz3129);
+  CREATE(sail_int)(&zghz3130);
+  CREATE(sail_int)(&zghz3131);
+  CREATE(lbits)(&zghz3132);
+  CREATE(sail_int)(&zghz3133);
+  CREATE(lbits)(&zghz3134);
+  CREATE(lbits)(&zghz3135);
+  CREATE(lbits)(&zghz3136);
+  CREATE(lbits)(&zghz3137);
+  CREATE(sail_int)(&zghz3138);
+  CREATE(lbits)(&zghz3139);
+  CREATE(lbits)(&zghz3140);
+  CREATE(sail_int)(&zghz3141);
+  CREATE(lbits)(&zghz3142);
+  CREATE(lbits)(&zghz3143);
+  CREATE(sail_int)(&zghz3144);
+  CREATE(lbits)(&zghz3145);
+  CREATE(lbits)(&zghz3146);
+  CREATE(lbits)(&zghz3147);
+  CREATE(lbits)(&zghz3148);
+  CREATE(sail_int)(&zghz3149);
+  CREATE(lbits)(&zghz3150);
+  CREATE(lbits)(&zghz3151);
+  CREATE(sail_int)(&zghz3152);
+  CREATE(lbits)(&zghz3153);
+  CREATE(lbits)(&zghz3154);
+  CREATE(sail_int)(&zghz3155);
+  CREATE(lbits)(&zghz3156);
+  CREATE(sail_int)(&zghz3157);
+  CREATE(sail_int)(&zghz3158);
+  CREATE(sail_int)(&zghz3159);
+  CREATE(sail_int)(&zghz3160);
+  CREATE(sail_int)(&zghz3161);
+  CREATE(sail_int)(&zghz3162);
+  CREATE(lbits)(&zghz3163);
+  CREATE(lbits)(&zghz3164);
+  CREATE(lbits)(&zghz3165);
+  CREATE(lbits)(&zghz3166);
+  CREATE(lbits)(&zghz3167);
+  CREATE(lbits)(&zghz3168);
+  CREATE(lbits)(&zghz3169);
+  CREATE(sail_int)(&zghz3170);
+  CREATE(lbits)(&zghz3171);
+  CREATE(lbits)(&zghz3172);
+  CREATE(sail_int)(&zghz3173);
+  CREATE(lbits)(&zghz3174);
+  CREATE(lbits)(&zghz3175);
+  CREATE(sail_int)(&zghz3176);
+  CREATE(lbits)(&zghz3177);
+  CREATE(lbits)(&zghz3178);
+  CREATE(sail_int)(&zghz3179);
+  CREATE(lbits)(&zghz3180);
+  CREATE(sail_int)(&zghz3181);
+  CREATE(sail_int)(&zghz3182);
+  CREATE(sail_int)(&zghz3183);
+  CREATE(sail_int)(&zghz3184);
+  CREATE(sail_int)(&zghz3185);
+  CREATE(sail_int)(&zghz3186);
+  CREATE(lbits)(&zghz3187);
+  CREATE(sail_int)(&zghz3188);
+}
+
 static void sailgen_getCapBoundsBits(struct ztuple_z8z5bv64zCz0z5bvz9 *zcbz324, struct zCapability zc)
 {
   __label__ end_function_108, end_block_exception_109, end_function_198;
 
   int64_t zE;
   {
-    int64_t zgaz3238;
+    int64_t zgaz3208;
     {
-      uint64_t zgaz3237;
-      zgaz3237 = zc.zE;
+      uint64_t zgaz3207;
+      zgaz3207 = zc.zE;
       {
-        lbits zgsz3401;
-        CREATE(lbits)(&zgsz3401);
-        CONVERT_OF(lbits, fbits)(&zgsz3401, zgaz3237, UINT64_C(6) , true);
-        sail_int zgsz3402;
-        CREATE(sail_int)(&zgsz3402);
-        sail_unsigned(&zgsz3402, zgsz3401);
-        zgaz3238 = CONVERT_OF(mach_int, sail_int)(zgsz3402);
-        KILL(sail_int)(&zgsz3402);
-        KILL(lbits)(&zgsz3401);
+        RECREATE(lbits)(&zghz3187);
+        CONVERT_OF(lbits, fbits)(&zghz3187, zgaz3207, UINT64_C(6) , true);
+        RECREATE(sail_int)(&zghz3188);
+        sail_unsigned(&zghz3188, zghz3187);
+        zgaz3208 = CONVERT_OF(mach_int, sail_int)(zghz3188);
       }
     }
     {
-      sail_int zgsz3403;
-      CREATE(sail_int)(&zgsz3403);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3403, zcap_max_E);
-      sail_int zgsz3404;
-      CREATE(sail_int)(&zgsz3404);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3404, zgaz3238);
-      sail_int zgsz3405;
-      CREATE(sail_int)(&zgsz3405);
-      min_int(&zgsz3405, zgsz3403, zgsz3404);
-      zE = CONVERT_OF(mach_int, sail_int)(zgsz3405);
-      KILL(sail_int)(&zgsz3405);
-      KILL(sail_int)(&zgsz3404);
-      KILL(sail_int)(&zgsz3403);
+      RECREATE(sail_int)(&zghz3184);
+      CONVERT_OF(sail_int, mach_int)(&zghz3184, zcap_max_E);
+      RECREATE(sail_int)(&zghz3185);
+      CONVERT_OF(sail_int, mach_int)(&zghz3185, zgaz3208);
+      RECREATE(sail_int)(&zghz3186);
+      min_int(&zghz3186, zghz3184, zghz3185);
+      zE = CONVERT_OF(mach_int, sail_int)(zghz3186);
     }
   }
   uint64_t za;
   za = zc.zaddress;
   uint64_t za3;
   {
-    uint64_t zgaz3236;
+    uint64_t zgaz3206;
     {
-      int64_t zgaz3235;
+      int64_t zgaz3205;
       {
-        int64_t zgaz3234;
+        int64_t zgaz3204;
+        zgaz3204 = (zE + zcap_mantissa_width);
         {
-          sail_int zgsz3409;
-          CREATE(sail_int)(&zgsz3409);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3409, zE);
-          sail_int zgsz3410;
-          CREATE(sail_int)(&zgsz3410);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3410, zcap_mantissa_width);
-          sail_int zgsz3411;
-          CREATE(sail_int)(&zgsz3411);
-          add_int(&zgsz3411, zgsz3409, zgsz3410);
-          zgaz3234 = CONVERT_OF(mach_int, sail_int)(zgsz3411);
-          KILL(sail_int)(&zgsz3411);
-          KILL(sail_int)(&zgsz3410);
-          KILL(sail_int)(&zgsz3409);
-        }
-        {
-          sail_int zgsz3406;
-          CREATE(sail_int)(&zgsz3406);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3406, zgaz3234);
-          sail_int zgsz3407;
-          CREATE(sail_int)(&zgsz3407);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3407, INT64_C(3));
-          sail_int zgsz3408;
-          CREATE(sail_int)(&zgsz3408);
-          sub_int(&zgsz3408, zgsz3406, zgsz3407);
-          zgaz3235 = CONVERT_OF(mach_int, sail_int)(zgsz3408);
-          KILL(sail_int)(&zgsz3408);
-          KILL(sail_int)(&zgsz3407);
-          KILL(sail_int)(&zgsz3406);
+          RECREATE(sail_int)(&zghz3181);
+          CONVERT_OF(sail_int, mach_int)(&zghz3181, zgaz3204);
+          RECREATE(sail_int)(&zghz3182);
+          CONVERT_OF(sail_int, mach_int)(&zghz3182, INT64_C(3));
+          RECREATE(sail_int)(&zghz3183);
+          sub_int(&zghz3183, zghz3181, zghz3182);
+          zgaz3205 = CONVERT_OF(mach_int, sail_int)(zghz3183);
         }
       }
       {
-        lbits zgsz3412;
-        CREATE(lbits)(&zgsz3412);
-        CONVERT_OF(lbits, fbits)(&zgsz3412, za, UINT64_C(64) , true);
-        sail_int zgsz3413;
-        CREATE(sail_int)(&zgsz3413);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3413, zgaz3235);
-        lbits zgsz3414;
-        CREATE(lbits)(&zgsz3414);
-        shiftr(&zgsz3414, zgsz3412, zgsz3413);
-        zgaz3236 = CONVERT_OF(fbits, lbits)(zgsz3414, true);
-        KILL(lbits)(&zgsz3414);
-        KILL(sail_int)(&zgsz3413);
-        KILL(lbits)(&zgsz3412);
+        RECREATE(lbits)(&zghz3178);
+        CONVERT_OF(lbits, fbits)(&zghz3178, za, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3179);
+        CONVERT_OF(sail_int, mach_int)(&zghz3179, zgaz3205);
+        RECREATE(lbits)(&zghz3180);
+        shiftr(&zghz3180, zghz3178, zghz3179);
+        zgaz3206 = CONVERT_OF(fbits, lbits)(zghz3180, true);
       }
     }
     {
-      lbits zgsz3415;
-      CREATE(lbits)(&zgsz3415);
-      CONVERT_OF(lbits, fbits)(&zgsz3415, zgaz3236, UINT64_C(64) , true);
-      sail_int zgsz3416;
-      CREATE(sail_int)(&zgsz3416);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3416, INT64_C(3));
-      lbits zgsz3417;
-      CREATE(lbits)(&zgsz3417);
-      sail_truncate(&zgsz3417, zgsz3415, zgsz3416);
-      za3 = CONVERT_OF(fbits, lbits)(zgsz3417, true);
-      KILL(lbits)(&zgsz3417);
-      KILL(sail_int)(&zgsz3416);
-      KILL(lbits)(&zgsz3415);
+      RECREATE(lbits)(&zghz3175);
+      CONVERT_OF(lbits, fbits)(&zghz3175, zgaz3206, UINT64_C(64) , true);
+      RECREATE(sail_int)(&zghz3176);
+      CONVERT_OF(sail_int, mach_int)(&zghz3176, INT64_C(3));
+      RECREATE(lbits)(&zghz3177);
+      sail_truncate(&zghz3177, zghz3175, zghz3176);
+      za3 = CONVERT_OF(fbits, lbits)(zghz3177, true);
     }
   }
   uint64_t zB3;
   {
-    uint64_t zgaz3233;
-    zgaz3233 = zc.zB;
+    uint64_t zgaz3203;
+    zgaz3203 = zc.zB;
     {
-      lbits zgsz3418;
-      CREATE(lbits)(&zgsz3418);
-      CONVERT_OF(lbits, fbits)(&zgsz3418, zgaz3233, UINT64_C(14) , true);
-      sail_int zgsz3419;
-      CREATE(sail_int)(&zgsz3419);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3419, INT64_C(3));
-      lbits zgsz3420;
-      CREATE(lbits)(&zgsz3420);
-      sail_truncateLSB(&zgsz3420, zgsz3418, zgsz3419);
-      zB3 = CONVERT_OF(fbits, lbits)(zgsz3420, true);
-      KILL(lbits)(&zgsz3420);
-      KILL(sail_int)(&zgsz3419);
-      KILL(lbits)(&zgsz3418);
+      RECREATE(lbits)(&zghz3172);
+      CONVERT_OF(lbits, fbits)(&zghz3172, zgaz3203, UINT64_C(14) , true);
+      RECREATE(sail_int)(&zghz3173);
+      CONVERT_OF(sail_int, mach_int)(&zghz3173, INT64_C(3));
+      RECREATE(lbits)(&zghz3174);
+      sail_truncateLSB(&zghz3174, zghz3172, zghz3173);
+      zB3 = CONVERT_OF(fbits, lbits)(zghz3174, true);
     }
   }
   uint64_t zT3;
   {
-    uint64_t zgaz3232;
-    zgaz3232 = zc.zT;
+    uint64_t zgaz3202;
+    zgaz3202 = zc.zT;
     {
-      lbits zgsz3421;
-      CREATE(lbits)(&zgsz3421);
-      CONVERT_OF(lbits, fbits)(&zgsz3421, zgaz3232, UINT64_C(14) , true);
-      sail_int zgsz3422;
-      CREATE(sail_int)(&zgsz3422);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3422, INT64_C(3));
-      lbits zgsz3423;
-      CREATE(lbits)(&zgsz3423);
-      sail_truncateLSB(&zgsz3423, zgsz3421, zgsz3422);
-      zT3 = CONVERT_OF(fbits, lbits)(zgsz3423, true);
-      KILL(lbits)(&zgsz3423);
-      KILL(sail_int)(&zgsz3422);
-      KILL(lbits)(&zgsz3421);
+      RECREATE(lbits)(&zghz3169);
+      CONVERT_OF(lbits, fbits)(&zghz3169, zgaz3202, UINT64_C(14) , true);
+      RECREATE(sail_int)(&zghz3170);
+      CONVERT_OF(sail_int, mach_int)(&zghz3170, INT64_C(3));
+      RECREATE(lbits)(&zghz3171);
+      sail_truncateLSB(&zghz3171, zghz3169, zghz3170);
+      zT3 = CONVERT_OF(fbits, lbits)(zghz3171, true);
     }
   }
   uint64_t zR3;
-  {
-    lbits zgsz3493;
-    CREATE(lbits)(&zgsz3493);
-    CONVERT_OF(lbits, fbits)(&zgsz3493, zB3, UINT64_C(3) , true);
-    lbits zgsz3494;
-    CREATE(lbits)(&zgsz3494);
-    CONVERT_OF(lbits, fbits)(&zgsz3494, UINT64_C(0b001), UINT64_C(3) , true);
-    lbits zgsz3495;
-    CREATE(lbits)(&zgsz3495);
-    sub_bits(&zgsz3495, zgsz3493, zgsz3494);
-    zR3 = CONVERT_OF(fbits, lbits)(zgsz3495, true);
-    KILL(lbits)(&zgsz3495);
-    KILL(lbits)(&zgsz3494);
-    KILL(lbits)(&zgsz3493);
-  }
+  zR3 = ((zB3 - UINT64_C(0b001)) & UINT64_C(0b111));
   int64_t zaHi;
   {
-    bool zgaz3231;
+    bool zgaz3201;
     {
-      lbits zgsz3424;
-      CREATE(lbits)(&zgsz3424);
-      CONVERT_OF(lbits, fbits)(&zgsz3424, za3, UINT64_C(3) , true);
-      lbits zgsz3425;
-      CREATE(lbits)(&zgsz3425);
-      CONVERT_OF(lbits, fbits)(&zgsz3425, zR3, UINT64_C(3) , true);
-      zgaz3231 = sailgen_z8operatorz0zI_uz9(zgsz3424, zgsz3425);
-      KILL(lbits)(&zgsz3425);
-      KILL(lbits)(&zgsz3424);
+      RECREATE(lbits)(&zghz3167);
+      CONVERT_OF(lbits, fbits)(&zghz3167, za3, UINT64_C(3) , true);
+      RECREATE(lbits)(&zghz3168);
+      CONVERT_OF(lbits, fbits)(&zghz3168, zR3, UINT64_C(3) , true);
+      zgaz3201 = sailgen_z8operatorz0zI_uz9(zghz3167, zghz3168);
     }
-    if (zgaz3231) {  zaHi = INT64_C(1);  } else {  zaHi = INT64_C(0);  }
+    if (zgaz3201) {  zaHi = INT64_C(1);  } else {  zaHi = INT64_C(0);  }
   }
   int64_t zbHi;
   {
-    bool zgaz3230;
+    bool zgaz3200;
     {
-      lbits zgsz3426;
-      CREATE(lbits)(&zgsz3426);
-      CONVERT_OF(lbits, fbits)(&zgsz3426, zB3, UINT64_C(3) , true);
-      lbits zgsz3427;
-      CREATE(lbits)(&zgsz3427);
-      CONVERT_OF(lbits, fbits)(&zgsz3427, zR3, UINT64_C(3) , true);
-      zgaz3230 = sailgen_z8operatorz0zI_uz9(zgsz3426, zgsz3427);
-      KILL(lbits)(&zgsz3427);
-      KILL(lbits)(&zgsz3426);
+      RECREATE(lbits)(&zghz3165);
+      CONVERT_OF(lbits, fbits)(&zghz3165, zB3, UINT64_C(3) , true);
+      RECREATE(lbits)(&zghz3166);
+      CONVERT_OF(lbits, fbits)(&zghz3166, zR3, UINT64_C(3) , true);
+      zgaz3200 = sailgen_z8operatorz0zI_uz9(zghz3165, zghz3166);
     }
-    if (zgaz3230) {  zbHi = INT64_C(1);  } else {  zbHi = INT64_C(0);  }
+    if (zgaz3200) {  zbHi = INT64_C(1);  } else {  zbHi = INT64_C(0);  }
   }
   int64_t ztHi;
   {
-    bool zgaz3229;
+    bool zgaz3199;
     {
-      lbits zgsz3428;
-      CREATE(lbits)(&zgsz3428);
-      CONVERT_OF(lbits, fbits)(&zgsz3428, zT3, UINT64_C(3) , true);
-      lbits zgsz3429;
-      CREATE(lbits)(&zgsz3429);
-      CONVERT_OF(lbits, fbits)(&zgsz3429, zR3, UINT64_C(3) , true);
-      zgaz3229 = sailgen_z8operatorz0zI_uz9(zgsz3428, zgsz3429);
-      KILL(lbits)(&zgsz3429);
-      KILL(lbits)(&zgsz3428);
+      RECREATE(lbits)(&zghz3163);
+      CONVERT_OF(lbits, fbits)(&zghz3163, zT3, UINT64_C(3) , true);
+      RECREATE(lbits)(&zghz3164);
+      CONVERT_OF(lbits, fbits)(&zghz3164, zR3, UINT64_C(3) , true);
+      zgaz3199 = sailgen_z8operatorz0zI_uz9(zghz3163, zghz3164);
     }
-    if (zgaz3229) {  ztHi = INT64_C(1);  } else {  ztHi = INT64_C(0);  }
+    if (zgaz3199) {  ztHi = INT64_C(1);  } else {  ztHi = INT64_C(0);  }
   }
   int64_t zcorrection_base;
   {
-    sail_int zgsz3490;
-    CREATE(sail_int)(&zgsz3490);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3490, zbHi);
-    sail_int zgsz3491;
-    CREATE(sail_int)(&zgsz3491);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3491, zaHi);
-    sail_int zgsz3492;
-    CREATE(sail_int)(&zgsz3492);
-    sub_int(&zgsz3492, zgsz3490, zgsz3491);
-    zcorrection_base = CONVERT_OF(mach_int, sail_int)(zgsz3492);
-    KILL(sail_int)(&zgsz3492);
-    KILL(sail_int)(&zgsz3491);
-    KILL(sail_int)(&zgsz3490);
+    RECREATE(sail_int)(&zghz3160);
+    CONVERT_OF(sail_int, mach_int)(&zghz3160, zbHi);
+    RECREATE(sail_int)(&zghz3161);
+    CONVERT_OF(sail_int, mach_int)(&zghz3161, zaHi);
+    RECREATE(sail_int)(&zghz3162);
+    sub_int(&zghz3162, zghz3160, zghz3161);
+    zcorrection_base = CONVERT_OF(mach_int, sail_int)(zghz3162);
   }
   int64_t zcorrection_top;
   {
-    sail_int zgsz3487;
-    CREATE(sail_int)(&zgsz3487);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3487, ztHi);
-    sail_int zgsz3488;
-    CREATE(sail_int)(&zgsz3488);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3488, zaHi);
-    sail_int zgsz3489;
-    CREATE(sail_int)(&zgsz3489);
-    sub_int(&zgsz3489, zgsz3487, zgsz3488);
-    zcorrection_top = CONVERT_OF(mach_int, sail_int)(zgsz3489);
-    KILL(sail_int)(&zgsz3489);
-    KILL(sail_int)(&zgsz3488);
-    KILL(sail_int)(&zgsz3487);
+    RECREATE(sail_int)(&zghz3157);
+    CONVERT_OF(sail_int, mach_int)(&zghz3157, ztHi);
+    RECREATE(sail_int)(&zghz3158);
+    CONVERT_OF(sail_int, mach_int)(&zghz3158, zaHi);
+    RECREATE(sail_int)(&zghz3159);
+    sub_int(&zghz3159, zghz3157, zghz3158);
+    zcorrection_top = CONVERT_OF(mach_int, sail_int)(zghz3159);
   }
   uint64_t za_top;
   {
-    int64_t zgaz3228;
+    int64_t zgaz3198;
+    zgaz3198 = (zE + zcap_mantissa_width);
     {
-      sail_int zgsz3433;
-      CREATE(sail_int)(&zgsz3433);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3433, zE);
-      sail_int zgsz3434;
-      CREATE(sail_int)(&zgsz3434);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3434, zcap_mantissa_width);
-      sail_int zgsz3435;
-      CREATE(sail_int)(&zgsz3435);
-      add_int(&zgsz3435, zgsz3433, zgsz3434);
-      zgaz3228 = CONVERT_OF(mach_int, sail_int)(zgsz3435);
-      KILL(sail_int)(&zgsz3435);
-      KILL(sail_int)(&zgsz3434);
-      KILL(sail_int)(&zgsz3433);
-    }
-    {
-      lbits zgsz3430;
-      CREATE(lbits)(&zgsz3430);
-      CONVERT_OF(lbits, fbits)(&zgsz3430, za, UINT64_C(64) , true);
-      sail_int zgsz3431;
-      CREATE(sail_int)(&zgsz3431);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3431, zgaz3228);
-      lbits zgsz3432;
-      CREATE(lbits)(&zgsz3432);
-      shiftr(&zgsz3432, zgsz3430, zgsz3431);
-      za_top = CONVERT_OF(fbits, lbits)(zgsz3432, true);
-      KILL(lbits)(&zgsz3432);
-      KILL(sail_int)(&zgsz3431);
-      KILL(lbits)(&zgsz3430);
+      RECREATE(lbits)(&zghz3154);
+      CONVERT_OF(lbits, fbits)(&zghz3154, za, UINT64_C(64) , true);
+      RECREATE(sail_int)(&zghz3155);
+      CONVERT_OF(sail_int, mach_int)(&zghz3155, zgaz3198);
+      RECREATE(lbits)(&zghz3156);
+      shiftr(&zghz3156, zghz3154, zghz3155);
+      za_top = CONVERT_OF(fbits, lbits)(zghz3156, true);
     }
   }
-  lbits zbase;
-  CREATE(lbits)(&zbase);
+  RECREATE(lbits)(&zghz3107);
   {
-    lbits zgaz3227;
-    CREATE(lbits)(&zgaz3227);
+    RECREATE(lbits)(&zghz3143);
     {
-      uint64_t zgaz3225;
+      uint64_t zgaz3195;
       {
-        lbits zgsz3441;
-        CREATE(lbits)(&zgsz3441);
-        CONVERT_OF(lbits, fbits)(&zgsz3441, za_top, UINT64_C(64) , true);
-        sail_int zgsz3442;
-        CREATE(sail_int)(&zgsz3442);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3442, zcorrection_base);
-        lbits zgsz3443;
-        CREATE(lbits)(&zgsz3443);
-        add_bits_int(&zgsz3443, zgsz3441, zgsz3442);
-        zgaz3225 = CONVERT_OF(fbits, lbits)(zgsz3443, true);
-        KILL(lbits)(&zgsz3443);
-        KILL(sail_int)(&zgsz3442);
-        KILL(lbits)(&zgsz3441);
+        RECREATE(lbits)(&zghz3151);
+        CONVERT_OF(lbits, fbits)(&zghz3151, za_top, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3152);
+        CONVERT_OF(sail_int, mach_int)(&zghz3152, zcorrection_base);
+        RECREATE(lbits)(&zghz3153);
+        add_bits_int(&zghz3153, zghz3151, zghz3152);
+        zgaz3195 = CONVERT_OF(fbits, lbits)(zghz3153, true);
       }
-      lbits zgaz3226;
-      CREATE(lbits)(&zgaz3226);
+      RECREATE(lbits)(&zghz3145);
       {
-        uint64_t zgaz3223;
-        zgaz3223 = zc.zB;
-        sbits zgaz3224;
+        uint64_t zgaz3193;
+        zgaz3193 = zc.zB;
+        sbits zgaz3194;
         {
-          sail_int zgsz3438;
-          CREATE(sail_int)(&zgsz3438);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3438, zE);
-          lbits zgsz3439;
-          CREATE(lbits)(&zgsz3439);
-          sailgen_zzeros_implicit(&zgsz3439, zgsz3438);
-          zgaz3224 = CONVERT_OF(sbits, lbits)(zgsz3439, true);
-          KILL(lbits)(&zgsz3439);
-          KILL(sail_int)(&zgsz3438);
+          RECREATE(sail_int)(&zghz3149);
+          CONVERT_OF(sail_int, mach_int)(&zghz3149, zE);
+          RECREATE(lbits)(&zghz3150);
+          sailgen_zzeros_implicit(&zghz3150, zghz3149);
+          zgaz3194 = CONVERT_OF(sbits, lbits)(zghz3150, true);
         }
         {
-          lbits zgsz3436;
-          CREATE(lbits)(&zgsz3436);
-          CONVERT_OF(lbits, fbits)(&zgsz3436, zgaz3223, UINT64_C(14) , true);
-          lbits zgsz3437;
-          CREATE(lbits)(&zgsz3437);
-          CONVERT_OF(lbits, sbits)(&zgsz3437, zgaz3224, true);
-          append(&zgaz3226, zgsz3436, zgsz3437);
-          KILL(lbits)(&zgsz3437);
-          KILL(lbits)(&zgsz3436);
+          RECREATE(lbits)(&zghz3147);
+          CONVERT_OF(lbits, fbits)(&zghz3147, zgaz3193, UINT64_C(14) , true);
+          RECREATE(lbits)(&zghz3148);
+          CONVERT_OF(lbits, sbits)(&zghz3148, zgaz3194, true);
+          append(&zghz3145, zghz3147, zghz3148);
         }
       }
       {
-        lbits zgsz3440;
-        CREATE(lbits)(&zgsz3440);
-        CONVERT_OF(lbits, fbits)(&zgsz3440, zgaz3225, UINT64_C(64) , true);
-        append(&zgaz3227, zgsz3440, zgaz3226);
-        KILL(lbits)(&zgsz3440);
+        RECREATE(lbits)(&zghz3146);
+        CONVERT_OF(lbits, fbits)(&zghz3146, zgaz3195, UINT64_C(64) , true);
+        append(&zghz3143, zghz3146, zghz3145);
       }
-      KILL(lbits)(&zgaz3226);
     }
     {
-      sail_int zgsz3444;
-      CREATE(sail_int)(&zgsz3444);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3444, zcap_len_width);
-      sail_truncate(&zbase, zgaz3227, zgsz3444);
-      KILL(sail_int)(&zgsz3444);
+      RECREATE(sail_int)(&zghz3144);
+      CONVERT_OF(sail_int, mach_int)(&zghz3144, zcap_len_width);
+      sail_truncate(&zghz3107, zghz3143, zghz3144);
     }
-    KILL(lbits)(&zgaz3227);
   }
-  lbits ztop;
-  CREATE(lbits)(&ztop);
+  RECREATE(lbits)(&zghz3108);
   {
-    lbits zgaz3222;
-    CREATE(lbits)(&zgaz3222);
+    RECREATE(lbits)(&zghz3132);
     {
-      uint64_t zgaz3220;
+      uint64_t zgaz3190;
       {
-        lbits zgsz3450;
-        CREATE(lbits)(&zgsz3450);
-        CONVERT_OF(lbits, fbits)(&zgsz3450, za_top, UINT64_C(64) , true);
-        sail_int zgsz3451;
-        CREATE(sail_int)(&zgsz3451);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3451, zcorrection_top);
-        lbits zgsz3452;
-        CREATE(lbits)(&zgsz3452);
-        add_bits_int(&zgsz3452, zgsz3450, zgsz3451);
-        zgaz3220 = CONVERT_OF(fbits, lbits)(zgsz3452, true);
-        KILL(lbits)(&zgsz3452);
-        KILL(sail_int)(&zgsz3451);
-        KILL(lbits)(&zgsz3450);
+        RECREATE(lbits)(&zghz3140);
+        CONVERT_OF(lbits, fbits)(&zghz3140, za_top, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3141);
+        CONVERT_OF(sail_int, mach_int)(&zghz3141, zcorrection_top);
+        RECREATE(lbits)(&zghz3142);
+        add_bits_int(&zghz3142, zghz3140, zghz3141);
+        zgaz3190 = CONVERT_OF(fbits, lbits)(zghz3142, true);
       }
-      lbits zgaz3221;
-      CREATE(lbits)(&zgaz3221);
+      RECREATE(lbits)(&zghz3134);
       {
-        uint64_t zgaz3218;
-        zgaz3218 = zc.zT;
-        sbits zgaz3219;
+        uint64_t zgaz3188;
+        zgaz3188 = zc.zT;
+        sbits zgaz3189;
         {
-          sail_int zgsz3447;
-          CREATE(sail_int)(&zgsz3447);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3447, zE);
-          lbits zgsz3448;
-          CREATE(lbits)(&zgsz3448);
-          sailgen_zzeros_implicit(&zgsz3448, zgsz3447);
-          zgaz3219 = CONVERT_OF(sbits, lbits)(zgsz3448, true);
-          KILL(lbits)(&zgsz3448);
-          KILL(sail_int)(&zgsz3447);
+          RECREATE(sail_int)(&zghz3138);
+          CONVERT_OF(sail_int, mach_int)(&zghz3138, zE);
+          RECREATE(lbits)(&zghz3139);
+          sailgen_zzeros_implicit(&zghz3139, zghz3138);
+          zgaz3189 = CONVERT_OF(sbits, lbits)(zghz3139, true);
         }
         {
-          lbits zgsz3445;
-          CREATE(lbits)(&zgsz3445);
-          CONVERT_OF(lbits, fbits)(&zgsz3445, zgaz3218, UINT64_C(14) , true);
-          lbits zgsz3446;
-          CREATE(lbits)(&zgsz3446);
-          CONVERT_OF(lbits, sbits)(&zgsz3446, zgaz3219, true);
-          append(&zgaz3221, zgsz3445, zgsz3446);
-          KILL(lbits)(&zgsz3446);
-          KILL(lbits)(&zgsz3445);
+          RECREATE(lbits)(&zghz3136);
+          CONVERT_OF(lbits, fbits)(&zghz3136, zgaz3188, UINT64_C(14) , true);
+          RECREATE(lbits)(&zghz3137);
+          CONVERT_OF(lbits, sbits)(&zghz3137, zgaz3189, true);
+          append(&zghz3134, zghz3136, zghz3137);
         }
       }
       {
-        lbits zgsz3449;
-        CREATE(lbits)(&zgsz3449);
-        CONVERT_OF(lbits, fbits)(&zgsz3449, zgaz3220, UINT64_C(64) , true);
-        append(&zgaz3222, zgsz3449, zgaz3221);
-        KILL(lbits)(&zgsz3449);
+        RECREATE(lbits)(&zghz3135);
+        CONVERT_OF(lbits, fbits)(&zghz3135, zgaz3190, UINT64_C(64) , true);
+        append(&zghz3132, zghz3135, zghz3134);
       }
-      KILL(lbits)(&zgaz3221);
     }
     {
-      sail_int zgsz3453;
-      CREATE(sail_int)(&zgsz3453);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3453, zcap_len_width);
-      sail_truncate(&ztop, zgaz3222, zgsz3453);
-      KILL(sail_int)(&zgsz3453);
+      RECREATE(sail_int)(&zghz3133);
+      CONVERT_OF(sail_int, mach_int)(&zghz3133, zcap_len_width);
+      sail_truncate(&zghz3108, zghz3132, zghz3133);
     }
-    KILL(lbits)(&zgaz3222);
   }
   uint64_t zbase2;
   {
-    uint64_t zgaz3217;
+    uint64_t zgaz3187;
     {
-      fbits zgaz3216;
+      fbits zgaz3186;
       {
-        int64_t zgaz3215;
+        int64_t zgaz3185;
         {
-          sail_int zgsz3455;
-          CREATE(sail_int)(&zgsz3455);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3455, zcap_addr_width);
-          sail_int zgsz3456;
-          CREATE(sail_int)(&zgsz3456);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3456, INT64_C(1));
-          sail_int zgsz3457;
-          CREATE(sail_int)(&zgsz3457);
-          sub_int(&zgsz3457, zgsz3455, zgsz3456);
-          zgaz3215 = CONVERT_OF(mach_int, sail_int)(zgsz3457);
-          KILL(sail_int)(&zgsz3457);
-          KILL(sail_int)(&zgsz3456);
-          KILL(sail_int)(&zgsz3455);
+          RECREATE(sail_int)(&zghz3129);
+          CONVERT_OF(sail_int, mach_int)(&zghz3129, zcap_addr_width);
+          RECREATE(sail_int)(&zghz3130);
+          CONVERT_OF(sail_int, mach_int)(&zghz3130, INT64_C(1));
+          RECREATE(sail_int)(&zghz3131);
+          sub_int(&zghz3131, zghz3129, zghz3130);
+          zgaz3185 = CONVERT_OF(mach_int, sail_int)(zghz3131);
         }
         {
-          sail_int zgsz3454;
-          CREATE(sail_int)(&zgsz3454);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3454, zgaz3215);
-          zgaz3216 = bitvector_access(zbase, zgsz3454);
-          KILL(sail_int)(&zgsz3454);
+          RECREATE(sail_int)(&zghz3128);
+          CONVERT_OF(sail_int, mach_int)(&zghz3128, zgaz3185);
+          zgaz3186 = bitvector_access(zghz3107, zghz3128);
         }
       }
-      uint64_t zgsz347;
-      zgsz347 = UINT64_C(0b0);
-      zgsz347 = update_fbits(zgsz347, INT64_C(0), zgaz3216);
-      zgaz3217 = zgsz347;
+      zgaz3187 = UINT64_C(0b0);
+      zgaz3187 = update_fbits(zgaz3187, INT64_C(0), zgaz3186);
     }
-    {
-      lbits zgsz3458;
-      CREATE(lbits)(&zgsz3458);
-      CONVERT_OF(lbits, fbits)(&zgsz3458, UINT64_C(0b0), UINT64_C(1) , true);
-      lbits zgsz3459;
-      CREATE(lbits)(&zgsz3459);
-      CONVERT_OF(lbits, fbits)(&zgsz3459, zgaz3217, UINT64_C(1) , true);
-      lbits zgsz3460;
-      CREATE(lbits)(&zgsz3460);
-      append(&zgsz3460, zgsz3458, zgsz3459);
-      zbase2 = CONVERT_OF(fbits, lbits)(zgsz3460, true);
-      KILL(lbits)(&zgsz3460);
-      KILL(lbits)(&zgsz3459);
-      KILL(lbits)(&zgsz3458);
-    }
+    zbase2 = (UINT64_C(0b0) << 1) | zgaz3187;
   }
   uint64_t ztop2;
   {
-    int64_t zgaz3214;
+    int64_t zgaz3184;
     {
-      sail_int zgsz3464;
-      CREATE(sail_int)(&zgsz3464);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3464, zcap_addr_width);
-      sail_int zgsz3465;
-      CREATE(sail_int)(&zgsz3465);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3465, INT64_C(1));
-      sail_int zgsz3466;
-      CREATE(sail_int)(&zgsz3466);
-      sub_int(&zgsz3466, zgsz3464, zgsz3465);
-      zgaz3214 = CONVERT_OF(mach_int, sail_int)(zgsz3466);
-      KILL(sail_int)(&zgsz3466);
-      KILL(sail_int)(&zgsz3465);
-      KILL(sail_int)(&zgsz3464);
+      RECREATE(sail_int)(&zghz3125);
+      CONVERT_OF(sail_int, mach_int)(&zghz3125, zcap_addr_width);
+      RECREATE(sail_int)(&zghz3126);
+      CONVERT_OF(sail_int, mach_int)(&zghz3126, INT64_C(1));
+      RECREATE(sail_int)(&zghz3127);
+      sub_int(&zghz3127, zghz3125, zghz3126);
+      zgaz3184 = CONVERT_OF(mach_int, sail_int)(zghz3127);
     }
     {
-      sail_int zgsz3461;
-      CREATE(sail_int)(&zgsz3461);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3461, zcap_addr_width);
-      sail_int zgsz3462;
-      CREATE(sail_int)(&zgsz3462);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3462, zgaz3214);
-      lbits zgsz3463;
-      CREATE(lbits)(&zgsz3463);
-      vector_subrange_lbits(&zgsz3463, ztop, zgsz3461, zgsz3462);
-      ztop2 = CONVERT_OF(fbits, lbits)(zgsz3463, true);
-      KILL(lbits)(&zgsz3463);
-      KILL(sail_int)(&zgsz3462);
-      KILL(sail_int)(&zgsz3461);
+      RECREATE(sail_int)(&zghz3122);
+      CONVERT_OF(sail_int, mach_int)(&zghz3122, zcap_addr_width);
+      RECREATE(sail_int)(&zghz3123);
+      CONVERT_OF(sail_int, mach_int)(&zghz3123, zgaz3184);
+      RECREATE(lbits)(&zghz3124);
+      vector_subrange_lbits(&zghz3124, zghz3108, zghz3122, zghz3123);
+      ztop2 = CONVERT_OF(fbits, lbits)(zghz3124, true);
     }
   }
   {
-    bool zgaz3209;
+    bool zgaz3179;
     {
-      bool zgaz3208;
+      bool zgaz3178;
       {
-        int64_t zgaz3205;
+        int64_t zgaz3175;
         {
-          sail_int zgsz3469;
-          CREATE(sail_int)(&zgsz3469);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3469, zcap_max_E);
-          sail_int zgsz3470;
-          CREATE(sail_int)(&zgsz3470);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3470, INT64_C(1));
-          sail_int zgsz3471;
-          CREATE(sail_int)(&zgsz3471);
-          sub_int(&zgsz3471, zgsz3469, zgsz3470);
-          zgaz3205 = CONVERT_OF(mach_int, sail_int)(zgsz3471);
-          KILL(sail_int)(&zgsz3471);
-          KILL(sail_int)(&zgsz3470);
-          KILL(sail_int)(&zgsz3469);
+          RECREATE(sail_int)(&zghz3119);
+          CONVERT_OF(sail_int, mach_int)(&zghz3119, zcap_max_E);
+          RECREATE(sail_int)(&zghz3120);
+          CONVERT_OF(sail_int, mach_int)(&zghz3120, INT64_C(1));
+          RECREATE(sail_int)(&zghz3121);
+          sub_int(&zghz3121, zghz3119, zghz3120);
+          zgaz3175 = CONVERT_OF(mach_int, sail_int)(zghz3121);
         }
-        {
-          sail_int zgsz3467;
-          CREATE(sail_int)(&zgsz3467);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3467, zE);
-          sail_int zgsz3468;
-          CREATE(sail_int)(&zgsz3468);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3468, zgaz3205);
-          zgaz3208 = lt(zgsz3467, zgsz3468);
-          KILL(sail_int)(&zgsz3468);
-          KILL(sail_int)(&zgsz3467);
-        }
+        zgaz3178 = (zE < zgaz3175);
       }
       bool zgsz348;
-      if (zgaz3208) {
-        int64_t zgaz3207;
+      if (zgaz3178) {
+        int64_t zgaz3177;
         {
-          uint64_t zgaz3206;
+          uint64_t zgaz3176;
+          zgaz3176 = ((ztop2 - zbase2) & UINT64_C(0b11));
           {
-            lbits zgsz3474;
-            CREATE(lbits)(&zgsz3474);
-            CONVERT_OF(lbits, fbits)(&zgsz3474, ztop2, UINT64_C(2) , true);
-            lbits zgsz3475;
-            CREATE(lbits)(&zgsz3475);
-            CONVERT_OF(lbits, fbits)(&zgsz3475, zbase2, UINT64_C(2) , true);
-            lbits zgsz3476;
-            CREATE(lbits)(&zgsz3476);
-            sub_bits(&zgsz3476, zgsz3474, zgsz3475);
-            zgaz3206 = CONVERT_OF(fbits, lbits)(zgsz3476, true);
-            KILL(lbits)(&zgsz3476);
-            KILL(lbits)(&zgsz3475);
-            KILL(lbits)(&zgsz3474);
-          }
-          {
-            lbits zgsz3472;
-            CREATE(lbits)(&zgsz3472);
-            CONVERT_OF(lbits, fbits)(&zgsz3472, zgaz3206, UINT64_C(2) , true);
-            sail_int zgsz3473;
-            CREATE(sail_int)(&zgsz3473);
-            sail_unsigned(&zgsz3473, zgsz3472);
-            zgaz3207 = CONVERT_OF(mach_int, sail_int)(zgsz3473);
-            KILL(sail_int)(&zgsz3473);
-            KILL(lbits)(&zgsz3472);
+            RECREATE(lbits)(&zghz3117);
+            CONVERT_OF(lbits, fbits)(&zghz3117, zgaz3176, UINT64_C(2) , true);
+            RECREATE(sail_int)(&zghz3118);
+            sail_unsigned(&zghz3118, zghz3117);
+            zgaz3177 = CONVERT_OF(mach_int, sail_int)(zghz3118);
           }
         }
-        {
-          sail_int zgsz3477;
-          CREATE(sail_int)(&zgsz3477);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3477, zgaz3207);
-          sail_int zgsz3478;
-          CREATE(sail_int)(&zgsz3478);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3478, INT64_C(1));
-          zgsz348 = gt(zgsz3477, zgsz3478);
-          KILL(sail_int)(&zgsz3478);
-          KILL(sail_int)(&zgsz3477);
-        }
+        zgsz348 = (zgaz3177 > INT64_C(1));
       } else {  zgsz348 = false;  }
-      zgaz3209 = zgsz348;
+      zgaz3179 = zgsz348;
     }
     unit zgsz349;
-    if (zgaz3209) {
-      fbits zgaz3211;
+    if (zgaz3179) {
+      fbits zgaz3181;
       {
-        fbits zgaz3210;
+        fbits zgaz3180;
         {
-          sail_int zgsz3479;
-          CREATE(sail_int)(&zgsz3479);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3479, zcap_addr_width);
-          zgaz3210 = bitvector_access(ztop, zgsz3479);
-          KILL(sail_int)(&zgsz3479);
+          RECREATE(sail_int)(&zghz3116);
+          CONVERT_OF(sail_int, mach_int)(&zghz3116, zcap_addr_width);
+          zgaz3180 = bitvector_access(zghz3108, zghz3116);
         }
-        zgaz3211 = sailgen_not_bit(zgaz3210);
+        zgaz3181 = sailgen_not_bit(zgaz3180);
       }
       {
-        sail_int zgsz3480;
-        CREATE(sail_int)(&zgsz3480);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3480, zcap_addr_width);
-        update_lbits(&ztop, ztop, zgsz3480, zgaz3211);
-        KILL(sail_int)(&zgsz3480);
+        RECREATE(sail_int)(&zghz3115);
+        CONVERT_OF(sail_int, mach_int)(&zghz3115, zcap_addr_width);
+        update_lbits(&zghz3108, zghz3108, zghz3115, zgaz3181);
       }
       zgsz349 = UNIT;
     } else {  zgsz349 = UNIT;  }
   }
-  uint64_t zgaz3213;
+  uint64_t zgaz3183;
   {
-    int64_t zgaz3212;
+    int64_t zgaz3182;
     {
-      sail_int zgsz3484;
-      CREATE(sail_int)(&zgsz3484);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3484, zcap_addr_width);
-      sail_int zgsz3485;
-      CREATE(sail_int)(&zgsz3485);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3485, INT64_C(1));
-      sail_int zgsz3486;
-      CREATE(sail_int)(&zgsz3486);
-      sub_int(&zgsz3486, zgsz3484, zgsz3485);
-      zgaz3212 = CONVERT_OF(mach_int, sail_int)(zgsz3486);
-      KILL(sail_int)(&zgsz3486);
-      KILL(sail_int)(&zgsz3485);
-      KILL(sail_int)(&zgsz3484);
+      RECREATE(sail_int)(&zghz3112);
+      CONVERT_OF(sail_int, mach_int)(&zghz3112, zcap_addr_width);
+      RECREATE(sail_int)(&zghz3113);
+      CONVERT_OF(sail_int, mach_int)(&zghz3113, INT64_C(1));
+      RECREATE(sail_int)(&zghz3114);
+      sub_int(&zghz3114, zghz3112, zghz3113);
+      zgaz3182 = CONVERT_OF(mach_int, sail_int)(zghz3114);
     }
     {
-      sail_int zgsz3481;
-      CREATE(sail_int)(&zgsz3481);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3481, zgaz3212);
-      sail_int zgsz3482;
-      CREATE(sail_int)(&zgsz3482);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3482, INT64_C(0));
-      lbits zgsz3483;
-      CREATE(lbits)(&zgsz3483);
-      vector_subrange_lbits(&zgsz3483, zbase, zgsz3481, zgsz3482);
-      zgaz3213 = CONVERT_OF(fbits, lbits)(zgsz3483, true);
-      KILL(lbits)(&zgsz3483);
-      KILL(sail_int)(&zgsz3482);
-      KILL(sail_int)(&zgsz3481);
+      RECREATE(sail_int)(&zghz3109);
+      CONVERT_OF(sail_int, mach_int)(&zghz3109, zgaz3182);
+      RECREATE(sail_int)(&zghz3110);
+      CONVERT_OF(sail_int, mach_int)(&zghz3110, INT64_C(0));
+      RECREATE(lbits)(&zghz3111);
+      vector_subrange_lbits(&zghz3111, zghz3107, zghz3109, zghz3110);
+      zgaz3183 = CONVERT_OF(fbits, lbits)(zghz3111, true);
     }
   }
   struct ztuple_z8z5bv64zCz0z5bvz9 zgsz350;
   CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz350);
-  zgsz350.ztup0 = zgaz3213;
-  COPY(lbits)(&((&zgsz350)->ztup1), ztop);
+  zgsz350.ztup0 = zgaz3183;
+  COPY(lbits)(&((&zgsz350)->ztup1), zghz3108);
   COPY(ztuple_z8z5bv64zCz0z5bvz9)((*(&zcbz324)), zgsz350);
   KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz350);
 
 
 
-  KILL(lbits)(&ztop);
-  KILL(lbits)(&zbase);
 
 
 
@@ -4033,6 +3208,94 @@ end_function_108: ;
 end_block_exception_109: ;
   goto end_function_198;
 end_function_198: ;
+}
+
+
+
+static void finish_sailgen_getCapBoundsBits(void)
+{
+  KILL(sail_int)(&zghz3188);
+  KILL(lbits)(&zghz3187);
+  KILL(sail_int)(&zghz3186);
+  KILL(sail_int)(&zghz3185);
+  KILL(sail_int)(&zghz3184);
+  KILL(sail_int)(&zghz3183);
+  KILL(sail_int)(&zghz3182);
+  KILL(sail_int)(&zghz3181);
+  KILL(lbits)(&zghz3180);
+  KILL(sail_int)(&zghz3179);
+  KILL(lbits)(&zghz3178);
+  KILL(lbits)(&zghz3177);
+  KILL(sail_int)(&zghz3176);
+  KILL(lbits)(&zghz3175);
+  KILL(lbits)(&zghz3174);
+  KILL(sail_int)(&zghz3173);
+  KILL(lbits)(&zghz3172);
+  KILL(lbits)(&zghz3171);
+  KILL(sail_int)(&zghz3170);
+  KILL(lbits)(&zghz3169);
+  KILL(lbits)(&zghz3168);
+  KILL(lbits)(&zghz3167);
+  KILL(lbits)(&zghz3166);
+  KILL(lbits)(&zghz3165);
+  KILL(lbits)(&zghz3164);
+  KILL(lbits)(&zghz3163);
+  KILL(sail_int)(&zghz3162);
+  KILL(sail_int)(&zghz3161);
+  KILL(sail_int)(&zghz3160);
+  KILL(sail_int)(&zghz3159);
+  KILL(sail_int)(&zghz3158);
+  KILL(sail_int)(&zghz3157);
+  KILL(lbits)(&zghz3156);
+  KILL(sail_int)(&zghz3155);
+  KILL(lbits)(&zghz3154);
+  KILL(lbits)(&zghz3153);
+  KILL(sail_int)(&zghz3152);
+  KILL(lbits)(&zghz3151);
+  KILL(lbits)(&zghz3150);
+  KILL(sail_int)(&zghz3149);
+  KILL(lbits)(&zghz3148);
+  KILL(lbits)(&zghz3147);
+  KILL(lbits)(&zghz3146);
+  KILL(lbits)(&zghz3145);
+  KILL(sail_int)(&zghz3144);
+  KILL(lbits)(&zghz3143);
+  KILL(lbits)(&zghz3142);
+  KILL(sail_int)(&zghz3141);
+  KILL(lbits)(&zghz3140);
+  KILL(lbits)(&zghz3139);
+  KILL(sail_int)(&zghz3138);
+  KILL(lbits)(&zghz3137);
+  KILL(lbits)(&zghz3136);
+  KILL(lbits)(&zghz3135);
+  KILL(lbits)(&zghz3134);
+  KILL(sail_int)(&zghz3133);
+  KILL(lbits)(&zghz3132);
+  KILL(sail_int)(&zghz3131);
+  KILL(sail_int)(&zghz3130);
+  KILL(sail_int)(&zghz3129);
+  KILL(sail_int)(&zghz3128);
+  KILL(sail_int)(&zghz3127);
+  KILL(sail_int)(&zghz3126);
+  KILL(sail_int)(&zghz3125);
+  KILL(lbits)(&zghz3124);
+  KILL(sail_int)(&zghz3123);
+  KILL(sail_int)(&zghz3122);
+  KILL(sail_int)(&zghz3121);
+  KILL(sail_int)(&zghz3120);
+  KILL(sail_int)(&zghz3119);
+  KILL(sail_int)(&zghz3118);
+  KILL(lbits)(&zghz3117);
+  KILL(sail_int)(&zghz3116);
+  KILL(sail_int)(&zghz3115);
+  KILL(sail_int)(&zghz3114);
+  KILL(sail_int)(&zghz3113);
+  KILL(sail_int)(&zghz3112);
+  KILL(lbits)(&zghz3111);
+  KILL(sail_int)(&zghz3110);
+  KILL(sail_int)(&zghz3109);
+  KILL(lbits)(&zghz3108);
+  KILL(lbits)(&zghz3107);
 }
 
 // struct tuple_(%i, %i)
@@ -4067,43 +3330,44 @@ static bool EQUAL(ztuple_z8z5izCz0z5iz9)(struct ztuple_z8z5izCz0z5iz9 op1, struc
 
 static void sailgen_getCapBounds(struct ztuple_z8z5izCz0z5iz9 *rop, struct zCapability);
 
+lbits zghz3189;
+sail_int zghz3190;
+sail_int zghz3191;
+lbits zghz3192;
+
+static void startup_sailgen_getCapBounds(void)
+{
+  CREATE(lbits)(&zghz3189);
+  CREATE(sail_int)(&zghz3190);
+  CREATE(sail_int)(&zghz3191);
+  CREATE(lbits)(&zghz3192);
+}
+
 
 static void sailgen_getCapBounds(struct ztuple_z8z5izCz0z5iz9 *zcbz325, struct zCapability zcap)
 {
   __label__ case_112, finish_match_111, end_function_113, end_block_exception_114, end_function_197;
 
-  struct ztuple_z8z5bv64zCz0z5bvz9 zgaz3239;
-  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3239);
-  sailgen_getCapBoundsBits(&zgaz3239, zcap);
+  struct ztuple_z8z5bv64zCz0z5bvz9 zgaz3209;
+  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3209);
+  sailgen_getCapBoundsBits(&zgaz3209, zcap);
   struct ztuple_z8z5izCz0z5iz9 zgsz351;
   CREATE(ztuple_z8z5izCz0z5iz9)(&zgsz351);
   {
     uint64_t zbase;
-    zbase = zgaz3239.ztup0;
-    lbits ztop;
-    CREATE(lbits)(&ztop);
-    COPY(lbits)(&ztop, zgaz3239.ztup1);
-    sail_int zgaz3240;
-    CREATE(sail_int)(&zgaz3240);
+    zbase = zgaz3209.ztup0;
+    RECREATE(lbits)(&zghz3189);
+    COPY(lbits)(&zghz3189, zgaz3209.ztup1);
+    RECREATE(sail_int)(&zghz3190);
     {
-      lbits zgsz3496;
-      CREATE(lbits)(&zgsz3496);
-      CONVERT_OF(lbits, fbits)(&zgsz3496, zbase, UINT64_C(64) , true);
-      sail_unsigned(&zgaz3240, zgsz3496);
-      KILL(lbits)(&zgsz3496);
+      RECREATE(lbits)(&zghz3192);
+      CONVERT_OF(lbits, fbits)(&zghz3192, zbase, UINT64_C(64) , true);
+      sail_unsigned(&zghz3190, zghz3192);
     }
-    sail_int zgaz3241;
-    CREATE(sail_int)(&zgaz3241);
-    sail_unsigned(&zgaz3241, ztop);
-    struct ztuple_z8z5izCz0z5iz9 zgsz352;
-    CREATE(ztuple_z8z5izCz0z5iz9)(&zgsz352);
-    COPY(sail_int)(&((&zgsz352)->ztup0), zgaz3240);
-    COPY(sail_int)(&((&zgsz352)->ztup1), zgaz3241);
-    COPY(ztuple_z8z5izCz0z5iz9)(&zgsz351, zgsz352);
-    KILL(ztuple_z8z5izCz0z5iz9)(&zgsz352);
-    KILL(sail_int)(&zgaz3241);
-    KILL(sail_int)(&zgaz3240);
-    KILL(lbits)(&ztop);
+    RECREATE(sail_int)(&zghz3191);
+    sail_unsigned(&zghz3191, zghz3189);
+    COPY(sail_int)(&((&zgsz351)->ztup0), zghz3190);
+    COPY(sail_int)(&((&zgsz351)->ztup1), zghz3191);
     goto finish_match_111;
   }
 case_112: ;
@@ -4111,12 +3375,22 @@ case_112: ;
 finish_match_111: ;
   COPY(ztuple_z8z5izCz0z5iz9)((*(&zcbz325)), zgsz351);
   KILL(ztuple_z8z5izCz0z5iz9)(&zgsz351);
-  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3239);
+  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3209);
 end_function_113: ;
   goto end_function_197;
 end_block_exception_114: ;
   goto end_function_197;
 end_function_197: ;
+}
+
+
+
+static void finish_sailgen_getCapBounds(void)
+{
+  KILL(lbits)(&zghz3192);
+  KILL(sail_int)(&zghz3191);
+  KILL(sail_int)(&zghz3190);
+  KILL(lbits)(&zghz3189);
 }
 
 // struct tuple_(%bool, %struct zCapability)
@@ -4136,166 +3410,285 @@ static bool EQUAL(ztuple_z8z5boolzCz0z5structz0zzCapabilityz9)(struct ztuple_z8z
 
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(struct zCapability, uint64_t, lbits);
 
+lbits zghz3193;
+lbits zghz3194;
+struct zCapability zghz3195;
+sail_int zghz3196;
+sail_int zghz3197;
+lbits zghz3198;
+lbits zghz3199;
+lbits zghz3200;
+sail_int zghz3201;
+lbits zghz3202;
+lbits zghz3203;
+sail_int zghz3204;
+lbits zghz3205;
+sail_int zghz3206;
+sail_int zghz3207;
+sail_int zghz3208;
+sail_int zghz3209;
+lbits zghz3210;
+sail_int zghz3211;
+lbits zghz3212;
+sail_int zghz3213;
+sail_int zghz3214;
+sail_int zghz3215;
+lbits zghz3216;
+sail_int zghz3217;
+lbits zghz3218;
+sail_int zghz3219;
+sail_int zghz3220;
+sail_int zghz3221;
+lbits zghz3222;
+sail_int zghz3223;
+lbits zghz3224;
+sail_int zghz3225;
+sail_int zghz3226;
+lbits zghz3227;
+sail_int zghz3228;
+sail_int zghz3229;
+lbits zghz3230;
+sail_int zghz3231;
+lbits zghz3232;
+sail_int zghz3233;
+lbits zghz3234;
+lbits zghz3235;
+sail_int zghz3236;
+lbits zghz3237;
+sail_int zghz3238;
+sail_int zghz3239;
+sail_int zghz3240;
+sail_int zghz3241;
+lbits zghz3242;
+sail_int zghz3243;
+lbits zghz3244;
+sail_int zghz3245;
+sail_int zghz3246;
+sail_int zghz3247;
+lbits zghz3248;
+sail_int zghz3249;
+lbits zghz3250;
+sail_int zghz3251;
+lbits zghz3252;
+lbits zghz3253;
+sail_int zghz3254;
+lbits zghz3255;
+sail_int zghz3256;
+sail_int zghz3257;
+sail_int zghz3258;
+sail_int zghz3259;
+sail_int zghz3260;
+sail_int zghz3261;
+sail_int zghz3262;
+sail_int zghz3263;
+sail_int zghz3264;
+lbits zghz3265;
+sail_int zghz3266;
+sail_int zghz3267;
+sail_int zghz3268;
+lbits zghz3269;
+sail_int zghz3270;
+sail_int zghz3271;
+sail_int zghz3272;
+lbits zghz3273;
+lbits zghz3274;
+
+static void startup_sailgen_setCapBounds(void)
+{
+  CREATE(lbits)(&zghz3193);
+  CREATE(lbits)(&zghz3194);
+
+  CREATE(sail_int)(&zghz3196);
+  CREATE(sail_int)(&zghz3197);
+  CREATE(lbits)(&zghz3198);
+  CREATE(lbits)(&zghz3199);
+  CREATE(lbits)(&zghz3200);
+  CREATE(sail_int)(&zghz3201);
+  CREATE(lbits)(&zghz3202);
+  CREATE(lbits)(&zghz3203);
+  CREATE(sail_int)(&zghz3204);
+  CREATE(lbits)(&zghz3205);
+  CREATE(sail_int)(&zghz3206);
+  CREATE(sail_int)(&zghz3207);
+  CREATE(sail_int)(&zghz3208);
+  CREATE(sail_int)(&zghz3209);
+  CREATE(lbits)(&zghz3210);
+  CREATE(sail_int)(&zghz3211);
+  CREATE(lbits)(&zghz3212);
+  CREATE(sail_int)(&zghz3213);
+  CREATE(sail_int)(&zghz3214);
+  CREATE(sail_int)(&zghz3215);
+  CREATE(lbits)(&zghz3216);
+  CREATE(sail_int)(&zghz3217);
+  CREATE(lbits)(&zghz3218);
+  CREATE(sail_int)(&zghz3219);
+  CREATE(sail_int)(&zghz3220);
+  CREATE(sail_int)(&zghz3221);
+  CREATE(lbits)(&zghz3222);
+  CREATE(sail_int)(&zghz3223);
+  CREATE(lbits)(&zghz3224);
+  CREATE(sail_int)(&zghz3225);
+  CREATE(sail_int)(&zghz3226);
+  CREATE(lbits)(&zghz3227);
+  CREATE(sail_int)(&zghz3228);
+  CREATE(sail_int)(&zghz3229);
+  CREATE(lbits)(&zghz3230);
+  CREATE(sail_int)(&zghz3231);
+  CREATE(lbits)(&zghz3232);
+  CREATE(sail_int)(&zghz3233);
+  CREATE(lbits)(&zghz3234);
+  CREATE(lbits)(&zghz3235);
+  CREATE(sail_int)(&zghz3236);
+  CREATE(lbits)(&zghz3237);
+  CREATE(sail_int)(&zghz3238);
+  CREATE(sail_int)(&zghz3239);
+  CREATE(sail_int)(&zghz3240);
+  CREATE(sail_int)(&zghz3241);
+  CREATE(lbits)(&zghz3242);
+  CREATE(sail_int)(&zghz3243);
+  CREATE(lbits)(&zghz3244);
+  CREATE(sail_int)(&zghz3245);
+  CREATE(sail_int)(&zghz3246);
+  CREATE(sail_int)(&zghz3247);
+  CREATE(lbits)(&zghz3248);
+  CREATE(sail_int)(&zghz3249);
+  CREATE(lbits)(&zghz3250);
+  CREATE(sail_int)(&zghz3251);
+  CREATE(lbits)(&zghz3252);
+  CREATE(lbits)(&zghz3253);
+  CREATE(sail_int)(&zghz3254);
+  CREATE(lbits)(&zghz3255);
+  CREATE(sail_int)(&zghz3256);
+  CREATE(sail_int)(&zghz3257);
+  CREATE(sail_int)(&zghz3258);
+  CREATE(sail_int)(&zghz3259);
+  CREATE(sail_int)(&zghz3260);
+  CREATE(sail_int)(&zghz3261);
+  CREATE(sail_int)(&zghz3262);
+  CREATE(sail_int)(&zghz3263);
+  CREATE(sail_int)(&zghz3264);
+  CREATE(lbits)(&zghz3265);
+  CREATE(sail_int)(&zghz3266);
+  CREATE(sail_int)(&zghz3267);
+  CREATE(sail_int)(&zghz3268);
+  CREATE(lbits)(&zghz3269);
+  CREATE(sail_int)(&zghz3270);
+  CREATE(sail_int)(&zghz3271);
+  CREATE(sail_int)(&zghz3272);
+  CREATE(lbits)(&zghz3273);
+  CREATE(lbits)(&zghz3274);
+}
+
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(struct zCapability zcap, uint64_t zbase, lbits ztop)
 {
   __label__ end_function_116, end_block_exception_117;
 
   struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zcbz326;
-  lbits zext_base;
-  CREATE(lbits)(&zext_base);
+  RECREATE(lbits)(&zghz3193);
   {
-    lbits zgsz3600;
-    CREATE(lbits)(&zgsz3600);
-    CONVERT_OF(lbits, fbits)(&zgsz3600, UINT64_C(0b0), UINT64_C(1) , true);
-    lbits zgsz3601;
-    CREATE(lbits)(&zgsz3601);
-    CONVERT_OF(lbits, fbits)(&zgsz3601, zbase, UINT64_C(64) , true);
-    append(&zext_base, zgsz3600, zgsz3601);
-    KILL(lbits)(&zgsz3601);
-    KILL(lbits)(&zgsz3600);
+    RECREATE(lbits)(&zghz3273);
+    CONVERT_OF(lbits, fbits)(&zghz3273, UINT64_C(0b0), UINT64_C(1) , true);
+    RECREATE(lbits)(&zghz3274);
+    CONVERT_OF(lbits, fbits)(&zghz3274, zbase, UINT64_C(64) , true);
+    append(&zghz3193, zghz3273, zghz3274);
   }
-  lbits zlength;
-  CREATE(lbits)(&zlength);
-  sub_bits(&zlength, ztop, zext_base);
+  RECREATE(lbits)(&zghz3194);
+  sub_bits(&zghz3194, ztop, zghz3193);
   int64_t ze;
   {
-    int64_t zgaz3274;
+    int64_t zgaz3244;
     {
-      uint64_t zgaz3273;
+      uint64_t zgaz3243;
       {
-        int64_t zgaz3272;
+        int64_t zgaz3242;
         {
-          sail_int zgsz3500;
-          CREATE(sail_int)(&zgsz3500);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3500, zcap_mantissa_width);
-          sail_int zgsz3501;
-          CREATE(sail_int)(&zgsz3501);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3501, INT64_C(1));
-          sail_int zgsz3502;
-          CREATE(sail_int)(&zgsz3502);
-          sub_int(&zgsz3502, zgsz3500, zgsz3501);
-          zgaz3272 = CONVERT_OF(mach_int, sail_int)(zgsz3502);
-          KILL(sail_int)(&zgsz3502);
-          KILL(sail_int)(&zgsz3501);
-          KILL(sail_int)(&zgsz3500);
+          RECREATE(sail_int)(&zghz3270);
+          CONVERT_OF(sail_int, mach_int)(&zghz3270, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz3271);
+          CONVERT_OF(sail_int, mach_int)(&zghz3271, INT64_C(1));
+          RECREATE(sail_int)(&zghz3272);
+          sub_int(&zghz3272, zghz3270, zghz3271);
+          zgaz3242 = CONVERT_OF(mach_int, sail_int)(zghz3272);
         }
         {
-          sail_int zgsz3497;
-          CREATE(sail_int)(&zgsz3497);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3497, zcap_addr_width);
-          sail_int zgsz3498;
-          CREATE(sail_int)(&zgsz3498);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3498, zgaz3272);
-          lbits zgsz3499;
-          CREATE(lbits)(&zgsz3499);
-          vector_subrange_lbits(&zgsz3499, zlength, zgsz3497, zgsz3498);
-          zgaz3273 = CONVERT_OF(fbits, lbits)(zgsz3499, true);
-          KILL(lbits)(&zgsz3499);
-          KILL(sail_int)(&zgsz3498);
-          KILL(sail_int)(&zgsz3497);
+          RECREATE(sail_int)(&zghz3267);
+          CONVERT_OF(sail_int, mach_int)(&zghz3267, zcap_addr_width);
+          RECREATE(sail_int)(&zghz3268);
+          CONVERT_OF(sail_int, mach_int)(&zghz3268, zgaz3242);
+          RECREATE(lbits)(&zghz3269);
+          vector_subrange_lbits(&zghz3269, zghz3194, zghz3267, zghz3268);
+          zgaz3243 = CONVERT_OF(fbits, lbits)(zghz3269, true);
         }
       }
       {
-        lbits zgsz3503;
-        CREATE(lbits)(&zgsz3503);
-        CONVERT_OF(lbits, fbits)(&zgsz3503, zgaz3273, UINT64_C(52) , true);
-        sail_int zgsz3504;
-        CREATE(sail_int)(&zgsz3504);
-        count_leading_zeros(&zgsz3504, zgsz3503);
-        zgaz3274 = CONVERT_OF(mach_int, sail_int)(zgsz3504);
-        KILL(sail_int)(&zgsz3504);
-        KILL(lbits)(&zgsz3503);
+        RECREATE(lbits)(&zghz3265);
+        CONVERT_OF(lbits, fbits)(&zghz3265, zgaz3243, UINT64_C(52) , true);
+        RECREATE(sail_int)(&zghz3266);
+        count_leading_zeros(&zghz3266, zghz3265);
+        zgaz3244 = CONVERT_OF(mach_int, sail_int)(zghz3266);
       }
     }
     {
-      sail_int zgsz3505;
-      CREATE(sail_int)(&zgsz3505);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3505, zcap_max_E);
-      sail_int zgsz3506;
-      CREATE(sail_int)(&zgsz3506);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3506, zgaz3274);
-      sail_int zgsz3507;
-      CREATE(sail_int)(&zgsz3507);
-      sub_int(&zgsz3507, zgsz3505, zgsz3506);
-      ze = CONVERT_OF(mach_int, sail_int)(zgsz3507);
-      KILL(sail_int)(&zgsz3507);
-      KILL(sail_int)(&zgsz3506);
-      KILL(sail_int)(&zgsz3505);
+      RECREATE(sail_int)(&zghz3262);
+      CONVERT_OF(sail_int, mach_int)(&zghz3262, zcap_max_E);
+      RECREATE(sail_int)(&zghz3263);
+      CONVERT_OF(sail_int, mach_int)(&zghz3263, zgaz3244);
+      RECREATE(sail_int)(&zghz3264);
+      sub_int(&zghz3264, zghz3262, zghz3263);
+      ze = CONVERT_OF(mach_int, sail_int)(zghz3264);
     }
   }
   bool zie;
   {
-    bool zgaz3271;
+    bool zgaz3241;
     {
-      sail_int zgsz3512;
-      CREATE(sail_int)(&zgsz3512);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3512, ze);
-      sail_int zgsz3513;
-      CREATE(sail_int)(&zgsz3513);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3513, INT64_C(0));
-      zgaz3271 = sailgen_neq_int(zgsz3512, zgsz3513);
-      KILL(sail_int)(&zgsz3513);
-      KILL(sail_int)(&zgsz3512);
+      RECREATE(sail_int)(&zghz3260);
+      CONVERT_OF(sail_int, mach_int)(&zghz3260, ze);
+      RECREATE(sail_int)(&zghz3261);
+      CONVERT_OF(sail_int, mach_int)(&zghz3261, INT64_C(0));
+      zgaz3241 = sailgen_neq_int(zghz3260, zghz3261);
     }
     bool zgsz354;
-    if (zgaz3271) {  zgsz354 = true;  } else {
-      fbits zgaz3270;
+    if (zgaz3241) {  zgsz354 = true;  } else {
+      fbits zgaz3240;
       {
-        int64_t zgaz3269;
+        int64_t zgaz3239;
         {
-          sail_int zgsz3509;
-          CREATE(sail_int)(&zgsz3509);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3509, zcap_mantissa_width);
-          sail_int zgsz3510;
-          CREATE(sail_int)(&zgsz3510);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3510, INT64_C(2));
-          sail_int zgsz3511;
-          CREATE(sail_int)(&zgsz3511);
-          sub_int(&zgsz3511, zgsz3509, zgsz3510);
-          zgaz3269 = CONVERT_OF(mach_int, sail_int)(zgsz3511);
-          KILL(sail_int)(&zgsz3511);
-          KILL(sail_int)(&zgsz3510);
-          KILL(sail_int)(&zgsz3509);
+          RECREATE(sail_int)(&zghz3257);
+          CONVERT_OF(sail_int, mach_int)(&zghz3257, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz3258);
+          CONVERT_OF(sail_int, mach_int)(&zghz3258, INT64_C(2));
+          RECREATE(sail_int)(&zghz3259);
+          sub_int(&zghz3259, zghz3257, zghz3258);
+          zgaz3239 = CONVERT_OF(mach_int, sail_int)(zghz3259);
         }
         {
-          sail_int zgsz3508;
-          CREATE(sail_int)(&zgsz3508);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3508, zgaz3269);
-          zgaz3270 = bitvector_access(zlength, zgsz3508);
-          KILL(sail_int)(&zgsz3508);
+          RECREATE(sail_int)(&zghz3256);
+          CONVERT_OF(sail_int, mach_int)(&zghz3256, zgaz3239);
+          zgaz3240 = bitvector_access(zghz3194, zghz3256);
         }
       }
-      zgsz354 = eq_bit(zgaz3270, UINT64_C(1));
+      zgsz354 = eq_bit(zgaz3240, UINT64_C(1));
     }
     zie = zgsz354;
   }
   uint64_t zBbits;
   {
-    lbits zgsz3597;
-    CREATE(lbits)(&zgsz3597);
-    CONVERT_OF(lbits, fbits)(&zgsz3597, zbase, UINT64_C(64) , true);
-    sail_int zgsz3598;
-    CREATE(sail_int)(&zgsz3598);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3598, zcap_mantissa_width);
-    lbits zgsz3599;
-    CREATE(lbits)(&zgsz3599);
-    sail_truncate(&zgsz3599, zgsz3597, zgsz3598);
-    zBbits = CONVERT_OF(fbits, lbits)(zgsz3599, true);
-    KILL(lbits)(&zgsz3599);
-    KILL(sail_int)(&zgsz3598);
-    KILL(lbits)(&zgsz3597);
+    RECREATE(lbits)(&zghz3253);
+    CONVERT_OF(lbits, fbits)(&zghz3253, zbase, UINT64_C(64) , true);
+    RECREATE(sail_int)(&zghz3254);
+    CONVERT_OF(sail_int, mach_int)(&zghz3254, zcap_mantissa_width);
+    RECREATE(lbits)(&zghz3255);
+    sail_truncate(&zghz3255, zghz3253, zghz3254);
+    zBbits = CONVERT_OF(fbits, lbits)(zghz3255, true);
   }
   uint64_t zTbits;
   {
-    sail_int zgsz3595;
-    CREATE(sail_int)(&zgsz3595);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3595, zcap_mantissa_width);
-    lbits zgsz3596;
-    CREATE(lbits)(&zgsz3596);
-    sail_truncate(&zgsz3596, ztop, zgsz3595);
-    zTbits = CONVERT_OF(fbits, lbits)(zgsz3596, true);
-    KILL(lbits)(&zgsz3596);
-    KILL(sail_int)(&zgsz3595);
+    RECREATE(sail_int)(&zghz3251);
+    CONVERT_OF(sail_int, mach_int)(&zghz3251, zcap_mantissa_width);
+    RECREATE(lbits)(&zghz3252);
+    sail_truncate(&zghz3252, ztop, zghz3251);
+    zTbits = CONVERT_OF(fbits, lbits)(zghz3252, true);
   }
   bool zlostSignificantTop;
   zlostSignificantTop = false;
@@ -4308,291 +3701,160 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
     if (zie) {
       uint64_t zB_ie;
       {
-        uint64_t zgaz3264;
+        uint64_t zgaz3234;
         {
-          int64_t zgaz3263;
+          int64_t zgaz3233;
+          zgaz3233 = (ze + INT64_C(3));
           {
-            sail_int zgsz3517;
-            CREATE(sail_int)(&zgsz3517);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3517, ze);
-            sail_int zgsz3518;
-            CREATE(sail_int)(&zgsz3518);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3518, INT64_C(3));
-            sail_int zgsz3519;
-            CREATE(sail_int)(&zgsz3519);
-            add_int(&zgsz3519, zgsz3517, zgsz3518);
-            zgaz3263 = CONVERT_OF(mach_int, sail_int)(zgsz3519);
-            KILL(sail_int)(&zgsz3519);
-            KILL(sail_int)(&zgsz3518);
-            KILL(sail_int)(&zgsz3517);
-          }
-          {
-            lbits zgsz3514;
-            CREATE(lbits)(&zgsz3514);
-            CONVERT_OF(lbits, fbits)(&zgsz3514, zbase, UINT64_C(64) , true);
-            sail_int zgsz3515;
-            CREATE(sail_int)(&zgsz3515);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3515, zgaz3263);
-            lbits zgsz3516;
-            CREATE(lbits)(&zgsz3516);
-            shiftr(&zgsz3516, zgsz3514, zgsz3515);
-            zgaz3264 = CONVERT_OF(fbits, lbits)(zgsz3516, true);
-            KILL(lbits)(&zgsz3516);
-            KILL(sail_int)(&zgsz3515);
-            KILL(lbits)(&zgsz3514);
+            RECREATE(lbits)(&zghz3248);
+            CONVERT_OF(lbits, fbits)(&zghz3248, zbase, UINT64_C(64) , true);
+            RECREATE(sail_int)(&zghz3249);
+            CONVERT_OF(sail_int, mach_int)(&zghz3249, zgaz3233);
+            RECREATE(lbits)(&zghz3250);
+            shiftr(&zghz3250, zghz3248, zghz3249);
+            zgaz3234 = CONVERT_OF(fbits, lbits)(zghz3250, true);
           }
         }
-        int64_t zgaz3265;
+        int64_t zgaz3235;
         {
-          sail_int zgsz3523;
-          CREATE(sail_int)(&zgsz3523);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3523, zcap_mantissa_width);
-          sail_int zgsz3524;
-          CREATE(sail_int)(&zgsz3524);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3524, INT64_C(3));
-          sail_int zgsz3525;
-          CREATE(sail_int)(&zgsz3525);
-          sub_int(&zgsz3525, zgsz3523, zgsz3524);
-          zgaz3265 = CONVERT_OF(mach_int, sail_int)(zgsz3525);
-          KILL(sail_int)(&zgsz3525);
-          KILL(sail_int)(&zgsz3524);
-          KILL(sail_int)(&zgsz3523);
+          RECREATE(sail_int)(&zghz3245);
+          CONVERT_OF(sail_int, mach_int)(&zghz3245, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz3246);
+          CONVERT_OF(sail_int, mach_int)(&zghz3246, INT64_C(3));
+          RECREATE(sail_int)(&zghz3247);
+          sub_int(&zghz3247, zghz3245, zghz3246);
+          zgaz3235 = CONVERT_OF(mach_int, sail_int)(zghz3247);
         }
         {
-          lbits zgsz3520;
-          CREATE(lbits)(&zgsz3520);
-          CONVERT_OF(lbits, fbits)(&zgsz3520, zgaz3264, UINT64_C(64) , true);
-          sail_int zgsz3521;
-          CREATE(sail_int)(&zgsz3521);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3521, zgaz3265);
-          lbits zgsz3522;
-          CREATE(lbits)(&zgsz3522);
-          sail_truncate(&zgsz3522, zgsz3520, zgsz3521);
-          zB_ie = CONVERT_OF(fbits, lbits)(zgsz3522, true);
-          KILL(lbits)(&zgsz3522);
-          KILL(sail_int)(&zgsz3521);
-          KILL(lbits)(&zgsz3520);
+          RECREATE(lbits)(&zghz3242);
+          CONVERT_OF(lbits, fbits)(&zghz3242, zgaz3234, UINT64_C(64) , true);
+          RECREATE(sail_int)(&zghz3243);
+          CONVERT_OF(sail_int, mach_int)(&zghz3243, zgaz3235);
+          RECREATE(lbits)(&zghz3244);
+          sail_truncate(&zghz3244, zghz3242, zghz3243);
+          zB_ie = CONVERT_OF(fbits, lbits)(zghz3244, true);
         }
       }
       uint64_t zT_ie;
       {
-        lbits zgaz3261;
-        CREATE(lbits)(&zgaz3261);
+        RECREATE(lbits)(&zghz3235);
         {
-          int64_t zgaz3260;
+          int64_t zgaz3230;
+          zgaz3230 = (ze + INT64_C(3));
           {
-            sail_int zgsz3527;
-            CREATE(sail_int)(&zgsz3527);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3527, ze);
-            sail_int zgsz3528;
-            CREATE(sail_int)(&zgsz3528);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3528, INT64_C(3));
-            sail_int zgsz3529;
-            CREATE(sail_int)(&zgsz3529);
-            add_int(&zgsz3529, zgsz3527, zgsz3528);
-            zgaz3260 = CONVERT_OF(mach_int, sail_int)(zgsz3529);
-            KILL(sail_int)(&zgsz3529);
-            KILL(sail_int)(&zgsz3528);
-            KILL(sail_int)(&zgsz3527);
-          }
-          {
-            sail_int zgsz3526;
-            CREATE(sail_int)(&zgsz3526);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3526, zgaz3260);
-            shiftr(&zgaz3261, ztop, zgsz3526);
-            KILL(sail_int)(&zgsz3526);
+            RECREATE(sail_int)(&zghz3241);
+            CONVERT_OF(sail_int, mach_int)(&zghz3241, zgaz3230);
+            shiftr(&zghz3235, ztop, zghz3241);
           }
         }
-        int64_t zgaz3262;
+        int64_t zgaz3232;
         {
-          sail_int zgsz3532;
-          CREATE(sail_int)(&zgsz3532);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3532, zcap_mantissa_width);
-          sail_int zgsz3533;
-          CREATE(sail_int)(&zgsz3533);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3533, INT64_C(3));
-          sail_int zgsz3534;
-          CREATE(sail_int)(&zgsz3534);
-          sub_int(&zgsz3534, zgsz3532, zgsz3533);
-          zgaz3262 = CONVERT_OF(mach_int, sail_int)(zgsz3534);
-          KILL(sail_int)(&zgsz3534);
-          KILL(sail_int)(&zgsz3533);
-          KILL(sail_int)(&zgsz3532);
+          RECREATE(sail_int)(&zghz3238);
+          CONVERT_OF(sail_int, mach_int)(&zghz3238, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz3239);
+          CONVERT_OF(sail_int, mach_int)(&zghz3239, INT64_C(3));
+          RECREATE(sail_int)(&zghz3240);
+          sub_int(&zghz3240, zghz3238, zghz3239);
+          zgaz3232 = CONVERT_OF(mach_int, sail_int)(zghz3240);
         }
         {
-          sail_int zgsz3530;
-          CREATE(sail_int)(&zgsz3530);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3530, zgaz3262);
-          lbits zgsz3531;
-          CREATE(lbits)(&zgsz3531);
-          sail_truncate(&zgsz3531, zgaz3261, zgsz3530);
-          zT_ie = CONVERT_OF(fbits, lbits)(zgsz3531, true);
-          KILL(lbits)(&zgsz3531);
-          KILL(sail_int)(&zgsz3530);
+          RECREATE(sail_int)(&zghz3236);
+          CONVERT_OF(sail_int, mach_int)(&zghz3236, zgaz3232);
+          RECREATE(lbits)(&zghz3237);
+          sail_truncate(&zghz3237, zghz3235, zghz3236);
+          zT_ie = CONVERT_OF(fbits, lbits)(zghz3237, true);
         }
-        KILL(lbits)(&zgaz3261);
       }
-      lbits zmaskLo;
-      CREATE(lbits)(&zmaskLo);
+      RECREATE(lbits)(&zghz3199);
       {
-        sbits zgaz3259;
+        sbits zgaz3229;
         {
-          int64_t zgaz3258;
+          int64_t zgaz3228;
+          zgaz3228 = (ze + INT64_C(3));
           {
-            sail_int zgsz3537;
-            CREATE(sail_int)(&zgsz3537);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3537, ze);
-            sail_int zgsz3538;
-            CREATE(sail_int)(&zgsz3538);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3538, INT64_C(3));
-            sail_int zgsz3539;
-            CREATE(sail_int)(&zgsz3539);
-            add_int(&zgsz3539, zgsz3537, zgsz3538);
-            zgaz3258 = CONVERT_OF(mach_int, sail_int)(zgsz3539);
-            KILL(sail_int)(&zgsz3539);
-            KILL(sail_int)(&zgsz3538);
-            KILL(sail_int)(&zgsz3537);
-          }
-          {
-            sail_int zgsz3535;
-            CREATE(sail_int)(&zgsz3535);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3535, zgaz3258);
-            lbits zgsz3536;
-            CREATE(lbits)(&zgsz3536);
-            sailgen_ones(&zgsz3536, zgsz3535);
-            zgaz3259 = CONVERT_OF(sbits, lbits)(zgsz3536, true);
-            KILL(lbits)(&zgsz3536);
-            KILL(sail_int)(&zgsz3535);
+            RECREATE(sail_int)(&zghz3233);
+            CONVERT_OF(sail_int, mach_int)(&zghz3233, zgaz3228);
+            RECREATE(lbits)(&zghz3234);
+            sailgen_ones(&zghz3234, zghz3233);
+            zgaz3229 = CONVERT_OF(sbits, lbits)(zghz3234, true);
           }
         }
         {
-          sail_int zgsz3540;
-          CREATE(sail_int)(&zgsz3540);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3540, INT64_C(65));
-          lbits zgsz3541;
-          CREATE(lbits)(&zgsz3541);
-          CONVERT_OF(lbits, sbits)(&zgsz3541, zgaz3259, true);
-          sailgen_EXTZ(&zmaskLo, zgsz3540, zgsz3541);
-          KILL(lbits)(&zgsz3541);
-          KILL(sail_int)(&zgsz3540);
+          RECREATE(sail_int)(&zghz3231);
+          CONVERT_OF(sail_int, mach_int)(&zghz3231, INT64_C(65));
+          RECREATE(lbits)(&zghz3232);
+          CONVERT_OF(lbits, sbits)(&zghz3232, zgaz3229, true);
+          sailgen_EXTZ(&zghz3199, zghz3231, zghz3232);
         }
       }
       {
-        sail_int zgaz3243;
-        CREATE(sail_int)(&zgaz3243);
+        RECREATE(sail_int)(&zghz3228);
         {
-          lbits zgaz3242;
-          CREATE(lbits)(&zgaz3242);
-          and_bits(&zgaz3242, zext_base, zmaskLo);
-          sail_unsigned(&zgaz3243, zgaz3242);
-          KILL(lbits)(&zgaz3242);
+          RECREATE(lbits)(&zghz3230);
+          and_bits(&zghz3230, zghz3193, zghz3199);
+          sail_unsigned(&zghz3228, zghz3230);
         }
         {
-          sail_int zgsz3542;
-          CREATE(sail_int)(&zgsz3542);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3542, INT64_C(0));
-          zlostSignificantBase = sailgen_neq_int(zgaz3243, zgsz3542);
-          KILL(sail_int)(&zgsz3542);
+          RECREATE(sail_int)(&zghz3229);
+          CONVERT_OF(sail_int, mach_int)(&zghz3229, INT64_C(0));
+          zlostSignificantBase = sailgen_neq_int(zghz3228, zghz3229);
         }
         unit zgsz358;
         zgsz358 = UNIT;
-        KILL(sail_int)(&zgaz3243);
       }
       {
-        sail_int zgaz3245;
-        CREATE(sail_int)(&zgaz3245);
+        RECREATE(sail_int)(&zghz3225);
         {
-          lbits zgaz3244;
-          CREATE(lbits)(&zgaz3244);
-          and_bits(&zgaz3244, ztop, zmaskLo);
-          sail_unsigned(&zgaz3245, zgaz3244);
-          KILL(lbits)(&zgaz3244);
+          RECREATE(lbits)(&zghz3227);
+          and_bits(&zghz3227, ztop, zghz3199);
+          sail_unsigned(&zghz3225, zghz3227);
         }
         {
-          sail_int zgsz3543;
-          CREATE(sail_int)(&zgsz3543);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3543, INT64_C(0));
-          zlostSignificantTop = sailgen_neq_int(zgaz3245, zgsz3543);
-          KILL(sail_int)(&zgsz3543);
+          RECREATE(sail_int)(&zghz3226);
+          CONVERT_OF(sail_int, mach_int)(&zghz3226, INT64_C(0));
+          zlostSignificantTop = sailgen_neq_int(zghz3225, zghz3226);
         }
         unit zgsz357;
         zgsz357 = UNIT;
-        KILL(sail_int)(&zgaz3245);
       }
       {
         unit zgsz356;
         if (zlostSignificantTop) {
           {
-            lbits zgsz3544;
-            CREATE(lbits)(&zgsz3544);
-            CONVERT_OF(lbits, fbits)(&zgsz3544, zT_ie, UINT64_C(11) , true);
-            sail_int zgsz3545;
-            CREATE(sail_int)(&zgsz3545);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3545, INT64_C(1));
-            lbits zgsz3546;
-            CREATE(lbits)(&zgsz3546);
-            add_bits_int(&zgsz3546, zgsz3544, zgsz3545);
-            zT_ie = CONVERT_OF(fbits, lbits)(zgsz3546, true);
-            KILL(lbits)(&zgsz3546);
-            KILL(sail_int)(&zgsz3545);
-            KILL(lbits)(&zgsz3544);
+            RECREATE(lbits)(&zghz3222);
+            CONVERT_OF(lbits, fbits)(&zghz3222, zT_ie, UINT64_C(11) , true);
+            RECREATE(sail_int)(&zghz3223);
+            CONVERT_OF(sail_int, mach_int)(&zghz3223, INT64_C(1));
+            RECREATE(lbits)(&zghz3224);
+            add_bits_int(&zghz3224, zghz3222, zghz3223);
+            zT_ie = CONVERT_OF(fbits, lbits)(zghz3224, true);
           }
           zgsz356 = UNIT;
         } else {  zgsz356 = UNIT;  }
       }
       uint64_t zlen_ie;
+      zlen_ie = ((zT_ie - zB_ie) & UINT64_C(0b11111111111));
       {
-        lbits zgsz3586;
-        CREATE(lbits)(&zgsz3586);
-        CONVERT_OF(lbits, fbits)(&zgsz3586, zT_ie, UINT64_C(11) , true);
-        lbits zgsz3587;
-        CREATE(lbits)(&zgsz3587);
-        CONVERT_OF(lbits, fbits)(&zgsz3587, zB_ie, UINT64_C(11) , true);
-        lbits zgsz3588;
-        CREATE(lbits)(&zgsz3588);
-        sub_bits(&zgsz3588, zgsz3586, zgsz3587);
-        zlen_ie = CONVERT_OF(fbits, lbits)(zgsz3588, true);
-        KILL(lbits)(&zgsz3588);
-        KILL(lbits)(&zgsz3587);
-        KILL(lbits)(&zgsz3586);
-      }
-      {
-        bool zgaz3248;
+        bool zgaz3218;
         {
-          fbits zgaz3247;
+          fbits zgaz3217;
           {
-            int64_t zgaz3246;
+            int64_t zgaz3216;
             {
-              sail_int zgsz3549;
-              CREATE(sail_int)(&zgsz3549);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3549, zcap_mantissa_width);
-              sail_int zgsz3550;
-              CREATE(sail_int)(&zgsz3550);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3550, INT64_C(4));
-              sail_int zgsz3551;
-              CREATE(sail_int)(&zgsz3551);
-              sub_int(&zgsz3551, zgsz3549, zgsz3550);
-              zgaz3246 = CONVERT_OF(mach_int, sail_int)(zgsz3551);
-              KILL(sail_int)(&zgsz3551);
-              KILL(sail_int)(&zgsz3550);
-              KILL(sail_int)(&zgsz3549);
+              RECREATE(sail_int)(&zghz3219);
+              CONVERT_OF(sail_int, mach_int)(&zghz3219, zcap_mantissa_width);
+              RECREATE(sail_int)(&zghz3220);
+              CONVERT_OF(sail_int, mach_int)(&zghz3220, INT64_C(4));
+              RECREATE(sail_int)(&zghz3221);
+              sub_int(&zghz3221, zghz3219, zghz3220);
+              zgaz3216 = CONVERT_OF(mach_int, sail_int)(zghz3221);
             }
-            {
-              lbits zgsz3547;
-              CREATE(lbits)(&zgsz3547);
-              CONVERT_OF(lbits, fbits)(&zgsz3547, zlen_ie, UINT64_C(11) , true);
-              sail_int zgsz3548;
-              CREATE(sail_int)(&zgsz3548);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3548, zgaz3246);
-              zgaz3247 = bitvector_access(zgsz3547, zgsz3548);
-              KILL(sail_int)(&zgsz3548);
-              KILL(lbits)(&zgsz3547);
-            }
+            zgaz3217 = (UINT64_C(1) & (zlen_ie >> zgaz3216));
           }
-          zgaz3248 = eq_bit(zgaz3247, UINT64_C(1));
+          zgaz3218 = eq_bit(zgaz3217, UINT64_C(1));
         }
         unit zgsz360;
-        if (zgaz3248) {
+        if (zgaz3218) {
           {
             zincE = true;
             unit zgsz366;
@@ -4601,19 +3863,9 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           {
             bool zgsz361;
             if (zlostSignificantBase) {  zgsz361 = true;  } else {
-              fbits zgaz3249;
-              {
-                lbits zgsz3552;
-                CREATE(lbits)(&zgsz3552);
-                CONVERT_OF(lbits, fbits)(&zgsz3552, zB_ie, UINT64_C(11) , true);
-                sail_int zgsz3553;
-                CREATE(sail_int)(&zgsz3553);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3553, INT64_C(0));
-                zgaz3249 = bitvector_access(zgsz3552, zgsz3553);
-                KILL(sail_int)(&zgsz3553);
-                KILL(lbits)(&zgsz3552);
-              }
-              zgsz361 = eq_bit(zgaz3249, UINT64_C(1));
+              fbits zgaz3219;
+              zgaz3219 = (UINT64_C(1) & (zB_ie >> INT64_C(0)));
+              zgsz361 = eq_bit(zgaz3219, UINT64_C(1));
             }
             zlostSignificantBase = zgsz361;
             unit zgsz365;
@@ -4622,270 +3874,136 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           {
             bool zgsz362;
             if (zlostSignificantTop) {  zgsz362 = true;  } else {
-              fbits zgaz3250;
-              {
-                lbits zgsz3554;
-                CREATE(lbits)(&zgsz3554);
-                CONVERT_OF(lbits, fbits)(&zgsz3554, zT_ie, UINT64_C(11) , true);
-                sail_int zgsz3555;
-                CREATE(sail_int)(&zgsz3555);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3555, INT64_C(0));
-                zgaz3250 = bitvector_access(zgsz3554, zgsz3555);
-                KILL(sail_int)(&zgsz3555);
-                KILL(lbits)(&zgsz3554);
-              }
-              zgsz362 = eq_bit(zgaz3250, UINT64_C(1));
+              fbits zgaz3220;
+              zgaz3220 = (UINT64_C(1) & (zT_ie >> INT64_C(0)));
+              zgsz362 = eq_bit(zgaz3220, UINT64_C(1));
             }
             zlostSignificantTop = zgsz362;
             unit zgsz364;
             zgsz364 = UNIT;
           }
           {
-            uint64_t zgaz3252;
+            uint64_t zgaz3222;
             {
-              int64_t zgaz3251;
+              int64_t zgaz3221;
+              zgaz3221 = (ze + INT64_C(4));
               {
-                sail_int zgsz3559;
-                CREATE(sail_int)(&zgsz3559);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3559, ze);
-                sail_int zgsz3560;
-                CREATE(sail_int)(&zgsz3560);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3560, INT64_C(4));
-                sail_int zgsz3561;
-                CREATE(sail_int)(&zgsz3561);
-                add_int(&zgsz3561, zgsz3559, zgsz3560);
-                zgaz3251 = CONVERT_OF(mach_int, sail_int)(zgsz3561);
-                KILL(sail_int)(&zgsz3561);
-                KILL(sail_int)(&zgsz3560);
-                KILL(sail_int)(&zgsz3559);
-              }
-              {
-                lbits zgsz3556;
-                CREATE(lbits)(&zgsz3556);
-                CONVERT_OF(lbits, fbits)(&zgsz3556, zbase, UINT64_C(64) , true);
-                sail_int zgsz3557;
-                CREATE(sail_int)(&zgsz3557);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3557, zgaz3251);
-                lbits zgsz3558;
-                CREATE(lbits)(&zgsz3558);
-                shiftr(&zgsz3558, zgsz3556, zgsz3557);
-                zgaz3252 = CONVERT_OF(fbits, lbits)(zgsz3558, true);
-                KILL(lbits)(&zgsz3558);
-                KILL(sail_int)(&zgsz3557);
-                KILL(lbits)(&zgsz3556);
+                RECREATE(lbits)(&zghz3216);
+                CONVERT_OF(lbits, fbits)(&zghz3216, zbase, UINT64_C(64) , true);
+                RECREATE(sail_int)(&zghz3217);
+                CONVERT_OF(sail_int, mach_int)(&zghz3217, zgaz3221);
+                RECREATE(lbits)(&zghz3218);
+                shiftr(&zghz3218, zghz3216, zghz3217);
+                zgaz3222 = CONVERT_OF(fbits, lbits)(zghz3218, true);
               }
             }
-            int64_t zgaz3253;
+            int64_t zgaz3223;
             {
-              sail_int zgsz3565;
-              CREATE(sail_int)(&zgsz3565);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3565, zcap_mantissa_width);
-              sail_int zgsz3566;
-              CREATE(sail_int)(&zgsz3566);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3566, INT64_C(3));
-              sail_int zgsz3567;
-              CREATE(sail_int)(&zgsz3567);
-              sub_int(&zgsz3567, zgsz3565, zgsz3566);
-              zgaz3253 = CONVERT_OF(mach_int, sail_int)(zgsz3567);
-              KILL(sail_int)(&zgsz3567);
-              KILL(sail_int)(&zgsz3566);
-              KILL(sail_int)(&zgsz3565);
+              RECREATE(sail_int)(&zghz3213);
+              CONVERT_OF(sail_int, mach_int)(&zghz3213, zcap_mantissa_width);
+              RECREATE(sail_int)(&zghz3214);
+              CONVERT_OF(sail_int, mach_int)(&zghz3214, INT64_C(3));
+              RECREATE(sail_int)(&zghz3215);
+              sub_int(&zghz3215, zghz3213, zghz3214);
+              zgaz3223 = CONVERT_OF(mach_int, sail_int)(zghz3215);
             }
             {
-              lbits zgsz3562;
-              CREATE(lbits)(&zgsz3562);
-              CONVERT_OF(lbits, fbits)(&zgsz3562, zgaz3252, UINT64_C(64) , true);
-              sail_int zgsz3563;
-              CREATE(sail_int)(&zgsz3563);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3563, zgaz3253);
-              lbits zgsz3564;
-              CREATE(lbits)(&zgsz3564);
-              sail_truncate(&zgsz3564, zgsz3562, zgsz3563);
-              zB_ie = CONVERT_OF(fbits, lbits)(zgsz3564, true);
-              KILL(lbits)(&zgsz3564);
-              KILL(sail_int)(&zgsz3563);
-              KILL(lbits)(&zgsz3562);
+              RECREATE(lbits)(&zghz3210);
+              CONVERT_OF(lbits, fbits)(&zghz3210, zgaz3222, UINT64_C(64) , true);
+              RECREATE(sail_int)(&zghz3211);
+              CONVERT_OF(sail_int, mach_int)(&zghz3211, zgaz3223);
+              RECREATE(lbits)(&zghz3212);
+              sail_truncate(&zghz3212, zghz3210, zghz3211);
+              zB_ie = CONVERT_OF(fbits, lbits)(zghz3212, true);
             }
             unit zgsz363;
             zgsz363 = UNIT;
           }
           int64_t zincT;
           if (zlostSignificantTop) {  zincT = INT64_C(1);  } else {  zincT = INT64_C(0);  }
-          uint64_t zgaz3257;
+          uint64_t zgaz3227;
           {
-            lbits zgaz3255;
-            CREATE(lbits)(&zgaz3255);
+            RECREATE(lbits)(&zghz3203);
             {
-              int64_t zgaz3254;
+              int64_t zgaz3224;
+              zgaz3224 = (ze + INT64_C(4));
               {
-                sail_int zgsz3569;
-                CREATE(sail_int)(&zgsz3569);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3569, ze);
-                sail_int zgsz3570;
-                CREATE(sail_int)(&zgsz3570);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3570, INT64_C(4));
-                sail_int zgsz3571;
-                CREATE(sail_int)(&zgsz3571);
-                add_int(&zgsz3571, zgsz3569, zgsz3570);
-                zgaz3254 = CONVERT_OF(mach_int, sail_int)(zgsz3571);
-                KILL(sail_int)(&zgsz3571);
-                KILL(sail_int)(&zgsz3570);
-                KILL(sail_int)(&zgsz3569);
-              }
-              {
-                sail_int zgsz3568;
-                CREATE(sail_int)(&zgsz3568);
-                CONVERT_OF(sail_int, mach_int)(&zgsz3568, zgaz3254);
-                shiftr(&zgaz3255, ztop, zgsz3568);
-                KILL(sail_int)(&zgsz3568);
+                RECREATE(sail_int)(&zghz3209);
+                CONVERT_OF(sail_int, mach_int)(&zghz3209, zgaz3224);
+                shiftr(&zghz3203, ztop, zghz3209);
               }
             }
-            int64_t zgaz3256;
+            int64_t zgaz3226;
             {
-              sail_int zgsz3574;
-              CREATE(sail_int)(&zgsz3574);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3574, zcap_mantissa_width);
-              sail_int zgsz3575;
-              CREATE(sail_int)(&zgsz3575);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3575, INT64_C(3));
-              sail_int zgsz3576;
-              CREATE(sail_int)(&zgsz3576);
-              sub_int(&zgsz3576, zgsz3574, zgsz3575);
-              zgaz3256 = CONVERT_OF(mach_int, sail_int)(zgsz3576);
-              KILL(sail_int)(&zgsz3576);
-              KILL(sail_int)(&zgsz3575);
-              KILL(sail_int)(&zgsz3574);
+              RECREATE(sail_int)(&zghz3206);
+              CONVERT_OF(sail_int, mach_int)(&zghz3206, zcap_mantissa_width);
+              RECREATE(sail_int)(&zghz3207);
+              CONVERT_OF(sail_int, mach_int)(&zghz3207, INT64_C(3));
+              RECREATE(sail_int)(&zghz3208);
+              sub_int(&zghz3208, zghz3206, zghz3207);
+              zgaz3226 = CONVERT_OF(mach_int, sail_int)(zghz3208);
             }
             {
-              sail_int zgsz3572;
-              CREATE(sail_int)(&zgsz3572);
-              CONVERT_OF(sail_int, mach_int)(&zgsz3572, zgaz3256);
-              lbits zgsz3573;
-              CREATE(lbits)(&zgsz3573);
-              sail_truncate(&zgsz3573, zgaz3255, zgsz3572);
-              zgaz3257 = CONVERT_OF(fbits, lbits)(zgsz3573, true);
-              KILL(lbits)(&zgsz3573);
-              KILL(sail_int)(&zgsz3572);
+              RECREATE(sail_int)(&zghz3204);
+              CONVERT_OF(sail_int, mach_int)(&zghz3204, zgaz3226);
+              RECREATE(lbits)(&zghz3205);
+              sail_truncate(&zghz3205, zghz3203, zghz3204);
+              zgaz3227 = CONVERT_OF(fbits, lbits)(zghz3205, true);
             }
-            KILL(lbits)(&zgaz3255);
           }
           {
-            lbits zgsz3577;
-            CREATE(lbits)(&zgsz3577);
-            CONVERT_OF(lbits, fbits)(&zgsz3577, zgaz3257, UINT64_C(11) , true);
-            sail_int zgsz3578;
-            CREATE(sail_int)(&zgsz3578);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3578, zincT);
-            lbits zgsz3579;
-            CREATE(lbits)(&zgsz3579);
-            add_bits_int(&zgsz3579, zgsz3577, zgsz3578);
-            zT_ie = CONVERT_OF(fbits, lbits)(zgsz3579, true);
-            KILL(lbits)(&zgsz3579);
-            KILL(sail_int)(&zgsz3578);
-            KILL(lbits)(&zgsz3577);
+            RECREATE(lbits)(&zghz3200);
+            CONVERT_OF(lbits, fbits)(&zghz3200, zgaz3227, UINT64_C(11) , true);
+            RECREATE(sail_int)(&zghz3201);
+            CONVERT_OF(sail_int, mach_int)(&zghz3201, zincT);
+            RECREATE(lbits)(&zghz3202);
+            add_bits_int(&zghz3202, zghz3200, zghz3201);
+            zT_ie = CONVERT_OF(fbits, lbits)(zghz3202, true);
           }
           zgsz360 = UNIT;
         } else {  zgsz360 = UNIT;  }
       }
       {
-        {
-          lbits zgsz3580;
-          CREATE(lbits)(&zgsz3580);
-          CONVERT_OF(lbits, fbits)(&zgsz3580, zB_ie, UINT64_C(11) , true);
-          lbits zgsz3581;
-          CREATE(lbits)(&zgsz3581);
-          CONVERT_OF(lbits, fbits)(&zgsz3581, UINT64_C(0b000), UINT64_C(3) , true);
-          lbits zgsz3582;
-          CREATE(lbits)(&zgsz3582);
-          append(&zgsz3582, zgsz3580, zgsz3581);
-          zBbits = CONVERT_OF(fbits, lbits)(zgsz3582, true);
-          KILL(lbits)(&zgsz3582);
-          KILL(lbits)(&zgsz3581);
-          KILL(lbits)(&zgsz3580);
-        }
+        zBbits = (zB_ie << 3) | UINT64_C(0b000);
         unit zgsz359;
         zgsz359 = UNIT;
       }
-      {
-        lbits zgsz3583;
-        CREATE(lbits)(&zgsz3583);
-        CONVERT_OF(lbits, fbits)(&zgsz3583, zT_ie, UINT64_C(11) , true);
-        lbits zgsz3584;
-        CREATE(lbits)(&zgsz3584);
-        CONVERT_OF(lbits, fbits)(&zgsz3584, UINT64_C(0b000), UINT64_C(3) , true);
-        lbits zgsz3585;
-        CREATE(lbits)(&zgsz3585);
-        append(&zgsz3585, zgsz3583, zgsz3584);
-        zTbits = CONVERT_OF(fbits, lbits)(zgsz3585, true);
-        KILL(lbits)(&zgsz3585);
-        KILL(lbits)(&zgsz3584);
-        KILL(lbits)(&zgsz3583);
-      }
+      zTbits = (zT_ie << 3) | UINT64_C(0b000);
       zgsz355 = UNIT;
-      KILL(lbits)(&zmaskLo);
     } else {  zgsz355 = UNIT;  }
   }
-  struct zCapability znewCap;
+  struct zCapability zghz3195;
   {
-    uint64_t zgaz3268;
+    uint64_t zgaz3238;
     {
-      int64_t zgaz3267;
-      if (zincE) {
-        {
-          sail_int zgsz3589;
-          CREATE(sail_int)(&zgsz3589);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3589, ze);
-          sail_int zgsz3590;
-          CREATE(sail_int)(&zgsz3590);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3590, INT64_C(1));
-          sail_int zgsz3591;
-          CREATE(sail_int)(&zgsz3591);
-          add_int(&zgsz3591, zgsz3589, zgsz3590);
-          zgaz3267 = CONVERT_OF(mach_int, sail_int)(zgsz3591);
-          KILL(sail_int)(&zgsz3591);
-          KILL(sail_int)(&zgsz3590);
-          KILL(sail_int)(&zgsz3589);
-        }
-      } else {  zgaz3267 = ze;  }
+      int64_t zgaz3237;
+      if (zincE) {  zgaz3237 = (ze + INT64_C(1));  } else {  zgaz3237 = ze;  }
       {
-        sail_int zgsz3592;
-        CREATE(sail_int)(&zgsz3592);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3592, INT64_C(6));
-        sail_int zgsz3593;
-        CREATE(sail_int)(&zgsz3593);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3593, zgaz3267);
-        lbits zgsz3594;
-        CREATE(lbits)(&zgsz3594);
-        sailgen_to_bits(&zgsz3594, zgsz3592, zgsz3593);
-        zgaz3268 = CONVERT_OF(fbits, lbits)(zgsz3594, true);
-        KILL(lbits)(&zgsz3594);
-        KILL(sail_int)(&zgsz3593);
-        KILL(sail_int)(&zgsz3592);
+        RECREATE(sail_int)(&zghz3196);
+        CONVERT_OF(sail_int, mach_int)(&zghz3196, INT64_C(6));
+        RECREATE(sail_int)(&zghz3197);
+        CONVERT_OF(sail_int, mach_int)(&zghz3197, zgaz3237);
+        RECREATE(lbits)(&zghz3198);
+        sailgen_to_bits(&zghz3198, zghz3196, zghz3197);
+        zgaz3238 = CONVERT_OF(fbits, lbits)(zghz3198, true);
       }
     }
-    struct zCapability zgsz367;
-    zgsz367 = zcap;
-    zgsz367.zB = zBbits;
-    zgsz367.zE = zgaz3268;
-    zgsz367.zT = zTbits;
-    zgsz367.zaddress = zbase;
-    zgsz367.zinternal_E = zie;
-    znewCap = zgsz367;
+    zghz3195 = zcap;
+    zghz3195.zB = zBbits;
+    zghz3195.zE = zgaz3238;
+    zghz3195.zT = zTbits;
+    zghz3195.zaddress = zbase;
+    zghz3195.zinternal_E = zie;
   }
   bool zexact;
   {
-    bool zgaz3266;
-    {
-      bool zgsz368;
-      if (zlostSignificantBase) {  zgsz368 = true;  } else {  zgsz368 = zlostSignificantTop;  }
-      zgaz3266 = zgsz368;
+    bool zgaz3236;
+    {    if (zlostSignificantBase) {  zgaz3236 = true;  } else {  zgaz3236 = zlostSignificantTop;  }
     }
-    zexact = not(zgaz3266);
+    zexact = not(zgaz3236);
   }
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz369;
-  zgsz369.ztup0 = zexact;
-  zgsz369.ztup1 = znewCap;
-  zcbz326 = zgsz369;
+  zcbz326.ztup0 = zexact;
+  zcbz326.ztup1 = zghz3195;
 
 
 
@@ -4894,10 +4012,6 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
 
 
 
-
-
-  KILL(lbits)(&zlength);
-  KILL(lbits)(&zext_base);
 end_function_116: ;
   return zcbz326;
 end_block_exception_117: ;
@@ -4906,7 +4020,106 @@ end_block_exception_117: ;
   return zcbz352;
 }
 
+
+
+static void finish_sailgen_setCapBounds(void)
+{
+  KILL(lbits)(&zghz3274);
+  KILL(lbits)(&zghz3273);
+  KILL(sail_int)(&zghz3272);
+  KILL(sail_int)(&zghz3271);
+  KILL(sail_int)(&zghz3270);
+  KILL(lbits)(&zghz3269);
+  KILL(sail_int)(&zghz3268);
+  KILL(sail_int)(&zghz3267);
+  KILL(sail_int)(&zghz3266);
+  KILL(lbits)(&zghz3265);
+  KILL(sail_int)(&zghz3264);
+  KILL(sail_int)(&zghz3263);
+  KILL(sail_int)(&zghz3262);
+  KILL(sail_int)(&zghz3261);
+  KILL(sail_int)(&zghz3260);
+  KILL(sail_int)(&zghz3259);
+  KILL(sail_int)(&zghz3258);
+  KILL(sail_int)(&zghz3257);
+  KILL(sail_int)(&zghz3256);
+  KILL(lbits)(&zghz3255);
+  KILL(sail_int)(&zghz3254);
+  KILL(lbits)(&zghz3253);
+  KILL(lbits)(&zghz3252);
+  KILL(sail_int)(&zghz3251);
+  KILL(lbits)(&zghz3250);
+  KILL(sail_int)(&zghz3249);
+  KILL(lbits)(&zghz3248);
+  KILL(sail_int)(&zghz3247);
+  KILL(sail_int)(&zghz3246);
+  KILL(sail_int)(&zghz3245);
+  KILL(lbits)(&zghz3244);
+  KILL(sail_int)(&zghz3243);
+  KILL(lbits)(&zghz3242);
+  KILL(sail_int)(&zghz3241);
+  KILL(sail_int)(&zghz3240);
+  KILL(sail_int)(&zghz3239);
+  KILL(sail_int)(&zghz3238);
+  KILL(lbits)(&zghz3237);
+  KILL(sail_int)(&zghz3236);
+  KILL(lbits)(&zghz3235);
+  KILL(lbits)(&zghz3234);
+  KILL(sail_int)(&zghz3233);
+  KILL(lbits)(&zghz3232);
+  KILL(sail_int)(&zghz3231);
+  KILL(lbits)(&zghz3230);
+  KILL(sail_int)(&zghz3229);
+  KILL(sail_int)(&zghz3228);
+  KILL(lbits)(&zghz3227);
+  KILL(sail_int)(&zghz3226);
+  KILL(sail_int)(&zghz3225);
+  KILL(lbits)(&zghz3224);
+  KILL(sail_int)(&zghz3223);
+  KILL(lbits)(&zghz3222);
+  KILL(sail_int)(&zghz3221);
+  KILL(sail_int)(&zghz3220);
+  KILL(sail_int)(&zghz3219);
+  KILL(lbits)(&zghz3218);
+  KILL(sail_int)(&zghz3217);
+  KILL(lbits)(&zghz3216);
+  KILL(sail_int)(&zghz3215);
+  KILL(sail_int)(&zghz3214);
+  KILL(sail_int)(&zghz3213);
+  KILL(lbits)(&zghz3212);
+  KILL(sail_int)(&zghz3211);
+  KILL(lbits)(&zghz3210);
+  KILL(sail_int)(&zghz3209);
+  KILL(sail_int)(&zghz3208);
+  KILL(sail_int)(&zghz3207);
+  KILL(sail_int)(&zghz3206);
+  KILL(lbits)(&zghz3205);
+  KILL(sail_int)(&zghz3204);
+  KILL(lbits)(&zghz3203);
+  KILL(lbits)(&zghz3202);
+  KILL(sail_int)(&zghz3201);
+  KILL(lbits)(&zghz3200);
+  KILL(lbits)(&zghz3199);
+  KILL(lbits)(&zghz3198);
+  KILL(sail_int)(&zghz3197);
+  KILL(sail_int)(&zghz3196);
+
+  KILL(lbits)(&zghz3194);
+  KILL(lbits)(&zghz3193);
+}
+
 static uint64_t sailgen_getCapPerms(struct zCapability);
+
+sail_int zghz3275;
+lbits zghz3276;
+lbits zghz3277;
+
+static void startup_sailgen_getCapPerms(void)
+{
+  CREATE(sail_int)(&zghz3275);
+  CREATE(lbits)(&zghz3276);
+  CREATE(lbits)(&zghz3277);
+}
 
 static uint64_t sailgen_getCapPerms(struct zCapability zcap)
 {
@@ -4915,41 +4128,21 @@ static uint64_t sailgen_getCapPerms(struct zCapability zcap)
   uint64_t zcbz327;
   uint64_t zperms;
   {
-    uint64_t zgaz3276;
-    zgaz3276 = sailgen_getCapHardPerms(zcap);
+    uint64_t zgaz3246;
+    zgaz3246 = sailgen_getCapHardPerms(zcap);
     {
-      sail_int zgsz3602;
-      CREATE(sail_int)(&zgsz3602);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3602, INT64_C(15));
-      lbits zgsz3603;
-      CREATE(lbits)(&zgsz3603);
-      CONVERT_OF(lbits, fbits)(&zgsz3603, zgaz3276, UINT64_C(12) , true);
-      lbits zgsz3604;
-      CREATE(lbits)(&zgsz3604);
-      sailgen_EXTZ(&zgsz3604, zgsz3602, zgsz3603);
-      zperms = CONVERT_OF(fbits, lbits)(zgsz3604, true);
-      KILL(lbits)(&zgsz3604);
-      KILL(lbits)(&zgsz3603);
-      KILL(sail_int)(&zgsz3602);
+      RECREATE(sail_int)(&zghz3275);
+      CONVERT_OF(sail_int, mach_int)(&zghz3275, INT64_C(15));
+      RECREATE(lbits)(&zghz3276);
+      CONVERT_OF(lbits, fbits)(&zghz3276, zgaz3246, UINT64_C(12) , true);
+      RECREATE(lbits)(&zghz3277);
+      sailgen_EXTZ(&zghz3277, zghz3275, zghz3276);
+      zperms = CONVERT_OF(fbits, lbits)(zghz3277, true);
     }
   }
-  uint64_t zgaz3275;
-  zgaz3275 = zcap.zuperms;
-  {
-    lbits zgsz3605;
-    CREATE(lbits)(&zgsz3605);
-    CONVERT_OF(lbits, fbits)(&zgsz3605, zgaz3275, UINT64_C(4) , true);
-    lbits zgsz3606;
-    CREATE(lbits)(&zgsz3606);
-    CONVERT_OF(lbits, fbits)(&zgsz3606, zperms, UINT64_C(15) , true);
-    lbits zgsz3607;
-    CREATE(lbits)(&zgsz3607);
-    append(&zgsz3607, zgsz3605, zgsz3606);
-    zcbz327 = CONVERT_OF(fbits, lbits)(zgsz3607, true);
-    KILL(lbits)(&zgsz3607);
-    KILL(lbits)(&zgsz3606);
-    KILL(lbits)(&zgsz3605);
-  }
+  uint64_t zgaz3245;
+  zgaz3245 = zcap.zuperms;
+  zcbz327 = (zgaz3245 << 15) | zperms;
 
 
 end_function_119: ;
@@ -4959,256 +4152,149 @@ end_block_exception_120: ;
   return UINT64_C(0xdeadc0de);
 }
 
+
+
+static void finish_sailgen_getCapPerms(void)
+{
+  KILL(lbits)(&zghz3277);
+  KILL(lbits)(&zghz3276);
+  KILL(sail_int)(&zghz3275);
+}
+
 static struct zCapability sailgen_setCapPerms(struct zCapability, uint64_t);
+
+struct zCapability zghz3278;
+lbits zghz3279;
+sail_int zghz3280;
+lbits zghz3281;
+lbits zghz3282;
+sail_int zghz3283;
+lbits zghz3284;
+
+static void startup_sailgen_setCapPerms(void)
+{
+
+  CREATE(lbits)(&zghz3279);
+  CREATE(sail_int)(&zghz3280);
+  CREATE(lbits)(&zghz3281);
+  CREATE(lbits)(&zghz3282);
+  CREATE(sail_int)(&zghz3283);
+  CREATE(lbits)(&zghz3284);
+}
 
 static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t zperms)
 {
   __label__ end_function_122, end_block_exception_123;
 
-  struct zCapability zcbz328;
-  uint64_t zgaz3278;
+  struct zCapability zghz3278;
+  uint64_t zgaz3248;
   {
-    uint64_t zgaz3277;
+    uint64_t zgaz3247;
     {
-      lbits zgsz3611;
-      CREATE(lbits)(&zgsz3611);
-      CONVERT_OF(lbits, fbits)(&zgsz3611, zperms, UINT64_C(19) , true);
-      sail_int zgsz3612;
-      CREATE(sail_int)(&zgsz3612);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3612, zcap_uperms_shift);
-      lbits zgsz3613;
-      CREATE(lbits)(&zgsz3613);
-      shiftr(&zgsz3613, zgsz3611, zgsz3612);
-      zgaz3277 = CONVERT_OF(fbits, lbits)(zgsz3613, true);
-      KILL(lbits)(&zgsz3613);
-      KILL(sail_int)(&zgsz3612);
-      KILL(lbits)(&zgsz3611);
+      RECREATE(lbits)(&zghz3282);
+      CONVERT_OF(lbits, fbits)(&zghz3282, zperms, UINT64_C(19) , true);
+      RECREATE(sail_int)(&zghz3283);
+      CONVERT_OF(sail_int, mach_int)(&zghz3283, zcap_uperms_shift);
+      RECREATE(lbits)(&zghz3284);
+      shiftr(&zghz3284, zghz3282, zghz3283);
+      zgaz3247 = CONVERT_OF(fbits, lbits)(zghz3284, true);
     }
     {
-      lbits zgsz3608;
-      CREATE(lbits)(&zgsz3608);
-      CONVERT_OF(lbits, fbits)(&zgsz3608, zgaz3277, UINT64_C(19) , true);
-      sail_int zgsz3609;
-      CREATE(sail_int)(&zgsz3609);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3609, zcap_uperms_width);
-      lbits zgsz3610;
-      CREATE(lbits)(&zgsz3610);
-      sail_truncate(&zgsz3610, zgsz3608, zgsz3609);
-      zgaz3278 = CONVERT_OF(fbits, lbits)(zgsz3610, true);
-      KILL(lbits)(&zgsz3610);
-      KILL(sail_int)(&zgsz3609);
-      KILL(lbits)(&zgsz3608);
+      RECREATE(lbits)(&zghz3279);
+      CONVERT_OF(lbits, fbits)(&zghz3279, zgaz3247, UINT64_C(19) , true);
+      RECREATE(sail_int)(&zghz3280);
+      CONVERT_OF(sail_int, mach_int)(&zghz3280, zcap_uperms_width);
+      RECREATE(lbits)(&zghz3281);
+      sail_truncate(&zghz3281, zghz3279, zghz3280);
+      zgaz3248 = CONVERT_OF(fbits, lbits)(zghz3281, true);
     }
   }
-  bool zgaz3280;
+  bool zgaz3250;
   {
-    fbits zgaz3279;
-    {
-      lbits zgsz3614;
-      CREATE(lbits)(&zgsz3614);
-      CONVERT_OF(lbits, fbits)(&zgsz3614, zperms, UINT64_C(19) , true);
-      sail_int zgsz3615;
-      CREATE(sail_int)(&zgsz3615);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3615, INT64_C(11));
-      zgaz3279 = bitvector_access(zgsz3614, zgsz3615);
-      KILL(sail_int)(&zgsz3615);
-      KILL(lbits)(&zgsz3614);
-    }
-    zgaz3280 = sailgen_bit_to_bool(zgaz3279);
+    fbits zgaz3249;
+    zgaz3249 = (UINT64_C(1) & (zperms >> INT64_C(11)));
+    zgaz3250 = sailgen_bit_to_bool(zgaz3249);
   }
-  bool zgaz3282;
+  bool zgaz3252;
   {
-    fbits zgaz3281;
-    {
-      lbits zgsz3616;
-      CREATE(lbits)(&zgsz3616);
-      CONVERT_OF(lbits, fbits)(&zgsz3616, zperms, UINT64_C(19) , true);
-      sail_int zgsz3617;
-      CREATE(sail_int)(&zgsz3617);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3617, INT64_C(10));
-      zgaz3281 = bitvector_access(zgsz3616, zgsz3617);
-      KILL(sail_int)(&zgsz3617);
-      KILL(lbits)(&zgsz3616);
-    }
-    zgaz3282 = sailgen_bit_to_bool(zgaz3281);
+    fbits zgaz3251;
+    zgaz3251 = (UINT64_C(1) & (zperms >> INT64_C(10)));
+    zgaz3252 = sailgen_bit_to_bool(zgaz3251);
   }
-  bool zgaz3284;
+  bool zgaz3254;
   {
-    fbits zgaz3283;
-    {
-      lbits zgsz3618;
-      CREATE(lbits)(&zgsz3618);
-      CONVERT_OF(lbits, fbits)(&zgsz3618, zperms, UINT64_C(19) , true);
-      sail_int zgsz3619;
-      CREATE(sail_int)(&zgsz3619);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3619, INT64_C(9));
-      zgaz3283 = bitvector_access(zgsz3618, zgsz3619);
-      KILL(sail_int)(&zgsz3619);
-      KILL(lbits)(&zgsz3618);
-    }
-    zgaz3284 = sailgen_bit_to_bool(zgaz3283);
+    fbits zgaz3253;
+    zgaz3253 = (UINT64_C(1) & (zperms >> INT64_C(9)));
+    zgaz3254 = sailgen_bit_to_bool(zgaz3253);
   }
-  bool zgaz3286;
+  bool zgaz3256;
   {
-    fbits zgaz3285;
-    {
-      lbits zgsz3620;
-      CREATE(lbits)(&zgsz3620);
-      CONVERT_OF(lbits, fbits)(&zgsz3620, zperms, UINT64_C(19) , true);
-      sail_int zgsz3621;
-      CREATE(sail_int)(&zgsz3621);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3621, INT64_C(8));
-      zgaz3285 = bitvector_access(zgsz3620, zgsz3621);
-      KILL(sail_int)(&zgsz3621);
-      KILL(lbits)(&zgsz3620);
-    }
-    zgaz3286 = sailgen_bit_to_bool(zgaz3285);
+    fbits zgaz3255;
+    zgaz3255 = (UINT64_C(1) & (zperms >> INT64_C(8)));
+    zgaz3256 = sailgen_bit_to_bool(zgaz3255);
   }
-  bool zgaz3288;
+  bool zgaz3258;
   {
-    fbits zgaz3287;
-    {
-      lbits zgsz3622;
-      CREATE(lbits)(&zgsz3622);
-      CONVERT_OF(lbits, fbits)(&zgsz3622, zperms, UINT64_C(19) , true);
-      sail_int zgsz3623;
-      CREATE(sail_int)(&zgsz3623);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3623, INT64_C(7));
-      zgaz3287 = bitvector_access(zgsz3622, zgsz3623);
-      KILL(sail_int)(&zgsz3623);
-      KILL(lbits)(&zgsz3622);
-    }
-    zgaz3288 = sailgen_bit_to_bool(zgaz3287);
+    fbits zgaz3257;
+    zgaz3257 = (UINT64_C(1) & (zperms >> INT64_C(7)));
+    zgaz3258 = sailgen_bit_to_bool(zgaz3257);
   }
-  bool zgaz3290;
+  bool zgaz3260;
   {
-    fbits zgaz3289;
-    {
-      lbits zgsz3624;
-      CREATE(lbits)(&zgsz3624);
-      CONVERT_OF(lbits, fbits)(&zgsz3624, zperms, UINT64_C(19) , true);
-      sail_int zgsz3625;
-      CREATE(sail_int)(&zgsz3625);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3625, INT64_C(6));
-      zgaz3289 = bitvector_access(zgsz3624, zgsz3625);
-      KILL(sail_int)(&zgsz3625);
-      KILL(lbits)(&zgsz3624);
-    }
-    zgaz3290 = sailgen_bit_to_bool(zgaz3289);
+    fbits zgaz3259;
+    zgaz3259 = (UINT64_C(1) & (zperms >> INT64_C(6)));
+    zgaz3260 = sailgen_bit_to_bool(zgaz3259);
   }
-  bool zgaz3292;
+  bool zgaz3262;
   {
-    fbits zgaz3291;
-    {
-      lbits zgsz3626;
-      CREATE(lbits)(&zgsz3626);
-      CONVERT_OF(lbits, fbits)(&zgsz3626, zperms, UINT64_C(19) , true);
-      sail_int zgsz3627;
-      CREATE(sail_int)(&zgsz3627);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3627, INT64_C(5));
-      zgaz3291 = bitvector_access(zgsz3626, zgsz3627);
-      KILL(sail_int)(&zgsz3627);
-      KILL(lbits)(&zgsz3626);
-    }
-    zgaz3292 = sailgen_bit_to_bool(zgaz3291);
+    fbits zgaz3261;
+    zgaz3261 = (UINT64_C(1) & (zperms >> INT64_C(5)));
+    zgaz3262 = sailgen_bit_to_bool(zgaz3261);
   }
-  bool zgaz3294;
+  bool zgaz3264;
   {
-    fbits zgaz3293;
-    {
-      lbits zgsz3628;
-      CREATE(lbits)(&zgsz3628);
-      CONVERT_OF(lbits, fbits)(&zgsz3628, zperms, UINT64_C(19) , true);
-      sail_int zgsz3629;
-      CREATE(sail_int)(&zgsz3629);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3629, INT64_C(4));
-      zgaz3293 = bitvector_access(zgsz3628, zgsz3629);
-      KILL(sail_int)(&zgsz3629);
-      KILL(lbits)(&zgsz3628);
-    }
-    zgaz3294 = sailgen_bit_to_bool(zgaz3293);
+    fbits zgaz3263;
+    zgaz3263 = (UINT64_C(1) & (zperms >> INT64_C(4)));
+    zgaz3264 = sailgen_bit_to_bool(zgaz3263);
   }
-  bool zgaz3296;
+  bool zgaz3266;
   {
-    fbits zgaz3295;
-    {
-      lbits zgsz3630;
-      CREATE(lbits)(&zgsz3630);
-      CONVERT_OF(lbits, fbits)(&zgsz3630, zperms, UINT64_C(19) , true);
-      sail_int zgsz3631;
-      CREATE(sail_int)(&zgsz3631);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3631, INT64_C(3));
-      zgaz3295 = bitvector_access(zgsz3630, zgsz3631);
-      KILL(sail_int)(&zgsz3631);
-      KILL(lbits)(&zgsz3630);
-    }
-    zgaz3296 = sailgen_bit_to_bool(zgaz3295);
+    fbits zgaz3265;
+    zgaz3265 = (UINT64_C(1) & (zperms >> INT64_C(3)));
+    zgaz3266 = sailgen_bit_to_bool(zgaz3265);
   }
-  bool zgaz3298;
+  bool zgaz3268;
   {
-    fbits zgaz3297;
-    {
-      lbits zgsz3632;
-      CREATE(lbits)(&zgsz3632);
-      CONVERT_OF(lbits, fbits)(&zgsz3632, zperms, UINT64_C(19) , true);
-      sail_int zgsz3633;
-      CREATE(sail_int)(&zgsz3633);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3633, INT64_C(2));
-      zgaz3297 = bitvector_access(zgsz3632, zgsz3633);
-      KILL(sail_int)(&zgsz3633);
-      KILL(lbits)(&zgsz3632);
-    }
-    zgaz3298 = sailgen_bit_to_bool(zgaz3297);
+    fbits zgaz3267;
+    zgaz3267 = (UINT64_C(1) & (zperms >> INT64_C(2)));
+    zgaz3268 = sailgen_bit_to_bool(zgaz3267);
   }
-  bool zgaz3300;
+  bool zgaz3270;
   {
-    fbits zgaz3299;
-    {
-      lbits zgsz3634;
-      CREATE(lbits)(&zgsz3634);
-      CONVERT_OF(lbits, fbits)(&zgsz3634, zperms, UINT64_C(19) , true);
-      sail_int zgsz3635;
-      CREATE(sail_int)(&zgsz3635);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3635, INT64_C(1));
-      zgaz3299 = bitvector_access(zgsz3634, zgsz3635);
-      KILL(sail_int)(&zgsz3635);
-      KILL(lbits)(&zgsz3634);
-    }
-    zgaz3300 = sailgen_bit_to_bool(zgaz3299);
+    fbits zgaz3269;
+    zgaz3269 = (UINT64_C(1) & (zperms >> INT64_C(1)));
+    zgaz3270 = sailgen_bit_to_bool(zgaz3269);
   }
-  bool zgaz3302;
+  bool zgaz3272;
   {
-    fbits zgaz3301;
-    {
-      lbits zgsz3636;
-      CREATE(lbits)(&zgsz3636);
-      CONVERT_OF(lbits, fbits)(&zgsz3636, zperms, UINT64_C(19) , true);
-      sail_int zgsz3637;
-      CREATE(sail_int)(&zgsz3637);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3637, INT64_C(0));
-      zgaz3301 = bitvector_access(zgsz3636, zgsz3637);
-      KILL(sail_int)(&zgsz3637);
-      KILL(lbits)(&zgsz3636);
-    }
-    zgaz3302 = sailgen_bit_to_bool(zgaz3301);
+    fbits zgaz3271;
+    zgaz3271 = (UINT64_C(1) & (zperms >> INT64_C(0)));
+    zgaz3272 = sailgen_bit_to_bool(zgaz3271);
   }
-  struct zCapability zgsz370;
-  zgsz370 = zcap;
-  zgsz370.zaccess_system_regs = zgaz3282;
-  zgsz370.zglobal = zgaz3302;
-  zgsz370.zpermit_cinvoke = zgaz3286;
-  zgsz370.zpermit_execute = zgaz3300;
-  zgsz370.zpermit_load = zgaz3298;
-  zgsz370.zpermit_load_cap = zgaz3294;
-  zgsz370.zpermit_seal = zgaz3288;
-  zgsz370.zpermit_set_CID = zgaz3280;
-  zgsz370.zpermit_store = zgaz3296;
-  zgsz370.zpermit_store_cap = zgaz3292;
-  zgsz370.zpermit_store_local_cap = zgaz3290;
-  zgsz370.zpermit_unseal = zgaz3284;
-  zgsz370.zuperms = zgaz3278;
-  zcbz328 = zgsz370;
-
+  zghz3278 = zcap;
+  zghz3278.zaccess_system_regs = zgaz3252;
+  zghz3278.zglobal = zgaz3272;
+  zghz3278.zpermit_cinvoke = zgaz3256;
+  zghz3278.zpermit_execute = zgaz3270;
+  zghz3278.zpermit_load = zgaz3268;
+  zghz3278.zpermit_load_cap = zgaz3264;
+  zghz3278.zpermit_seal = zgaz3258;
+  zghz3278.zpermit_set_CID = zgaz3250;
+  zghz3278.zpermit_store = zgaz3266;
+  zghz3278.zpermit_store_cap = zgaz3262;
+  zghz3278.zpermit_store_local_cap = zgaz3260;
+  zghz3278.zpermit_unseal = zgaz3254;
+  zghz3278.zuperms = zgaz3248;
 
 
 
@@ -5223,10 +4309,23 @@ static struct zCapability sailgen_setCapPerms(struct zCapability zcap, uint64_t 
 
 
 end_function_122: ;
-  return zcbz328;
+  return zghz3278;
 end_block_exception_123: ;
   struct zCapability zcbz354 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz354;
+}
+
+
+
+static void finish_sailgen_setCapPerms(void)
+{
+  KILL(lbits)(&zghz3284);
+  KILL(sail_int)(&zghz3283);
+  KILL(lbits)(&zghz3282);
+  KILL(lbits)(&zghz3281);
+  KILL(sail_int)(&zghz3280);
+  KILL(lbits)(&zghz3279);
+
 }
 
 static uint64_t sailgen_getCapFlags(struct zCapability);
@@ -5236,9 +4335,9 @@ static uint64_t sailgen_getCapFlags(struct zCapability zcap)
   __label__ end_function_125, end_block_exception_126;
 
   uint64_t zcbz329;
-  bool zgaz3303;
-  zgaz3303 = zcap.zflag_cap_mode;
-  zcbz329 = sailgen_bool_to_bits(zgaz3303);
+  bool zgaz3273;
+  zgaz3273 = zcap.zflag_cap_mode;
+  zcbz329 = sailgen_bool_to_bits(zgaz3273);
 
 end_function_125: ;
   return zcbz329;
@@ -5249,37 +4348,42 @@ end_block_exception_126: ;
 
 static bool sailgen_isCapSealed(struct zCapability);
 
+sail_int zghz3285;
+sail_int zghz3286;
+lbits zghz3287;
+sail_int zghz3288;
+
+static void startup_sailgen_isCapSealed(void)
+{
+  CREATE(sail_int)(&zghz3285);
+  CREATE(sail_int)(&zghz3286);
+  CREATE(lbits)(&zghz3287);
+  CREATE(sail_int)(&zghz3288);
+}
+
 static bool sailgen_isCapSealed(struct zCapability zcap)
 {
   __label__ end_function_128, end_block_exception_129;
 
   bool zcbz330;
-  int64_t zgaz3305;
+  int64_t zgaz3275;
   {
-    uint64_t zgaz3304;
-    zgaz3304 = zcap.zotype;
+    uint64_t zgaz3274;
+    zgaz3274 = zcap.zotype;
     {
-      lbits zgsz3638;
-      CREATE(lbits)(&zgsz3638);
-      CONVERT_OF(lbits, fbits)(&zgsz3638, zgaz3304, UINT64_C(18) , true);
-      sail_int zgsz3639;
-      CREATE(sail_int)(&zgsz3639);
-      sail_signed(&zgsz3639, zgsz3638);
-      zgaz3305 = CONVERT_OF(mach_int, sail_int)(zgsz3639);
-      KILL(sail_int)(&zgsz3639);
-      KILL(lbits)(&zgsz3638);
+      RECREATE(lbits)(&zghz3287);
+      CONVERT_OF(lbits, fbits)(&zghz3287, zgaz3274, UINT64_C(18) , true);
+      RECREATE(sail_int)(&zghz3288);
+      sail_signed(&zghz3288, zghz3287);
+      zgaz3275 = CONVERT_OF(mach_int, sail_int)(zghz3288);
     }
   }
   {
-    sail_int zgsz3640;
-    CREATE(sail_int)(&zgsz3640);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3640, zgaz3305);
-    sail_int zgsz3641;
-    CREATE(sail_int)(&zgsz3641);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3641, zotype_unsealed);
-    zcbz330 = sailgen_neq_int(zgsz3640, zgsz3641);
-    KILL(sail_int)(&zgsz3641);
-    KILL(sail_int)(&zgsz3640);
+    RECREATE(sail_int)(&zghz3285);
+    CONVERT_OF(sail_int, mach_int)(&zghz3285, zgaz3275);
+    RECREATE(sail_int)(&zghz3286);
+    CONVERT_OF(sail_int, mach_int)(&zghz3286, zotype_unsealed);
+    zcbz330 = sailgen_neq_int(zghz3285, zghz3286);
   }
 
 end_function_128: ;
@@ -5289,46 +4393,59 @@ end_block_exception_129: ;
   return false;
 }
 
+
+
+static void finish_sailgen_isCapSealed(void)
+{
+  KILL(sail_int)(&zghz3288);
+  KILL(lbits)(&zghz3287);
+  KILL(sail_int)(&zghz3286);
+  KILL(sail_int)(&zghz3285);
+}
+
 static bool sailgen_hasReservedOType(struct zCapability);
+
+lbits zghz3289;
+sail_int zghz3290;
+
+static void startup_sailgen_hasReservedOType(void)
+{
+  CREATE(lbits)(&zghz3289);
+  CREATE(sail_int)(&zghz3290);
+}
 
 static bool sailgen_hasReservedOType(struct zCapability zcap)
 {
   __label__ end_function_131, end_block_exception_132;
 
   bool zcbz331;
-  int64_t zgaz3307;
+  int64_t zgaz3277;
   {
-    uint64_t zgaz3306;
-    zgaz3306 = zcap.zotype;
+    uint64_t zgaz3276;
+    zgaz3276 = zcap.zotype;
     {
-      lbits zgsz3642;
-      CREATE(lbits)(&zgsz3642);
-      CONVERT_OF(lbits, fbits)(&zgsz3642, zgaz3306, UINT64_C(18) , true);
-      sail_int zgsz3643;
-      CREATE(sail_int)(&zgsz3643);
-      sail_unsigned(&zgsz3643, zgsz3642);
-      zgaz3307 = CONVERT_OF(mach_int, sail_int)(zgsz3643);
-      KILL(sail_int)(&zgsz3643);
-      KILL(lbits)(&zgsz3642);
+      RECREATE(lbits)(&zghz3289);
+      CONVERT_OF(lbits, fbits)(&zghz3289, zgaz3276, UINT64_C(18) , true);
+      RECREATE(sail_int)(&zghz3290);
+      sail_unsigned(&zghz3290, zghz3289);
+      zgaz3277 = CONVERT_OF(mach_int, sail_int)(zghz3290);
     }
   }
-  {
-    sail_int zgsz3644;
-    CREATE(sail_int)(&zgsz3644);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3644, zgaz3307);
-    sail_int zgsz3645;
-    CREATE(sail_int)(&zgsz3645);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3645, zcap_max_otype);
-    zcbz331 = gt(zgsz3644, zgsz3645);
-    KILL(sail_int)(&zgsz3645);
-    KILL(sail_int)(&zgsz3644);
-  }
+  zcbz331 = (zgaz3277 > zcap_max_otype);
 
 end_function_131: ;
   return zcbz331;
 end_block_exception_132: ;
 
   return false;
+}
+
+
+
+static void finish_sailgen_hasReservedOType(void)
+{
+  KILL(sail_int)(&zghz3290);
+  KILL(lbits)(&zghz3289);
 }
 
 static uint64_t sailgen_getCapBaseBits(struct zCapability);
@@ -5338,22 +4455,19 @@ static uint64_t sailgen_getCapBaseBits(struct zCapability zc)
   __label__ case_135, finish_match_134, end_function_136, end_block_exception_137;
 
   uint64_t zcbz332;
-  struct ztuple_z8z5bv64zCz0z5bvz9 zgaz3308;
-  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3308);
-  sailgen_getCapBoundsBits(&zgaz3308, zc);
-  uint64_t zgsz371;
+  struct ztuple_z8z5bv64zCz0z5bvz9 zgaz3278;
+  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3278);
+  sailgen_getCapBoundsBits(&zgaz3278, zc);
   {
     uint64_t zbase;
-    zbase = zgaz3308.ztup0;
-    zgsz371 = zbase;
+    zbase = zgaz3278.ztup0;
+    zcbz332 = zbase;
     goto finish_match_134;
   }
 case_135: ;
   sail_match_failure("getCapBaseBits");
 finish_match_134: ;
-  zcbz332 = zgsz371;
-
-  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3308);
+  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgaz3278);
 end_function_136: ;
   return zcbz332;
 end_block_exception_137: ;
@@ -5363,63 +4477,68 @@ end_block_exception_137: ;
 
 static void sailgen_getCapLength(sail_int *rop, struct zCapability);
 
+sail_int zghz3291;
+sail_int zghz3292;
+sail_int zghz3293;
+sail_int zghz3294;
+sail_int zghz3295;
+sail_int zghz3296;
+
+static void startup_sailgen_getCapLength(void)
+{
+  CREATE(sail_int)(&zghz3291);
+  CREATE(sail_int)(&zghz3292);
+  CREATE(sail_int)(&zghz3293);
+  CREATE(sail_int)(&zghz3294);
+  CREATE(sail_int)(&zghz3295);
+  CREATE(sail_int)(&zghz3296);
+}
+
 static void sailgen_getCapLength(sail_int *zcbz333, struct zCapability zc)
 {
   __label__ case_140, finish_match_139, end_function_141, end_block_exception_142, end_function_196;
 
-  struct ztuple_z8z5izCz0z5iz9 zgaz3309;
-  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3309);
-  sailgen_getCapBounds(&zgaz3309, zc);
-  sail_int zgsz373;
-  CREATE(sail_int)(&zgsz373);
+  struct ztuple_z8z5izCz0z5iz9 zgaz3279;
+  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3279);
+  sailgen_getCapBounds(&zgaz3279, zc);
+  RECREATE(sail_int)(&zghz3291);
   {
-    sail_int zbase;
-    CREATE(sail_int)(&zbase);
-    COPY(sail_int)(&zbase, zgaz3309.ztup0);
-    sail_int ztop;
-    CREATE(sail_int)(&ztop);
-    COPY(sail_int)(&ztop, zgaz3309.ztup1);
+    RECREATE(sail_int)(&zghz3292);
+    COPY(sail_int)(&zghz3292, zgaz3279.ztup0);
+    RECREATE(sail_int)(&zghz3293);
+    COPY(sail_int)(&zghz3293, zgaz3279.ztup1);
     {
-      bool zgaz3312;
+      bool zgaz3282;
       {
-        bool zgaz3311;
+        bool zgaz3281;
         {
-          bool zgaz3310;
-          zgaz3310 = zc.ztag;
-          zgaz3311 = not(zgaz3310);
+          bool zgaz3280;
+          zgaz3280 = zc.ztag;
+          zgaz3281 = not(zgaz3280);
         }
         bool zgsz374;
-        if (zgaz3311) {  zgsz374 = true;  } else {  zgsz374 = gteq(ztop, zbase);  }
-        zgaz3312 = zgsz374;
+        if (zgaz3281) {  zgsz374 = true;  } else {  zgsz374 = gteq(zghz3293, zghz3292);  }
+        zgaz3282 = zgsz374;
       }
       unit zgsz375;
-      zgsz375 = sail_assert(zgaz3312, "src/cheri_cap_common.sail:453.40-453.41");
+      zgsz375 = sail_assert(zgaz3282, "src/cheri_cap_common.sail:453.40-453.41");
     }
-    sail_int zgaz3313;
-    CREATE(sail_int)(&zgaz3313);
-    sub_int(&zgaz3313, ztop, zbase);
-    sail_int zgaz3314;
-    CREATE(sail_int)(&zgaz3314);
+    RECREATE(sail_int)(&zghz3294);
+    sub_int(&zghz3294, zghz3293, zghz3292);
+    RECREATE(sail_int)(&zghz3295);
     {
-      sail_int zgsz3646;
-      CREATE(sail_int)(&zgsz3646);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3646, zcap_len_width);
-      pow2(&zgaz3314, zgsz3646);
-      KILL(sail_int)(&zgsz3646);
+      RECREATE(sail_int)(&zghz3296);
+      CONVERT_OF(sail_int, mach_int)(&zghz3296, zcap_len_width);
+      pow2(&zghz3295, zghz3296);
     }
-    emod_int(&zgsz373, zgaz3313, zgaz3314);
-    KILL(sail_int)(&zgaz3314);
-    KILL(sail_int)(&zgaz3313);
-    KILL(sail_int)(&ztop);
-    KILL(sail_int)(&zbase);
+    emod_int(&zghz3291, zghz3294, zghz3295);
     goto finish_match_139;
   }
 case_140: ;
   sail_match_failure("getCapLength");
 finish_match_139: ;
-  COPY(sail_int)((*(&zcbz333)), zgsz373);
-  KILL(sail_int)(&zgsz373);
-  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3309);
+  COPY(sail_int)((*(&zcbz333)), zghz3291);
+  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3279);
 end_function_141: ;
   goto end_function_196;
 end_block_exception_142: ;
@@ -5427,55 +4546,69 @@ end_block_exception_142: ;
 end_function_196: ;
 }
 
+
+
+static void finish_sailgen_getCapLength(void)
+{
+  KILL(sail_int)(&zghz3296);
+  KILL(sail_int)(&zghz3295);
+  KILL(sail_int)(&zghz3294);
+  KILL(sail_int)(&zghz3293);
+  KILL(sail_int)(&zghz3292);
+  KILL(sail_int)(&zghz3291);
+}
+
 static bool sailgen_inCapBounds(struct zCapability, uint64_t, sail_int);
+
+sail_int zghz3297;
+sail_int zghz3298;
+sail_int zghz3299;
+sail_int zghz3300;
+lbits zghz3301;
+
+static void startup_sailgen_inCapBounds(void)
+{
+  CREATE(sail_int)(&zghz3297);
+  CREATE(sail_int)(&zghz3298);
+  CREATE(sail_int)(&zghz3299);
+  CREATE(sail_int)(&zghz3300);
+  CREATE(lbits)(&zghz3301);
+}
 
 static bool sailgen_inCapBounds(struct zCapability zcap, uint64_t zaddr, sail_int zsizze)
 {
   __label__ case_145, finish_match_144, end_function_146, end_block_exception_147;
 
   bool zcbz334;
-  struct ztuple_z8z5izCz0z5iz9 zgaz3315;
-  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3315);
-  sailgen_getCapBounds(&zgaz3315, zcap);
-  bool zgsz377;
+  struct ztuple_z8z5izCz0z5iz9 zgaz3285;
+  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3285);
+  sailgen_getCapBounds(&zgaz3285, zcap);
   {
-    sail_int zbase;
-    CREATE(sail_int)(&zbase);
-    COPY(sail_int)(&zbase, zgaz3315.ztup0);
-    sail_int ztop;
-    CREATE(sail_int)(&ztop);
-    COPY(sail_int)(&ztop, zgaz3315.ztup1);
-    sail_int za;
-    CREATE(sail_int)(&za);
+    RECREATE(sail_int)(&zghz3297);
+    COPY(sail_int)(&zghz3297, zgaz3285.ztup0);
+    RECREATE(sail_int)(&zghz3298);
+    COPY(sail_int)(&zghz3298, zgaz3285.ztup1);
+    RECREATE(sail_int)(&zghz3299);
     {
-      lbits zgsz3647;
-      CREATE(lbits)(&zgsz3647);
-      CONVERT_OF(lbits, fbits)(&zgsz3647, zaddr, UINT64_C(64) , true);
-      sail_unsigned(&za, zgsz3647);
-      KILL(lbits)(&zgsz3647);
+      RECREATE(lbits)(&zghz3301);
+      CONVERT_OF(lbits, fbits)(&zghz3301, zaddr, UINT64_C(64) , true);
+      sail_unsigned(&zghz3299, zghz3301);
     }
-    bool zgaz3317;
-    zgaz3317 = gteq(za, zbase);
+    bool zgaz3287;
+    zgaz3287 = gteq(zghz3299, zghz3297);
     bool zgsz378;
-    if (zgaz3317) {
-      sail_int zgaz3316;
-      CREATE(sail_int)(&zgaz3316);
-      add_int(&zgaz3316, za, zsizze);
-      zgsz378 = lteq(zgaz3316, ztop);
-      KILL(sail_int)(&zgaz3316);
+    if (zgaz3287) {
+      RECREATE(sail_int)(&zghz3300);
+      add_int(&zghz3300, zghz3299, zsizze);
+      zgsz378 = lteq(zghz3300, zghz3298);
     } else {  zgsz378 = false;  }
-    zgsz377 = zgsz378;
-    KILL(sail_int)(&za);
-    KILL(sail_int)(&ztop);
-    KILL(sail_int)(&zbase);
+    zcbz334 = zgsz378;
     goto finish_match_144;
   }
 case_145: ;
   sail_match_failure("inCapBounds");
 finish_match_144: ;
-  zcbz334 = zgsz377;
-
-  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3315);
+  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3285);
 end_function_146: ;
   return zcbz334;
 end_block_exception_147: ;
@@ -5483,107 +4616,141 @@ end_block_exception_147: ;
   return false;
 }
 
+
+
+static void finish_sailgen_inCapBounds(void)
+{
+  KILL(lbits)(&zghz3301);
+  KILL(sail_int)(&zghz3300);
+  KILL(sail_int)(&zghz3299);
+  KILL(sail_int)(&zghz3298);
+  KILL(sail_int)(&zghz3297);
+}
+
 static struct zCapability sailgen_clearTagIf(struct zCapability, bool);
+
+struct zCapability zghz3302;
+
+static void startup_sailgen_clearTagIf(void)
+{
+}
 
 static struct zCapability sailgen_clearTagIf(struct zCapability zcap, bool zcond)
 {
   __label__ end_function_149, end_block_exception_150;
 
-  struct zCapability zcbz335;
-  bool zgaz3319;
+  struct zCapability zghz3302;
+  bool zgaz3289;
   {
-    bool zgaz3318;
-    zgaz3318 = zcap.ztag;
+    bool zgaz3288;
+    zgaz3288 = zcap.ztag;
     bool zgsz380;
-    if (zgaz3318) {  zgsz380 = not(zcond);  } else {  zgsz380 = false;  }
-    zgaz3319 = zgsz380;
+    if (zgaz3288) {  zgsz380 = not(zcond);  } else {  zgsz380 = false;  }
+    zgaz3289 = zgsz380;
   }
-  struct zCapability zgsz381;
-  zgsz381 = zcap;
-  zgsz381.ztag = zgaz3319;
-  zcbz335 = zgsz381;
-
+  zghz3302 = zcap;
+  zghz3302.ztag = zgaz3289;
 
 end_function_149: ;
-  return zcbz335;
+  return zghz3302;
 end_block_exception_150: ;
   struct zCapability zcbz355 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz355;
 }
 
+
+
+static void finish_sailgen_clearTagIf(void)
+{
+}
+
 static struct zCapability sailgen_clearTagIfSealed(struct zCapability);
+
+struct zCapability zghz3303;
+
+static void startup_sailgen_clearTagIfSealed(void)
+{
+}
 
 static struct zCapability sailgen_clearTagIfSealed(struct zCapability zcap)
 {
   __label__ end_function_152, end_block_exception_153;
 
-  struct zCapability zcbz336;
-  bool zgaz3320;
-  zgaz3320 = sailgen_isCapSealed(zcap);
-  zcbz336 = sailgen_clearTagIf(zcap, zgaz3320);
+  struct zCapability zghz3303;
+  bool zgaz3290;
+  zgaz3290 = sailgen_isCapSealed(zcap);
+  zghz3303 = sailgen_clearTagIf(zcap, zgaz3290);
 
 end_function_152: ;
-  return zcbz336;
+  return zghz3303;
 end_block_exception_153: ;
   struct zCapability zcbz356 = { .zB = UINT64_C(0xdeadc0de), .zE = UINT64_C(0xdeadc0de), .zT = UINT64_C(0xdeadc0de), .zaccess_system_regs = false, .zaddress = UINT64_C(0xdeadc0de), .zflag_cap_mode = false, .zglobal = false, .zinternal_E = false, .zotype = UINT64_C(0xdeadc0de), .zpermit_cinvoke = false, .zpermit_execute = false, .zpermit_load = false, .zpermit_load_cap = false, .zpermit_seal = false, .zpermit_set_CID = false, .zpermit_store = false, .zpermit_store_cap = false, .zpermit_store_local_cap = false, .zpermit_unseal = false, .zreserved = UINT64_C(0xdeadc0de), .ztag = false, .zuperms = UINT64_C(0xdeadc0de) };
   return zcbz356;
 }
 
+
+
+static void finish_sailgen_clearTagIfSealed(void)
+{
+}
+
 static bool sailgen_capBoundsEqual(struct zCapability, struct zCapability);
+
+sail_int zghz3304;
+sail_int zghz3305;
+sail_int zghz3306;
+sail_int zghz3307;
+
+static void startup_sailgen_capBoundsEqual(void)
+{
+  CREATE(sail_int)(&zghz3304);
+  CREATE(sail_int)(&zghz3305);
+  CREATE(sail_int)(&zghz3306);
+  CREATE(sail_int)(&zghz3307);
+}
 
 static bool sailgen_capBoundsEqual(struct zCapability zc1, struct zCapability zc2)
 {
   __label__ case_156, finish_match_155, end_function_159, end_block_exception_160;
 
   bool zcbz337;
-  struct ztuple_z8z5izCz0z5iz9 zgaz3321;
-  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3321);
-  sailgen_getCapBounds(&zgaz3321, zc1);
-  bool zgsz382;
+  struct ztuple_z8z5izCz0z5iz9 zgaz3291;
+  CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3291);
+  sailgen_getCapBounds(&zgaz3291, zc1);
   {
     __label__ case_158, finish_match_157;
 
-    sail_int zbase1;
-    CREATE(sail_int)(&zbase1);
-    COPY(sail_int)(&zbase1, zgaz3321.ztup0);
-    sail_int ztop1;
-    CREATE(sail_int)(&ztop1);
-    COPY(sail_int)(&ztop1, zgaz3321.ztup1);
-    struct ztuple_z8z5izCz0z5iz9 zgaz3322;
-    CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3322);
-    sailgen_getCapBounds(&zgaz3322, zc2);
+    RECREATE(sail_int)(&zghz3304);
+    COPY(sail_int)(&zghz3304, zgaz3291.ztup0);
+    RECREATE(sail_int)(&zghz3305);
+    COPY(sail_int)(&zghz3305, zgaz3291.ztup1);
+    struct ztuple_z8z5izCz0z5iz9 zgaz3292;
+    CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3292);
+    sailgen_getCapBounds(&zgaz3292, zc2);
     bool zgsz383;
     {
-      sail_int zbase2;
-      CREATE(sail_int)(&zbase2);
-      COPY(sail_int)(&zbase2, zgaz3322.ztup0);
-      sail_int ztop2;
-      CREATE(sail_int)(&ztop2);
-      COPY(sail_int)(&ztop2, zgaz3322.ztup1);
-      bool zgaz3323;
-      zgaz3323 = eq_int(zbase1, zbase2);
+      RECREATE(sail_int)(&zghz3306);
+      COPY(sail_int)(&zghz3306, zgaz3292.ztup0);
+      RECREATE(sail_int)(&zghz3307);
+      COPY(sail_int)(&zghz3307, zgaz3292.ztup1);
+      bool zgaz3293;
+      zgaz3293 = eq_int(zghz3304, zghz3306);
       bool zgsz384;
-      if (zgaz3323) {  zgsz384 = eq_int(ztop1, ztop2);  } else {  zgsz384 = false;  }
+      if (zgaz3293) {  zgsz384 = eq_int(zghz3305, zghz3307);  } else {  zgsz384 = false;  }
       zgsz383 = zgsz384;
-      KILL(sail_int)(&ztop2);
-      KILL(sail_int)(&zbase2);
       goto finish_match_157;
     }
   case_158: ;
     sail_match_failure("capBoundsEqual");
   finish_match_157: ;
-    zgsz382 = zgsz383;
-    KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3322);
-    KILL(sail_int)(&ztop1);
-    KILL(sail_int)(&zbase1);
+    zcbz337 = zgsz383;
+    KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3292);
     goto finish_match_155;
   }
 case_156: ;
   sail_match_failure("capBoundsEqual");
 finish_match_155: ;
-  zcbz337 = zgsz382;
-
-  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3321);
+  KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3291);
 end_function_159: ;
   return zcbz337;
 end_block_exception_160: ;
@@ -5591,28 +4758,38 @@ end_block_exception_160: ;
   return false;
 }
 
+
+
+static void finish_sailgen_capBoundsEqual(void)
+{
+  KILL(sail_int)(&zghz3307);
+  KILL(sail_int)(&zghz3306);
+  KILL(sail_int)(&zghz3305);
+  KILL(sail_int)(&zghz3304);
+}
+
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapAddr(struct zCapability, uint64_t);
+
+struct zCapability zghz3308;
+
+static void startup_sailgen_setCapAddr(void)
+{
+}
 
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapAddr(struct zCapability zc, uint64_t zaddr)
 {
   __label__ end_function_162, end_block_exception_163;
 
   struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zcbz338;
-  struct zCapability znewCap;
+  struct zCapability zghz3308;
   {
-    struct zCapability zgsz387;
-    zgsz387 = zc;
-    zgsz387.zaddress = zaddr;
-    znewCap = zgsz387;
+    zghz3308 = zc;
+    zghz3308.zaddress = zaddr;
   }
   bool zrepresentable;
-  zrepresentable = sailgen_capBoundsEqual(zc, znewCap);
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz388;
-  zgsz388.ztup0 = zrepresentable;
-  zgsz388.ztup1 = znewCap;
-  zcbz338 = zgsz388;
-
-
+  zrepresentable = sailgen_capBoundsEqual(zc, zghz3308);
+  zcbz338.ztup0 = zrepresentable;
+  zcbz338.ztup1 = zghz3308;
 
 end_function_162: ;
   return zcbz338;
@@ -5622,7 +4799,92 @@ end_block_exception_163: ;
   return zcbz357;
 }
 
+
+
+static void finish_sailgen_setCapAddr(void)
+{
+}
+
 static bool sailgen_fastRepCheck(struct zCapability, uint64_t);
+
+lbits zghz3309;
+lbits zghz3310;
+lbits zghz3311;
+lbits zghz3312;
+lbits zghz3313;
+sail_int zghz3314;
+lbits zghz3315;
+sail_int zghz3316;
+lbits zghz3317;
+sail_int zghz3318;
+sail_int zghz3319;
+sail_int zghz3320;
+lbits zghz3321;
+sail_int zghz3322;
+lbits zghz3323;
+lbits zghz3324;
+sail_int zghz3325;
+lbits zghz3326;
+lbits zghz3327;
+sail_int zghz3328;
+lbits zghz3329;
+lbits zghz3330;
+sail_int zghz3331;
+lbits zghz3332;
+lbits zghz3333;
+sail_int zghz3334;
+lbits zghz3335;
+lbits zghz3336;
+sail_int zghz3337;
+lbits zghz3338;
+sail_int zghz3339;
+lbits zghz3340;
+sail_int zghz3341;
+sail_int zghz3342;
+sail_int zghz3343;
+lbits zghz3344;
+sail_int zghz3345;
+
+static void startup_sailgen_fastRepCheck(void)
+{
+  CREATE(lbits)(&zghz3309);
+  CREATE(lbits)(&zghz3310);
+  CREATE(lbits)(&zghz3311);
+  CREATE(lbits)(&zghz3312);
+  CREATE(lbits)(&zghz3313);
+  CREATE(sail_int)(&zghz3314);
+  CREATE(lbits)(&zghz3315);
+  CREATE(sail_int)(&zghz3316);
+  CREATE(lbits)(&zghz3317);
+  CREATE(sail_int)(&zghz3318);
+  CREATE(sail_int)(&zghz3319);
+  CREATE(sail_int)(&zghz3320);
+  CREATE(lbits)(&zghz3321);
+  CREATE(sail_int)(&zghz3322);
+  CREATE(lbits)(&zghz3323);
+  CREATE(lbits)(&zghz3324);
+  CREATE(sail_int)(&zghz3325);
+  CREATE(lbits)(&zghz3326);
+  CREATE(lbits)(&zghz3327);
+  CREATE(sail_int)(&zghz3328);
+  CREATE(lbits)(&zghz3329);
+  CREATE(lbits)(&zghz3330);
+  CREATE(sail_int)(&zghz3331);
+  CREATE(lbits)(&zghz3332);
+  CREATE(lbits)(&zghz3333);
+  CREATE(sail_int)(&zghz3334);
+  CREATE(lbits)(&zghz3335);
+  CREATE(lbits)(&zghz3336);
+  CREATE(sail_int)(&zghz3337);
+  CREATE(lbits)(&zghz3338);
+  CREATE(sail_int)(&zghz3339);
+  CREATE(lbits)(&zghz3340);
+  CREATE(sail_int)(&zghz3341);
+  CREATE(sail_int)(&zghz3342);
+  CREATE(sail_int)(&zghz3343);
+  CREATE(lbits)(&zghz3344);
+  CREATE(sail_int)(&zghz3345);
+}
 
 static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
 {
@@ -5631,351 +4893,179 @@ static bool sailgen_fastRepCheck(struct zCapability zc, uint64_t zi)
   bool zcbz339;
   int64_t zE;
   {
-    uint64_t zgaz3337;
-    zgaz3337 = zc.zE;
+    uint64_t zgaz3307;
+    zgaz3307 = zc.zE;
     {
-      lbits zgsz3648;
-      CREATE(lbits)(&zgsz3648);
-      CONVERT_OF(lbits, fbits)(&zgsz3648, zgaz3337, UINT64_C(6) , true);
-      sail_int zgsz3649;
-      CREATE(sail_int)(&zgsz3649);
-      sail_unsigned(&zgsz3649, zgsz3648);
-      zE = CONVERT_OF(mach_int, sail_int)(zgsz3649);
-      KILL(sail_int)(&zgsz3649);
-      KILL(lbits)(&zgsz3648);
+      RECREATE(lbits)(&zghz3344);
+      CONVERT_OF(lbits, fbits)(&zghz3344, zgaz3307, UINT64_C(6) , true);
+      RECREATE(sail_int)(&zghz3345);
+      sail_unsigned(&zghz3345, zghz3344);
+      zE = CONVERT_OF(mach_int, sail_int)(zghz3345);
     }
   }
-  bool zgaz3325;
+  bool zgaz3295;
   {
-    int64_t zgaz3324;
+    int64_t zgaz3294;
     {
-      sail_int zgsz3652;
-      CREATE(sail_int)(&zgsz3652);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3652, zcap_max_E);
-      sail_int zgsz3653;
-      CREATE(sail_int)(&zgsz3653);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3653, INT64_C(2));
-      sail_int zgsz3654;
-      CREATE(sail_int)(&zgsz3654);
-      sub_int(&zgsz3654, zgsz3652, zgsz3653);
-      zgaz3324 = CONVERT_OF(mach_int, sail_int)(zgsz3654);
-      KILL(sail_int)(&zgsz3654);
-      KILL(sail_int)(&zgsz3653);
-      KILL(sail_int)(&zgsz3652);
+      RECREATE(sail_int)(&zghz3341);
+      CONVERT_OF(sail_int, mach_int)(&zghz3341, zcap_max_E);
+      RECREATE(sail_int)(&zghz3342);
+      CONVERT_OF(sail_int, mach_int)(&zghz3342, INT64_C(2));
+      RECREATE(sail_int)(&zghz3343);
+      sub_int(&zghz3343, zghz3341, zghz3342);
+      zgaz3294 = CONVERT_OF(mach_int, sail_int)(zghz3343);
     }
-    {
-      sail_int zgsz3650;
-      CREATE(sail_int)(&zgsz3650);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3650, zE);
-      sail_int zgsz3651;
-      CREATE(sail_int)(&zgsz3651);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3651, zgaz3324);
-      zgaz3325 = gteq(zgsz3650, zgsz3651);
-      KILL(sail_int)(&zgsz3651);
-      KILL(sail_int)(&zgsz3650);
-    }
+    zgaz3295 = (zE >= zgaz3294);
   }
-  if (zgaz3325) {  zcbz339 = true;  } else {
+  if (zgaz3295) {  zcbz339 = true;  } else {
     int64_t zi_top;
     {
-      uint64_t zgaz3336;
+      uint64_t zgaz3306;
       {
-        int64_t zgaz3335;
+        int64_t zgaz3305;
+        zgaz3305 = (zE + zcap_mantissa_width);
         {
-          sail_int zgsz3658;
-          CREATE(sail_int)(&zgsz3658);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3658, zE);
-          sail_int zgsz3659;
-          CREATE(sail_int)(&zgsz3659);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3659, zcap_mantissa_width);
-          sail_int zgsz3660;
-          CREATE(sail_int)(&zgsz3660);
-          add_int(&zgsz3660, zgsz3658, zgsz3659);
-          zgaz3335 = CONVERT_OF(mach_int, sail_int)(zgsz3660);
-          KILL(sail_int)(&zgsz3660);
-          KILL(sail_int)(&zgsz3659);
-          KILL(sail_int)(&zgsz3658);
-        }
-        {
-          lbits zgsz3655;
-          CREATE(lbits)(&zgsz3655);
-          CONVERT_OF(lbits, fbits)(&zgsz3655, zi, UINT64_C(64) , true);
-          sail_int zgsz3656;
-          CREATE(sail_int)(&zgsz3656);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3656, zgaz3335);
-          lbits zgsz3657;
-          CREATE(lbits)(&zgsz3657);
-          arith_shiftr(&zgsz3657, zgsz3655, zgsz3656);
-          zgaz3336 = CONVERT_OF(fbits, lbits)(zgsz3657, true);
-          KILL(lbits)(&zgsz3657);
-          KILL(sail_int)(&zgsz3656);
-          KILL(lbits)(&zgsz3655);
+          RECREATE(lbits)(&zghz3338);
+          CONVERT_OF(lbits, fbits)(&zghz3338, zi, UINT64_C(64) , true);
+          RECREATE(sail_int)(&zghz3339);
+          CONVERT_OF(sail_int, mach_int)(&zghz3339, zgaz3305);
+          RECREATE(lbits)(&zghz3340);
+          arith_shiftr(&zghz3340, zghz3338, zghz3339);
+          zgaz3306 = CONVERT_OF(fbits, lbits)(zghz3340, true);
         }
       }
       {
-        lbits zgsz3661;
-        CREATE(lbits)(&zgsz3661);
-        CONVERT_OF(lbits, fbits)(&zgsz3661, zgaz3336, UINT64_C(64) , true);
-        sail_int zgsz3662;
-        CREATE(sail_int)(&zgsz3662);
-        sail_signed(&zgsz3662, zgsz3661);
-        zi_top = CONVERT_OF(mach_int, sail_int)(zgsz3662);
-        KILL(sail_int)(&zgsz3662);
-        KILL(lbits)(&zgsz3661);
+        RECREATE(lbits)(&zghz3336);
+        CONVERT_OF(lbits, fbits)(&zghz3336, zgaz3306, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3337);
+        sail_signed(&zghz3337, zghz3336);
+        zi_top = CONVERT_OF(mach_int, sail_int)(zghz3337);
       }
     }
     uint64_t zi_mid;
     {
-      uint64_t zgaz3334;
+      uint64_t zgaz3304;
       {
-        lbits zgsz3666;
-        CREATE(lbits)(&zgsz3666);
-        CONVERT_OF(lbits, fbits)(&zgsz3666, zi, UINT64_C(64) , true);
-        sail_int zgsz3667;
-        CREATE(sail_int)(&zgsz3667);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3667, zE);
-        lbits zgsz3668;
-        CREATE(lbits)(&zgsz3668);
-        shiftr(&zgsz3668, zgsz3666, zgsz3667);
-        zgaz3334 = CONVERT_OF(fbits, lbits)(zgsz3668, true);
-        KILL(lbits)(&zgsz3668);
-        KILL(sail_int)(&zgsz3667);
-        KILL(lbits)(&zgsz3666);
+        RECREATE(lbits)(&zghz3333);
+        CONVERT_OF(lbits, fbits)(&zghz3333, zi, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3334);
+        CONVERT_OF(sail_int, mach_int)(&zghz3334, zE);
+        RECREATE(lbits)(&zghz3335);
+        shiftr(&zghz3335, zghz3333, zghz3334);
+        zgaz3304 = CONVERT_OF(fbits, lbits)(zghz3335, true);
       }
       {
-        lbits zgsz3663;
-        CREATE(lbits)(&zgsz3663);
-        CONVERT_OF(lbits, fbits)(&zgsz3663, zgaz3334, UINT64_C(64) , true);
-        sail_int zgsz3664;
-        CREATE(sail_int)(&zgsz3664);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3664, zcap_mantissa_width);
-        lbits zgsz3665;
-        CREATE(lbits)(&zgsz3665);
-        sail_truncate(&zgsz3665, zgsz3663, zgsz3664);
-        zi_mid = CONVERT_OF(fbits, lbits)(zgsz3665, true);
-        KILL(lbits)(&zgsz3665);
-        KILL(sail_int)(&zgsz3664);
-        KILL(lbits)(&zgsz3663);
+        RECREATE(lbits)(&zghz3330);
+        CONVERT_OF(lbits, fbits)(&zghz3330, zgaz3304, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3331);
+        CONVERT_OF(sail_int, mach_int)(&zghz3331, zcap_mantissa_width);
+        RECREATE(lbits)(&zghz3332);
+        sail_truncate(&zghz3332, zghz3330, zghz3331);
+        zi_mid = CONVERT_OF(fbits, lbits)(zghz3332, true);
       }
     }
     uint64_t za_mid;
     {
-      uint64_t zgaz3333;
+      uint64_t zgaz3303;
       {
-        uint64_t zgaz3332;
-        zgaz3332 = zc.zaddress;
+        uint64_t zgaz3302;
+        zgaz3302 = zc.zaddress;
         {
-          lbits zgsz3669;
-          CREATE(lbits)(&zgsz3669);
-          CONVERT_OF(lbits, fbits)(&zgsz3669, zgaz3332, UINT64_C(64) , true);
-          sail_int zgsz3670;
-          CREATE(sail_int)(&zgsz3670);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3670, zE);
-          lbits zgsz3671;
-          CREATE(lbits)(&zgsz3671);
-          shiftr(&zgsz3671, zgsz3669, zgsz3670);
-          zgaz3333 = CONVERT_OF(fbits, lbits)(zgsz3671, true);
-          KILL(lbits)(&zgsz3671);
-          KILL(sail_int)(&zgsz3670);
-          KILL(lbits)(&zgsz3669);
+          RECREATE(lbits)(&zghz3327);
+          CONVERT_OF(lbits, fbits)(&zghz3327, zgaz3302, UINT64_C(64) , true);
+          RECREATE(sail_int)(&zghz3328);
+          CONVERT_OF(sail_int, mach_int)(&zghz3328, zE);
+          RECREATE(lbits)(&zghz3329);
+          shiftr(&zghz3329, zghz3327, zghz3328);
+          zgaz3303 = CONVERT_OF(fbits, lbits)(zghz3329, true);
         }
       }
       {
-        lbits zgsz3672;
-        CREATE(lbits)(&zgsz3672);
-        CONVERT_OF(lbits, fbits)(&zgsz3672, zgaz3333, UINT64_C(64) , true);
-        sail_int zgsz3673;
-        CREATE(sail_int)(&zgsz3673);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3673, zcap_mantissa_width);
-        lbits zgsz3674;
-        CREATE(lbits)(&zgsz3674);
-        sail_truncate(&zgsz3674, zgsz3672, zgsz3673);
-        za_mid = CONVERT_OF(fbits, lbits)(zgsz3674, true);
-        KILL(lbits)(&zgsz3674);
-        KILL(sail_int)(&zgsz3673);
-        KILL(lbits)(&zgsz3672);
+        RECREATE(lbits)(&zghz3324);
+        CONVERT_OF(lbits, fbits)(&zghz3324, zgaz3303, UINT64_C(64) , true);
+        RECREATE(sail_int)(&zghz3325);
+        CONVERT_OF(sail_int, mach_int)(&zghz3325, zcap_mantissa_width);
+        RECREATE(lbits)(&zghz3326);
+        sail_truncate(&zghz3326, zghz3324, zghz3325);
+        za_mid = CONVERT_OF(fbits, lbits)(zghz3326, true);
       }
     }
     uint64_t zB3;
     {
-      uint64_t zgaz3331;
-      zgaz3331 = zc.zB;
+      uint64_t zgaz3301;
+      zgaz3301 = zc.zB;
       {
-        lbits zgsz3675;
-        CREATE(lbits)(&zgsz3675);
-        CONVERT_OF(lbits, fbits)(&zgsz3675, zgaz3331, UINT64_C(14) , true);
-        sail_int zgsz3676;
-        CREATE(sail_int)(&zgsz3676);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3676, INT64_C(3));
-        lbits zgsz3677;
-        CREATE(lbits)(&zgsz3677);
-        sail_truncateLSB(&zgsz3677, zgsz3675, zgsz3676);
-        zB3 = CONVERT_OF(fbits, lbits)(zgsz3677, true);
-        KILL(lbits)(&zgsz3677);
-        KILL(sail_int)(&zgsz3676);
-        KILL(lbits)(&zgsz3675);
+        RECREATE(lbits)(&zghz3321);
+        CONVERT_OF(lbits, fbits)(&zghz3321, zgaz3301, UINT64_C(14) , true);
+        RECREATE(sail_int)(&zghz3322);
+        CONVERT_OF(sail_int, mach_int)(&zghz3322, INT64_C(3));
+        RECREATE(lbits)(&zghz3323);
+        sail_truncateLSB(&zghz3323, zghz3321, zghz3322);
+        zB3 = CONVERT_OF(fbits, lbits)(zghz3323, true);
       }
     }
     uint64_t zR3;
-    {
-      lbits zgsz3702;
-      CREATE(lbits)(&zgsz3702);
-      CONVERT_OF(lbits, fbits)(&zgsz3702, zB3, UINT64_C(3) , true);
-      lbits zgsz3703;
-      CREATE(lbits)(&zgsz3703);
-      CONVERT_OF(lbits, fbits)(&zgsz3703, UINT64_C(0b001), UINT64_C(3) , true);
-      lbits zgsz3704;
-      CREATE(lbits)(&zgsz3704);
-      sub_bits(&zgsz3704, zgsz3702, zgsz3703);
-      zR3 = CONVERT_OF(fbits, lbits)(zgsz3704, true);
-      KILL(lbits)(&zgsz3704);
-      KILL(lbits)(&zgsz3703);
-      KILL(lbits)(&zgsz3702);
-    }
+    zR3 = ((zB3 - UINT64_C(0b001)) & UINT64_C(0b111));
     uint64_t zR;
     {
-      uint64_t zgaz3330;
+      uint64_t zgaz3300;
       {
-        int64_t zgaz3329;
+        int64_t zgaz3299;
         {
-          sail_int zgsz3680;
-          CREATE(sail_int)(&zgsz3680);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3680, zcap_mantissa_width);
-          sail_int zgsz3681;
-          CREATE(sail_int)(&zgsz3681);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3681, INT64_C(3));
-          sail_int zgsz3682;
-          CREATE(sail_int)(&zgsz3682);
-          sub_int(&zgsz3682, zgsz3680, zgsz3681);
-          zgaz3329 = CONVERT_OF(mach_int, sail_int)(zgsz3682);
-          KILL(sail_int)(&zgsz3682);
-          KILL(sail_int)(&zgsz3681);
-          KILL(sail_int)(&zgsz3680);
+          RECREATE(sail_int)(&zghz3318);
+          CONVERT_OF(sail_int, mach_int)(&zghz3318, zcap_mantissa_width);
+          RECREATE(sail_int)(&zghz3319);
+          CONVERT_OF(sail_int, mach_int)(&zghz3319, INT64_C(3));
+          RECREATE(sail_int)(&zghz3320);
+          sub_int(&zghz3320, zghz3318, zghz3319);
+          zgaz3299 = CONVERT_OF(mach_int, sail_int)(zghz3320);
         }
         {
-          sail_int zgsz3678;
-          CREATE(sail_int)(&zgsz3678);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3678, zgaz3329);
-          lbits zgsz3679;
-          CREATE(lbits)(&zgsz3679);
-          sailgen_zzeros_implicit(&zgsz3679, zgsz3678);
-          zgaz3330 = CONVERT_OF(fbits, lbits)(zgsz3679, true);
-          KILL(lbits)(&zgsz3679);
-          KILL(sail_int)(&zgsz3678);
+          RECREATE(sail_int)(&zghz3316);
+          CONVERT_OF(sail_int, mach_int)(&zghz3316, zgaz3299);
+          RECREATE(lbits)(&zghz3317);
+          sailgen_zzeros_implicit(&zghz3317, zghz3316);
+          zgaz3300 = CONVERT_OF(fbits, lbits)(zghz3317, true);
         }
       }
-      {
-        lbits zgsz3683;
-        CREATE(lbits)(&zgsz3683);
-        CONVERT_OF(lbits, fbits)(&zgsz3683, zR3, UINT64_C(3) , true);
-        lbits zgsz3684;
-        CREATE(lbits)(&zgsz3684);
-        CONVERT_OF(lbits, fbits)(&zgsz3684, zgaz3330, UINT64_C(11) , true);
-        lbits zgsz3685;
-        CREATE(lbits)(&zgsz3685);
-        append(&zgsz3685, zgsz3683, zgsz3684);
-        zR = CONVERT_OF(fbits, lbits)(zgsz3685, true);
-        KILL(lbits)(&zgsz3685);
-        KILL(lbits)(&zgsz3684);
-        KILL(lbits)(&zgsz3683);
-      }
+      zR = (zR3 << 11) | zgaz3300;
     }
     uint64_t zdiff;
-    {
-      lbits zgsz3699;
-      CREATE(lbits)(&zgsz3699);
-      CONVERT_OF(lbits, fbits)(&zgsz3699, zR, UINT64_C(14) , true);
-      lbits zgsz3700;
-      CREATE(lbits)(&zgsz3700);
-      CONVERT_OF(lbits, fbits)(&zgsz3700, za_mid, UINT64_C(14) , true);
-      lbits zgsz3701;
-      CREATE(lbits)(&zgsz3701);
-      sub_bits(&zgsz3701, zgsz3699, zgsz3700);
-      zdiff = CONVERT_OF(fbits, lbits)(zgsz3701, true);
-      KILL(lbits)(&zgsz3701);
-      KILL(lbits)(&zgsz3700);
-      KILL(lbits)(&zgsz3699);
-    }
+    zdiff = ((zR - za_mid) & UINT64_C(0b11111111111111));
     uint64_t zdiff1;
     {
-      lbits zgsz3696;
-      CREATE(lbits)(&zgsz3696);
-      CONVERT_OF(lbits, fbits)(&zgsz3696, zdiff, UINT64_C(14) , true);
-      sail_int zgsz3697;
-      CREATE(sail_int)(&zgsz3697);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3697, INT64_C(1));
-      lbits zgsz3698;
-      CREATE(lbits)(&zgsz3698);
-      sub_bits_int(&zgsz3698, zgsz3696, zgsz3697);
-      zdiff1 = CONVERT_OF(fbits, lbits)(zgsz3698, true);
-      KILL(lbits)(&zgsz3698);
-      KILL(sail_int)(&zgsz3697);
-      KILL(lbits)(&zgsz3696);
+      RECREATE(lbits)(&zghz3313);
+      CONVERT_OF(lbits, fbits)(&zghz3313, zdiff, UINT64_C(14) , true);
+      RECREATE(sail_int)(&zghz3314);
+      CONVERT_OF(sail_int, mach_int)(&zghz3314, INT64_C(1));
+      RECREATE(lbits)(&zghz3315);
+      sub_bits_int(&zghz3315, zghz3313, zghz3314);
+      zdiff1 = CONVERT_OF(fbits, lbits)(zghz3315, true);
     }
-    bool zgaz3326;
-    {
-      sail_int zgsz3694;
-      CREATE(sail_int)(&zgsz3694);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3694, zi_top);
-      sail_int zgsz3695;
-      CREATE(sail_int)(&zgsz3695);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3695, INT64_C(0));
-      zgaz3326 = eq_int(zgsz3694, zgsz3695);
-      KILL(sail_int)(&zgsz3695);
-      KILL(sail_int)(&zgsz3694);
-    }
-    if (zgaz3326) {
+    bool zgaz3296;
+    zgaz3296 = (zi_top == INT64_C(0));
+    if (zgaz3296) {
       {
-        lbits zgsz3692;
-        CREATE(lbits)(&zgsz3692);
-        CONVERT_OF(lbits, fbits)(&zgsz3692, zi_mid, UINT64_C(14) , true);
-        lbits zgsz3693;
-        CREATE(lbits)(&zgsz3693);
-        CONVERT_OF(lbits, fbits)(&zgsz3693, zdiff1, UINT64_C(14) , true);
-        zcbz339 = sailgen_z8operatorz0zI_uz9(zgsz3692, zgsz3693);
-        KILL(lbits)(&zgsz3693);
-        KILL(lbits)(&zgsz3692);
+        RECREATE(lbits)(&zghz3311);
+        CONVERT_OF(lbits, fbits)(&zghz3311, zi_mid, UINT64_C(14) , true);
+        RECREATE(lbits)(&zghz3312);
+        CONVERT_OF(lbits, fbits)(&zghz3312, zdiff1, UINT64_C(14) , true);
+        zcbz339 = sailgen_z8operatorz0zI_uz9(zghz3311, zghz3312);
       }
     } else {
-      bool zgaz3327;
-      {
-        sail_int zgsz3690;
-        CREATE(sail_int)(&zgsz3690);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3690, zi_top);
-        sail_int zgsz3691;
-        CREATE(sail_int)(&zgsz3691);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3691, INT64_C(-1));
-        zgaz3327 = eq_int(zgsz3690, zgsz3691);
-        KILL(sail_int)(&zgsz3691);
-        KILL(sail_int)(&zgsz3690);
-      }
-      if (zgaz3327) {
-        bool zgaz3328;
+      bool zgaz3297;
+      zgaz3297 = (zi_top == INT64_C(-1));
+      if (zgaz3297) {
+        bool zgaz3298;
         {
-          lbits zgsz3688;
-          CREATE(lbits)(&zgsz3688);
-          CONVERT_OF(lbits, fbits)(&zgsz3688, zi_mid, UINT64_C(14) , true);
-          lbits zgsz3689;
-          CREATE(lbits)(&zgsz3689);
-          CONVERT_OF(lbits, fbits)(&zgsz3689, zdiff, UINT64_C(14) , true);
-          zgaz3328 = sailgen_z8operatorz0zKzJ_uz9(zgsz3688, zgsz3689);
-          KILL(lbits)(&zgsz3689);
-          KILL(lbits)(&zgsz3688);
+          RECREATE(lbits)(&zghz3309);
+          CONVERT_OF(lbits, fbits)(&zghz3309, zi_mid, UINT64_C(14) , true);
+          RECREATE(lbits)(&zghz3310);
+          CONVERT_OF(lbits, fbits)(&zghz3310, zdiff, UINT64_C(14) , true);
+          zgaz3298 = sailgen_z8operatorz0zKzJ_uz9(zghz3309, zghz3310);
         }
         bool zgsz389;
-        if (zgaz3328) {
-          {
-            lbits zgsz3686;
-            CREATE(lbits)(&zgsz3686);
-            CONVERT_OF(lbits, fbits)(&zgsz3686, zR, UINT64_C(14) , true);
-            lbits zgsz3687;
-            CREATE(lbits)(&zgsz3687);
-            CONVERT_OF(lbits, fbits)(&zgsz3687, za_mid, UINT64_C(14) , true);
-            zgsz389 = neq_bits(zgsz3686, zgsz3687);
-            KILL(lbits)(&zgsz3687);
-            KILL(lbits)(&zgsz3686);
-          }
-        } else {  zgsz389 = false;  }
+        if (zgaz3298) {  zgsz389 = (zR != za_mid);  } else {  zgsz389 = false;  }
         zcbz339 = zgsz389;
       } else {  zcbz339 = false;  }
     }
@@ -5989,250 +5079,270 @@ end_block_exception_166: ;
   return false;
 }
 
+
+
+static void finish_sailgen_fastRepCheck(void)
+{
+  KILL(sail_int)(&zghz3345);
+  KILL(lbits)(&zghz3344);
+  KILL(sail_int)(&zghz3343);
+  KILL(sail_int)(&zghz3342);
+  KILL(sail_int)(&zghz3341);
+  KILL(lbits)(&zghz3340);
+  KILL(sail_int)(&zghz3339);
+  KILL(lbits)(&zghz3338);
+  KILL(sail_int)(&zghz3337);
+  KILL(lbits)(&zghz3336);
+  KILL(lbits)(&zghz3335);
+  KILL(sail_int)(&zghz3334);
+  KILL(lbits)(&zghz3333);
+  KILL(lbits)(&zghz3332);
+  KILL(sail_int)(&zghz3331);
+  KILL(lbits)(&zghz3330);
+  KILL(lbits)(&zghz3329);
+  KILL(sail_int)(&zghz3328);
+  KILL(lbits)(&zghz3327);
+  KILL(lbits)(&zghz3326);
+  KILL(sail_int)(&zghz3325);
+  KILL(lbits)(&zghz3324);
+  KILL(lbits)(&zghz3323);
+  KILL(sail_int)(&zghz3322);
+  KILL(lbits)(&zghz3321);
+  KILL(sail_int)(&zghz3320);
+  KILL(sail_int)(&zghz3319);
+  KILL(sail_int)(&zghz3318);
+  KILL(lbits)(&zghz3317);
+  KILL(sail_int)(&zghz3316);
+  KILL(lbits)(&zghz3315);
+  KILL(sail_int)(&zghz3314);
+  KILL(lbits)(&zghz3313);
+  KILL(lbits)(&zghz3312);
+  KILL(lbits)(&zghz3311);
+  KILL(lbits)(&zghz3310);
+  KILL(lbits)(&zghz3309);
+}
+
 static void sailgen_capToString(sail_string *rop, struct zCapability);
+
+sail_int zghz3346;
+lbits zghz3347;
+lbits zghz3348;
+lbits zghz3349;
+lbits zghz3350;
+sail_int zghz3351;
+lbits zghz3352;
+lbits zghz3353;
+sail_int zghz3354;
+lbits zghz3355;
+lbits zghz3356;
+lbits zghz3357;
+sail_int zghz3358;
+
+static void startup_sailgen_capToString(void)
+{
+  CREATE(sail_int)(&zghz3346);
+  CREATE(lbits)(&zghz3347);
+  CREATE(lbits)(&zghz3348);
+  CREATE(lbits)(&zghz3349);
+  CREATE(lbits)(&zghz3350);
+  CREATE(sail_int)(&zghz3351);
+  CREATE(lbits)(&zghz3352);
+  CREATE(lbits)(&zghz3353);
+  CREATE(sail_int)(&zghz3354);
+  CREATE(lbits)(&zghz3355);
+  CREATE(lbits)(&zghz3356);
+  CREATE(lbits)(&zghz3357);
+  CREATE(sail_int)(&zghz3358);
+}
 
 static void sailgen_capToString(sail_string *zcbz340, struct zCapability zcap)
 {
   __label__ end_function_168, end_block_exception_169, end_function_195;
 
-  sail_int zlen;
-  CREATE(sail_int)(&zlen);
-  sailgen_getCapLength(&zlen, zcap);
+  RECREATE(sail_int)(&zghz3346);
+  sailgen_getCapLength(&zghz3346, zcap);
   sail_string zlen_str;
   CREATE(sail_string)(&zlen_str);
   {
-    lbits zgaz3366;
-    CREATE(lbits)(&zgaz3366);
+    RECREATE(lbits)(&zghz3357);
     {
-      int64_t zgaz3365;
+      int64_t zgaz3335;
+      zgaz3335 = (zcap_len_width + INT64_C(3));
       {
-        sail_int zgsz3706;
-        CREATE(sail_int)(&zgsz3706);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3706, zcap_len_width);
-        sail_int zgsz3707;
-        CREATE(sail_int)(&zgsz3707);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3707, INT64_C(3));
-        sail_int zgsz3708;
-        CREATE(sail_int)(&zgsz3708);
-        add_int(&zgsz3708, zgsz3706, zgsz3707);
-        zgaz3365 = CONVERT_OF(mach_int, sail_int)(zgsz3708);
-        KILL(sail_int)(&zgsz3708);
-        KILL(sail_int)(&zgsz3707);
-        KILL(sail_int)(&zgsz3706);
-      }
-      {
-        sail_int zgsz3705;
-        CREATE(sail_int)(&zgsz3705);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3705, zgaz3365);
-        sailgen_to_bits(&zgaz3366, zgsz3705, zlen);
-        KILL(sail_int)(&zgsz3705);
+        RECREATE(sail_int)(&zghz3358);
+        CONVERT_OF(sail_int, mach_int)(&zghz3358, zgaz3335);
+        sailgen_to_bits(&zghz3357, zghz3358, zghz3346);
       }
     }
-    string_of_lbits(&zlen_str, zgaz3366);
-    KILL(lbits)(&zgaz3366);
+    string_of_lbits(&zlen_str, zghz3357);
   }
   uint64_t zotype64;
   {
-    bool zgaz3362;
-    zgaz3362 = sailgen_hasReservedOType(zcap);
-    if (zgaz3362) {
-      uint64_t zgaz3363;
-      zgaz3363 = zcap.zotype;
+    bool zgaz3332;
+    zgaz3332 = sailgen_hasReservedOType(zcap);
+    if (zgaz3332) {
+      uint64_t zgaz3333;
+      zgaz3333 = zcap.zotype;
       {
-        sail_int zgsz3712;
-        CREATE(sail_int)(&zgsz3712);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3712, INT64_C(64));
-        lbits zgsz3713;
-        CREATE(lbits)(&zgsz3713);
-        CONVERT_OF(lbits, fbits)(&zgsz3713, zgaz3363, UINT64_C(18) , true);
-        lbits zgsz3714;
-        CREATE(lbits)(&zgsz3714);
-        sailgen_EXTS(&zgsz3714, zgsz3712, zgsz3713);
-        zotype64 = CONVERT_OF(fbits, lbits)(zgsz3714, true);
-        KILL(lbits)(&zgsz3714);
-        KILL(lbits)(&zgsz3713);
-        KILL(sail_int)(&zgsz3712);
+        RECREATE(sail_int)(&zghz3354);
+        CONVERT_OF(sail_int, mach_int)(&zghz3354, INT64_C(64));
+        RECREATE(lbits)(&zghz3355);
+        CONVERT_OF(lbits, fbits)(&zghz3355, zgaz3333, UINT64_C(18) , true);
+        RECREATE(lbits)(&zghz3356);
+        sailgen_EXTS(&zghz3356, zghz3354, zghz3355);
+        zotype64 = CONVERT_OF(fbits, lbits)(zghz3356, true);
       }
     } else {
-      uint64_t zgaz3364;
-      zgaz3364 = zcap.zotype;
+      uint64_t zgaz3334;
+      zgaz3334 = zcap.zotype;
       {
-        sail_int zgsz3709;
-        CREATE(sail_int)(&zgsz3709);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3709, INT64_C(64));
-        lbits zgsz3710;
-        CREATE(lbits)(&zgsz3710);
-        CONVERT_OF(lbits, fbits)(&zgsz3710, zgaz3364, UINT64_C(18) , true);
-        lbits zgsz3711;
-        CREATE(lbits)(&zgsz3711);
-        sailgen_EXTZ(&zgsz3711, zgsz3709, zgsz3710);
-        zotype64 = CONVERT_OF(fbits, lbits)(zgsz3711, true);
-        KILL(lbits)(&zgsz3711);
-        KILL(lbits)(&zgsz3710);
-        KILL(sail_int)(&zgsz3709);
+        RECREATE(sail_int)(&zghz3351);
+        CONVERT_OF(sail_int, mach_int)(&zghz3351, INT64_C(64));
+        RECREATE(lbits)(&zghz3352);
+        CONVERT_OF(lbits, fbits)(&zghz3352, zgaz3334, UINT64_C(18) , true);
+        RECREATE(lbits)(&zghz3353);
+        sailgen_EXTZ(&zghz3353, zghz3351, zghz3352);
+        zotype64 = CONVERT_OF(fbits, lbits)(zghz3353, true);
       }
     }
   }
-  sail_string zgaz3361;
-  CREATE(sail_string)(&zgaz3361);
+  sail_string zgaz3331;
+  CREATE(sail_string)(&zgaz3331);
   {
-    sail_string zgaz3359;
-    CREATE(sail_string)(&zgaz3359);
+    sail_string zgaz3329;
+    CREATE(sail_string)(&zgaz3329);
     {
-      bool zgaz3338;
-      zgaz3338 = zcap.ztag;
-      if (zgaz3338) {  COPY(sail_string)(&zgaz3359, "1");  } else {  COPY(sail_string)(&zgaz3359, "0");  }
+      bool zgaz3308;
+      zgaz3308 = zcap.ztag;
+      if (zgaz3308) {  COPY(sail_string)(&zgaz3329, "1");  } else {  COPY(sail_string)(&zgaz3329, "0");  }
     }
-    sail_string zgaz3360;
-    CREATE(sail_string)(&zgaz3360);
+    sail_string zgaz3330;
+    CREATE(sail_string)(&zgaz3330);
     {
-      sail_string zgaz3358;
-      CREATE(sail_string)(&zgaz3358);
+      sail_string zgaz3328;
+      CREATE(sail_string)(&zgaz3328);
       {
-        sail_string zgaz3356;
-        CREATE(sail_string)(&zgaz3356);
+        sail_string zgaz3326;
+        CREATE(sail_string)(&zgaz3326);
         {
-          bool zgaz3339;
-          zgaz3339 = sailgen_isCapSealed(zcap);
-          if (zgaz3339) {  COPY(sail_string)(&zgaz3356, "1");  } else {  COPY(sail_string)(&zgaz3356, "0");  }
+          bool zgaz3309;
+          zgaz3309 = sailgen_isCapSealed(zcap);
+          if (zgaz3309) {  COPY(sail_string)(&zgaz3326, "1");  } else {  COPY(sail_string)(&zgaz3326, "0");  }
         }
-        sail_string zgaz3357;
-        CREATE(sail_string)(&zgaz3357);
+        sail_string zgaz3327;
+        CREATE(sail_string)(&zgaz3327);
         {
-          sail_string zgaz3355;
-          CREATE(sail_string)(&zgaz3355);
+          sail_string zgaz3325;
+          CREATE(sail_string)(&zgaz3325);
           {
-            sail_string zgaz3353;
-            CREATE(sail_string)(&zgaz3353);
+            sail_string zgaz3323;
+            CREATE(sail_string)(&zgaz3323);
             {
-              uint64_t zgaz3341;
+              uint64_t zgaz3311;
               {
-                uint64_t zgaz3340;
-                zgaz3340 = sailgen_getCapPerms(zcap);
-                {
-                  lbits zgsz3715;
-                  CREATE(lbits)(&zgsz3715);
-                  CONVERT_OF(lbits, fbits)(&zgsz3715, UINT64_C(0b0), UINT64_C(1) , true);
-                  lbits zgsz3716;
-                  CREATE(lbits)(&zgsz3716);
-                  CONVERT_OF(lbits, fbits)(&zgsz3716, zgaz3340, UINT64_C(19) , true);
-                  lbits zgsz3717;
-                  CREATE(lbits)(&zgsz3717);
-                  append(&zgsz3717, zgsz3715, zgsz3716);
-                  zgaz3341 = CONVERT_OF(fbits, lbits)(zgsz3717, true);
-                  KILL(lbits)(&zgsz3717);
-                  KILL(lbits)(&zgsz3716);
-                  KILL(lbits)(&zgsz3715);
-                }
+                uint64_t zgaz3310;
+                zgaz3310 = sailgen_getCapPerms(zcap);
+                zgaz3311 = (UINT64_C(0b0) << 19) | zgaz3310;
               }
               {
-                lbits zgsz3718;
-                CREATE(lbits)(&zgsz3718);
-                CONVERT_OF(lbits, fbits)(&zgsz3718, zgaz3341, UINT64_C(20) , true);
-                string_of_lbits(&zgaz3353, zgsz3718);
-                KILL(lbits)(&zgsz3718);
+                RECREATE(lbits)(&zghz3350);
+                CONVERT_OF(lbits, fbits)(&zghz3350, zgaz3311, UINT64_C(20) , true);
+                string_of_lbits(&zgaz3323, zghz3350);
               }
             }
-            sail_string zgaz3354;
-            CREATE(sail_string)(&zgaz3354);
+            sail_string zgaz3324;
+            CREATE(sail_string)(&zgaz3324);
             {
-              sail_string zgaz3352;
-              CREATE(sail_string)(&zgaz3352);
+              sail_string zgaz3322;
+              CREATE(sail_string)(&zgaz3322);
               {
-                sail_string zgaz3350;
-                CREATE(sail_string)(&zgaz3350);
+                sail_string zgaz3320;
+                CREATE(sail_string)(&zgaz3320);
                 {
-                  lbits zgsz3721;
-                  CREATE(lbits)(&zgsz3721);
-                  CONVERT_OF(lbits, fbits)(&zgsz3721, zotype64, UINT64_C(64) , true);
-                  string_of_lbits(&zgaz3350, zgsz3721);
-                  KILL(lbits)(&zgsz3721);
+                  RECREATE(lbits)(&zghz3349);
+                  CONVERT_OF(lbits, fbits)(&zghz3349, zotype64, UINT64_C(64) , true);
+                  string_of_lbits(&zgaz3320, zghz3349);
                 }
-                sail_string zgaz3351;
-                CREATE(sail_string)(&zgaz3351);
+                sail_string zgaz3321;
+                CREATE(sail_string)(&zgaz3321);
                 {
-                  sail_string zgaz3349;
-                  CREATE(sail_string)(&zgaz3349);
+                  sail_string zgaz3319;
+                  CREATE(sail_string)(&zgaz3319);
                   {
-                    sail_string zgaz3347;
-                    CREATE(sail_string)(&zgaz3347);
+                    sail_string zgaz3317;
+                    CREATE(sail_string)(&zgaz3317);
                     {
-                      uint64_t zgaz3342;
-                      zgaz3342 = zcap.zaddress;
+                      uint64_t zgaz3312;
+                      zgaz3312 = zcap.zaddress;
                       {
-                        lbits zgsz3719;
-                        CREATE(lbits)(&zgsz3719);
-                        CONVERT_OF(lbits, fbits)(&zgsz3719, zgaz3342, UINT64_C(64) , true);
-                        string_of_lbits(&zgaz3347, zgsz3719);
-                        KILL(lbits)(&zgsz3719);
+                        RECREATE(lbits)(&zghz3348);
+                        CONVERT_OF(lbits, fbits)(&zghz3348, zgaz3312, UINT64_C(64) , true);
+                        string_of_lbits(&zgaz3317, zghz3348);
                       }
                     }
-                    sail_string zgaz3348;
-                    CREATE(sail_string)(&zgaz3348);
+                    sail_string zgaz3318;
+                    CREATE(sail_string)(&zgaz3318);
                     {
-                      sail_string zgaz3346;
-                      CREATE(sail_string)(&zgaz3346);
+                      sail_string zgaz3316;
+                      CREATE(sail_string)(&zgaz3316);
                       {
-                        sail_string zgaz3344;
-                        CREATE(sail_string)(&zgaz3344);
+                        sail_string zgaz3314;
+                        CREATE(sail_string)(&zgaz3314);
                         {
-                          uint64_t zgaz3343;
-                          zgaz3343 = sailgen_getCapBaseBits(zcap);
+                          uint64_t zgaz3313;
+                          zgaz3313 = sailgen_getCapBaseBits(zcap);
                           {
-                            lbits zgsz3720;
-                            CREATE(lbits)(&zgsz3720);
-                            CONVERT_OF(lbits, fbits)(&zgsz3720, zgaz3343, UINT64_C(64) , true);
-                            string_of_lbits(&zgaz3344, zgsz3720);
-                            KILL(lbits)(&zgsz3720);
+                            RECREATE(lbits)(&zghz3347);
+                            CONVERT_OF(lbits, fbits)(&zghz3347, zgaz3313, UINT64_C(64) , true);
+                            string_of_lbits(&zgaz3314, zghz3347);
                           }
                         }
-                        sail_string zgaz3345;
-                        CREATE(sail_string)(&zgaz3345);
-                        concat_str(&zgaz3345, " length:", zlen_str);
-                        concat_str(&zgaz3346, zgaz3344, zgaz3345);
-                        KILL(sail_string)(&zgaz3345);
-                        KILL(sail_string)(&zgaz3344);
+                        sail_string zgaz3315;
+                        CREATE(sail_string)(&zgaz3315);
+                        concat_str(&zgaz3315, " length:", zlen_str);
+                        concat_str(&zgaz3316, zgaz3314, zgaz3315);
+                        KILL(sail_string)(&zgaz3315);
+                        KILL(sail_string)(&zgaz3314);
                       }
-                      concat_str(&zgaz3348, " base:", zgaz3346);
-                      KILL(sail_string)(&zgaz3346);
+                      concat_str(&zgaz3318, " base:", zgaz3316);
+                      KILL(sail_string)(&zgaz3316);
                     }
-                    concat_str(&zgaz3349, zgaz3347, zgaz3348);
-                    KILL(sail_string)(&zgaz3348);
-                    KILL(sail_string)(&zgaz3347);
+                    concat_str(&zgaz3319, zgaz3317, zgaz3318);
+                    KILL(sail_string)(&zgaz3318);
+                    KILL(sail_string)(&zgaz3317);
                   }
-                  concat_str(&zgaz3351, " address:", zgaz3349);
-                  KILL(sail_string)(&zgaz3349);
+                  concat_str(&zgaz3321, " address:", zgaz3319);
+                  KILL(sail_string)(&zgaz3319);
                 }
-                concat_str(&zgaz3352, zgaz3350, zgaz3351);
-                KILL(sail_string)(&zgaz3351);
-                KILL(sail_string)(&zgaz3350);
+                concat_str(&zgaz3322, zgaz3320, zgaz3321);
+                KILL(sail_string)(&zgaz3321);
+                KILL(sail_string)(&zgaz3320);
               }
-              concat_str(&zgaz3354, " type:", zgaz3352);
-              KILL(sail_string)(&zgaz3352);
+              concat_str(&zgaz3324, " type:", zgaz3322);
+              KILL(sail_string)(&zgaz3322);
             }
-            concat_str(&zgaz3355, zgaz3353, zgaz3354);
-            KILL(sail_string)(&zgaz3354);
-            KILL(sail_string)(&zgaz3353);
+            concat_str(&zgaz3325, zgaz3323, zgaz3324);
+            KILL(sail_string)(&zgaz3324);
+            KILL(sail_string)(&zgaz3323);
           }
-          concat_str(&zgaz3357, " perms:", zgaz3355);
-          KILL(sail_string)(&zgaz3355);
+          concat_str(&zgaz3327, " perms:", zgaz3325);
+          KILL(sail_string)(&zgaz3325);
         }
-        concat_str(&zgaz3358, zgaz3356, zgaz3357);
-        KILL(sail_string)(&zgaz3357);
-        KILL(sail_string)(&zgaz3356);
+        concat_str(&zgaz3328, zgaz3326, zgaz3327);
+        KILL(sail_string)(&zgaz3327);
+        KILL(sail_string)(&zgaz3326);
       }
-      concat_str(&zgaz3360, " s:", zgaz3358);
-      KILL(sail_string)(&zgaz3358);
+      concat_str(&zgaz3330, " s:", zgaz3328);
+      KILL(sail_string)(&zgaz3328);
     }
-    concat_str(&zgaz3361, zgaz3359, zgaz3360);
-    KILL(sail_string)(&zgaz3360);
-    KILL(sail_string)(&zgaz3359);
+    concat_str(&zgaz3331, zgaz3329, zgaz3330);
+    KILL(sail_string)(&zgaz3330);
+    KILL(sail_string)(&zgaz3329);
   }
-  concat_str((*(&zcbz340)), " t:", zgaz3361);
-  KILL(sail_string)(&zgaz3361);
+  concat_str((*(&zcbz340)), " t:", zgaz3331);
+  KILL(sail_string)(&zgaz3331);
 
   KILL(sail_string)(&zlen_str);
-  KILL(sail_int)(&zlen);
 end_function_168: ;
   goto end_function_195;
 end_block_exception_169: ;
@@ -6240,179 +5350,180 @@ end_block_exception_169: ;
 end_function_195: ;
 }
 
+
+
+static void finish_sailgen_capToString(void)
+{
+  KILL(sail_int)(&zghz3358);
+  KILL(lbits)(&zghz3357);
+  KILL(lbits)(&zghz3356);
+  KILL(lbits)(&zghz3355);
+  KILL(sail_int)(&zghz3354);
+  KILL(lbits)(&zghz3353);
+  KILL(lbits)(&zghz3352);
+  KILL(sail_int)(&zghz3351);
+  KILL(lbits)(&zghz3350);
+  KILL(lbits)(&zghz3349);
+  KILL(lbits)(&zghz3348);
+  KILL(lbits)(&zghz3347);
+  KILL(sail_int)(&zghz3346);
+}
+
 static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t);
+
+struct zCapability zghz3359;
+sail_int zghz3360;
+lbits zghz3361;
+sail_int zghz3362;
+lbits zghz3363;
+sail_int zghz3364;
+sail_int zghz3365;
+sail_int zghz3366;
+sail_int zghz3367;
+sail_int zghz3368;
+sail_int zghz3369;
+lbits zghz3370;
+sail_int zghz3371;
+lbits zghz3372;
+lbits zghz3373;
+lbits zghz3374;
+
+static void startup_sailgen_getRepresentableAlignmentMask(void)
+{
+
+  CREATE(sail_int)(&zghz3360);
+  CREATE(lbits)(&zghz3361);
+  CREATE(sail_int)(&zghz3362);
+  CREATE(lbits)(&zghz3363);
+  CREATE(sail_int)(&zghz3364);
+  CREATE(sail_int)(&zghz3365);
+  CREATE(sail_int)(&zghz3366);
+  CREATE(sail_int)(&zghz3367);
+  CREATE(sail_int)(&zghz3368);
+  CREATE(sail_int)(&zghz3369);
+  CREATE(lbits)(&zghz3370);
+  CREATE(sail_int)(&zghz3371);
+  CREATE(lbits)(&zghz3372);
+  CREATE(lbits)(&zghz3373);
+  CREATE(lbits)(&zghz3374);
+}
 
 static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t zlen)
 {
   __label__ case_172, finish_match_171, end_function_173, end_block_exception_174;
 
   uint64_t zcbz341;
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3369;
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3338;
   {
-    uint64_t zgaz3367;
+    RECREATE(lbits)(&zghz3372);
     {
-      sail_int zgsz3724;
-      CREATE(sail_int)(&zgsz3724);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3724, INT64_C(64));
-      sail_int zgsz3725;
-      CREATE(sail_int)(&zgsz3725);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3725, INT64_C(0));
-      lbits zgsz3726;
-      CREATE(lbits)(&zgsz3726);
-      sailgen_to_bits(&zgsz3726, zgsz3724, zgsz3725);
-      zgaz3367 = CONVERT_OF(fbits, lbits)(zgsz3726, true);
-      KILL(lbits)(&zgsz3726);
-      KILL(sail_int)(&zgsz3725);
-      KILL(sail_int)(&zgsz3724);
+      RECREATE(lbits)(&zghz3373);
+      CONVERT_OF(lbits, fbits)(&zghz3373, UINT64_C(0b0), UINT64_C(1) , true);
+      RECREATE(lbits)(&zghz3374);
+      CONVERT_OF(lbits, fbits)(&zghz3374, zlen, UINT64_C(64) , true);
+      append(&zghz3372, zghz3373, zghz3374);
     }
-    lbits zgaz3368;
-    CREATE(lbits)(&zgaz3368);
-    {
-      lbits zgsz3722;
-      CREATE(lbits)(&zgsz3722);
-      CONVERT_OF(lbits, fbits)(&zgsz3722, UINT64_C(0b0), UINT64_C(1) , true);
-      lbits zgsz3723;
-      CREATE(lbits)(&zgsz3723);
-      CONVERT_OF(lbits, fbits)(&zgsz3723, zlen, UINT64_C(64) , true);
-      append(&zgaz3368, zgsz3722, zgsz3723);
-      KILL(lbits)(&zgsz3723);
-      KILL(lbits)(&zgsz3722);
-    }
-    zgaz3369 = sailgen_setCapBounds(zdefault_cap, zgaz3367, zgaz3368);
-    KILL(lbits)(&zgaz3368);
+    zgaz3338 = sailgen_setCapBounds(zdefault_cap, UINT64_C(0x0000000000000000), zghz3372);
   }
-  uint64_t zgsz390;
   {
     bool zexact;
-    zexact = zgaz3369.ztup0;
-    struct zCapability zc;
-    zc = zgaz3369.ztup1;
+    zexact = zgaz3338.ztup0;
+    struct zCapability zghz3359;
+    zghz3359 = zgaz3338.ztup1;
     int64_t ze;
     {
-      int64_t zgaz3375;
+      int64_t zgaz3344;
       {
-        uint64_t zgaz3374;
-        zgaz3374 = zc.zE;
+        uint64_t zgaz3343;
+        zgaz3343 = zghz3359.zE;
         {
-          lbits zgsz3727;
-          CREATE(lbits)(&zgsz3727);
-          CONVERT_OF(lbits, fbits)(&zgsz3727, zgaz3374, UINT64_C(6) , true);
-          sail_int zgsz3728;
-          CREATE(sail_int)(&zgsz3728);
-          sail_unsigned(&zgsz3728, zgsz3727);
-          zgaz3375 = CONVERT_OF(mach_int, sail_int)(zgsz3728);
-          KILL(sail_int)(&zgsz3728);
-          KILL(lbits)(&zgsz3727);
+          RECREATE(lbits)(&zghz3370);
+          CONVERT_OF(lbits, fbits)(&zghz3370, zgaz3343, UINT64_C(6) , true);
+          RECREATE(sail_int)(&zghz3371);
+          sail_unsigned(&zghz3371, zghz3370);
+          zgaz3344 = CONVERT_OF(mach_int, sail_int)(zghz3371);
         }
       }
       {
-        sail_int zgsz3729;
-        CREATE(sail_int)(&zgsz3729);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3729, zgaz3375);
-        sail_int zgsz3730;
-        CREATE(sail_int)(&zgsz3730);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3730, zcap_max_E);
-        sail_int zgsz3731;
-        CREATE(sail_int)(&zgsz3731);
-        min_int(&zgsz3731, zgsz3729, zgsz3730);
-        ze = CONVERT_OF(mach_int, sail_int)(zgsz3731);
-        KILL(sail_int)(&zgsz3731);
-        KILL(sail_int)(&zgsz3730);
-        KILL(sail_int)(&zgsz3729);
+        RECREATE(sail_int)(&zghz3367);
+        CONVERT_OF(sail_int, mach_int)(&zghz3367, zgaz3344);
+        RECREATE(sail_int)(&zghz3368);
+        CONVERT_OF(sail_int, mach_int)(&zghz3368, zcap_max_E);
+        RECREATE(sail_int)(&zghz3369);
+        min_int(&zghz3369, zghz3367, zghz3368);
+        ze = CONVERT_OF(mach_int, sail_int)(zghz3369);
       }
     }
     int64_t zez7;
     {
-      bool zgaz3373;
-      zgaz3373 = zc.zinternal_E;
-      if (zgaz3373) {
-        {
-          sail_int zgsz3732;
-          CREATE(sail_int)(&zgsz3732);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3732, ze);
-          sail_int zgsz3733;
-          CREATE(sail_int)(&zgsz3733);
-          CONVERT_OF(sail_int, mach_int)(&zgsz3733, zinternal_E_take_bits);
-          sail_int zgsz3734;
-          CREATE(sail_int)(&zgsz3734);
-          add_int(&zgsz3734, zgsz3732, zgsz3733);
-          zez7 = CONVERT_OF(mach_int, sail_int)(zgsz3734);
-          KILL(sail_int)(&zgsz3734);
-          KILL(sail_int)(&zgsz3733);
-          KILL(sail_int)(&zgsz3732);
-        }
-      } else {  zez7 = INT64_C(0);  }
+      bool zgaz3342;
+      zgaz3342 = zghz3359.zinternal_E;
+      if (zgaz3342) {  zez7 = (ze + zinternal_E_take_bits);  } else {  zez7 = INT64_C(0);  }
     }
-    sbits zgaz3371;
+    sbits zgaz3340;
     {
-      int64_t zgaz3370;
+      int64_t zgaz3339;
       {
-        sail_int zgsz3737;
-        CREATE(sail_int)(&zgsz3737);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3737, INT64_C(64));
-        sail_int zgsz3738;
-        CREATE(sail_int)(&zgsz3738);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3738, zez7);
-        sail_int zgsz3739;
-        CREATE(sail_int)(&zgsz3739);
-        sub_int(&zgsz3739, zgsz3737, zgsz3738);
-        zgaz3370 = CONVERT_OF(mach_int, sail_int)(zgsz3739);
-        KILL(sail_int)(&zgsz3739);
-        KILL(sail_int)(&zgsz3738);
-        KILL(sail_int)(&zgsz3737);
+        RECREATE(sail_int)(&zghz3364);
+        CONVERT_OF(sail_int, mach_int)(&zghz3364, INT64_C(64));
+        RECREATE(sail_int)(&zghz3365);
+        CONVERT_OF(sail_int, mach_int)(&zghz3365, zez7);
+        RECREATE(sail_int)(&zghz3366);
+        sub_int(&zghz3366, zghz3364, zghz3365);
+        zgaz3339 = CONVERT_OF(mach_int, sail_int)(zghz3366);
       }
       {
-        sail_int zgsz3735;
-        CREATE(sail_int)(&zgsz3735);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3735, zgaz3370);
-        lbits zgsz3736;
-        CREATE(lbits)(&zgsz3736);
-        sailgen_ones(&zgsz3736, zgsz3735);
-        zgaz3371 = CONVERT_OF(sbits, lbits)(zgsz3736, true);
-        KILL(lbits)(&zgsz3736);
-        KILL(sail_int)(&zgsz3735);
+        RECREATE(sail_int)(&zghz3362);
+        CONVERT_OF(sail_int, mach_int)(&zghz3362, zgaz3339);
+        RECREATE(lbits)(&zghz3363);
+        sailgen_ones(&zghz3363, zghz3362);
+        zgaz3340 = CONVERT_OF(sbits, lbits)(zghz3363, true);
       }
     }
-    sbits zgaz3372;
+    sbits zgaz3341;
     {
-      sail_int zgsz3743;
-      CREATE(sail_int)(&zgsz3743);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3743, zez7);
-      lbits zgsz3744;
-      CREATE(lbits)(&zgsz3744);
-      sailgen_zzeros_implicit(&zgsz3744, zgsz3743);
-      zgaz3372 = CONVERT_OF(sbits, lbits)(zgsz3744, true);
-      KILL(lbits)(&zgsz3744);
-      KILL(sail_int)(&zgsz3743);
+      RECREATE(sail_int)(&zghz3360);
+      CONVERT_OF(sail_int, mach_int)(&zghz3360, zez7);
+      RECREATE(lbits)(&zghz3361);
+      sailgen_zzeros_implicit(&zghz3361, zghz3360);
+      zgaz3341 = CONVERT_OF(sbits, lbits)(zghz3361, true);
     }
-    {
-      lbits zgsz3740;
-      CREATE(lbits)(&zgsz3740);
-      CONVERT_OF(lbits, sbits)(&zgsz3740, zgaz3371, true);
-      lbits zgsz3741;
-      CREATE(lbits)(&zgsz3741);
-      CONVERT_OF(lbits, sbits)(&zgsz3741, zgaz3372, true);
-      lbits zgsz3742;
-      CREATE(lbits)(&zgsz3742);
-      append(&zgsz3742, zgsz3740, zgsz3741);
-      zgsz390 = CONVERT_OF(fbits, lbits)(zgsz3742, true);
-      KILL(lbits)(&zgsz3742);
-      KILL(lbits)(&zgsz3741);
-      KILL(lbits)(&zgsz3740);
-    }
+    uint64_t zgsz391;
+    zgsz391 = CONVERT_OF(fbits, sbits)(append_ss(zgaz3340, zgaz3341), true);
+    zcbz341 = zgsz391;
     goto finish_match_171;
   }
 case_172: ;
   sail_match_failure("getRepresentableAlignmentMask");
 finish_match_171: ;
-  zcbz341 = zgsz390;
-
 
 end_function_173: ;
   return zcbz341;
 end_block_exception_174: ;
 
   return UINT64_C(0xdeadc0de);
+}
+
+
+
+static void finish_sailgen_getRepresentableAlignmentMask(void)
+{
+  KILL(lbits)(&zghz3374);
+  KILL(lbits)(&zghz3373);
+  KILL(lbits)(&zghz3372);
+  KILL(sail_int)(&zghz3371);
+  KILL(lbits)(&zghz3370);
+  KILL(sail_int)(&zghz3369);
+  KILL(sail_int)(&zghz3368);
+  KILL(sail_int)(&zghz3367);
+  KILL(sail_int)(&zghz3366);
+  KILL(sail_int)(&zghz3365);
+  KILL(sail_int)(&zghz3364);
+  KILL(lbits)(&zghz3363);
+  KILL(sail_int)(&zghz3362);
+  KILL(lbits)(&zghz3361);
+  KILL(sail_int)(&zghz3360);
+
 }
 
 static uint64_t sailgen_getRepresentableLength(uint64_t);
@@ -6424,51 +5535,13 @@ static uint64_t sailgen_getRepresentableLength(uint64_t zlen)
   uint64_t zcbz342;
   uint64_t zm;
   zm = sailgen_getRepresentableAlignmentMask(zlen);
-  uint64_t zgaz3377;
+  uint64_t zgaz3346;
   {
-    uint64_t zgaz3376;
-    {
-      lbits zgsz3748;
-      CREATE(lbits)(&zgsz3748);
-      CONVERT_OF(lbits, fbits)(&zgsz3748, zm, UINT64_C(64) , true);
-      lbits zgsz3749;
-      CREATE(lbits)(&zgsz3749);
-      not_bits(&zgsz3749, zgsz3748);
-      zgaz3376 = CONVERT_OF(fbits, lbits)(zgsz3749, true);
-      KILL(lbits)(&zgsz3749);
-      KILL(lbits)(&zgsz3748);
-    }
-    {
-      lbits zgsz3745;
-      CREATE(lbits)(&zgsz3745);
-      CONVERT_OF(lbits, fbits)(&zgsz3745, zlen, UINT64_C(64) , true);
-      lbits zgsz3746;
-      CREATE(lbits)(&zgsz3746);
-      CONVERT_OF(lbits, fbits)(&zgsz3746, zgaz3376, UINT64_C(64) , true);
-      lbits zgsz3747;
-      CREATE(lbits)(&zgsz3747);
-      add_bits(&zgsz3747, zgsz3745, zgsz3746);
-      zgaz3377 = CONVERT_OF(fbits, lbits)(zgsz3747, true);
-      KILL(lbits)(&zgsz3747);
-      KILL(lbits)(&zgsz3746);
-      KILL(lbits)(&zgsz3745);
-    }
+    uint64_t zgaz3345;
+    zgaz3345 = (~(zm) & UINT64_C(0xFFFFFFFFFFFFFFFF));
+    zgaz3346 = ((zlen + zgaz3345) & UINT64_C(0xFFFFFFFFFFFFFFFF));
   }
-  {
-    lbits zgsz3750;
-    CREATE(lbits)(&zgsz3750);
-    CONVERT_OF(lbits, fbits)(&zgsz3750, zgaz3377, UINT64_C(64) , true);
-    lbits zgsz3751;
-    CREATE(lbits)(&zgsz3751);
-    CONVERT_OF(lbits, fbits)(&zgsz3751, zm, UINT64_C(64) , true);
-    lbits zgsz3752;
-    CREATE(lbits)(&zgsz3752);
-    and_bits(&zgsz3752, zgsz3750, zgsz3751);
-    zcbz342 = CONVERT_OF(fbits, lbits)(zgsz3752, true);
-    KILL(lbits)(&zgsz3752);
-    KILL(lbits)(&zgsz3751);
-    KILL(lbits)(&zgsz3750);
-  }
+  zcbz342 = (zgaz3346 & zm);
 
 
 end_function_176: ;
@@ -6489,6 +5562,27 @@ static lbits zTestLen;
 
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(struct zCapability, lbits);
 
+lbits zghz3375;
+struct zCapability zghz3376;
+struct zCapability zghz3377;
+struct zCapability zghz3378;
+sail_int zghz3379;
+lbits zghz3380;
+sail_int zghz3381;
+lbits zghz3382;
+
+static void startup_sailgen_doCSetBounds(void)
+{
+  CREATE(lbits)(&zghz3375);
+
+
+
+  CREATE(sail_int)(&zghz3379);
+  CREATE(lbits)(&zghz3380);
+  CREATE(sail_int)(&zghz3381);
+  CREATE(lbits)(&zghz3382);
+}
+
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(struct zCapability zinput, lbits zreq_len)
 {
   __label__ case_180, finish_match_179, end_function_181, end_block_exception_182;
@@ -6496,64 +5590,51 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(s
   struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zcbz343;
   uint64_t znewBase;
   znewBase = zinput.zaddress;
-  lbits znewTop;
-  CREATE(lbits)(&znewTop);
+  RECREATE(lbits)(&zghz3375);
   {
-    lbits zgaz3382;
-    CREATE(lbits)(&zgaz3382);
+    RECREATE(lbits)(&zghz3380);
     {
-      sail_int zgsz3753;
-      CREATE(sail_int)(&zgsz3753);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3753, INT64_C(65));
-      lbits zgsz3754;
-      CREATE(lbits)(&zgsz3754);
-      CONVERT_OF(lbits, fbits)(&zgsz3754, znewBase, UINT64_C(64) , true);
-      sailgen_EXTZ(&zgaz3382, zgsz3753, zgsz3754);
-      KILL(lbits)(&zgsz3754);
-      KILL(sail_int)(&zgsz3753);
+      RECREATE(sail_int)(&zghz3381);
+      CONVERT_OF(sail_int, mach_int)(&zghz3381, INT64_C(65));
+      RECREATE(lbits)(&zghz3382);
+      CONVERT_OF(lbits, fbits)(&zghz3382, znewBase, UINT64_C(64) , true);
+      sailgen_EXTZ(&zghz3380, zghz3381, zghz3382);
     }
-    add_bits(&znewTop, zgaz3382, zreq_len);
-    KILL(lbits)(&zgaz3382);
+    add_bits(&zghz3375, zghz3380, zreq_len);
   }
   bool zinBounds;
   {
-    sail_int zgaz3381;
-    CREATE(sail_int)(&zgaz3381);
-    sail_unsigned(&zgaz3381, zreq_len);
-    zinBounds = sailgen_inCapBounds(zinput, znewBase, zgaz3381);
-    KILL(sail_int)(&zgaz3381);
+    RECREATE(sail_int)(&zghz3379);
+    sail_unsigned(&zghz3379, zreq_len);
+    zinBounds = sailgen_inCapBounds(zinput, znewBase, zghz3379);
   }
-  struct zCapability zinCap;
-  zinCap = sailgen_clearTagIfSealed(zinput);
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3378;
-  zgaz3378 = sailgen_setCapBounds(zinCap, znewBase, znewTop);
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz392;
+  struct zCapability zghz3376;
+  zghz3376 = sailgen_clearTagIfSealed(zinput);
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3347;
+  zgaz3347 = sailgen_setCapBounds(zghz3376, znewBase, zghz3375);
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz393;
   {
     bool zexact;
-    zexact = zgaz3378.ztup0;
-    struct zCapability znewCap;
-    znewCap = zgaz3378.ztup1;
-    struct zCapability zgaz3380;
+    zexact = zgaz3347.ztup0;
+    struct zCapability zghz3377;
+    zghz3377 = zgaz3347.ztup1;
+    struct zCapability zghz3378;
     {
-      bool zgaz3379;
-      zgaz3379 = not(zinBounds);
-      zgaz3380 = sailgen_clearTagIf(znewCap, zgaz3379);
+      bool zgaz3348;
+      zgaz3348 = not(zinBounds);
+      zghz3378 = sailgen_clearTagIf(zghz3377, zgaz3348);
     }
-    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz393;
     zgsz393.ztup0 = zexact;
-    zgsz393.ztup1 = zgaz3380;
-    zgsz392 = zgsz393;
+    zgsz393.ztup1 = zghz3378;
     goto finish_match_179;
   }
 case_180: ;
   sail_match_failure("doCSetBounds");
 finish_match_179: ;
-  zcbz343 = zgsz392;
+  zcbz343 = zgsz393;
 
 
 
-
-  KILL(lbits)(&znewTop);
 
 end_function_181: ;
   return zcbz343;
@@ -6563,88 +5644,106 @@ end_block_exception_182: ;
   return zcbz359;
 }
 
+
+
+static void finish_sailgen_doCSetBounds(void)
+{
+  KILL(lbits)(&zghz3382);
+  KILL(sail_int)(&zghz3381);
+  KILL(lbits)(&zghz3380);
+  KILL(sail_int)(&zghz3379);
+
+
+
+  KILL(lbits)(&zghz3375);
+}
+
 static unit sailgen_main(unit);
 
+lbits zghz3383;
+lbits zghz3384;
+struct zCapability zghz3385;
+struct zCapability zghz3386;
+struct zCapability zghz3387;
+struct zCapability zghz3388;
+sail_int zghz3389;
+sail_int zghz3390;
+struct zCapability zghz3391;
 
-static unit sailgen_main(unit zgsz395)
+static void startup_sailgen_main(void)
+{
+  CREATE(lbits)(&zghz3383);
+  CREATE(lbits)(&zghz3384);
+
+
+
+
+  CREATE(sail_int)(&zghz3389);
+  CREATE(sail_int)(&zghz3390);
+
+}
+
+
+static unit sailgen_main(unit zgsz396)
 {
   __label__ case_185, finish_match_184, end_function_190, end_block_exception_191;
 
   unit zcbz344;
   {
     zTestCap = znull_cap;
-    unit zgsz396;
-    zgsz396 = UNIT;
+    unit zgsz397;
+    zgsz397 = UNIT;
   }
-  lbits zbits1;
-  CREATE(lbits)(&zbits1);
-  sailgen_capToBits(&zbits1, zTestCap);
-  lbits zbits2;
-  CREATE(lbits)(&zbits2);
-  sailgen_capToMemBits(&zbits2, zTestCap);
-  struct zCapability zcap1;
+  RECREATE(lbits)(&zghz3383);
+  sailgen_capToBits(&zghz3383, zTestCap);
+  RECREATE(lbits)(&zghz3384);
+  sailgen_capToMemBits(&zghz3384, zTestCap);
+  struct zCapability zghz3385;
   {
-    bool zgaz3388;
-    zgaz3388 = zTestCap.ztag;
-    zcap1 = sailgen_capBitsToCapability(zgaz3388, zbits1);
+    bool zgaz3356;
+    zgaz3356 = zTestCap.ztag;
+    zghz3385 = sailgen_capBitsToCapability(zgaz3356, zghz3383);
   }
-  struct zCapability zcap2;
+  struct zCapability zghz3386;
   {
-    bool zgaz3387;
-    zgaz3387 = zTestCap.ztag;
-    zcap2 = sailgen_memBitsToCapability(zgaz3387, zbits2);
+    bool zgaz3355;
+    zgaz3355 = zTestCap.ztag;
+    zghz3386 = sailgen_memBitsToCapability(zgaz3355, zghz3384);
   }
   bool zrep;
   zrep = sailgen_fastRepCheck(zTestCap, zTestAddr);
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3383;
-  zgaz3383 = sailgen_doCSetBounds(zTestCap, zTestLen);
-  unit zgsz397;
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3352;
+  zgaz3352 = sailgen_doCSetBounds(zTestCap, zTestLen);
+  unit zgsz398;
   {
     __label__ case_187, finish_match_186;
 
     bool zexact;
-    zexact = zgaz3383.ztup0;
-    struct zCapability zcap;
-    zcap = zgaz3383.ztup1;
-    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3384;
-    zgaz3384 = sailgen_setCapAddr(zTestCap, zTestAddr);
-    unit zgsz398;
+    zexact = zgaz3352.ztup0;
+    struct zCapability zghz3387;
+    zghz3387 = zgaz3352.ztup1;
+    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3353;
+    zgaz3353 = sailgen_setCapAddr(zTestCap, zTestAddr);
     {
       __label__ case_189, finish_match_188;
 
       bool zrepresentable;
-      zrepresentable = zgaz3384.ztup0;
-      struct zCapability zcapshadowz30;
-      zcapshadowz30 = zgaz3384.ztup1;
-      struct ztuple_z8z5izCz0z5iz9 zgaz3385;
-      CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3385);
-      sailgen_getCapBounds(&zgaz3385, zTestCap);
-      unit zgsz399;
+      zrepresentable = zgaz3353.ztup0;
+      struct zCapability zghz3388;
+      zghz3388 = zgaz3353.ztup1;
+      struct ztuple_z8z5izCz0z5iz9 zgaz3354;
+      CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3354);
+      sailgen_getCapBounds(&zgaz3354, zTestCap);
+      unit zgsz3100;
       {
-        sail_int zbase;
-        CREATE(sail_int)(&zbase);
-        COPY(sail_int)(&zbase, zgaz3385.ztup0);
-        sail_int ztop;
-        CREATE(sail_int)(&ztop);
-        COPY(sail_int)(&ztop, zgaz3385.ztup1);
+        RECREATE(sail_int)(&zghz3389);
+        COPY(sail_int)(&zghz3389, zgaz3354.ztup0);
+        RECREATE(sail_int)(&zghz3390);
+        COPY(sail_int)(&zghz3390, zgaz3354.ztup1);
         uint64_t zflags;
         zflags = sailgen_getCapFlags(zTestCap);
-        struct zCapability znew_cap;
-        {
-          uint64_t zgaz3386;
-          {
-            sail_int zgsz3755;
-            CREATE(sail_int)(&zgsz3755);
-            CONVERT_OF(sail_int, mach_int)(&zgsz3755, INT64_C(19));
-            lbits zgsz3756;
-            CREATE(lbits)(&zgsz3756);
-            sailgen_ones(&zgsz3756, zgsz3755);
-            zgaz3386 = CONVERT_OF(fbits, lbits)(zgsz3756, true);
-            KILL(lbits)(&zgsz3756);
-            KILL(sail_int)(&zgsz3755);
-          }
-          znew_cap = sailgen_setCapPerms(zTestCap, zgaz3386);
-        }
+        struct zCapability zghz3391;
+        zghz3391 = sailgen_setCapPerms(zTestCap, UINT64_C(0b1111111111111111111));
         sail_string zcap_str;
         CREATE(sail_string)(&zcap_str);
         sailgen_capToString(&zcap_str, zTestCap);
@@ -6652,36 +5751,29 @@ static unit sailgen_main(unit zgsz395)
         zlen = sailgen_getRepresentableLength(zTestAddr);
         uint64_t zmask;
         zmask = sailgen_getRepresentableAlignmentMask(zTestAddr);
-        zgsz399 = UNIT;
+        zgsz3100 = UNIT;
         KILL(sail_string)(&zcap_str);
-        KILL(sail_int)(&ztop);
-        KILL(sail_int)(&zbase);
         goto finish_match_188;
       }
     case_189: ;
       sail_match_failure("main");
     finish_match_188: ;
-      zgsz398 = zgsz399;
-      KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3385);
+      zgsz398 = zgsz3100;
+      KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3354);
       goto finish_match_186;
     }
   case_187: ;
     sail_match_failure("main");
   finish_match_186: ;
-    zgsz397 = zgsz398;
     goto finish_match_184;
   }
 case_185: ;
   sail_match_failure("main");
 finish_match_184: ;
-  zcbz344 = zgsz397;
+  zcbz344 = zgsz398;
 
 
 
-
-
-  KILL(lbits)(&zbits2);
-  KILL(lbits)(&zbits1);
 end_function_190: ;
   return zcbz344;
 end_block_exception_191: ;
@@ -6689,46 +5781,88 @@ end_block_exception_191: ;
   return UNIT;
 }
 
+
+
+static void finish_sailgen_main(void)
+{
+
+  KILL(sail_int)(&zghz3390);
+  KILL(sail_int)(&zghz3389);
+
+
+
+
+  KILL(lbits)(&zghz3384);
+  KILL(lbits)(&zghz3383);
+}
+
 static unit sailgen_initializze_registers(unit);
 
-static unit sailgen_initializze_registers(unit zgsz3103)
+lbits zghz3392;
+struct zCapability zghz3393;
+
+static void startup_sailgen_initializze_registers(void)
+{
+  CREATE(lbits)(&zghz3392);
+
+}
+
+static unit sailgen_initializze_registers(unit zgsz3104)
 {
   __label__ end_function_193, end_block_exception_194;
 
   unit zcbz345;
   {
-    zTestCap = sailgen_undefined_Capability(UNIT);
-    unit zgsz3105;
-    zgsz3105 = UNIT;
+    struct zCapability zghz3393;
+    zghz3393.zB = UINT64_C(0b00000000000000);
+    zghz3393.zE = UINT64_C(0b000000);
+    zghz3393.zT = UINT64_C(0b00000000000000);
+    zghz3393.zaccess_system_regs = false;
+    zghz3393.zaddress = UINT64_C(0x0000000000000000);
+    zghz3393.zflag_cap_mode = false;
+    zghz3393.zglobal = false;
+    zghz3393.zinternal_E = false;
+    zghz3393.zotype = UINT64_C(0b000000000000000000);
+    zghz3393.zpermit_cinvoke = false;
+    zghz3393.zpermit_execute = false;
+    zghz3393.zpermit_load = false;
+    zghz3393.zpermit_load_cap = false;
+    zghz3393.zpermit_seal = false;
+    zghz3393.zpermit_set_CID = false;
+    zghz3393.zpermit_store = false;
+    zghz3393.zpermit_store_cap = false;
+    zghz3393.zpermit_store_local_cap = false;
+    zghz3393.zpermit_unseal = false;
+    zghz3393.zreserved = UINT64_C(0b00);
+    zghz3393.ztag = false;
+    zghz3393.zuperms = UINT64_C(0x0);
+    zTestCap = zghz3393;
+    unit zgsz3107;
+    zgsz3107 = UNIT;
   }
   {
-    {
-      sail_int zgsz3757;
-      CREATE(sail_int)(&zgsz3757);
-      CONVERT_OF(sail_int, mach_int)(&zgsz3757, INT64_C(64));
-      lbits zgsz3758;
-      CREATE(lbits)(&zgsz3758);
-      UNDEFINED(lbits)(&zgsz3758, zgsz3757);
-      zTestAddr = CONVERT_OF(fbits, lbits)(zgsz3758, true);
-      KILL(lbits)(&zgsz3758);
-      KILL(sail_int)(&zgsz3757);
-    }
-    unit zgsz3104;
-    zgsz3104 = UNIT;
+    zTestAddr = UINT64_C(0x0000000000000000);
+    unit zgsz3106;
+    zgsz3106 = UNIT;
   }
-  {
-    sail_int zgsz3759;
-    CREATE(sail_int)(&zgsz3759);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3759, INT64_C(65));
-    UNDEFINED(lbits)(&zTestLen, zgsz3759);
-    KILL(sail_int)(&zgsz3759);
-  }
+  RECREATE(lbits)(&zghz3392);
+  CONVERT_OF(lbits, fbits)(&zghz3392, UINT64_C(0b0), UINT64_C(1) , true);
+  append_64(&zghz3392, zghz3392, UINT64_C(0x0000000000000000));
+  COPY(lbits)(&zTestLen, zghz3392);
   zcbz345 = UNIT;
 end_function_193: ;
   return zcbz345;
 end_block_exception_194: ;
 
   return UNIT;
+}
+
+
+
+static void finish_sailgen_initializze_registers(void)
+{
+
+  KILL(lbits)(&zghz3392);
 }
 
 static void model_init(void)
@@ -6738,6 +5872,39 @@ static void model_init(void)
   CREATE(zexception)(current_exception);
   throw_location = sail_new(sail_string);
   CREATE(sail_string)(throw_location);
+  startup_sailgen_sail_ones();
+  startup_sailgen_to_bits();
+  startup_sailgen_z8operatorz0zI_uz9();
+  startup_sailgen_z8operatorz0zKzJ_uz9();
+  startup_sailgen_MAX();
+  startup_sailgen_capBitsToEncCapability();
+  startup_sailgen_encCapToBits();
+  startup_sailgen_undefined_Capability();
+  startup_sailgen_encCapabilityToCapability();
+  startup_sailgen_capBitsToCapability();
+  startup_sailgen_capToEncCap();
+  startup_sailgen_capToBits();
+  startup_sailgen_capToMemBits();
+  startup_sailgen_memBitsToCapability();
+  startup_sailgen_getCapBoundsBits();
+  startup_sailgen_getCapBounds();
+  startup_sailgen_setCapBounds();
+  startup_sailgen_getCapPerms();
+  startup_sailgen_setCapPerms();
+  startup_sailgen_isCapSealed();
+  startup_sailgen_hasReservedOType();
+  startup_sailgen_getCapLength();
+  startup_sailgen_inCapBounds();
+  startup_sailgen_clearTagIf();
+  startup_sailgen_clearTagIfSealed();
+  startup_sailgen_capBoundsEqual();
+  startup_sailgen_setCapAddr();
+  startup_sailgen_fastRepCheck();
+  startup_sailgen_capToString();
+  startup_sailgen_getRepresentableAlignmentMask();
+  startup_sailgen_doCSetBounds();
+  startup_sailgen_main();
+  startup_sailgen_initializze_registers();
   create_letbind_0();
   create_letbind_1();
   create_letbind_2();
@@ -6801,6 +5968,39 @@ static void model_fini(void)
   kill_letbind_1();
   kill_letbind_0();
   KILL(lbits)(&zTestLen);
+  finish_sailgen_sail_ones();
+  finish_sailgen_to_bits();
+  finish_sailgen_z8operatorz0zI_uz9();
+  finish_sailgen_z8operatorz0zKzJ_uz9();
+  finish_sailgen_MAX();
+  finish_sailgen_capBitsToEncCapability();
+  finish_sailgen_encCapToBits();
+  finish_sailgen_undefined_Capability();
+  finish_sailgen_encCapabilityToCapability();
+  finish_sailgen_capBitsToCapability();
+  finish_sailgen_capToEncCap();
+  finish_sailgen_capToBits();
+  finish_sailgen_capToMemBits();
+  finish_sailgen_memBitsToCapability();
+  finish_sailgen_getCapBoundsBits();
+  finish_sailgen_getCapBounds();
+  finish_sailgen_setCapBounds();
+  finish_sailgen_getCapPerms();
+  finish_sailgen_setCapPerms();
+  finish_sailgen_isCapSealed();
+  finish_sailgen_hasReservedOType();
+  finish_sailgen_getCapLength();
+  finish_sailgen_inCapBounds();
+  finish_sailgen_clearTagIf();
+  finish_sailgen_clearTagIfSealed();
+  finish_sailgen_capBoundsEqual();
+  finish_sailgen_setCapAddr();
+  finish_sailgen_fastRepCheck();
+  finish_sailgen_capToString();
+  finish_sailgen_getRepresentableAlignmentMask();
+  finish_sailgen_doCSetBounds();
+  finish_sailgen_main();
+  finish_sailgen_initializze_registers();
   cleanup_rts();
   if (have_exception) {fprintf(stderr, "Exiting due to uncaught exception: %s\n", *throw_location);}
   KILL(zexception)(current_exception);
