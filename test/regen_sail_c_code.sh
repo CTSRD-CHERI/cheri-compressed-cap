@@ -19,7 +19,7 @@ if [ ! -d "$SAIL_RISCV_DIR" ]; then
   exit 1
 fi
 
-sail_pre_srcs="sail-riscv/model/prelude.sail sail-riscv/model/prelude_mapping.sail"
+sail_pre_srcs="sail-riscv/model/prelude.sail"
 sail128_srcs="$sail_pre_srcs sail-riscv/model/riscv_xlen64.sail sail-riscv/model/riscv_flen_D.sail src/cheri_prelude.sail src/cheri_types.sail src/cheri_prelude_128.sail src/cheri_cap_common.sail"
 sail64_srcs="$sail_pre_srcs sail-riscv/model/riscv_xlen32.sail sail-riscv/model/riscv_flen_F.sail src/cheri_prelude.sail src/cheri_types.sail src/cheri_prelude_64.sail src/cheri_cap_common.sail"
 output_dir=${SCRIPT_DIR}/contrib
