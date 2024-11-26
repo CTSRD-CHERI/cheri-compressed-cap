@@ -86,7 +86,7 @@ enum {
 #define _CC_CURSOR_MASK _CC_N(CURSOR_MASK)
 // Check that the sizes of the individual fields match up
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_SIZE) + _CC_N(FIELD_OTYPE_SIZE) + _CC_N(FIELD_FLAGS_SIZE) +
-                           _CC_N(FIELD_RESERVED_SIZE) + _CC_N(FIELD_HWPERMS_SIZE) + _CC_N(FIELD_UPERMS_SIZE),
+                           _CC_N(RESERVED_BITS) + _CC_N(FIELD_HWPERMS_SIZE) + _CC_N(FIELD_UPERMS_SIZE),
                        _CC_ADDR_WIDTH);
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_ZERO_TOP_SIZE) +
                            _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
@@ -256,7 +256,9 @@ ALL_WRAPPERS(HWPERMS, perms, uint32_t)
 ALL_WRAPPERS(UPERMS, uperms, uint32_t)
 ALL_WRAPPERS(OTYPE, otype, uint32_t)
 ALL_WRAPPERS(FLAGS, flags, uint8_t)
+#if _CC_N(RESERVED_FIELDS) == 1
 ALL_WRAPPERS(RESERVED, reserved, uint8_t)
+#endif
 #undef ALL_WRAPPERS
 
 /// Extract the bits used for bounds and infer the top two bits of T
@@ -437,7 +439,7 @@ static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bo
         _cc_debug_assert(cdp->_cr_top <= _CC_N(MAX_TOP));
         _cc_debug_assert(cdp->cr_base <= cdp->_cr_top);
 #endif
-        _cc_debug_assert(_CC_EXTRACT_FIELD(pesbt, RESERVED) == 0);
+        _cc_debug_assert(_cc_N(get_reserved)(cdp) == 0);
     }
 }
 

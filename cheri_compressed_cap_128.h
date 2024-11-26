@@ -150,6 +150,8 @@ _CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 // The exponent bits in memory are xored on load/store, so we encode the raw exponent value.
 #define CC128_ENCODE_EXPONENT(E) _CC_ENCODE_SPLIT_EXPONENT(E)
 #define CC128_EXTRACT_EXPONENT(pesbt) _CC_EXTRACT_SPLIT_EXPONENT(pesbt)
+#define CC128_RESERVED_FIELDS 1
+#define CC128_RESERVED_BITS CC128_FIELD_RESERVED_SIZE
 
 #include "cheri_compressed_cap_common.h"
 

@@ -102,7 +102,6 @@ enum {
 // Should really be `_CC_FIELD(FLAGS, 63, 56)', if this stuff applied to the address
 #define MORELLO_FLAG_BITS 8
     _CC_FIELD(FLAGS, 64, 65),
-    _CC_FIELD(RESERVED, 64, 65),
 
     _CC_FIELD(EXPONENT_ZERO, 94, 94),
     // The FIELD_INTERNAL_EXPONENT_SIZE name is currently required by various static assertions.
@@ -187,8 +186,15 @@ _CC_STATIC_ASSERT_SAME(CC128M_MANTISSA_WIDTH, CC128M_FIELD_EXP_ZERO_BOTTOM_SIZE)
 // The exponent bits in memory are negated when decoding in the IE case.
 #define CC128M_ENCODE_EXPONENT(E) _CC_ENCODE_SPLIT_EXPONENT(~(E))
 #define CC128M_EXTRACT_EXPONENT(pesbt) ((~_CC_EXTRACT_SPLIT_EXPONENT(pesbt)) & _CC_BITMASK64(CC128M_EXPONENT_WIDTH))
+#define CC128M_RESERVED_FIELDS 0
+#define CC128M_RESERVED_BITS 0
 
 #include "cheri_compressed_cap_common.h"
+
+static inline uint8_t cc128m_get_reserved(const cc128m_cap_t* cap) {
+    (void)cap;
+    return 0;
+}
 
 // Sanity-check mask is the expected NULL encoding
 _CC_STATIC_ASSERT_SAME(CC128M_MEM_XOR_MASK, UINT64_C(0));
