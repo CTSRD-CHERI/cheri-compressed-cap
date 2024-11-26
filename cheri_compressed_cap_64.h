@@ -150,7 +150,6 @@ _CC_STATIC_ASSERT_SAME(CC64_MEM_XOR_MASK, UINT32_C(0x7c302));
 #define CC64_FIELD(name, last, start) _CC_FIELD(name, last, start)
 #define CC64_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)
 #define CC64_EXTRACT_FIELD(value, name) _CC_EXTRACT_FIELD(value, name)
-#define CC64_ENCODE_EBT_FIELD(value, name) _CC_ENCODE_EBT_FIELD(value, name)
 
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER

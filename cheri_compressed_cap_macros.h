@@ -95,12 +95,9 @@
 
 #define _CC_EXTRACT_FIELD(pesbt, name) _cc_N(getbits)((pesbt), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
 
-#define _CC_ENCODE_EBT_FIELD(value, name)                                                                              \
-    ((uint64_t)((value)&_CC_N(FIELD_##name##_MAX_VALUE)) << (_CC_N(FIELD_##name##_START) + _CC_N(FIELD_EBT_START)))
-
 #define _CC_ENCODE_SPLIT_EXPONENT(E)                                                                                   \
-    _CC_ENCODE_EBT_FIELD((E) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |                             \
-        _CC_ENCODE_EBT_FIELD(E, EXPONENT_LOW_PART)
+    _CC_ENCODE_FIELD((E) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |                                 \
+        _CC_ENCODE_FIELD(E, EXPONENT_LOW_PART)
 #define _CC_EXTRACT_SPLIT_EXPONENT(pesbt)                                                                              \
     (_CC_EXTRACT_FIELD(pesbt, EXPONENT_LOW_PART) |                                                                     \
      (_CC_EXTRACT_FIELD(pesbt, EXPONENT_HIGH_PART) << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE)))

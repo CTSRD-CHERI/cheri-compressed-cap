@@ -180,7 +180,6 @@ decompress_128cap(uint64_t pesbt, uint64_t cursor, _cc_cap_t* cdp) {
 #define CC128_FIELD(name, last, start) _CC_FIELD(name, last, start)
 #define CC128_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)
 #define CC128_EXTRACT_FIELD(value, name) _CC_EXTRACT_FIELD(value, name)
-#define CC128_ENCODE_EBT_FIELD(value, name) _CC_ENCODE_EBT_FIELD(value, name)
 
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER

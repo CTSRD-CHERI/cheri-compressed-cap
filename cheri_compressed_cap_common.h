@@ -56,8 +56,7 @@ enum {
     _CC_N(NULL_T) = _CC_N(RESET_T),
 #endif
     _CC_N(RESET_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(RESET_EXP)) |
-                       _CC_ENCODE_EBT_FIELD(_CC_N(RESET_T), EXP_NONZERO_TOP) |
-                       _CC_ENCODE_EBT_FIELD(0, EXP_NONZERO_BOTTOM),
+                       _CC_ENCODE_FIELD(_CC_N(RESET_T), EXP_NONZERO_TOP) | _CC_ENCODE_FIELD(0, EXP_NONZERO_BOTTOM),
     _CC_N(RESET_PESBT) = _CC_N(RESET_EBT) | _CC_ENCODE_FIELD(_CC_N(UPERMS_ALL), UPERMS) |
                          _CC_ENCODE_FIELD(_CC_N(PERMS_ALL), HWPERMS) | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE),
     _CC_N(NULL_EBT) = _CC_N(ENCODE_IE)(true) | _CC_N(ENCODE_EXPONENT)(_CC_N(NULL_EXP)) |
@@ -98,7 +97,8 @@ _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_NON
                            _CC_N(FIELD_EXP_NONZERO_BOTTOM_SIZE) + _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE) +
                            _CC_N(FIELD_EXPONENT_LOW_PART_SIZE),
                        _CC_N(FIELD_EBT_SIZE));
-
+// The code below assumes that encoding the EBT fields inside pesbt and just obtaining EBT is the same.
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_START), 0);
 // Sanity-check the min/max otype macros:
 _CC_STATIC_ASSERT(_CC_N(MIN_RESERVED_OTYPE) >= 0, "MIN_RESERVED_OTYPE is signed?");
 _CC_STATIC_ASSERT(_CC_N(MIN_RESERVED_OTYPE) < _CC_N(MAX_RESERVED_OTYPE),
@@ -544,8 +544,8 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
         //  lostSignificantTop  : bool = false;
         //  lostSignificantBase : bool = false;
         //  incE : bool = false;
-        uint32_t ebt_bits = _CC_N(ENCODE_IE)(false) | _CC_ENCODE_EBT_FIELD(req_top, EXP_ZERO_TOP) |
-                            _CC_ENCODE_EBT_FIELD(req_base, EXP_ZERO_BOTTOM);
+        uint32_t ebt_bits = _CC_N(ENCODE_IE)(false) | _CC_ENCODE_FIELD(req_top, EXP_ZERO_TOP) |
+                            _CC_ENCODE_FIELD(req_base, EXP_ZERO_BOTTOM);
         if (alignment_mask)
             *alignment_mask = _CC_MAX_ADDR; // no adjustment to base required
         *exact = true;
