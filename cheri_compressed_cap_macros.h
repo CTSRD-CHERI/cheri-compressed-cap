@@ -95,12 +95,12 @@
 
 #define _CC_EXTRACT_FIELD(pesbt, name) _cc_N(getbits)((pesbt), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
 
-#define _CC_ENCODE_SPLIT_EXPONENT(E)                                                                                   \
-    _CC_ENCODE_FIELD((E) >> _CC_N(FIELD_EXPONENT_LOW_PART_SIZE), EXPONENT_HIGH_PART) |                                 \
-        _CC_ENCODE_FIELD(E, EXPONENT_LOW_PART)
-#define _CC_EXTRACT_SPLIT_EXPONENT(pesbt)                                                                              \
-    (_CC_EXTRACT_FIELD(pesbt, EXPONENT_LOW_PART) |                                                                     \
-     (_CC_EXTRACT_FIELD(pesbt, EXPONENT_HIGH_PART) << _CC_N(FIELD_EXPONENT_LOW_PART_SIZE)))
+#define _CC_ENCODE_SPLIT_FIELD(value, HIGH, LOW)                                                                       \
+    _CC_ENCODE_FIELD((value) >> _CC_N(FIELD_##LOW##_SIZE), HIGH) | _CC_ENCODE_FIELD(value, LOW)
+#define _CC_EXTRACT_SPLIT_FIELD(pesbt, HIGH, LOW)                                                                      \
+    (_CC_EXTRACT_FIELD(pesbt, LOW) | (_CC_EXTRACT_FIELD(pesbt, HIGH) << _CC_N(FIELD_##LOW##_SIZE)))
+#define _CC_ENCODE_SPLIT_EXPONENT(E) _CC_ENCODE_SPLIT_FIELD(E, EXPONENT_HIGH_PART, EXPONENT_LOW_PART)
+#define _CC_EXTRACT_SPLIT_EXPONENT(pesbt) _CC_EXTRACT_SPLIT_FIELD(pesbt, EXPONENT_HIGH_PART, EXPONENT_LOW_PART)
 
 #define _CC_SPECIAL_OTYPE(name, val)                                                                                   \
     _CC_N(name) = (_CC_N(SPECIAL_OTYPE_VAL)(val)), _CC_N(name##_SIGNED) = (_CC_N(SPECIAL_OTYPE_VAL_SIGNED)(val))
