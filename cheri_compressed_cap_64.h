@@ -147,9 +147,5 @@ _CC_STATIC_ASSERT_SAME(CC64_MANTISSA_WIDTH, CC64_FIELD_EXP_ZERO_BOTTOM_SIZE);
 // Sanity-check mask is the expected NULL encoding
 _CC_STATIC_ASSERT_SAME(CC64_MEM_XOR_MASK, UINT32_C(0x7c302));
 
-#define CC64_FIELD(name, last, start) _CC_FIELD(name, last, start)
-#define CC64_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)
-#define CC64_EXTRACT_FIELD(value, name) _CC_EXTRACT_FIELD(value, name)
-
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER

@@ -199,10 +199,6 @@ static inline uint8_t cc128m_get_reserved(const cc128m_cap_t* cap) {
 // Sanity-check mask is the expected NULL encoding
 _CC_STATIC_ASSERT_SAME(CC128M_MEM_XOR_MASK, UINT64_C(0));
 
-#define CC128M_FIELD(name, last, start) _CC_FIELD(name, last, start)
-#define CC128M_ENCODE_FIELD(value, name) _CC_ENCODE_FIELD(value, name)
-#define CC128M_EXTRACT_FIELD(value, name) _CC_EXTRACT_FIELD(value, name)
-
 #undef CC_IS_MORELLO
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER
