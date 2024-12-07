@@ -57,15 +57,6 @@ static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint64_t pesbt, 
     KILL(lbits)(&sail_pesbt);
     KILL(lbits)(&sail_cursor);
 }
-static void cc_length_t_to_sail_cap_bits(sail_cap_bits* out, unsigned __int128 len) {
-    lbits len_high;
-    lbits len_low;
-    CREATE_OF(lbits, fbits)(&len_high, len >> 64, 1, true);
-    CREATE_OF(lbits, fbits)(&len_low, (uint64_t)len, 64, true);
-    append(out, len_high, len_low);
-    KILL(lbits)(&len_high);
-    KILL(lbits)(&len_low);
-}
 
 static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len);
 static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len) {

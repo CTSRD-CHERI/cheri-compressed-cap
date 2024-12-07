@@ -95,6 +95,20 @@ static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
     return result;
 }
 
+static void cc_length_t_to_sail_cap_bits(sail_cap_bits* out, _cc_length_t len) {
+#if _CC_LEN_WIDTH > 64
+    lbits len_high;
+    lbits len_low;
+    CREATE_OF(lbits, fbits)(&len_high, len >> 64, 1, true);
+    CREATE_OF(lbits, fbits)(&len_low, (uint64_t)len, 64, true);
+    append(out, len_high, len_low);
+    KILL(lbits)(&len_high);
+    KILL(lbits)(&len_low);
+#else
+    *out = len;
+#endif
+}
+
 #ifdef SAIL_WRAPPER_CC_IS_MORELLO
 
 static inline uint64_t extract_low_bits(lbits bits) {
