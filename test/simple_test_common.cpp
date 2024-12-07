@@ -23,10 +23,10 @@ TEST_CASE("Compressed NULL cap has canonical bounds", "[nullcap]") {
 TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     _cc_cap_t null_cap = TestAPICC::make_null_derived_cap(0);
     auto pesbt = _cc_N(compress_mem)(&null_cap);
-    auto pesbt_from_sail = _cc_sail_compress_mem(&null_cap);
+    auto pesbt_from_sail = TestAPICC::sail_compress_mem(null_cap);
     CHECK(pesbt == pesbt_from_sail);
     auto pesbt_without_xor = _cc_N(compress_raw)(&null_cap);
-    auto pesbt_from_sail_without_xor = _cc_sail_compress_raw(&null_cap);
+    auto pesbt_from_sail_without_xor = TestAPICC::sail_compress_raw(null_cap);
     CHECK(pesbt_without_xor == pesbt_from_sail_without_xor);
     fprintf(stderr, "NULL ENCODED: 0x%llx\n", (long long)pesbt_without_xor);
     CHECK(pesbt_without_xor == _CC_N(MEM_XOR_MASK));
@@ -119,15 +119,15 @@ TEST_CASE("Check make_max_perms_cap() sets cr_exp correctly", "[sail]") {
 }
 
 TEST_CASE("Check NULL mask matches sail", "[sail]") {
-    CHECK(_cc_sail(null_pesbt)() == _CC_N(NULL_PESBT));
-    CHECK(_cc_sail(null_pesbt)() == _CC_N(MEM_XOR_MASK));
+    CHECK(TestAPICC::sail_null_pesbt() == _CC_N(NULL_PESBT));
+    CHECK(TestAPICC::sail_null_pesbt() == _CC_N(MEM_XOR_MASK));
 }
 
 TEST_CASE("Check reset PESBT matches sail", "[sail]") {
-    TestAPICC::cap_t reset_cap = _cc_sail(reset_capability)();
+    TestAPICC::cap_t reset_cap = TestAPICC::sail_reset_capability();
     CHECK(TestAPICC::compress_raw(reset_cap) == _CC_N(RESET_PESBT));
     // reset_pesbt returns the internal "raw" pesbt value rather than the in-memory representation
-    CHECK(_cc_sail(reset_pesbt)() == _CC_N(RESET_PESBT));
+    CHECK(TestAPICC::sail_reset_pesbt() == _CC_N(RESET_PESBT));
     CHECK(TestAPICC::compress_mem(reset_cap) == (_CC_N(RESET_PESBT) ^ _CC_N(MEM_XOR_MASK)));
     fprintf(stderr, "Decompressed reset cap:\n");
     dump_cap_fields(stderr, reset_cap);

@@ -140,7 +140,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 
     memset(&result, 0, sizeof(result));
     _cc_N(decompress_raw)(pesbt, cursor, false, &result);
-    sail_result = _cc_sail_decode_raw(pesbt, cursor, false);
+    sail_result = _cc_sail(decode_raw)(pesbt, cursor, false);
     if (!compare_caps("DECODE ALREADY XORED", result, sail_result)) {
         abort();
     }

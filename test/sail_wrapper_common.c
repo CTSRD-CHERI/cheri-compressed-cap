@@ -168,16 +168,16 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
     return result;
 }
 
-_cc_cap_t _cc_sail_decode_mem(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
+_cc_cap_t _cc_sail(decode_mem)(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
     lbits capbits = to_sail_cap(mem_pesbt, mem_cursor, tag);
     _cc_cap_t result = from_sail_cap(&capbits);
     KILL(lbits)(&capbits);
     return result;
 }
 
-_cc_cap_t _cc_sail_decode_raw(uint64_t pesbt, uint64_t cursor, bool tag) {
+_cc_cap_t _cc_sail(decode_raw)(uint64_t pesbt, uint64_t cursor, bool tag) {
     // There is no difference between raw and memory format for Morello
-    return _cc_sail_decode_mem(pesbt, cursor, tag);
+    return _cc_sail(decode_mem)(pesbt, cursor, tag);
 }
 
 uint64_t sail_compress_common_mem(const _cc_cap_t* csp) {
@@ -239,7 +239,7 @@ static _cc_cap_t sail_cap_to_cap_t(const struct zCapability* sail) {
     return c;
 }
 
-_cc_cap_t _cc_sail_decode_mem(_cc_addr_t mem_pesbt, _cc_addr_t mem_cursor, bool tag) {
+_cc_cap_t _cc_sail(decode_mem)(_cc_addr_t mem_pesbt, _cc_addr_t mem_cursor, bool tag) {
     sail_cap_bits sail_all_bits;
     pesbt_and_addr_to_sail_cap_bits(&sail_all_bits, mem_pesbt, mem_cursor);
     struct zCapability sail_result = sailgen_memBitsToCapability(tag, sail_all_bits);
@@ -256,7 +256,7 @@ static struct zCapability _sail_decode_common_raw_impl(_cc_addr_t pesbt, _cc_add
     return sail_result;
 }
 
-_cc_cap_t _cc_sail_decode_raw(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag) {
+_cc_cap_t _cc_sail(decode_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bool tag) {
     struct zCapability sail_result = _sail_decode_common_raw_impl(pesbt, cursor, tag);
     return sail_cap_to_cap_t(&sail_result);
 }
