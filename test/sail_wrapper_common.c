@@ -94,6 +94,39 @@ static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len) {
     KILL(lbits)(&slice_bits);
     return result;
 }
+/* CHERI-64 uses uint64_t, CHERI-128 uses lbits */
+#if _CC_N(CAP_BITS) == 64
+typedef uint64_t sail_cap_bits;
+static void CREATE(sail_cap_bits)(sail_cap_bits* bits) { *bits = 0; }
+static void KILL(sail_cap_bits)(sail_cap_bits* bits) { *bits = UINT64_MAX; }
+static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint32_t pesbt, uint32_t cursor) {
+    *out = (sail_cap_bits)pesbt << 32 | (sail_cap_bits)cursor;
+}
+static uint64_t cc64_getbits(uint64_t bits, uint32_t start, uint32_t size);
+static uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len) {
+    return cc64_getbits(*bits, start, len);
+}
+#elif _CC_N(CAP_BITS) == 128
+typedef lbits sail_cap_bits;
+#define SAIL_COMPRESSION_INDIRECT_BITS
+static void create_sail_cap_bits(sail_cap_bits* bits) { create_lbits(bits); }
+static void kill_sail_cap_bits(sail_cap_bits* bits) { kill_lbits(bits); }
+static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint64_t pesbt, uint64_t cursor) {
+    lbits sail_pesbt;
+    lbits sail_cursor;
+    CREATE_OF(lbits, fbits)(&sail_pesbt, pesbt, 64, true);
+    CREATE_OF(lbits, fbits)(&sail_cursor, cursor, 64, true);
+    CREATE(lbits)(out);
+    append(out, sail_pesbt, sail_cursor);
+    KILL(lbits)(&sail_pesbt);
+    KILL(lbits)(&sail_cursor);
+}
+static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len) {
+    return extract_bits(*bits, start, len);
+}
+#else
+#error Invalid capability size
+#endif
 
 static void cc_length_t_to_sail_cap_bits(sail_cap_bits* out, _cc_length_t len) {
 #if _CC_LEN_WIDTH > 64

@@ -42,27 +42,6 @@
 #define SAIL_WRAPPER_CC_FORMAT_LOWER 128m
 #define SAIL_WRAPPER_CC_FORMAT_UPPER 128M
 
-/* CHERI-64 uses uint64_t, CHERI-128 uses lbits */
-typedef lbits sail_cap_bits;
-#define SAIL_COMPRESSION_INDIRECT_BITS
-static void create_sail_cap_bits(sail_cap_bits* bits) { create_lbits(bits); }
-static void kill_sail_cap_bits(sail_cap_bits* bits) { kill_lbits(bits); }
-static void pesbt_and_addr_to_sail_cap_bits(sail_cap_bits* out, uint64_t pesbt, uint64_t cursor) {
-    lbits sail_pesbt;
-    lbits sail_cursor;
-    CREATE_OF(lbits, fbits)(&sail_pesbt, pesbt, 64, true);
-    CREATE_OF(lbits, fbits)(&sail_cursor, cursor, 64, true);
-    CREATE(lbits)(out);
-    append(out, sail_pesbt, sail_cursor);
-    KILL(lbits)(&sail_pesbt);
-    KILL(lbits)(&sail_cursor);
-}
-
-static inline uint64_t extract_bits(lbits op, uint64_t start, uint64_t len);
-static inline uint64_t extract_sail_cap_bits(sail_cap_bits* bits, uint64_t start, uint64_t len) {
-    return extract_bits(*bits, start, len);
-}
-
 #include "sail_wrapper_common.c"
 
 /* Exported API */
