@@ -142,105 +142,7 @@ static void cc_length_t_to_sail_cap_bits(sail_cap_bits* out, _cc_length_t len) {
 #endif
 }
 
-#ifdef SAIL_WRAPPER_CC_IS_MORELLO
-
-static inline uint64_t extract_low_bits(lbits bits) {
-    fbits bits_low = CONVERT_OF(fbits, lbits)(bits, true);
-    return (uint64_t)bits_low;
-}
-
-#define CHECK_FIELD_LENGTHS
-
-static inline void check_length(lbits bits, uint64_t length) {
-#ifdef CHECK_FIELD_LENGTHS
-    sail_int len;
-    CREATE(sail_int)(&len);
-    length_lbits(&len, bits);
-    assert(CONVERT_OF(mach_int, sail_int)(len) == length);
-    KILL(sail_int)(&len);
-#endif
-}
-
-// The Morello cap is just all the bits slammed together with no extra decode
-static lbits to_sail_cap(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
-    lbits cap_without_tag;
-    pesbt_and_addr_to_sail_cap_bits(&cap_without_tag, mem_pesbt, mem_cursor);
-    lbits capbits;
-    CREATE(lbits)(&capbits);
-    lbits captag;
-    CREATE_OF(lbits, fbits)(&captag, tag ? 1 : 0, 1, true);
-    append(&capbits, captag, cap_without_tag);
-    KILL(lbits)(&captag);
-    KILL(lbits)(&cap_without_tag);
-
-    check_length(capbits, 129);
-    return capbits;
-}
-
-static lbits cap_t_to_sail_cap(const _cc_cap_t* c) { return to_sail_cap(c->cr_pesbt, c->_cr_cursor, c->cr_tag); }
-
-/* Exported API */
-static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
-    _cc_cap_t result;
-    memset(&result, 0, sizeof(result));
-
-    // Now extract some fields
-    // Bounds (base and top) and exponent
-    struct sail_bounds_tuple bounds;
-    _CC_CONCAT(create_, sail_bounds_tuple)(&bounds);
-    sailgen_CapGetBounds(&bounds, *sail_cap);
-
-    check_length(bounds.ztup0, 65);
-    check_length(bounds.ztup1, 65);
-
-    result.cr_base = extract_bits(bounds.ztup0, 0, 64);
-    uint64_t top_hi = extract_bits(bounds.ztup1, 64, 1);
-    uint64_t top_lo = extract_low_bits(bounds.ztup1);
-    result._cr_top = (((_cc_length_t)top_hi) << 64) | (_cc_length_t)top_lo;
-    _CC_CONCAT(kill_, sail_bounds_tuple)(&bounds);
-
-    result.cr_bounds_valid = bounds.ztup2;
-    result.cr_exp = sailgen_CapGetExponent(*sail_cap);
-
-    // Address including flag bits
-    result._cr_cursor = sailgen_CapGetValue(*sail_cap);
-    _cc_N(update_perms)(&result, sailgen_CapGetPermissions(*sail_cap));
-    _cc_N(update_otype)(&result, sailgen_CapGetObjectType(*sail_cap));
-    result.cr_tag = sailgen_CapGetTag(*sail_cap);
-
-    // Fix these extra fields not really present in sail
-    _cc_N(update_flags)(&result, 0);
-    _cc_N(update_uperms)(&result, 0);
-    result.cr_pesbt = extract_bits(*sail_cap, 64, 64);
-    return result;
-}
-
-_cc_cap_t _cc_sail(decode_mem)(uint64_t mem_pesbt, uint64_t mem_cursor, bool tag) {
-    lbits capbits = to_sail_cap(mem_pesbt, mem_cursor, tag);
-    _cc_cap_t result = from_sail_cap(&capbits);
-    KILL(lbits)(&capbits);
-    return result;
-}
-
-_cc_cap_t _cc_sail(decode_raw)(uint64_t pesbt, uint64_t cursor, bool tag) {
-    // There is no difference between raw and memory format for Morello
-    return _cc_sail(decode_mem)(pesbt, cursor, tag);
-}
-
-uint64_t sail_compress_common_mem(const _cc_cap_t* csp) {
-    lbits capbits = cap_t_to_sail_cap(csp);
-    // The sail representation uses the memory format internally.
-    uint64_t mem_pesbt = extract_bits(capbits, 64, 64);
-    KILL(lbits)(&capbits);
-    return mem_pesbt;
-}
-
-uint64_t sail_compress_common_raw(const _cc_cap_t* csp) {
-    // There is no difference between raw and memory format for Morello
-    return sail_compress_common_mem(csp);
-}
-
-#else
+#ifndef SAIL_WRAPPER_CC_IS_MORELLO
 
 static inline void sail_dump_cap(const char* msg, struct zCapability cap) {
     sail_string zcap_str;
@@ -389,5 +291,8 @@ bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _
 _cc_cap_t _CC_CONCAT(sail_reset_capability_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
     return sail_cap_to_cap_t(&zdefault_cap);
 }
+
+_cc_addr_t _cc_sail(compress_raw)(const _cc_cap_t* csp) { return sail_compress_common_raw(csp); }
+_cc_addr_t _cc_sail(compress_mem)(const _cc_cap_t* csp) { return sail_compress_common_mem(csp); }
 
 #endif // SAIL_WRAPPER_CC_IS_MORELLO

@@ -19,7 +19,6 @@ TEST_CASE("Compressed NULL cap has canonical bounds", "[nullcap]") {
 }
 #endif
 
-// TODO: Implement non-stub sail_compress_common_mem/raw for Morello
 TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     _cc_cap_t null_cap = TestAPICC::make_null_derived_cap(0);
     auto pesbt = _cc_N(compress_mem)(&null_cap);
