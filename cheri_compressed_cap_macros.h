@@ -94,6 +94,11 @@
     ((uint64_t)((value)&_CC_N(FIELD_##name##_MAX_VALUE)) << _CC_N(FIELD_##name##_START))
 
 #define _CC_EXTRACT_FIELD(pesbt, name) _cc_N(getbits)((pesbt), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
+#define _CC_DEPOSIT_FIELD(pesbt, value, name)                                                                          \
+    __extension__({                                                                                                    \
+        _cc_debug_assert(value <= _CC_N(FIELD_##name##_MAX_VALUE));                                                    \
+        ((pesbt) & ~_CC_N(FIELD_##name##_MASK64)) | _CC_ENCODE_FIELD(value, name);                                     \
+    })
 
 #define _CC_ENCODE_SPLIT_FIELD(value, HIGH, LOW)                                                                       \
     _CC_ENCODE_FIELD((value) >> _CC_N(FIELD_##LOW##_SIZE), HIGH) | _CC_ENCODE_FIELD(value, LOW)
