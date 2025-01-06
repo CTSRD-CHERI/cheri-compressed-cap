@@ -35,10 +35,12 @@
 /* Provide the 128-specific APIs for sail_wrapper_common.c */
 
 #define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_128.c"
+#define SAIL_INFINITE_CAP zdefault_cap
 #define sail_bounds_tuple ztuple_z8z5bv64zCz0z5bvz9
 
 #define SAIL_WRAPPER_CC_FORMAT_LOWER 128
 #define SAIL_WRAPPER_CC_FORMAT_UPPER 128
+#define SAIL_WRAPPER_CC_IS_V9 1
 
 #include "sail_wrapper_common.c"
 
