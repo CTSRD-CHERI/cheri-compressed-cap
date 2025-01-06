@@ -36,6 +36,7 @@
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsometimes-uninitialized"
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #ifdef HAVE_UNUSED_BUT_SET_VARIABLE
 #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #endif
