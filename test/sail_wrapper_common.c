@@ -168,13 +168,11 @@ bool _cc_sail(precise_is_representable)(const _cc_cap_t* cap, _cc_addr_t new_add
     return sailgen_setCapAddr(sailcap, new_addr).ztup0;
 }
 
-_cc_addr_t _CC_CONCAT(sail_null_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) { return _compress_sailcap_raw(znull_cap); }
+_cc_addr_t _cc_sail(null_pesbt)(void) { return _compress_sailcap_raw(znull_cap); }
 
-_cc_addr_t _CC_CONCAT(sail_reset_pesbt_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
-    return _compress_sailcap_raw(SAIL_INFINITE_CAP);
-}
+_cc_addr_t _cc_sail(reset_pesbt)(void) { return _compress_sailcap_raw(SAIL_INFINITE_CAP); }
 
-bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _cc_length_t req_len) {
+bool _cc_sail(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
     struct zCapability sailcap = cap_t_to_sail_cap(cap);
     sail_cap_bits sail_req_len;
     CREATE(sail_cap_bits)(&sail_req_len);
@@ -186,8 +184,6 @@ bool _CC_CONCAT(sail_setbounds_, SAIL_WRAPPER_CC_FORMAT_LOWER)(_cc_cap_t* cap, _
     return exact;
 }
 
-_cc_cap_t _CC_CONCAT(sail_reset_capability_, SAIL_WRAPPER_CC_FORMAT_LOWER)(void) {
-    return sail_cap_to_cap_t(&SAIL_INFINITE_CAP);
-}
+_cc_cap_t _cc_sail(reset_capability)(void) { return sail_cap_to_cap_t(&SAIL_INFINITE_CAP); }
 
 #endif // SAIL_WRAPPER_CC_IS_MORELLO
