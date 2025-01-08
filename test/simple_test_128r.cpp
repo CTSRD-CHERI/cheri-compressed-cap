@@ -1,6 +1,3 @@
-#define TEST_CC_FORMAT_LOWER 128r
-#define TEST_CC_FORMAT_UPPER 128R
-
 #include "simple_test_common.cpp"
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
