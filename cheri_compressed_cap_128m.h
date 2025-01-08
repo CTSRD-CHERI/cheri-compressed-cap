@@ -188,12 +188,24 @@ _CC_STATIC_ASSERT_SAME(CC128M_MANTISSA_WIDTH, CC128M_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #define CC128M_EXTRACT_EXPONENT(pesbt) ((~_CC_EXTRACT_SPLIT_EXPONENT(pesbt)) & _CC_BITMASK64(CC128M_EXPONENT_WIDTH))
 #define CC128M_RESERVED_FIELDS 0
 #define CC128M_RESERVED_BITS 0
+#define CC128M_HAS_BASE_TOP_SPECIAL_CASES 1
 
 #include "cheri_compressed_cap_common.h"
 
 static inline uint8_t cc128m_get_reserved(const cc128m_cap_t* cap) {
     (void)cap;
     return 0;
+}
+
+static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds, _cc_addr_t* base_out,
+                                                         _cc_length_t* top_out, bool* valid) {
+    if (bounds.E > _CC_MAX_EXPONENT) {
+        *base_out = 0;
+        *top_out = _CC_N(MAX_TOP);
+        *valid = bounds.E == _CC_N(MAX_ENCODABLE_EXPONENT);
+        return true;
+    }
+    return false;
 }
 
 // Sanity-check mask is the expected NULL encoding

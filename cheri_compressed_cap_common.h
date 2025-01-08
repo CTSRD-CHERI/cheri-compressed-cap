@@ -327,15 +327,16 @@ static inline _cc_addr_t _cc_N(cap_bounds_address)(_cc_addr_t addr) {
     return cursor;
 }
 
+#if _CC_N(HAS_BASE_TOP_SPECIAL_CASES) != 0
+static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds, _cc_addr_t* base_out,
+                                                         _cc_length_t* top_out, bool* valid);
+#endif
 static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cursor, _cc_addr_t* base_out,
                                            _cc_length_t* top_out) {
-#ifdef CC_IS_MORELLO
-    if (bounds.E > _CC_MAX_EXPONENT) {
-        bool valid = bounds.E == _CC_N(MAX_ENCODABLE_EXPONENT);
-        *base_out = 0;
-        *top_out = _CC_N(MAX_TOP);
+#if _CC_N(HAS_BASE_TOP_SPECIAL_CASES) != 0
+    bool valid = true;
+    if (_cc_N(compute_base_top_special_cases)(bounds, base_out, top_out, &valid))
         return valid;
-    }
 #endif
     cursor = _cc_N(cap_bounds_address)(cursor);
 

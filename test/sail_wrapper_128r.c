@@ -47,11 +47,17 @@
 
 static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_cap_t* c) {
     // Would be nice to have a stable name for this tuple:
-    assert(!sailgen_boundsMalformed(*sail) && "Input cannot have malformed bounds");
     struct sail_bounds_tuple base_top;
     _CC_CONCAT(create_, sail_bounds_tuple)(&base_top);
     sailgen_getCapBoundsBits(&base_top, *sail);
-    assert(base_top.kind == Kind_zSomezIz8bzCbz9zK && "getCapBoundsBits returned None()");
+    if (base_top.kind == Kind_zNonezIz8bzCbz9zK) {
+        c->_cr_top = 0;
+        c->cr_base = 0;
+        c->cr_bounds_valid = false;
+        assert(sailgen_boundsMalformed(*sail));
+        return;
+    }
+    assert(base_top.kind == Kind_zSomezIz8bzCbz9zK);
 
     sail_int base_len;
     CREATE(sail_int)(&base_len);
@@ -99,6 +105,9 @@ static _cc_cap_t sail_cap_to_cap_t(const struct zCapability* sail) {
     c._cr_cursor = sail->zaddress;
     set_top_base_from_sail(sail, &c);
     c.cr_tag = sail->ztag;
+    if (sailgen_boundsMalformed(*sail)) {
+        assert(!sail->ztag && "Input cannot be tagged with malformed bounds");
+    }
     c.cr_exp = sail->zE;
     c.cr_bounds_valid = !sailgen_boundsMalformed(*sail);
     c.cr_pesbt = _compress_sailcap_raw(*sail);
