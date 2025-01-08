@@ -81,7 +81,7 @@ static void check_representable(_cc_addr_t base, _cc_length_t length, _cc_addr_t
     CHECK(unsealed_roundtrip == should_work);
     _cc_cap_t cap_sealed;
     _cc_N(decompress_raw)(compressed, base + offset, true, &cap_sealed);
-    _cc_N(update_otype)(&cap_sealed, 5);
+    _cc_N(update_otype)(&cap_sealed, _CC_N(OTYPE_SENTRY));
     _cc_N(decompress_raw)(cap_sealed.cr_pesbt, base + offset, true, &cap_sealed);
     bool sealed_roundtrip =
         base == decompressed.cr_base && length == decompressed.length() && offset == decompressed.offset();
@@ -106,6 +106,8 @@ TEST_CASE("Check omnipotent capability matches sail", "[sail]") {
     // 0000000d b:0000000000000000 l:ffffffffffffffff |o:0000000000000000 t:ffffff
     auto sail_reset_cap = TestAPICC::sail_reset_capability();
     auto cc_lib_reset_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(TestAPICC::sail_reset_pesbt() == sail_reset_cap.cr_pesbt);
+    CHECK(TestAPICC::sail_reset_pesbt() == cc_lib_reset_cap.cr_pesbt);
     CHECK(sail_reset_cap == cc_lib_reset_cap);
     CHECK(_cc_N(raw_equal(&sail_reset_cap, &cc_lib_reset_cap)));
     CHECK(cc_lib_reset_cap.cr_exp == _CC_N(RESET_EXP));
