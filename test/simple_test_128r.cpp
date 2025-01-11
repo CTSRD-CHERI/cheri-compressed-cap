@@ -28,3 +28,14 @@ TEST_CASE("New adjustment factors", "[bounds]") {
     // This previously reported offset=0x338e
     CHECK((int64_t)cap.offset() == -0xc72);
 }
+
+TEST_CASE("Malformed bounds return zero", "[bounds]") {
+    // Regression test: this pesbt value did not report malformed bounds
+    auto cap = TestAPICC::decompress_raw(0x5042f7ed6b1027a9, 0, false);
+    auto sail_cap = TestAPICC::sail_decode_raw(0x5042f7ed6b1027a9, 0, false);
+    CHECK(cap == sail_cap);
+    CHECK(!cap.cr_bounds_valid);
+    CHECK(cap.base() == 0);
+    CHECK(cap.top() == 0);
+    CHECK(cap.cr_exp == 51);
+}
