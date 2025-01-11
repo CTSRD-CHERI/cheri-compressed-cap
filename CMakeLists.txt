@@ -76,6 +76,7 @@ if (HAVE_WUNDEF)
     add_compile_options(-Werror=undef)
 endif()
 
+
 # TODO: -Weverything
 add_library(cheri_compressed_cap14 cheri_compressed_cap.c cheri_compressed_cap.h)
 
@@ -201,7 +202,7 @@ endfunction()
 
 function(add_cc_tests _format)
     add_cc_tests_target(${_format} simple_test)
-    if (NOT _format STREQUAL "256" AND NOT _format STREQUAL "128r")
+    if (NOT _format STREQUAL "256")
         add_cc_tests_target(${_format} setbounds_test)
         add_cc_tests_target(${_format} random_inputs_test)
     endif()
