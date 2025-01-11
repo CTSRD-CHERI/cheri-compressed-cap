@@ -71,6 +71,10 @@ add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-old-style-cast>
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     add_compile_options(-Wpedantic)
 endif()
+check_c_compiler_flag(-Wundef HAVE_WUNDEF)
+if (HAVE_WUNDEF)
+    add_compile_options(-Werror=undef)
+endif()
 
 # TODO: -Weverything
 add_library(cheri_compressed_cap14 cheri_compressed_cap.c cheri_compressed_cap.h)
