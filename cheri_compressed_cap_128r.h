@@ -163,7 +163,7 @@ static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
     // the maximum exponent instead.
     bool malformedLSB = bounds.E > _CC_MAX_EXPONENT;
     bool malformedMSB = (bounds.E == _CC_MAX_EXPONENT && bounds.B != 0) ||
-                        (bounds.E == _CC_MAX_EXPONENT - 1 && (bounds.B & 1u << _CC_MANTISSA_WIDTH) != 0);
+                        (bounds.E == _CC_MAX_EXPONENT - 1 && (bounds.B & (1u << (_CC_MANTISSA_WIDTH - 1))) != 0);
     return bounds.IE && (malformedLSB || malformedMSB);
 }
 
