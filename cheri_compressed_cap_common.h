@@ -359,7 +359,7 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
     unsigned a_mid = (unsigned)_cc_N(truncate64)(cursor >> E, _CC_MANTISSA_WIDTH);
     unsigned correction_B = bounds.B;
     unsigned correction_T = bounds.T;
-    unsigned R = (unsigned)bounds.B - (1 << (_CC_MANTISSA_WIDTH - 2)); /* wrapping subtraction */
+    unsigned R = _cc_N(truncate64)((unsigned)bounds.B - (1 << (_CC_MANTISSA_WIDTH - 2)), _CC_MANTISSA_WIDTH);
 #endif
     /* Do address, base and top lie in the R aligned region above the one containing R? */
     // let aHi = if a3 <_u R3 then 1 else 0 in
