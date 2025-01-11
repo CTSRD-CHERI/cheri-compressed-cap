@@ -340,6 +340,7 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
 #endif
     cursor = _cc_N(cap_bounds_address)(cursor);
 
+#if _CC_N(USES_V9_CORRECTION_FACTORS) != 0
     // For the remaining computations we have to clamp E to max_E
     //  let E = min(maxE, unsigned(c.E)) in
     uint8_t E = _CC_MIN(_CC_MAX_EXPONENT, bounds.E);
@@ -347,18 +348,26 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
     // let a3 = truncate(a >> (E + mantissa_width - 3), 3) in
     // let B3 = truncateLSB(c.B, 3) in
     // let T3 = truncateLSB(c.T, 3) in
-    unsigned a3 = (unsigned)_cc_N(truncate64)(cursor >> (E + _CC_MANTISSA_WIDTH - 3), 3);
-    unsigned B3 = (unsigned)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
-    unsigned T3 = (unsigned)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.T, 3);
+    unsigned a_mid = (unsigned)_cc_N(truncate64)(cursor >> (E + _CC_MANTISSA_WIDTH - 3), 3);
+    unsigned correction_B = (unsigned)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.B, 3);
+    unsigned correction_T = (unsigned)_cc_truncateLSB(_CC_MANTISSA_WIDTH)(bounds.T, 3);
     // let R3 = B3 - 0b001 in /* wraps */
-    unsigned R3 = (unsigned)_cc_N(truncate64)(B3 - 1, 3); // B3 == 0 ? 7 : B3 - 1;
+    unsigned R = (unsigned)_cc_N(truncate64)(correction_B - 1, 3); // B3 == 0 ? 7 : B3 - 1;
+#else
+    _cc_debug_assert(bounds.E <= _CC_MAX_EXPONENT && "malformed caps should already be handled");
+    uint8_t E = bounds.E;
+    unsigned a_mid = (unsigned)_cc_N(truncate64)(cursor >> E, _CC_MANTISSA_WIDTH);
+    unsigned correction_B = bounds.B;
+    unsigned correction_T = bounds.T;
+    unsigned R = (unsigned)bounds.B - (1 << (_CC_MANTISSA_WIDTH - 2)); /* wrapping subtraction */
+#endif
     /* Do address, base and top lie in the R aligned region above the one containing R? */
     // let aHi = if a3 <_u R3 then 1 else 0 in
     // let bHi = if B3 <_u R3 then 1 else 0 in
     // let tHi = if T3 <_u R3 then 1 else 0 in
-    int aHi = a3 < R3 ? 1 : 0;
-    int bHi = B3 < R3 ? 1 : 0;
-    int tHi = T3 < R3 ? 1 : 0;
+    int aHi = a_mid < R ? 1 : 0;
+    int bHi = correction_B < R ? 1 : 0;
+    int tHi = correction_T < R ? 1 : 0;
 
     /* Compute region corrections for top and base relative to a */
     // let correction_base = bHi - aHi in

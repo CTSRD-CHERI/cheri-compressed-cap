@@ -15,3 +15,16 @@ TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
     CHECK(cap2.base() == 0xffffffffffffc000);
     CHECK(cap2.top() == (_CC_MAX_TOP | 0x7fc000));
 }
+
+TEST_CASE("New adjustment factors", "[bounds]") {
+    // Regression test: the new format was still using the old V9 correctionTop algorithm.
+    auto cap = TestAPICC::decompress_raw(0xd1ce2baa14c79148, 0x934bb9c2f0eb84d6, false);
+    auto sail_cap = TestAPICC::sail_decode_raw(0xd1ce2baa14c79148, 0x934bb9c2f0eb84d6, false);
+    CHECK(cap == sail_cap);
+    // This previously reported base=0x934bb9c2f0eb5148 (5148 instead of 9148)
+    CHECK(cap.base() == 0x934bb9c2f0eb9148);
+    // This previously reported top=0x934bb9c2f0eb84d6 (84d6 instead of 931e)
+    CHECK(cap.top() == 0x934bb9c2f0eb931e);
+    // This previously reported offset=0x338e
+    CHECK((int64_t)cap.offset() == -0xc72);
+}
