@@ -44,6 +44,10 @@
 #include "sail_wrapper_api.inc"
 #undef SAIL_WRAPPER_FORMAT_LOWER
 
+#define SAIL_WRAPPER_FORMAT_LOWER 128r
+#include "sail_wrapper_api.inc"
+#undef SAIL_WRAPPER_FORMAT_LOWER
+
 #define _cc_sail(name) _CC_CONCAT(sail_, _CC_CONCAT(name, _CC_CONCAT(_, CC_FORMAT_LOWER)))
 #ifdef __cplusplus
 #define TestAPICC _CC_CONCAT(TestAPI, CC_FORMAT_LOWER)

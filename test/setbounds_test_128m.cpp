@@ -1,7 +1,3 @@
-#define TEST_CC_FORMAT_LOWER 128m
-#define TEST_CC_FORMAT_UPPER 128M
-#define TEST_CC_IS_MORELLO
-
 #include "setbounds_test_common.cpp"
 
 TEST_CASE("Morello setbounds with high bits", "[bounds]") {

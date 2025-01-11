@@ -5579,15 +5579,6 @@ end_block_exception_183: ;
   return UINT64_C(0xdeadc0de);
 }
 
-// register TestCap
-static struct zCapability zTestCap;
-
-// register TestAddr
-static uint64_t zTestAddr;
-
-// register TestLen
-static lbits zTestLen;
-
 static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(struct zCapability, lbits);
 
 lbits zghz3375;
@@ -5685,6 +5676,15 @@ static void finish_sailgen_doCSetBounds(void)
 
   KILL(lbits)(&zghz3375);
 }
+
+// register TestCap
+static struct zCapability zTestCap;
+
+// register TestAddr
+static uint64_t zTestAddr;
+
+// register TestLen
+static lbits zTestLen;
 
 static unit sailgen_main(unit);
 
