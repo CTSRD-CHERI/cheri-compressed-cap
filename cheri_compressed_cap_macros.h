@@ -91,7 +91,7 @@
     _CC_N(FIELD_##name##_MAX_VALUE) = _CC_N(FIELD_##name##_MASK_NOT_SHIFTED)
 
 #define _CC_ENCODE_FIELD(value, name)                                                                                  \
-    ((uint64_t)((value)&_CC_N(FIELD_##name##_MAX_VALUE)) << _CC_N(FIELD_##name##_START))
+    ((uint64_t)((value) & _CC_N(FIELD_##name##_MAX_VALUE)) << _CC_N(FIELD_##name##_START))
 
 #define _CC_EXTRACT_FIELD(pesbt, name) _cc_N(getbits)((pesbt), _CC_N(FIELD_##name##_START), _CC_N(FIELD_##name##_SIZE))
 #define _CC_DEPOSIT_FIELD(pesbt, value, name)                                                                          \
