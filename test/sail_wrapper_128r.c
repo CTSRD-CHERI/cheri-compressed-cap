@@ -64,6 +64,7 @@ static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_ca
     length_lbits(&base_len, sail_bounds_tuple_base(base_top));
     assert(CONVERT_OF(mach_int, sail_int)(base_len) == 64);
     c->cr_base = CONVERT_OF(fbits, lbits)(sail_bounds_tuple_base(base_top), true);
+    KILL(sail_int)(&base_len);
 
     sail_int top_len;
     CREATE(sail_int)(&top_len);
