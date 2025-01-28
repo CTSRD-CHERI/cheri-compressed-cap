@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2020 Alex Richardson
+ * Copyright (c) 2025 Alex Richardson
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory (Department of Computer Science and
@@ -30,29 +30,12 @@
  * SUCH DAMAGE.
  */
 
-#include "../cheri_compressed_cap.h"
+#include "contrib/sail.h"
 
-#define SAIL_WRAPPER_FORMAT_LOWER 64
-#include "sail_wrapper_api.inc"
-#undef SAIL_WRAPPER_FORMAT_LOWER
+/* Provide the RISC-V standard 128-bit APIs for sail_wrapper_common.c */
 
-#define SAIL_WRAPPER_FORMAT_LOWER 64r
-#include "sail_wrapper_api.inc"
-#undef SAIL_WRAPPER_FORMAT_LOWER
+#define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_64r.c"
+#define SAIL_WRAPPER_CC_FORMAT_LOWER 64r
+#define SAIL_WRAPPER_CC_FORMAT_UPPER 64R
 
-#define SAIL_WRAPPER_FORMAT_LOWER 128
-#include "sail_wrapper_api.inc"
-#undef SAIL_WRAPPER_FORMAT_LOWER
-
-#define SAIL_WRAPPER_FORMAT_LOWER 128m
-#include "sail_wrapper_api.inc"
-#undef SAIL_WRAPPER_FORMAT_LOWER
-
-#define SAIL_WRAPPER_FORMAT_LOWER 128r
-#include "sail_wrapper_api.inc"
-#undef SAIL_WRAPPER_FORMAT_LOWER
-
-#define _cc_sail(name) _CC_CONCAT(sail_, _CC_CONCAT(name, _CC_CONCAT(_, CC_FORMAT_LOWER)))
-#ifdef __cplusplus
-#define TestAPICC _CC_CONCAT(TestAPI, CC_FORMAT_LOWER)
-#endif
+#include "sail_wrapper_common_riscv.c"
