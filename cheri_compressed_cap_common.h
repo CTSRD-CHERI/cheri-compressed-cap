@@ -556,6 +556,32 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
         //  incE : bool = false;
         uint32_t ebt_bits = _CC_N(ENCODE_IE)(false) | _CC_ENCODE_FIELD(req_top, EXP_ZERO_TOP) |
                             _CC_ENCODE_FIELD(req_base, EXP_ZERO_BOTTOM);
+#if _CC_N(USES_LEN_MSB) != 0
+        // LEN_MSB is bit N of the bounds length, with N being the length of T plus one.
+        //
+        // For RV32 and exponent E == 0, both B and T are 10 bits wide.
+        // A capability stores B[9:0] and T[7:0]. For the bounds length l (the req_length64 variable), we know
+        // T = B + l. If l[9] was 1 we'd not have exponent 0, so l[9] must be 0.
+        //
+        // T[9:8] are not stored. Apart from B[9:0] and T[7:0], what else is required to recover T[9:8] from a stored
+        // capability?
+        //
+        //   B   .. .... ....
+        // + l   0. #### ####
+        //       ------------
+        // = T   xx .... ....
+        //
+        // (. == known bit (stored), # == known bit (not stored), x == unknown bit).
+        //
+        // T[9:8] = B[9:8] + l[8] + carry bit
+        // The carry bit is 1 if B[7:0] > T [7:0]
+        //
+        // Long story short: If we also store l[8] in the capability, we can recover T[9:8].
+        //
+        _CC_STATIC_ASSERT(_CC_N(FIELD_EXP_ZERO_TOP_SIZE) == 8, "We only support formats that use L8");
+        uint8_t len_msb = _cc_N(getbits)(req_length64, _CC_N(FIELD_EXP_ZERO_TOP_SIZE), 1);
+        ebt_bits |= _CC_ENCODE_FIELD(len_msb, LEN_MSB);
+#endif
         if (alignment_mask)
             *alignment_mask = _CC_MAX_ADDR; // no adjustment to base required
         *exact = true;
