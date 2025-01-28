@@ -96,3 +96,25 @@ TEST_CASE("Incorrect bounds bits", "[bounds]") {
     CHECK(cap.top() == 0x000000000b43a7458);
     CHECK((int64_t)cap.offset() == 0x2a5);
 }
+
+TEST_CASE("Malformed bounds L8", "[bounds]") {
+    // Regression test: the new format was still using the old V9 correctionTop algorithm.
+    constexpr _cc_addr_t input_pesbt = 0x1ab768a0;
+    constexpr _cc_addr_t input_cursor = 0xc58dfe0;
+    auto bounds_bits = TestAPICC::extract_bounds_bits(input_pesbt);
+    auto sail_bounds_bits = TestAPICC::sail_extract_bounds_bits(input_pesbt);
+    CHECK(bounds_bits == sail_bounds_bits);
+    CHECK(bounds_bits.E == 0);
+    CHECK(bounds_bits.IE == 1);
+    CHECK(bounds_bits.B == 160);
+    CHECK(bounds_bits.T == 472);
+    auto cap = TestAPICC::decompress_raw(input_pesbt, input_cursor, false);
+    auto sail_cap = TestAPICC::sail_decode_raw(input_pesbt, input_cursor, false);
+    CHECK(cap == sail_cap);
+    CHECK(!cap.cr_bounds_valid);                  // Should be malformed
+    CHECK(cap.base() == 0);                       // this previously reported base=0x0000000c58e0a0
+    CHECK(cap.top() == 0);                        // This previously reported top=0x0000000000c58e1d8
+    CHECK((int64_t)cap.offset() == input_cursor); // Previously reported 0xffffffffffffff40
+    CHECK(cap.reserved_bits() == 5);
+    CHECK(cap.type() == CC64R_OTYPE_SENTRY);
+}
