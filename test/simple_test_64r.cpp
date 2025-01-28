@@ -76,3 +76,23 @@ TEST_CASE("bounds encoding, exponent > 0, T8==0, c_b==-1", "[bounds]") {
     cc64r_update_uperms(&cap, 0);
     CHECK(cap.cr_pesbt == 0x000207e1);
 }
+
+TEST_CASE("Incorrect bounds bits", "[bounds]") {
+    // Regression test: the new format was still using the old V9 correctionTop algorithm.
+    constexpr _cc_addr_t input_pesbt = 0x97bd62bc;
+    constexpr _cc_addr_t input_cursor = 0xb43a7561;
+    auto bounds_bits = TestAPICC::extract_bounds_bits(input_pesbt);
+    auto sail_bounds_bits = TestAPICC::sail_extract_bounds_bits(input_pesbt);
+    CHECK(bounds_bits == sail_bounds_bits);
+    CHECK(bounds_bits.E == 0);
+    CHECK(bounds_bits.IE == 0);
+    CHECK(bounds_bits.B == 700);
+    CHECK(bounds_bits.T == 88); // Previously reported 856
+    auto cap = TestAPICC::decompress_raw(input_pesbt, input_cursor, false);
+    auto sail_cap = TestAPICC::sail_decode_raw(input_pesbt, input_cursor, false);
+    CHECK(cap == sail_cap);
+    CHECK(cap.base() == 0x000000b43a72bc);
+    // This previously reported top=0x000000000b43a7358 (72bc instead of 7458)
+    CHECK(cap.top() == 0x000000000b43a7458);
+    CHECK((int64_t)cap.offset() == 0x2a5);
+}
