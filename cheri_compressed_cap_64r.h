@@ -73,9 +73,10 @@ typedef int32_t cc64r_saddr_t;
 enum {
     _CC_FIELD(UPERMS, 63, 62),
     _CC_FIELD(HWPERMS, 61, 57),
-    _CC_FIELD(FLAGS, 57, 57), // For now pretend that the M bit is always present, not just for X caps
+    _CC_FIELD(FLAGS, 57, 57),     // For now pretend that the M bit is always present, not just for X caps
+    _CC_FIELD(RESERVED1, 56, 56), // Actually the CL field, but reserverd to match sail
     // TODO: Level should be separate: _CC_FIELD(LEVEL, 56, 56)
-    _CC_FIELD(RESERVED, 55, 53),
+    _CC_FIELD(RESERVED0, 55, 53),
     _CC_FIELD(OTYPE, 52, 52),
     _CC_FIELD(EBT, 51, 32),
 
@@ -145,13 +146,17 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 // FIXME: this is currently not correct, we are missing the L8 bit
 #define CC64R_ENCODE_EXPONENT(E) _CC_ENCODE_SPLIT_EXPONENT(CC64R_MAX_EXPONENT - (E))
 #define CC64R_EXTRACT_EXPONENT(pesbt) (CC64R_MAX_EXPONENT - _CC_EXTRACT_SPLIT_EXPONENT(pesbt))
-#define CC64R_RESERVED_FIELDS 1
-#define CC64R_RESERVED_BITS CC64R_FIELD_RESERVED_SIZE
+#define CC64R_RESERVED_FIELDS 2
+#define CC64R_RESERVED_BITS (CC128R_FIELD_RESERVED0_SIZE + CC128R_FIELD_RESERVED1_SIZE)
 #define CC64R_HAS_BASE_TOP_SPECIAL_CASES 1
 #define CC64R_USES_V9_CORRECTION_FACTORS 0
 #define CC64R_USES_LEN_MSB 1
 
 #include "cheri_compressed_cap_common.h"
+
+static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
+    return _CC_EXTRACT_SPLIT_FIELD(cap->cr_pesbt, RESERVED1, RESERVED0);
+}
 
 static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
     // The spec defines this check as checking for E < 0, but since we store it as an unsigned number, we compare it to
