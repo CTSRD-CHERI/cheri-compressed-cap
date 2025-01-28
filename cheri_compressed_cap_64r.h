@@ -163,7 +163,8 @@ static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
 static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
     // The spec defines this check as checking for E < 0, but since we store it as an unsigned number, we compare it to
     // the maximum exponent instead.
-    bool malformedLSB = bounds.E > _CC_MAX_EXPONENT;
+    // For MXLEN==32, we also report invalid bounds for IE && E == 0
+    bool malformedLSB = bounds.E > _CC_MAX_EXPONENT || (bounds.E == 0);
     bool malformedMSB = (bounds.E == _CC_MAX_EXPONENT && bounds.B != 0) ||
                         (bounds.E == _CC_MAX_EXPONENT - 1 && (bounds.B & (1u << (_CC_MANTISSA_WIDTH - 1))) != 0);
     return bounds.IE && (malformedLSB || malformedMSB);
