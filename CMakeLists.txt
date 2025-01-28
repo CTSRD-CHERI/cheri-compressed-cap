@@ -125,6 +125,7 @@ function(add_sail_wrappers _format)
 endfunction()
 
 add_sail_wrappers(64)
+add_sail_wrappers(64r)
 add_sail_wrappers(128)
 add_sail_wrappers(128m)
 add_sail_wrappers(128r)

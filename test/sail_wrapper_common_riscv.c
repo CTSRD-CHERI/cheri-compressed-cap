@@ -56,22 +56,26 @@ static inline void set_top_base_from_sail(const struct zCapability* sail, _cc_ca
     sail_int base_len;
     CREATE(sail_int)(&base_len);
     length_lbits(&base_len, sail_bounds_tuple_base(base_top));
-    assert(CONVERT_OF(mach_int, sail_int)(base_len) == 64);
+    assert(CONVERT_OF(mach_int, sail_int)(base_len) == _CC_ADDR_WIDTH);
     c->cr_base = CONVERT_OF(fbits, lbits)(sail_bounds_tuple_base(base_top), true);
     KILL(sail_int)(&base_len);
 
     sail_int top_len;
     CREATE(sail_int)(&top_len);
     length_lbits(&top_len, sail_bounds_tuple_top(base_top));
-    assert(CONVERT_OF(mach_int, sail_int)(top_len) == 65);
+    assert(CONVERT_OF(mach_int, sail_int)(top_len) == _CC_LEN_WIDTH);
     KILL(sail_int)(&top_len);
-    fbits top_high = extract_bits(sail_bounds_tuple_top(base_top), 64, 1);
     fbits top_low = CONVERT_OF(fbits, lbits)(sail_bounds_tuple_top(base_top), true);
+#if _CC_LEN_WIDTH <= 64
+    c->_cr_top = top_low;
+#else
+    fbits top_high = extract_bits(sail_bounds_tuple_top(base_top), 64, 1);
     c->_cr_top = (((cc128_length_t)top_high) << 64) | (cc128_length_t)top_low;
+#endif
     _CC_CONCAT(kill_, sail_bounds_tuple)(&base_top);
 }
 
-static uint64_t _compress_sailcap_raw(struct zCapability sailcap) { return sailgen_capToMetadataBits(sailcap).zbits; }
+static _cc_addr_t _compress_sailcap_raw(struct zCapability sailcap) { return sailgen_capToMetadataBits(sailcap).zbits; }
 
 static struct zCapability cap_t_to_sail_cap(const _cc_cap_t* c) {
     struct zCapability result;
@@ -127,8 +131,8 @@ _cc_bounds_bits _cc_sail(extract_bounds_bits)(_cc_addr_t pesbt) {
     result.IE = sail_result.zinternal_exponent;
     return result;
 }
-_cc_addr_t sail_representable_mask_128r(_cc_addr_t len) { return sailgen_getRepresentableAlignmentMask(len); }
-_cc_addr_t sail_representable_length_128r(_cc_addr_t len) { return sailgen_getRepresentableLength(len); }
+_cc_addr_t _cc_sail(representable_mask)(_cc_addr_t len) { return sailgen_getRepresentableAlignmentMask(len); }
+_cc_addr_t _cc_sail(representable_length)(_cc_addr_t len) { return sailgen_getRepresentableLength(len); }
 bool _cc_sail(fast_is_representable)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
     // The RISC-V standard version no longer uses the fast representability check.
     return _cc_sail(precise_is_representable)(cap, new_addr);
