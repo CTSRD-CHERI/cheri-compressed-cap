@@ -654,7 +654,7 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
     const uint8_t newE = E + (incE ? 1 : 0);
     //  let exact = not(lostSignificantBase | lostSignificantTop);
     *exact = !lostSignificantBase && !lostSignificantTop;
-    // Split E between T and B, use the remaining bits to encode Bbits/TBits
+    // Split E between T and B (and L_MSB), use the remaining bits to encode Bbits/TBits
     const _cc_addr_t expBits = _CC_N(ENCODE_EXPONENT)(newE);
     return expBits | _CC_N(ENCODE_IE)(true) | _CC_ENCODE_FIELD(top_ie, EXP_NONZERO_TOP) |
            _CC_ENCODE_FIELD(bot_ie, EXP_NONZERO_BOTTOM);
