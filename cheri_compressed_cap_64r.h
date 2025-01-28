@@ -81,7 +81,7 @@ enum {
     _CC_FIELD(EBT, 51, 32),
 
     _CC_FIELD(EXPONENT_FORMAT, 51, 51),
-    _CC_FIELD(LEN_MSB, 50, 50),
+    _CC_FIELD(LEN_MSB, 50, 50), // Either MSB of exponent or MSB of length depending on EXPONENT_FORMAT.
     // The FIELD_INTERNAL_EXPONENT_SIZE name is currently required by various static assertions.
     _CC_N(FIELD_INTERNAL_EXPONENT_SIZE) = _CC_N(FIELD_EXPONENT_FORMAT_SIZE),
     _CC_FIELD(TOP_ENCODED, 49, 42),
@@ -143,9 +143,11 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #define CC64R_ENCODE_IE(IE) _CC_ENCODE_FIELD(!(IE), EXPONENT_FORMAT)
 #define CC64R_EXTRACT_IE(value) (!_CC_EXTRACT_FIELD(value, EXPONENT_FORMAT))
 // The exponent bits in memory are subtracted from the max exponent when decoding in the IE case.
-// FIXME: this is currently not correct, we are missing the L8 bit
-#define CC64R_ENCODE_EXPONENT(E) _CC_ENCODE_SPLIT_EXPONENT(CC64R_MAX_EXPONENT - (E))
-#define CC64R_EXTRACT_EXPONENT(pesbt) (CC64R_MAX_EXPONENT - _CC_EXTRACT_SPLIT_EXPONENT(pesbt))
+#define _CC64R_ENCODE_EXPONENT_RAW(e_enc) _CC_ENCODE_SPLIT_EXPONENT(e_enc) | _CC_ENCODE_FIELD(((e_enc) >> 4), LEN_MSB)
+#define _CC64R_EXTRACT_EXPONENT_RAW(pesbt)                                                                             \
+    ((_CC_EXTRACT_FIELD(pesbt, LEN_MSB) << 4) | _CC_EXTRACT_SPLIT_EXPONENT(pesbt))
+#define CC64R_ENCODE_EXPONENT(E) _CC64R_ENCODE_EXPONENT_RAW(CC64R_MAX_EXPONENT - (E))
+#define CC64R_EXTRACT_EXPONENT(pesbt) (CC64R_MAX_EXPONENT - _CC64R_EXTRACT_EXPONENT_RAW(pesbt))
 #define CC64R_RESERVED_FIELDS 2
 #define CC64R_RESERVED_BITS (CC128R_FIELD_RESERVED0_SIZE + CC128R_FIELD_RESERVED1_SIZE)
 #define CC64R_HAS_BASE_TOP_SPECIAL_CASES 1
