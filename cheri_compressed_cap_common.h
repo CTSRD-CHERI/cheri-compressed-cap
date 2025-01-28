@@ -285,7 +285,11 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         L_msb = 1;
     } else {
         result.E = 0;
+#if _CC_N(USES_LEN_MSB) != 0
+        L_msb = _CC_EXTRACT_FIELD(pesbt, LEN_MSB);
+#else
         L_msb = 0;
+#endif
         result.B = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
         result.T = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_TOP);
     }
