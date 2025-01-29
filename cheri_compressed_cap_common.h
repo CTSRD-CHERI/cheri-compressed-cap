@@ -3,7 +3,6 @@
  *
  * Copyright (c) 2018 Lawrence Esswood
  * Copyright (c) 2018-2020 Alex Richardson
- * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
