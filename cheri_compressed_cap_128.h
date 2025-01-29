@@ -2,7 +2,6 @@
  * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2018-2020 Alex Richardson
- * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
@@ -154,6 +153,7 @@ _CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #define CC128_RESERVED_BITS CC128_FIELD_RESERVED_SIZE
 #define CC128_HAS_BASE_TOP_SPECIAL_CASES 0
 #define CC128_USES_V9_CORRECTION_FACTORS 1
+#define CC128_USES_LEN_MSB 0
 
 #include "cheri_compressed_cap_common.h"
 

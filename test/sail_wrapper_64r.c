@@ -1,11 +1,12 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2018 Alex Richardson
+ * Copyright (c) 2025 Alex Richardson
  *
  * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * Cambridge Computer Laboratory (Department of Computer Science and
+ * Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+ * DARPA SSITH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,14 +29,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include "cheri_compressed_cap.h"
 
-// Just check that everything compiles
-uint64_t test(void) {
-    uint64_t pesbt = 0x1234567;
-    uint64_t cursor = 0x98765431;
-    cc128_cap_t result;
-    cc128_decompress_mem(pesbt, cursor, false, &result);
-    uint64_t new_pesbt = cc128_compress_mem(&result);
-    return cc128_is_representable_cap_exact(&result) + new_pesbt;
-}
+#include "contrib/sail.h"
+
+/* Provide the RISC-V standard 128-bit APIs for sail_wrapper_common.c */
+
+#define SAIL_COMPRESSION_GENERATED_C_FILE "contrib/sail_compression_64r.c"
+#define SAIL_WRAPPER_CC_FORMAT_LOWER 64r
+#define SAIL_WRAPPER_CC_FORMAT_UPPER 64R
+
+#include "sail_wrapper_common_riscv.c"

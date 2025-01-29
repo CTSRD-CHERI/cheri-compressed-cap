@@ -3,7 +3,6 @@
  *
  * Copyright (c) 2018 Lawrence Esswood
  * Copyright (c) 2018 Alex Richardson
- * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory (Department of Computer Science and

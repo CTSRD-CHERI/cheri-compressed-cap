@@ -3,7 +3,6 @@
  *
  * Copyright (c) 2018 Lawrence Esswood
  * Copyright (c) 2018-2020 Alex Richardson
- * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
@@ -83,19 +82,21 @@ enum {
 #define _CC_MAX_ADDR _CC_N(MAX_ADDR)
 #define _CC_MAX_TOP _CC_N(MAX_TOP)
 #define _CC_CURSOR_MASK _CC_N(CURSOR_MASK)
+
+#if _CC_N(USES_LEN_MSB) == 0
+enum { _CC_N(FIELD_LEN_MSB_SIZE) = 0 };
+#endif
+
 // Check that the sizes of the individual fields match up
-_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_SIZE) + _CC_N(FIELD_OTYPE_SIZE) + _CC_N(FIELD_FLAGS_SIZE) +
-                           _CC_N(RESERVED_BITS) + _CC_N(FIELD_HWPERMS_SIZE) + _CC_N(FIELD_UPERMS_SIZE),
-                       _CC_ADDR_WIDTH);
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_ZERO_TOP_SIZE) +
-                           _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
+                           _CC_N(FIELD_LEN_MSB_SIZE) + _CC_N(FIELD_EXP_ZERO_BOTTOM_SIZE),
                        _CC_N(FIELD_EBT_SIZE));
-_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_TOP_ENCODED_SIZE) +
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_LEN_MSB_SIZE) + _CC_N(FIELD_TOP_ENCODED_SIZE) +
                            _CC_N(FIELD_BOTTOM_ENCODED_SIZE),
                        _CC_N(FIELD_EBT_SIZE));
-_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_EXP_NONZERO_TOP_SIZE) +
-                           _CC_N(FIELD_EXP_NONZERO_BOTTOM_SIZE) + _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE) +
-                           _CC_N(FIELD_EXPONENT_LOW_PART_SIZE),
+_CC_STATIC_ASSERT_SAME(_CC_N(FIELD_INTERNAL_EXPONENT_SIZE) + _CC_N(FIELD_LEN_MSB_SIZE) +
+                           _CC_N(FIELD_EXP_NONZERO_TOP_SIZE) + _CC_N(FIELD_EXP_NONZERO_BOTTOM_SIZE) +
+                           _CC_N(FIELD_EXPONENT_HIGH_PART_SIZE) + _CC_N(FIELD_EXPONENT_LOW_PART_SIZE),
                        _CC_N(FIELD_EBT_SIZE));
 // The code below assumes that encoding the EBT fields inside pesbt and just obtaining EBT is the same.
 _CC_STATIC_ASSERT_SAME(_CC_N(FIELD_EBT_START), 0);
@@ -284,7 +285,11 @@ static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
         L_msb = 1;
     } else {
         result.E = 0;
+#if _CC_N(USES_LEN_MSB) != 0
+        L_msb = _CC_EXTRACT_FIELD(pesbt, LEN_MSB);
+#else
         L_msb = 0;
+#endif
         result.B = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_BOTTOM);
         result.T = (uint16_t)_CC_EXTRACT_FIELD(pesbt, EXP_ZERO_TOP);
     }
@@ -555,6 +560,32 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
         //  incE : bool = false;
         uint32_t ebt_bits = _CC_N(ENCODE_IE)(false) | _CC_ENCODE_FIELD(req_top, EXP_ZERO_TOP) |
                             _CC_ENCODE_FIELD(req_base, EXP_ZERO_BOTTOM);
+#if _CC_N(USES_LEN_MSB) != 0
+        // LEN_MSB is bit N of the bounds length, with N being the length of T plus one.
+        //
+        // For RV32 and exponent E == 0, both B and T are 10 bits wide.
+        // A capability stores B[9:0] and T[7:0]. For the bounds length l (the req_length64 variable), we know
+        // T = B + l. If l[9] was 1 we'd not have exponent 0, so l[9] must be 0.
+        //
+        // T[9:8] are not stored. Apart from B[9:0] and T[7:0], what else is required to recover T[9:8] from a stored
+        // capability?
+        //
+        //   B   .. .... ....
+        // + l   0. #### ####
+        //       ------------
+        // = T   xx .... ....
+        //
+        // (. == known bit (stored), # == known bit (not stored), x == unknown bit).
+        //
+        // T[9:8] = B[9:8] + l[8] + carry bit
+        // The carry bit is 1 if B[7:0] > T [7:0]
+        //
+        // Long story short: If we also store l[8] in the capability, we can recover T[9:8].
+        //
+        _CC_STATIC_ASSERT(_CC_N(FIELD_EXP_ZERO_TOP_SIZE) == 8, "We only support formats that use L8");
+        uint8_t len_msb = _cc_N(getbits)(req_length64, _CC_N(FIELD_EXP_ZERO_TOP_SIZE), 1);
+        ebt_bits |= _CC_ENCODE_FIELD(len_msb, LEN_MSB);
+#endif
         if (alignment_mask)
             *alignment_mask = _CC_MAX_ADDR; // no adjustment to base required
         *exact = true;
@@ -627,7 +658,7 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
     const uint8_t newE = E + (incE ? 1 : 0);
     //  let exact = not(lostSignificantBase | lostSignificantTop);
     *exact = !lostSignificantBase && !lostSignificantTop;
-    // Split E between T and B, use the remaining bits to encode Bbits/TBits
+    // Split E between T and B (and L_MSB), use the remaining bits to encode Bbits/TBits
     const _cc_addr_t expBits = _CC_N(ENCODE_EXPONENT)(newE);
     return expBits | _CC_N(ENCODE_IE)(true) | _CC_ENCODE_FIELD(top_ie, EXP_NONZERO_TOP) |
            _CC_ENCODE_FIELD(bot_ie, EXP_NONZERO_BOTTOM);
@@ -771,13 +802,18 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
     if (req_base < cap->cr_base || req_top > cap->_cr_top) {
         cap->cr_tag = 0;
     }
+#if _CC_N(USES_LEN_MSB) != 0
+    _CC_STATIC_ASSERT(_CC_EXP_LOW_WIDTH == 2, "expected 2 bits to be used by");
+    _CC_STATIC_ASSERT(_CC_EXP_HIGH_WIDTH == 2, "expected 2 bits to be used by");
+#else
+    _CC_STATIC_ASSERT(_CC_EXP_LOW_WIDTH == 3, "expected 3 bits to be used by");
+    _CC_STATIC_ASSERT(_CC_EXP_HIGH_WIDTH == 3, "expected 3 bits to be used by");
+#endif
     /*
      * With compressed capabilities we may need to increase the range of
      * memory addresses to be wider than requested so it is
      * representable.
      */
-    _CC_STATIC_ASSERT(_CC_EXP_LOW_WIDTH == 3, "expected 3 bits to be used by");  // expected 3 bits to
-    _CC_STATIC_ASSERT(_CC_EXP_HIGH_WIDTH == 3, "expected 3 bits to be used by"); // expected 3 bits to
     bool exact = false;
     uint32_t new_ebt = _cc_N(compute_ebt)(req_base, req_top, alignment_mask, &exact);
     _cc_addr_t new_base;

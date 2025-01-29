@@ -2,7 +2,6 @@
  * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2018-2025 Alex Richardson
- * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
@@ -44,8 +43,9 @@
 #define CC128R_CAP_BITS 128
 #define CC128R_ADDR_WIDTH 64
 #define CC128R_LEN_WIDTH 65
-/* Max exponent is the largest exponent _required_, not that can be encoded. */
+
 #define CC128R_MANTISSA_WIDTH 14
+// Max exponent is the largest exponent _required_, not that can be encoded.
 #define CC128R_MAX_EXPONENT 52
 #define CC128R_CURSOR_MASK 0xFFFFFFFFFFFFFFFF
 #define CC128R_MAX_ADDRESS_PLUS_ONE ((cc128r_length_t)1u << CC128R_ADDR_WIDTH)
@@ -151,35 +151,7 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #define CC128R_RESERVED_BITS (CC128R_FIELD_RESERVED0_SIZE + CC128R_FIELD_RESERVED1_SIZE)
 #define CC128R_HAS_BASE_TOP_SPECIAL_CASES 1
 #define CC128R_USES_V9_CORRECTION_FACTORS 0
+#define CC128R_USES_LEN_MSB 0
 
 #include "cheri_compressed_cap_common.h"
-
-static inline uint8_t cc128r_get_reserved(const cc128r_cap_t* cap) {
-    return _CC_EXTRACT_SPLIT_FIELD(cap->cr_pesbt, RESERVED1, RESERVED0);
-}
-
-static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
-    // The spec defines this check as checking for E < 0, but since we store it as an unsigned number, we compare it to
-    // the maximum exponent instead.
-    bool malformedLSB = bounds.E > _CC_MAX_EXPONENT;
-    bool malformedMSB = (bounds.E == _CC_MAX_EXPONENT && bounds.B != 0) ||
-                        (bounds.E == _CC_MAX_EXPONENT - 1 && (bounds.B & (1u << (_CC_MANTISSA_WIDTH - 1))) != 0);
-    return bounds.IE && (malformedLSB || malformedMSB);
-}
-
-static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds, _cc_addr_t* base_out,
-                                                         _cc_length_t* top_out, bool* valid) {
-    if (_cc_N(bounds_malformed)(bounds)) {
-        *base_out = 0;
-        *top_out = 0;
-        *valid = false;
-        return true;
-    }
-    return false;
-}
-
-// Check that there is no XOR mask for this encoding format (i.e. NULL encodes to all-zeroes in memory).
-_CC_STATIC_ASSERT_SAME(CC128R_MEM_XOR_MASK, UINT64_C(0));
-
-#undef CC_FORMAT_LOWER
-#undef CC_FORMAT_UPPER
+#include "cheri_compressed_cap_riscv_common.h"

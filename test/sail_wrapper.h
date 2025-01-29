@@ -36,6 +36,10 @@
 #include "sail_wrapper_api.inc"
 #undef SAIL_WRAPPER_FORMAT_LOWER
 
+#define SAIL_WRAPPER_FORMAT_LOWER 64r
+#include "sail_wrapper_api.inc"
+#undef SAIL_WRAPPER_FORMAT_LOWER
+
 #define SAIL_WRAPPER_FORMAT_LOWER 128
 #include "sail_wrapper_api.inc"
 #undef SAIL_WRAPPER_FORMAT_LOWER
