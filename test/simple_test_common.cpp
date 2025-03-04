@@ -217,3 +217,12 @@ TEST_CASE("pesbt_is_correct ignores cr_extra", "") {
     null_cap.cr_extra = 10;
     CHECK(_cc_N(pesbt_is_correct)(&null_cap));
 }
+
+TEST_CASE("common permissions for almighty", "[perms]") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(max_cap.all_permissions() > 1);
+    // Execute and ASR are supported in all implementations, check that they are set.
+    CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
+    // ASR currently fails for 64r since we aren't decoding the permissions correctly.
+    // TODO: CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+}

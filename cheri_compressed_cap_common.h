@@ -115,6 +115,15 @@ static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_perms)(const _cc_cap_t* cap);
 static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_uperms)(const _cc_cap_t* cap);
+/// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
+#if _CC_N(USES_V9_PERMISSION_ENCODING) != 0
+// ISAv9 uses a direct 1:1 mapping of bits to permissions with user permissions shifted by a fixed offset
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+    return ((_cc_addr_t)(_cc_N(get_uperms)(cap) & _CC_N(PERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
+           (_cc_N(get_perms)(cap) & _CC_N(PERMS_ALL));
+}
+#endif
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
 struct _cc_N(cap) {
@@ -149,6 +158,7 @@ struct _cc_N(cap) {
         return l > _CC_MAX_ADDR ? _CC_MAX_ADDR : (_cc_addr_t)l;
     }
     inline uint32_t software_permissions() const { return _cc_N(get_uperms)(this); }
+    inline uint32_t all_permissions() const { return _cc_N(get_all_permissions)(this); }
     inline uint32_t permissions() const { return _cc_N(get_perms)(this); }
     inline uint32_t type() const { return _cc_N(get_otype)(this); }
     inline bool is_sealed() const { return type() != _CC_N(OTYPE_UNSEALED); }
