@@ -187,5 +187,36 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     return result;
 }
 
+static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    bool levels_supported = false; // TODO: make this configurable
+    // TODO: legalize permissions or reject invalid requests
+    _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
+    // See "Encoding of architectural permissions for MXLEN=64" in the spec
+    _cc_addr_t result = 0;
+    if (permissions & CC128R_PERM_CAPABILITY)
+        result |= _CC_BIT64(0);
+    if (permissions & CC128R_PERM_WRITE)
+        result |= _CC_BIT64(1);
+    if (permissions & CC128R_PERM_READ)
+        result |= _CC_BIT64(2);
+    if (permissions & CC128R_PERM_EXECUTE)
+        result |= _CC_BIT64(3);
+    if (permissions & CC128R_PERM_ACCESS_SYS_REGS)
+        result |= _CC_BIT64(4);
+    if (permissions & CC128R_PERM_LOAD_MUTABLE)
+        result |= _CC_BIT64(5);
+    if (levels_supported) {
+        if (permissions & CC128R_PERM_ELEVATE_LEVEL)
+            result |= _CC_BIT64(6);
+        if (permissions & CC128R_PERM_STORE_LEVEL)
+            result |= _CC_BIT64(7);
+        unsigned new_level = permissions & CC128R_PERM_LEVEL ? 1 : 0;
+        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
+    }
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, result, HWPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
+    return true; // all permissions are representable
+}
+
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER

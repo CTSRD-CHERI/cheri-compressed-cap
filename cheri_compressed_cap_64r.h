@@ -280,5 +280,90 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     return res;
 }
 
+static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    uint8_t res = 0;
+    bool mode = false;
+    bool levels_supported = false;
+    bool valid = true;
+    _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
+    // TODO: legalize
+    const _cc_addr_t maybe_el = levels_supported ? CC64R_PERM_ELEVATE_LEVEL : 0;
+    if (!levels_supported) {
+        // Levels extension not supported -> clear the level related permissions
+        permissions &= ~(CC64R_PERM_STORE_LEVEL | CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_LEVEL);
+    }
+    if (permissions & CC64R_PERM_EXECUTE) {
+        res |= CC64R_AP_Q1;
+        if (mode) {
+            res |= 1; // Mode is encoded as bit 0
+        }
+        switch (permissions & (CC64R_PERM_READ | CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE |
+                               CC64R_PERM_ACCESS_SYS_REGS)) {
+        case CC64R_PERM_READ | CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE |
+            CC64R_PERM_ACCESS_SYS_REGS:
+            res |= 0;
+            break;
+        case CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE: res |= 2; break;
+        case CC64R_PERM_READ | CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE: res |= 4; break;
+        case CC64R_PERM_READ | CC64R_PERM_WRITE: res |= 6; break;
+        default: valid = false;
+        }
+    } else if (mode) {
+        // M is valid only in Q1. Otherwise, M is reserved and must be 0.
+        res = UINT8_MAX;
+    } else if ((permissions & (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) ==
+               (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) {
+        res |= CC64R_AP_Q3;
+
+        switch (permissions & (CC64R_PERM_WRITE | CC64R_PERM_STORE_LEVEL)) {
+        // 0-2 are reserved
+        case 0: res |= 3; break;
+        // 4, 5 reserved for LVLBITS>1, we don't support this yet
+        case CC64R_PERM_WRITE | CC64R_PERM_STORE_LEVEL: res |= 6; break;
+        case CC64R_PERM_WRITE: res |= 7; break;
+        default: valid = false;
+        }
+    } else if ((permissions & (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | maybe_el)) ==
+               (CC64R_PERM_READ | CC64R_PERM_CAPABILITY)) {
+        res |= CC64R_AP_Q2;
+        switch (permissions & (CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_STORE_LEVEL)) {
+        // 0-2 are reserved
+        case 0: res |= 3; break;
+        // 4, 5 reserved for LVLBITS>1, we don't support this yet
+        case CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_STORE_LEVEL: res |= 6; break;
+        case CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE: res |= 7; break;
+        default: valid = false;
+        }
+    } else {
+        res |= CC64R_AP_Q0;
+        if (permissions & (CC64R_PERM_CAPABILITY | CC64R_PERM_EXECUTE | CC64R_PERM_ACCESS_SYS_REGS)) {
+            valid = false;
+        } else {
+            switch (permissions & (CC64R_PERM_READ | CC64R_PERM_WRITE)) {
+            case 0: break;
+            case CC64R_PERM_READ: res |= 1; break;
+            // 2, 3 are reserved
+            case CC64R_PERM_WRITE: res |= 4; break;
+            case CC64R_PERM_READ | CC64R_PERM_WRITE:
+                res |= 5;
+                break;
+                // 6, 7 are reserved
+            }
+        }
+    }
+
+    // TODO: We should warn about invalid permissions here.
+    if (!valid) {
+        res = 0; // Exact match not found -> set to no permissions
+    }
+    if (levels_supported) {
+        unsigned new_level = permissions & CC64R_PERM_LEVEL ? 1 : 0;
+        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
+    }
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, HWPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
+    return valid;
+}
+
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER

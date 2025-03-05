@@ -226,3 +226,18 @@ TEST_CASE("common permissions for almighty", "[perms]") {
     CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
     CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
 }
+
+TEST_CASE("set zero and almighty permissions", "[perms]") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(max_cap.all_permissions() > 1);
+    // Should be able to clear all permissions
+    CHECK(_cc_N(set_permissions)(&max_cap, 0) == true);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS)) == 0);
+    CHECK(max_cap.software_permissions() == 0);
+    // Setting all permission bits should be fine (unknown bits are masked off) and return max perms cap.
+    CHECK(_cc_N(set_permissions)(&max_cap, ~(_cc_addr_t)0u) == true);
+    CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
+    CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
+    CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+}

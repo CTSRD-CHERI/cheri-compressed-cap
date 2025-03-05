@@ -117,13 +117,6 @@ static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 /// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
-#if _CC_N(USES_V9_PERMISSION_ENCODING) != 0
-// ISAv9 uses a direct 1:1 mapping of bits to permissions with user permissions shifted by a fixed offset
-static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    return ((_cc_addr_t)(_cc_N(get_uperms)(cap) & _CC_N(PERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
-           (_cc_N(get_perms)(cap) & _CC_N(PERMS_ALL));
-}
-#endif
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
 struct _cc_N(cap) {
@@ -270,6 +263,21 @@ ALL_WRAPPERS(FLAGS, flags, uint8_t)
 ALL_WRAPPERS(RESERVED, reserved, uint8_t)
 #endif
 #undef ALL_WRAPPERS
+
+#if _CC_N(USES_V9_PERMISSION_ENCODING) != 0
+// ISAv9 uses a direct 1:1 mapping of bits to permissions with user permissions shifted by a fixed offset
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+    return ((_cc_addr_t)(_cc_N(get_uperms)(cap) & _CC_N(PERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
+           (_cc_N(get_perms)(cap) & _CC_N(PERMS_ALL));
+}
+static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    _cc_addr_t arch_perms = permissions & _CC_N(PERMS_ALL);
+    _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
+    _cc_N(update_perms)(cap, arch_perms);
+    _cc_N(update_uperms)(cap, sw_perms);
+    return true; // all permissions are representable
+}
+#endif
 
 /// Extract the bits used for bounds and infer the top two bits of T
 static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {
