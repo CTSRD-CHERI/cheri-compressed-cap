@@ -157,3 +157,6 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
+
+#undef CC_FORMAT_LOWER
+#undef CC_FORMAT_UPPER

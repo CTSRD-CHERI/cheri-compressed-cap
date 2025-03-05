@@ -30,6 +30,3 @@ static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds,
 
 // Check that there is no XOR mask for this encoding format (i.e. NULL encodes to all-zeroes in memory).
 _CC_STATIC_ASSERT_SAME(_CC_N(MEM_XOR_MASK), UINT64_C(0));
-
-#undef CC_FORMAT_LOWER
-#undef CC_FORMAT_UPPER

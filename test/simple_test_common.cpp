@@ -225,4 +225,5 @@ TEST_CASE("common permissions for almighty", "[perms]") {
     CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
     // ASR currently fails for 64r since we aren't decoding the permissions correctly.
     // TODO: CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+    CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
 }
