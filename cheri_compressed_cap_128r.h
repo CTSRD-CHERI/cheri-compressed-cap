@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2018-2025 Alex Richardson
+ * Copyright (c) 2024 Codasip
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract FA8750-10-C-0237
@@ -73,8 +74,8 @@ enum {
     _CC_FIELD(UPERMS, 120, 117),
     _CC_FIELD(FLAGS, 115, 116),
     _CC_FIELD(HWPERMS, 116, 108),
-    // TODO: Level should be separate: _CC_FIELD(LEVEL, 107, 107)
-    _CC_FIELD(RESERVED0, 107, 92),
+    _CC_FIELD(LEVEL, 107, 107),
+    _CC_FIELD(RESERVED0, 107, 92), // FIXME: Reserved0 should not include level
     _CC_FIELD(OTYPE, 91, 91),
     _CC_FIELD(EBT, 90, 64),
 
@@ -101,25 +102,19 @@ enum {
 #define CC128R_BOT_INTERNAL_EXP_WIDTH CC128R_FIELD_EXP_NONZERO_BOTTOM_SIZE
 #define CC128R_EXP_LOW_WIDTH CC128R_FIELD_EXPONENT_LOW_PART_SIZE
 
-#define CC128R_PERM_CAPABILITY (1 << 0)
-#define CC128R_PERM_WRITE (1 << 1)
-#define CC128R_PERM_READ (1 << 2)
-#define CC128R_PERM_EXECUTE (1 << 3)
-#define CC128R_PERM_ACCESS_SYS_REGS (1 << 4)
-#define CC128R_PERM_LOAD_MUTABLE (1 << 5)
-#define CC128R_PERM_ELEVATE_LEVEL (1 << 6)
-#define CC128R_PERM_STORE_LEVEL (1 << 7)
-
-// Note: shift by one 1 due to level currently being part of perms
-#define CC128R_HIGHEST_PERM (CC128R_PERM_STORE_LEVEL << 1)
-
-_CC_STATIC_ASSERT(CC128R_HIGHEST_PERM < CC128R_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
-_CC_STATIC_ASSERT((CC128R_HIGHEST_PERM << 1) > CC128R_FIELD_HWPERMS_MAX_VALUE, "all permission bits should be used");
+#define CC128R_PERM_WRITE (1 << 0)
+#define CC128R_PERM_LOAD_MUTABLE (1 << 1)
+#define CC128R_PERM_ELEVATE_LEVEL (1 << 2)
+#define CC128R_PERM_STORE_LEVEL (1 << 3)
+#define CC128R_PERM_LEVEL (1 << 4)
+#define CC128R_PERM_CAPABILITY (1 << 5)
+// Software permissions start at bit 6
+#define CC128R_PERM_ACCESS_SYS_REGS (1 << 16)
+#define CC128R_PERM_EXECUTE (1 << 17)
+#define CC128R_PERM_READ (1 << 18)
 
 #define CC128R_PERMS_ALL (0x13f) /* 0b100111111 since SL and EL are not supported in sail yet. */
 #define CC128R_UPERMS_ALL (0xf)  /* 4 bits */
-_CC_STATIC_ASSERT_SAME(CC128R_PERMS_ALL,
-                       CC128R_FIELD_HWPERMS_MAX_VALUE & ~(CC128R_PERM_ELEVATE_LEVEL | CC128R_PERM_STORE_LEVEL));
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
 #define CC128R_UPERMS_SHFT (6)
 #define CC128R_UPERMS_MEM_SHFT (0)
@@ -150,9 +145,47 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #define CC128R_RESERVED_FIELDS 2
 #define CC128R_RESERVED_BITS (CC128R_FIELD_RESERVED0_SIZE + CC128R_FIELD_RESERVED1_SIZE)
 #define CC128R_HAS_BASE_TOP_SPECIAL_CASES 1
-#define CC128R_USES_V9_PERMISSION_ENCODING 1 // FIXME: this is not actually true
+#define CC128R_USES_V9_PERMISSION_ENCODING 0
 #define CC128R_USES_V9_CORRECTION_FACTORS 0
 #define CC128R_USES_LEN_MSB 0
 
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
+
+// The 64-bit format uses one bit per permission but we have to move them to the correct offset in the final result.
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+    _cc_addr_t sw_perms = _cc_N(get_uperms)(cap);
+    _cc_addr_t arch_perms = _cc_N(get_perms)(cap);
+    _cc_addr_t result = sw_perms << _CC_N(UPERMS_SHFT);
+    // See "Encoding of architectural permissions for MXLEN=64" in the spec
+    if (arch_perms & _CC_BIT64(0))
+        result |= CC128R_PERM_CAPABILITY;
+    if (arch_perms & _CC_BIT64(1))
+        result |= CC128R_PERM_WRITE;
+    if (arch_perms & _CC_BIT64(2))
+        result |= CC128R_PERM_READ;
+    if (arch_perms & _CC_BIT64(3))
+        result |= CC128R_PERM_EXECUTE;
+    if (arch_perms & _CC_BIT64(4))
+        result |= CC128R_PERM_ACCESS_SYS_REGS;
+    if (arch_perms & _CC_BIT64(5))
+        result |= CC128R_PERM_LOAD_MUTABLE;
+    bool levels_supported = false; // TODO: make this configurable
+    if (levels_supported) {
+        if (arch_perms & _CC_BIT64(6))
+            result |= CC128R_PERM_ELEVATE_LEVEL;
+        if (arch_perms & _CC_BIT64(7))
+            result |= CC128R_PERM_STORE_LEVEL;
+        if (_CC_EXTRACT_FIELD(cap->cr_pesbt, LEVEL))
+            result |= CC128R_PERM_LEVEL;
+    } else {
+        // Levels extension not supported -> treat as reserved one-bits.
+        result |= CC128R_PERM_LEVEL | CC128R_PERM_STORE_LEVEL | CC128R_PERM_ELEVATE_LEVEL;
+    }
+    // Now include the hardcoded one-bits:
+    result |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_UPERMS_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    return result;
+}
+
+#undef CC_FORMAT_LOWER
+#undef CC_FORMAT_UPPER

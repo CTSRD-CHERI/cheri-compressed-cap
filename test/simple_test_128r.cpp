@@ -92,3 +92,18 @@ TEST_CASE("bounds encoding exponent > 0", "[bounds]") {
     cc128r_update_uperms(&cap, 0);
     CHECK(cap.cr_pesbt == 0x0000000001334105);
 }
+
+TEST_CASE("max perms value", "[perms]") {
+    _cc_cap_t cap = CompressedCap128r::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    // GCPERM on the almighty capability should report ones in the low 24 bits
+    CHECK(cap.all_permissions() == _CC_BITMASK64(24));
+    CHECK(cap.all_permissions() & CC128R_PERM_ACCESS_SYS_REGS);
+    CHECK(cap.all_permissions() & CC128R_PERM_CAPABILITY);
+    CHECK(cap.all_permissions() & CC128R_PERM_ELEVATE_LEVEL);
+    CHECK(cap.all_permissions() & CC128R_PERM_EXECUTE);
+    CHECK(cap.all_permissions() & CC128R_PERM_LEVEL);
+    CHECK(cap.all_permissions() & CC128R_PERM_LOAD_MUTABLE);
+    CHECK(cap.all_permissions() & CC128R_PERM_READ);
+    CHECK(cap.all_permissions() & CC128R_PERM_STORE_LEVEL);
+    CHECK(cap.all_permissions() & CC128R_PERM_WRITE);
+}

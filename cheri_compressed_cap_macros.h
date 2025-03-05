@@ -73,7 +73,9 @@
 #define _cc_N(name) _CC_CONCAT(_CC_CONCAT(_CC_CONCAT(cc, CC_FORMAT_LOWER), _), name)
 #define _CC_N(name) _CC_CONCAT(_CC_CONCAT(_CC_CONCAT(CC, CC_FORMAT_UPPER), _), name)
 
+#define _CC_BIT64(bit) (UINT64_C(1) << (bit))
 #define _CC_BITMASK64(nbits) ((UINT64_C(1) << (nbits)) - UINT64_C(1))
+#define _CC_BITMASK64_RANGE(from, to) ((UINT64_C(1) << ((to) - (from) + 1)) - UINT64_C(1)) << (from)
 
 // NB: Do not use GNU statement expressions as this is used by LLVM which warns
 // on any uses during its build. These are therefore unsafe if any arguments
