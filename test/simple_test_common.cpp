@@ -223,7 +223,6 @@ TEST_CASE("common permissions for almighty", "[perms]") {
     CHECK(max_cap.all_permissions() > 1);
     // Execute and ASR are supported in all implementations, check that they are set.
     CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
-    // ASR currently fails for 64r since we aren't decoding the permissions correctly.
-    // TODO: CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+    CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
     CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
 }
