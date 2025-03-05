@@ -56,7 +56,7 @@ TEST_CASE("Malformed bounds return zero", "[bounds]") {
 
 TEST_CASE("bounds encoding exponent 0", "[bounds]") {
     /* params are base, cursor, top */
-    _cc_cap_t cap = CompressedCap128r::make_max_perms_cap(0x0, 0x10, 0x20);
+    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap(0x0, 0x10, 0x20);
 
     /*
      * EF == 1 -> exponent 0
@@ -73,7 +73,7 @@ TEST_CASE("bounds encoding exponent 0", "[bounds]") {
 }
 
 TEST_CASE("bounds encoding exponent > 0", "[bounds]") {
-    _cc_cap_t cap = CompressedCap128r::make_max_perms_cap(0x8000, 0x41DF, 0xA6400);
+    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap(0x8000, 0x41DF, 0xA6400);
 
     /*
      * EF == 0 -> internal exponent
@@ -94,7 +94,7 @@ TEST_CASE("bounds encoding exponent > 0", "[bounds]") {
 }
 
 TEST_CASE("max perms value", "[perms]") {
-    _cc_cap_t cap = CompressedCap128r::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     // GCPERM on the almighty capability should report ones in the low 24 bits
     CHECK(cap.all_permissions() == _CC_BITMASK64(24));
     CHECK(cap.all_permissions() & CC128R_PERM_ACCESS_SYS_REGS);
