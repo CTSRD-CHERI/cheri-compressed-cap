@@ -74,8 +74,8 @@ enum {
     _CC_FIELD(UPERMS, 63, 62),
     _CC_FIELD(HWPERMS, 61, 57),
     _CC_FIELD(FLAGS, 57, 57),     // For now pretend that the M bit is always present, not just for X caps
-    _CC_FIELD(RESERVED1, 56, 56), // Actually the CL field, but reserverd to match sail
-    // TODO: Level should be separate: _CC_FIELD(LEVEL, 56, 56)
+    _CC_FIELD(RESERVED1, 56, 56), // Actually the CL field, but reserved for now to match sail
+    _CC_FIELD(LEVEL, 56, 56),
     _CC_FIELD(RESERVED0, 55, 53),
     _CC_FIELD(OTYPE, 52, 52),
     _CC_FIELD(EBT, 51, 32),
@@ -104,17 +104,16 @@ enum {
 #define CC64R_BOT_INTERNAL_EXP_WIDTH CC64R_FIELD_EXP_NONZERO_BOTTOM_SIZE
 #define CC64R_EXP_LOW_WIDTH CC64R_FIELD_EXPONENT_LOW_PART_SIZE
 
-#define CC64R_PERM_CAPABILITY (1 << 0)
-#define CC64R_PERM_WRITE (1 << 1)
-#define CC64R_PERM_READ (1 << 2)
-#define CC64R_PERM_EXECUTE (1 << 3)
-#define CC64R_PERM_ACCESS_SYS_REGS (1 << 4)
-#define CC64R_PERM_LOAD_MUTABLE (1 << 5)
-#define CC64R_PERM_ELEVATE_LEVEL (1 << 6)
-#define CC64R_PERM_STORE_LEVEL (1 << 7)
-
-// Note: shift by one 1 due to level currently being part of perms
-#define CC64R_HIGHEST_PERM (CC64R_PERM_STORE_LEVEL << 1)
+#define CC64R_PERM_WRITE (1 << 0)
+#define CC64R_PERM_LOAD_MUTABLE (1 << 1)
+#define CC64R_PERM_ELEVATE_LEVEL (1 << 2)
+#define CC64R_PERM_STORE_LEVEL (1 << 3)
+#define CC64R_PERM_LEVEL (1 << 4)
+#define CC64R_PERM_CAPABILITY (1 << 5)
+// Software permissions start at bit 6
+#define CC64R_PERM_ACCESS_SYS_REGS (1 << 16)
+#define CC64R_PERM_EXECUTE (1 << 17)
+#define CC64R_PERM_READ (1 << 18)
 
 #define CC64R_PERMS_ALL (0x9)  // See Infinite Capability in the spec: 0x8 or 0x9 depending on mode.
 #define CC64R_UPERMS_ALL (0x3) // 2 bits
@@ -151,12 +150,135 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #define CC64R_RESERVED_FIELDS 2
 #define CC64R_RESERVED_BITS (CC128R_FIELD_RESERVED0_SIZE + CC128R_FIELD_RESERVED1_SIZE)
 #define CC64R_HAS_BASE_TOP_SPECIAL_CASES 1
-#define CC64R_USES_V9_PERMISSION_ENCODING 1 // FIXME: this is not actually true
+#define CC64R_USES_V9_PERMISSION_ENCODING 0
 #define CC64R_USES_V9_CORRECTION_FACTORS 0
 #define CC64R_USES_LEN_MSB 1
 
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
+
+#define CC64R_AP_Q_MASK ((uint8_t)(0b11 << 3))
+#define CC64R_AP_Q0 ((uint8_t)(0b00 << 3))
+#define CC64R_AP_Q1 ((uint8_t)(0b01 << 3))
+#define CC64R_AP_Q2 ((uint8_t)(0b10 << 3))
+#define CC64R_AP_Q3 ((uint8_t)(0b11 << 3))
+
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+    uint8_t raw_perms = _cc_N(get_perms)(cap);
+    _cc_addr_t res = 0;
+
+    // If levels are not supported the encodings with levels are reserved and we return an invalid result.
+    bool levels_supported = false; // TODO: make this configurable
+
+    switch (raw_perms & CC64R_AP_Q_MASK) {
+    case CC64R_AP_Q0: // Non-capability data read/write
+        switch (raw_perms & ~CC64R_AP_Q_MASK) {
+        case 0: // No permissions
+            break;
+        case 1: // Data RO
+            res |= CC64R_PERM_READ;
+            break;
+        case 4: // Data WO
+            res |= CC64R_PERM_WRITE;
+            break;
+        case 5: // Data RW
+            res |= CC64R_PERM_READ | CC64R_PERM_WRITE;
+            break;
+        default:
+            // Reserved encoding in quadrant 0. All permissions are denied.
+            res = 0;
+            break;
+        }
+        break;
+    case CC64R_AP_Q1: // Executable capabilities
+        // All encodings in this quadrant grant R+X
+        res |= CC64R_PERM_READ | CC64R_PERM_EXECUTE;
+        // Bit 0 is the mode which can be ignored inside this function
+        switch ((raw_perms & ~CC64R_AP_Q_MASK) >> 1) {
+        case 0: // Infinite
+            res |= CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_ACCESS_SYS_REGS |
+                   CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_STORE_LEVEL;
+            break;
+        case 1: // Execute + Data & Cap RO
+            res |= CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_STORE_LEVEL;
+            break;
+        case 2: // Execute + Data & Cap RW
+            res |= CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_ELEVATE_LEVEL |
+                   CC64R_PERM_STORE_LEVEL;
+            break;
+        case 3: // Execute + Data RW
+            res |= CC64R_PERM_WRITE;
+            break;
+        default:
+            __builtin_unreachable(); // all values checked.
+            break;
+        }
+        break;
+    case CC64R_AP_Q2:                                   // Restricted capability data read/write
+        res |= CC64R_PERM_READ | CC64R_PERM_CAPABILITY; // All encodings in this quadrant grant R+C
+        switch (raw_perms & ~CC64R_AP_Q_MASK) {
+        // 0-2 reserved
+        case 3: // Data & Cap R0 (without LM-permission)
+            break;
+        // 4, 5 reserved for LVLBITS>1, we don't support this yet
+        case 6: // Data & Cap RW (with store local, no EL-permission)
+            if (levels_supported) {
+                res |= CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_STORE_LEVEL;
+            } else {
+                res = 0; // reserved encoding if levels are not supported
+            }
+            break;
+        case 7: // Data & Cap RW (no store local, no EL-permission)
+            if (levels_supported) {
+                res |= CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE;
+            } else {
+                res = 0; // reserved encoding if levels are not supported
+            }
+            break;
+        default:
+            // Reserved encoding in quadrant 2. All permissions are denied.
+            res = 0;
+            break;
+        }
+        break;
+    case CC64R_AP_Q3: // Capability data read/write
+        // All encodings in this quadrant grant R+C+EL+LM
+        res |= CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_ELEVATE_LEVEL;
+        switch (raw_perms & ~CC64R_AP_Q_MASK) {
+        // 0-2 reserved
+        case 3: // Data & Cap R0
+            break;
+        // 4, 5 reserved for LVLBITS>1, we don't support this yet
+        case 6: // Data & Cap RW (with store local)
+            if (levels_supported) {
+                res |= CC64R_PERM_WRITE | CC64R_PERM_STORE_LEVEL;
+            } else {
+                res = 0; // reserved encoding if levels are not supported
+            }
+            break;
+        case 7: // Data & Cap RW (no store local)
+            res |= CC64R_PERM_WRITE;
+            break;
+        default:
+            // Reserved encoding in quadrant 3. All permissions are denied.
+            res = 0;
+            break;
+        }
+        break;
+    }
+
+    if (levels_supported) {
+        if (_CC_EXTRACT_FIELD(cap->cr_pesbt, LEVEL))
+            res |= CC64R_PERM_LEVEL;
+    } else {
+        // Levels extension not supported -> treat as reserved one-bits.
+        res |= CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_STORE_LEVEL | CC64R_PERM_LEVEL;
+    }
+    // Finally, add the software permissions and hardcoded one-bits
+    res |= _cc_N(get_uperms)(cap) << _CC_N(UPERMS_SHFT);
+    res |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_UPERMS_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    return res;
+}
 
 #undef CC_FORMAT_LOWER
 #undef CC_FORMAT_UPPER
