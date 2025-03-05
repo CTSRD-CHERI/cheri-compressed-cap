@@ -157,11 +157,11 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
 
-#define CC64R_AP_Q_MASK ((uint8_t)(0b11 << 3))
-#define CC64R_AP_Q0 ((uint8_t)(0b00 << 3))
-#define CC64R_AP_Q1 ((uint8_t)(0b01 << 3))
-#define CC64R_AP_Q2 ((uint8_t)(0b10 << 3))
-#define CC64R_AP_Q3 ((uint8_t)(0b11 << 3))
+#define CC64R_AP_Q_MASK ((uint8_t)(3 << 3))
+#define CC64R_AP_Q0 ((uint8_t)(0 << 3))
+#define CC64R_AP_Q1 ((uint8_t)(1 << 3))
+#define CC64R_AP_Q2 ((uint8_t)(2 << 3))
+#define CC64R_AP_Q3 ((uint8_t)(3 << 3))
 
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     uint8_t raw_perms = _cc_N(get_perms)(cap);
