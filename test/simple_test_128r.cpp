@@ -16,9 +16,9 @@ TEST_CASE_M_AP_COMP(LVB_0, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP
 
 /* AP decompression */
 
-TEST_CASE_M_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4), 1,
+TEST_CASE_M_AP_DECOMP(LVB_0, _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4), 1,
                       CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
-TEST_CASE_M_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
+TEST_CASE_M_AP_DECOMP(LVB_0, _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
     auto cap = TestAPICC::make_max_perms_cap(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000);

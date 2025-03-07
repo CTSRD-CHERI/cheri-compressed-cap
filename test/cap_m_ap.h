@@ -25,8 +25,8 @@
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);                                                              \
     }
 
-#define TEST_CASE_M_AP_DECOMP(_ap, _cr_m, _cr_arch_perm)                                                               \
-    TEST_CASE(#_ap "-" #_cr_m " decompress", "[decompress]") {                                                         \
+#define TEST_CASE_M_AP_DECOMP(_cr_lvbits, _ap, _cr_m, _cr_arch_perm)                                                   \
+    TEST_CASE(#_cr_lvbits "-" #_ap "-" #_cr_m " decompress", "[decompress]") {                                         \
         _cc_cap_t cap = TestAPICC::make_null_derived_cap(0);                                                           \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == 0);                                                             \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);                                                              \
