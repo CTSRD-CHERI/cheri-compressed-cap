@@ -115,11 +115,12 @@ enum {
 #define CC128R_PERM_ACCESS_SYS_REGS (1 << 16)
 #define CC128R_PERM_EXECUTE (1 << 17)
 #define CC128R_PERM_READ (1 << 18)
+#define CC128R_PERMS_ALL (0x7003f)
 
-#define CC128R_PERMS_ALL (0x13f) /* 0b100111111 since SL and EL are not supported in sail yet. */
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
-#define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
-    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC128R_PERMS_ALL, HWPERMS))
+// Encoded value is 0b100111111 since SL and EL are not supported in sail yet.
+#define CC128R_ENCODED_INFINITE_PERMS() (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(0x13f, HWPERMS))
+#define CC128R_PERMS_MASK (CC128R_PERMS_ALL | CC128R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
 // However, other extensions (e.g. CHERIoT) define additional otypes beyond this.
@@ -188,6 +189,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
 }
 
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    _cc_api_requirement((permissions & _CC_N(PERMS_MASK)) == permissions, "invalid permissions");
     bool levels_supported = false; // TODO: make this configurable
     // TODO: legalize permissions or reject invalid requests
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
