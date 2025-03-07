@@ -86,7 +86,7 @@ static struct zCapability cap_t_to_sail_cap(const _cc_cap_t* c) {
     result.zaddress = c->_cr_cursor;
     result.zsealed = _cc_N(get_otype)(c) != 0;
     result.zsd_perms = _cc_N(get_uperms)(c);
-    result.zap_m = _CC_EXTRACT_FIELD(c->cr_pesbt, HWPERMS);
+    result.zap_m = _CC_EXTRACT_FIELD(c->cr_pesbt, AP_M);
 
     // Extract E,B,T,IE from the cr_pesbt field:
     _cc_addr_t fake_pesbt = c->cr_pesbt;

@@ -295,8 +295,6 @@ TEST_CASE("test old permissions API", "[perms]") {
 #ifndef TEST_CC_IS_MORELLO
 TEST_CASE("test mode API", "[perms]") {
     constexpr bool is_isa_v9 = _CC_N(USES_V9_CORRECTION_FACTORS);
-    if (!is_isa_v9 && sizeof(_cc_addr_t) == 8)
-        return; // FIXME: the reset mode is not correct for cc128r
     const TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     const TestAPICC::cap_t null_cap = TestAPICC::make_null_derived_cap(0);
     // NULL cap always has a mode of zero (capmode for RISC-V, intmode for V9).
