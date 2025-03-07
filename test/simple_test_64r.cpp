@@ -4,6 +4,7 @@
 //
 // AP compression
 //
+// --- lvbits = 0, valid permission set ---
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R, CC64R_AP_Q0 | 1)
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_W, CC64R_AP_Q0 | 4)
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R | CAP_AP_W, CC64R_AP_Q0 | 5)
@@ -22,17 +23,22 @@ TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C | CAP_AP_R, CC64R_AP_Q2 | 3)
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C | CAP_AP_R | CAP_AP_LM, CC64R_AP_Q3 | 3)
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C | CAP_AP_R | CAP_AP_W | CAP_AP_LM, CC64R_AP_Q3 | 7)
 
+// --- lvbits = 0, invalid permission set ---
 // Invalid permissions must result in "no permissions".
 // TODO: TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C, 0);
+
+// --- lvbits = 1, valid permission set ---
+// TODO: add test cases
+// --- lvbits = 1, invalid permission set ---
+// TODO: add test cases
 
 //
 // AP decompression
 //
+// --- lvbits = 0, valid encoding ---
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q0 | 1, 0, CAP_AP_R)
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q0 | 4, 0, CAP_AP_W)
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q0 | 5, 0, CAP_AP_R | CAP_AP_W)
-// invalid in Q0 -> no permissions
-TEST_CASE_M_AP_DECOMP(CC64R_AP_Q0 | 6, 0, 0)
 
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q1 | 0, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_LM | CAP_AP_C | CAP_AP_ASR)
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q1 | 1, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_LM | CAP_AP_C | CAP_AP_ASR)
@@ -44,13 +50,22 @@ TEST_CASE_M_AP_DECOMP(CC64R_AP_Q1 | 6, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q1 | 7, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q2 | 3, 0, CAP_AP_C | CAP_AP_R)
-// invalid in Q2 -> no permissions
-TEST_CASE_M_AP_DECOMP(CC64R_AP_Q2 | 2, 0, 0)
 
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q3 | 3, 0, CAP_AP_C | CAP_AP_R | CAP_AP_LM)
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q3 | 7, 0, CAP_AP_C | CAP_AP_R | CAP_AP_W | CAP_AP_LM)
+
+// --- lvbits = 0, invalid encoding ---
+// invalid in Q0 -> no permissions
+TEST_CASE_M_AP_DECOMP(CC64R_AP_Q0 | 6, 0, 0)
+// invalid in Q2 -> no permissions
+TEST_CASE_M_AP_DECOMP(CC64R_AP_Q2 | 2, 0, 0)
 // invalid in Q3 -> no permissions
 TEST_CASE_M_AP_DECOMP(CC64R_AP_Q3 | 1, 0, 0)
+
+// --- lvbits = 0, valid encoding ---
+// TODO: add test cases
+// --- lvbits = 1, invalid encoding ---
+// TODO: add test cases
 
 TEST_CASE("bounds encoding, internal exponent, T8 = 1", "[bounds]") {
     /* params are base, cursor, top */
