@@ -64,6 +64,7 @@ __extension__ typedef signed __int128 cc128_offset_t;
 typedef uint64_t cc128_addr_t;
 typedef int64_t cc128_saddr_t;
 #include "cheri_compressed_cap_macros.h"
+typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 1, _CC_N(MODE_INT) = 0 } _CC_N(Mode);
 
 /* ignore ISO C restricts enumerator values to range of 'int' */
 #pragma GCC diagnostic push

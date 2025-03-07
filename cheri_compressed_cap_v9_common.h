@@ -14,7 +14,6 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     return true; // all permissions are representable
 }
 
-typedef enum _cc_mode { _CC_N(MODE_CAP) = 1, _CC_N(MODE_INT) = 0 } _cc_mode;
 static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
     return (_cc_mode)_CC_EXTRACT_FIELD(cap->cr_pesbt, FLAGS);
 }

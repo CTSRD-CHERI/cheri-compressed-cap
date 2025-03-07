@@ -122,6 +122,10 @@ static inline bool _cc_N(has_permissions)(const _cc_cap_t* cap, _cc_addr_t permi
     return (_cc_N(get_all_permissions)(cap) & permissions) == permissions;
 }
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions);
+#ifndef CC_IS_MORELLO
+static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap);
+static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode);
+#endif
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
 struct _cc_N(cap) {
@@ -955,7 +959,8 @@ static inline bool _cc_N(checked_setbounds)(_cc_cap_t* cap, _cc_length_t req_len
     return _cc_N(setbounds)(cap, req_len);
 }
 
-static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
+// Common code shared between all architectures, no support for mode and levels
+static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
     _cc_cap_t creg;
     memset(&creg, 0, sizeof(creg));
     assert(base <= top && "Invalid arguments");
@@ -972,6 +977,31 @@ static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cu
     assert(_cc_N(is_representable_cap_exact)(&creg));
     return creg;
 }
+
+#ifndef CC_IS_MORELLO
+// For risc-v cheri formats, the value of M depends on Zcherihybrid support.
+// The CL field and SL, EL perms depend on lvbits (number of Zcherilevels or 0 if unsupported)
+static inline _cc_cap_t _cc_N(make_max_perms_cap_ext)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top,
+                                                      _cc_mode mode, uint8_t lvbits) {
+    _cc_cap_t creg = _cc_N(_make_max_perms_cap_common)(base, cursor, top);
+    _cc_debug_assert(lvbits <= _CC_N(MAX_LEVELS) && "We only support local-global levels.");
+#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
+    creg.cr_lvbits = lvbits;
+#else
+    (void)lvbits;
+#endif
+    bool mode_valid = _cc_N(set_execution_mode(&creg, mode));
+    assert(mode_valid && "Could not set mode on max perms cap");
+    return creg;
+}
+static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
+    return _cc_N(make_max_perms_cap_ext)(base, cursor, top, _CC_N(MODE_INT), /*lvbits*/ 0);
+}
+#else
+static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
+    return _cc_N(_make_max_perms_cap_common)(base, cursor, top);
+}
+#endif
 
 /* @return the mask that needs to be applied to base in order to get a precisely representable capability */
 static inline _cc_addr_t _cc_N(get_alignment_mask)(_cc_addr_t req_length) {
