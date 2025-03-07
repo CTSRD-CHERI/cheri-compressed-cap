@@ -72,7 +72,8 @@ typedef int64_t cc128r_saddr_t;
 enum {
     _CC_FIELD(RESERVED1, 127, 121),
     _CC_FIELD(UPERMS, 120, 117),
-    _CC_FIELD(FLAGS, 115, 116),
+    _CC_FIELD(FLAGS, 115, 116), // TODO: remove this old alias
+    _CC_FIELD(MODE, 115, 116),
     _CC_FIELD(HWPERMS, 116, 108),
     _CC_FIELD(LEVEL, 107, 107),
     _CC_FIELD(RESERVED0, 107, 92), // FIXME: Reserved0 should not include level
@@ -218,6 +219,18 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, result, HWPERMS);
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
     return true; // all permissions are representable
+}
+
+static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
+    return (_cc_mode)_CC_EXTRACT_FIELD(cap->cr_pesbt, MODE);
+}
+
+static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
+    // While mode could always be set, the spec requires execute permission.
+    if ((_cc_N(get_all_permissions)(cap) & _CC_N(PERM_EXECUTE)) == 0)
+        return false;
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
+    return true;
 }
 
 #undef CC_FORMAT_LOWER
