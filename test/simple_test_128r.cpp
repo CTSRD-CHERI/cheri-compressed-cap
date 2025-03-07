@@ -1,5 +1,6 @@
-#include "cap_m_ap.h"
 #include "simple_test_common.cpp"
+
+#include "cap_m_ap.h"
 
 /*
  * For 64-bit risc-v cheri, the conversion between AP bitfield and its encoding
