@@ -332,4 +332,15 @@ TEST_CASE("test mode API", "[perms]") {
     }
 }
 
+TEST_CASE("removing ASR should not throw", "[perms]") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)));
+    CHECK(max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)));
+    const _cc_addr_t initial_perms = max_cap.all_permissions();
+    // Keeping the reserved one-bits set should not be an API violation.
+    CHECK(_cc_N(set_permissions)(&max_cap, initial_perms & ~_CC_N(PERM_ACCESS_SYS_REGS)) == true);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)));
+    CHECK(!max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)));
+}
+
 #endif

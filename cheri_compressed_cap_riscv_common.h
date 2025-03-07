@@ -32,3 +32,4 @@ static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds,
 _CC_STATIC_ASSERT_SAME(_CC_N(MEM_XOR_MASK), UINT64_C(0));
 
 typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 0, _CC_N(MODE_INT) = 1 } _CC_N(Mode);
+enum { _CC_N(PERMS_RESERVED_ONES) = _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_SDP_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23) };
