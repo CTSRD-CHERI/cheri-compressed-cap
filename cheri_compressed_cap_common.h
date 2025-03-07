@@ -71,6 +71,7 @@ enum {
 #define _cc_offset_t _cc_N(offset_t)
 #define _cc_addr_t _cc_N(addr_t)
 #define _cc_saddr_t _cc_N(saddr_t)
+#define _cc_mode _CC_N(Mode)
 
 #define _CC_MANTISSA_WIDTH _CC_N(MANTISSA_WIDTH)
 #define _CC_MAX_EXPONENT _CC_N(MAX_EXPONENT)

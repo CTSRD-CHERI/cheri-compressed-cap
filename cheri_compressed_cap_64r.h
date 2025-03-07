@@ -73,7 +73,8 @@ typedef int32_t cc64r_saddr_t;
 enum {
     _CC_FIELD(UPERMS, 63, 62),
     _CC_FIELD(HWPERMS, 61, 57),
-    _CC_FIELD(FLAGS, 57, 57),     // For now pretend that the M bit is always present, not just for X caps
+    _CC_FIELD(MODE, 57, 57),      // Only valid if HWPERMS grant execute (quadrant 1)
+    _CC_FIELD(FLAGS, 57, 57),     // TODO: remove this field
     _CC_FIELD(RESERVED1, 56, 56), // Actually the CL field, but reserved for now to match sail
     _CC_FIELD(LEVEL, 56, 56),
     _CC_FIELD(RESERVED0, 55, 53),
@@ -366,6 +367,25 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, HWPERMS);
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
     return valid;
+}
+
+static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
+    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1)
+        return (_cc_mode)(raw_perms & 1);
+    return (_cc_mode)0;
+}
+static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
+    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
+        _cc_debug_assert(_cc_N(get_all_permissions)(cap) & _CC_N(PERM_EXECUTE));
+        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
+        return true;
+    }
+    _cc_debug_assert((_cc_N(get_all_permissions)(cap) & _CC_N(PERM_EXECUTE)) == 0);
+    return false;
 }
 
 #undef CC_FORMAT_LOWER

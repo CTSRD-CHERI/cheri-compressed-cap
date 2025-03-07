@@ -291,3 +291,47 @@ TEST_CASE("test old permissions API", "[perms]") {
     CHECK(_cc_N(get_perms)(&null_cap) == 0);
     CHECK(_cc_N(get_uperms)(&null_cap) == 0);
 }
+
+#ifndef TEST_CC_IS_MORELLO
+TEST_CASE("test mode API", "[perms]") {
+    constexpr bool is_isa_v9 = _CC_N(USES_V9_CORRECTION_FACTORS);
+    if (!is_isa_v9 && sizeof(_cc_addr_t) == 8)
+        return; // FIXME: the reset mode is not correct for cc128r
+    const TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    const TestAPICC::cap_t null_cap = TestAPICC::make_null_derived_cap(0);
+    // NULL cap always has a mode of zero (capmode for RISC-V, intmode for V9).
+    CHECK(_cc_N(get_execution_mode)(&null_cap) == (_cc_mode)0);
+    CHECK(_cc_N(get_execution_mode)(&null_cap) == (is_isa_v9 ? _CC_N(MODE_INT) : _CC_N(MODE_CAP)));
+    // The infinite cap always has integer mode
+    CHECK(_cc_N(get_execution_mode)(&max_cap) == _CC_N(MODE_INT));
+
+    {
+        auto cap = max_cap;
+        CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_INT))); // No change
+        CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_INT));
+        CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_CAP))); // Change to capmode
+        CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+        CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_INT))); // Change back to capmode should be ok
+        CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_INT));
+    }
+    {
+        auto cap = null_cap;
+        if (is_isa_v9) {
+            // For ISAv9, the mode can always be updated.
+            CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_INT));
+            CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_CAP)) == true);
+            CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+        } else {
+            // For the RISC-V standard version, we require execute permissions to change the mode
+            CHECK((cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
+            CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+            CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_INT)) == false);
+            CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+            // Even setting the mode to the current mode should return failure.
+            CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_CAP)) == false);
+            CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+        }
+    }
+}
+
+#endif
