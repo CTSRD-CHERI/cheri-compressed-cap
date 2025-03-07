@@ -118,6 +118,9 @@ static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 /// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
+static inline bool _cc_N(has_permissions)(const _cc_cap_t* cap, _cc_addr_t permissions) {
+    return (_cc_N(get_all_permissions)(cap) & permissions) == permissions;
+}
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions);
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
@@ -154,6 +157,7 @@ struct _cc_N(cap) {
     }
     inline uint32_t software_permissions() const { return _cc_N(get_uperms)(this); }
     inline uint32_t all_permissions() const { return _cc_N(get_all_permissions)(this); }
+    inline uint32_t has_permissions(_cc_addr_t perms) const { return _cc_N(has_permissions)(this, perms); }
     inline uint32_t permissions() const { return _cc_N(get_perms)(this); }
     inline uint32_t type() const { return _cc_N(get_otype)(this); }
     inline bool is_sealed() const { return type() != _CC_N(OTYPE_UNSEALED); }

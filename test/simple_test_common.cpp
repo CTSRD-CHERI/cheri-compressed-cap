@@ -226,8 +226,8 @@ TEST_CASE("common permissions for almighty", "[perms]") {
     TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     CHECK(max_cap.all_permissions() > 1);
     // Execute and ASR are supported in all implementations, check that they are set.
-    CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
-    CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)));
+    CHECK(max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)));
     CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
 }
 
@@ -238,8 +238,8 @@ TEST_CASE("set zero and almighty permissions", "[perms]") {
     CHECK((max_cap.all_permissions() & _CC_N(PERMS_MASK)) == _CC_N(PERMS_MASK));
     // Should be able to clear all permissions
     CHECK(_cc_N(set_permissions)(&max_cap, 0) == true);
-    CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
-    CHECK((max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS)) == 0);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)) == false);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)) == false);
     CHECK(max_cap.software_permissions() == 0);
     // Setting all permission bits should be fine and return max perms cap.
     CHECK(_cc_N(set_permissions)(&max_cap, _CC_N(PERMS_MASK)) == true);
@@ -267,8 +267,8 @@ TEST_CASE("test old permissions API", "[perms]") {
     CHECK(_cc_N(get_uperms)(&max_cap) == _CC_N(UPERMS_ALL));
     // Should be able to clear all permissions, but user perms should be unaffected
     _cc_N(update_perms)(&max_cap, 0);
-    CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
-    CHECK((max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS)) == 0);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)) == false);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)) == false);
     CHECK(_cc_N(get_uperms)(&max_cap) == _CC_N(UPERMS_ALL));
     CHECK((max_cap.all_permissions() & _CC_N(PERM_SW_ALL)) == _CC_N(PERM_SW_ALL));
 
@@ -321,7 +321,7 @@ TEST_CASE("test mode API", "[perms]") {
             CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
         } else {
             // For the RISC-V standard version, we require execute permissions to change the mode
-            CHECK((cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
+            CHECK(cap.has_permissions(_CC_N(PERM_EXECUTE)) == false);
             CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
             CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_INT)) == false);
             CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));

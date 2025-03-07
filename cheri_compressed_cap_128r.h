@@ -229,7 +229,7 @@ static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
 
 static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
     // While mode could always be set, the spec requires execute permission.
-    if ((_cc_N(get_all_permissions)(cap) & _CC_N(PERM_EXECUTE)) == 0)
+    if (!_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)))
         return false;
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
     return true;

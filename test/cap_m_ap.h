@@ -15,7 +15,7 @@
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == 0);                                                             \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);                                                              \
         CHECK(_cc_N(set_permissions)(&cap, (_cr_arch_perm)));                                                          \
-        const bool has_x = (_cc_N(get_all_permissions)(&cap) & _CC_N(PERM_EXECUTE)) == _CC_N(PERM_EXECUTE);            \
+        const bool has_x = cap.has_permissions(_CC_N(PERM_EXECUTE));                                                   \
         CHECK(_cc_N(set_execution_mode)(&cap, (_cc_mode)(_cr_m)) == has_x);                                            \
         CHECK((cap.all_permissions() & (_cr_arch_perm)) == (_cr_arch_perm));                                           \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == (_ap));                                                         \
