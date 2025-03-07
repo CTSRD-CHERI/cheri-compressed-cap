@@ -165,6 +165,25 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
 
+static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
+    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
+    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1)
+        return (_cc_mode)(raw_perms & 1);
+    return (_cc_mode)0;
+}
+static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
+    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
+    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
+        _cc_debug_assert(_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));
+        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
+        return true;
+    }
+    _cc_debug_assert(!_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));
+    return false;
+}
+
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     _cc_addr_t res = 0;
@@ -285,7 +304,6 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
     uint8_t res = 0;
-    bool mode = false;
     bool levels_supported = false;
     bool valid = true;
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
@@ -297,9 +315,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     }
     if (permissions & CC64R_PERM_EXECUTE) {
         res |= CC64R_AP_Q1;
-        if (mode) {
-            res |= 1; // Mode is encoded as bit 0
-        }
+        res |= _cc_N(get_execution_mode)(cap); // Mode is encoded as bit 0, keep the existing value
         switch (permissions & (CC64R_PERM_READ | CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE |
                                CC64R_PERM_ACCESS_SYS_REGS)) {
         case CC64R_PERM_READ | CC64R_PERM_WRITE | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE |
@@ -311,9 +327,6 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         case CC64R_PERM_READ | CC64R_PERM_WRITE: res |= 6; break;
         default: valid = false;
         }
-    } else if (mode) {
-        // M is valid only in Q1. Otherwise, M is reserved and must be 0.
-        res = UINT8_MAX;
     } else if ((permissions & (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) ==
                (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) {
         res |= CC64R_AP_Q3;
@@ -366,25 +379,6 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, AP_M);
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, SDP);
     return valid;
-}
-
-static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
-    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
-    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
-    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1)
-        return (_cc_mode)(raw_perms & 1);
-    return (_cc_mode)0;
-}
-static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
-    // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
-    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
-    if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
-        _cc_debug_assert(_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));
-        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
-        return true;
-    }
-    _cc_debug_assert(!_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));
-    return false;
 }
 
 #undef CC_FORMAT_LOWER
