@@ -9,9 +9,9 @@
 
 /* AP compression */
 
-TEST_CASE_M_AP_COMP(0, CAP_AP_R, _CC_BIT64(2))
+TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R, _CC_BIT64(2))
 
-TEST_CASE_M_AP_COMP(1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
+TEST_CASE_M_AP_COMP(LVB_0, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
                     _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4) | _CC_BIT64(8))
 
 /* AP decompression */

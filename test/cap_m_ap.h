@@ -9,8 +9,11 @@
 #define CAP_AP_EL _CC_N(PERM_ELEVATE_LEVEL)
 #define CAP_AP_SL _CC_N(PERM_STORE_LEVEL)
 
-#define TEST_CASE_M_AP_COMP(_cr_m, _cr_arch_perm, _ap)                                                                 \
-    TEST_CASE(#_cr_arch_perm "-" #_cr_m " compress", "[compress]") {                                                   \
+#define LVB_0 0
+#define LVB_1 1
+
+#define TEST_CASE_M_AP_COMP(_cr_lvbits, _cr_m, _cr_arch_perm, _ap)                                                     \
+    TEST_CASE(#_cr_lvbits "-" #_cr_arch_perm "-" #_cr_m " compress", "[compress]") {                                   \
         _cc_cap_t cap = TestAPICC::make_null_derived_cap(0);                                                           \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == 0);                                                             \
         CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);                                                              \
