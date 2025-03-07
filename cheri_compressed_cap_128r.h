@@ -58,6 +58,10 @@
 /* Special otypes are allocated upwards from 0 */
 #define CC128R_SPECIAL_OTYPE_VAL(val) (val##u)
 #define CC128R_SPECIAL_OTYPE_VAL_SIGNED(val) (val##u)
+// Levels support depend on Zcherilevels extension. When not supported we have zero level bits.
+#define CC128R_MANDATORY_LEVELS 0
+// The encoding allows for many levels, but the current implementation is limited to one level bit.
+#define CC128R_MAX_LEVELS 1
 
 /* Use __uint128 to represent 65 bit length */
 __extension__ typedef unsigned __int128 cc128r_length_t;
