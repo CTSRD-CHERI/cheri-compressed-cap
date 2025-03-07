@@ -71,7 +71,7 @@ typedef int32_t cc64r_saddr_t;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
-    _CC_FIELD(UPERMS, 63, 62),
+    _CC_FIELD(SDP, 63, 62),
     _CC_FIELD(AP_M, 61, 57),      // combined architectural permissions and mode
     _CC_FIELD(MODE, 57, 57),      // Only valid if AP_M grant execute (quadrant 1)
     _CC_FIELD(FLAGS, 57, 57),     // TODO: remove this field
@@ -115,7 +115,7 @@ enum {
 #define CC64R_UPERMS_ALL (0x3) // 2 bits
 #define CC64R_UPERMS_SHFT (6)
 #define CC64R_PERM_SW_ALL (CC64R_UPERMS_ALL << CC64R_UPERMS_SHFT)
-_CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
+_CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_SDP_MAX_VALUE);
 #define CC64R_PERM_ACCESS_SYS_REGS (1 << 16)
 #define CC64R_PERM_EXECUTE (1 << 17)
 #define CC64R_PERM_READ (1 << 18)
@@ -128,7 +128,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
 #define CC64R_AP_Q3 ((uint8_t)(3 << 3))
 // The infinite cap has mode = 1 (if hybrid is supported) and is the first value in quadrant 1 (0x8 or 0x9)
 #define CC64R_ENCODED_INFINITE_PERMS()                                                                                 \
-    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), AP_M))
+    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), AP_M))
 #define CC64R_PERMS_MASK (CC64R_PERMS_ALL | CC64R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
@@ -166,7 +166,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_riscv_common.h"
 
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS);
+    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, SDP);
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     _cc_addr_t res = 0;
 
@@ -279,7 +279,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     }
     // Finally, add the software permissions and hardcoded one-bits
     res |= sw_perms << _CC_N(UPERMS_SHFT);
-    res |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_UPERMS_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    res |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_SDP_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
     return res;
 }
 
@@ -365,7 +365,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
     }
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, AP_M);
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, SDP);
     return valid;
 }
 
