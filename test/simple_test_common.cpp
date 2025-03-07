@@ -343,4 +343,23 @@ TEST_CASE("removing ASR should not throw", "[perms]") {
     CHECK(!max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)));
 }
 
+TEST_CASE("removing ASR should not affect mode", "[perms]") {
+    const TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(max_cap.has_permissions(_CC_N(PERM_EXECUTE)));
+    CHECK(max_cap.has_permissions(_CC_N(PERM_ACCESS_SYS_REGS)));
+    const _cc_addr_t initial_perms = max_cap.all_permissions();
+    {
+        auto cap = max_cap;
+        _cc_mode initial_mode = _cc_N(get_execution_mode(&max_cap));
+        CHECK(_cc_N(set_permissions)(&cap, initial_perms & ~_CC_N(PERM_ACCESS_SYS_REGS)) == true);
+        CHECK(_cc_N(get_execution_mode(&cap)) == initial_mode); // mode should not have changed
+    }
+    for (auto mode : {_CC_N(MODE_INT), _CC_N(MODE_CAP)}) {
+        auto cap = max_cap;
+        CHECK(_cc_N(set_execution_mode(&cap, mode))); // setting mode should work
+        CHECK(_cc_N(set_permissions)(&cap, initial_perms & ~_CC_N(PERM_ACCESS_SYS_REGS)) == true);
+        CHECK(_cc_N(get_execution_mode(&cap)) == mode); // mode should not have changed
+    }
+}
+
 #endif
