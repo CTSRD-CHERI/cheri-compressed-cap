@@ -8,15 +8,16 @@
  */
 
 /* AP compression */
-
+constexpr _cc_addr_t INT_MODE_ENCODED = _CC_BIT64(_CC_N(FIELD_AP_SIZE));
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R, _CC_BIT64(2))
 
 TEST_CASE_M_AP_COMP(LVB_0, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
-                    _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4) | _CC_BIT64(8))
+                    INT_MODE_ENCODED | _CC_BIT64(4) | _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0))
 
 /* AP decompression */
 
-TEST_CASE_M_AP_DECOMP(LVB_0, _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4), 1,
+TEST_CASE_M_AP_DECOMP(LVB_0,
+                      INT_MODE_ENCODED | _CC_BIT64(4) | _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0), 1,
                       CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
 TEST_CASE_M_AP_DECOMP(LVB_0, _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 
