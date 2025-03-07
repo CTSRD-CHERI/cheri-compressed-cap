@@ -1,4 +1,4 @@
-#include "cap_ap.h"
+#include "cap_m_ap.h"
 #include "simple_test_common.cpp"
 
 /*
@@ -9,17 +9,16 @@
 
 /* AP compression */
 
-TEST_CASE_AP_COMP(CAP_AP_R, _CC_BIT64(2))
+TEST_CASE_M_AP_COMP(0, CAP_AP_R, _CC_BIT64(2))
 
-TEST_CASE_AP_COMP(CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
-                  _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4))
+TEST_CASE_M_AP_COMP(1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
+                    _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4) | _CC_BIT64(8))
 
 /* AP decompression */
 
-TEST_CASE_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4),
-                    CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
-
-TEST_CASE_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), CAP_AP_X | CAP_AP_R | CAP_AP_W)
+TEST_CASE_M_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0) | _CC_BIT64(4), 1,
+                      CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
+TEST_CASE_M_AP_DECOMP(_CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
     auto cap = TestAPICC::make_max_perms_cap(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000);
