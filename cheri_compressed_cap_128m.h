@@ -89,9 +89,9 @@ typedef int64_t cc128m_saddr_t;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
-    // Morello HW perms actually 127..116, and 111...100. But seperating the fields is just a headache, and would make
-    // other code more complex. Pretend that they are all HW Perms.
-    _CC_FIELD(HWPERMS, 127, 110),
+    _CC_FIELD(ALL_PERMS, 127, 110),
+    _CC_FIELD(HWPERMS, 127, 110), // TODO: remove this, currently still used by QEMU
+    // Morello HW perms actually 127..116, and 111...100 with SW perms in the middle.
     _CC_FIELD(UPERMS, 115, 112),
     _CC_FIELD(OTYPE, 109, 95),
     _CC_FIELD(EBT, 94, 64),
@@ -148,12 +148,12 @@ enum {
 
 #define CC128M_HIGHEST_PERM CC128M_PERM_LOAD
 
-_CC_STATIC_ASSERT(CC128M_HIGHEST_PERM < CC128M_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
-_CC_STATIC_ASSERT((CC128M_HIGHEST_PERM << 1) > CC128M_FIELD_HWPERMS_MAX_VALUE, "all permission bits should be used");
+_CC_STATIC_ASSERT(CC128M_HIGHEST_PERM < CC128M_FIELD_ALL_PERMS_MAX_VALUE, "permissions not representable?");
+_CC_STATIC_ASSERT((CC128M_HIGHEST_PERM << 1) > CC128M_FIELD_ALL_PERMS_MAX_VALUE, "all permission bits should be used");
 
 #define CC128M_PERMS_ALL UINT64_C(0x3FFFF) /* Includes SW perms */
-#define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_ALL, HWPERMS)
-_CC_STATIC_ASSERT_SAME(CC128M_PERMS_ALL, CC128M_FIELD_HWPERMS_MAX_VALUE);
+#define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_ALL, ALL_PERMS)
+_CC_STATIC_ASSERT_SAME(CC128M_PERMS_ALL, CC128M_FIELD_ALL_PERMS_MAX_VALUE);
 _CC_STATIC_ASSERT_SAME(CC128M_ENCODED_INFINITE_PERMS(), CC128M_PERMS_ALL << 46);
 
 /* Morello calls the special otypes LB, LPB and RB.
@@ -190,11 +190,18 @@ _CC_STATIC_ASSERT_SAME(CC128M_MANTISSA_WIDTH, CC128M_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #define CC128M_RESERVED_FIELDS 0
 #define CC128M_RESERVED_BITS 0
 #define CC128M_HAS_BASE_TOP_SPECIAL_CASES 1
-#define CC128M_USES_V9_PERMISSION_ENCODING 1 // FIXME: this is not actually true
 #define CC128M_USES_V9_CORRECTION_FACTORS 1
 #define CC128M_USES_LEN_MSB 0
 
 #include "cheri_compressed_cap_common.h"
+
+static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+    return (_cc_addr_t)_CC_EXTRACT_FIELD(cap->cr_pesbt, ALL_PERMS);
+}
+static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, permissions, ALL_PERMS);
+    return true; // all permissions are representable
+}
 
 static inline uint8_t cc128m_get_reserved(const cc128m_cap_t* cap) {
     (void)cap;
