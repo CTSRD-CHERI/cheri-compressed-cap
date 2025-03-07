@@ -71,7 +71,7 @@ typedef int64_t cc128r_saddr_t;
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
     _CC_FIELD(RESERVED1, 127, 121),
-    _CC_FIELD(UPERMS, 120, 117),
+    _CC_FIELD(SDP, 120, 117),
     _CC_FIELD(FLAGS, 116, 116), // TODO: remove this old alias
     _CC_FIELD(AP_M, 116, 108),  // Combined architectural permissions and mode
     _CC_FIELD(MODE, 116, 116),
@@ -119,10 +119,10 @@ enum {
 #define CC128R_PERM_READ (1 << 18)
 #define CC128R_PERMS_ALL (0x7003f)
 
-_CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
+_CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_SDP_MAX_VALUE);
 // Encoded value is 0b100111111 since SL and EL are not supported in sail yet.
 #define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
-    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(0x13f, AP) | _CC_ENCODE_FIELD(1, MODE))
+    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD(0x13f, AP) | _CC_ENCODE_FIELD(1, MODE))
 #define CC128R_PERMS_MASK (CC128R_PERMS_ALL | CC128R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
@@ -158,7 +158,7 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 
 // The 64-bit format uses one bit per permission but we have to move them to the correct offset in the final result.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS);
+    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, SDP);
     _cc_addr_t arch_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP);
     _cc_addr_t result = sw_perms << _CC_N(UPERMS_SHFT);
     // See "Encoding of architectural permissions for MXLEN=64" in the spec
@@ -187,7 +187,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
         result |= CC128R_PERM_LEVEL | CC128R_PERM_STORE_LEVEL | CC128R_PERM_ELEVATE_LEVEL;
     }
     // Now include the hardcoded one-bits:
-    result |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_UPERMS_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    result |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_SDP_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
     return result;
 }
 
@@ -219,7 +219,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
     }
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, result, AP);
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, SDP);
     return true; // all permissions are representable
 }
 
