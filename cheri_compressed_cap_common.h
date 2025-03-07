@@ -263,21 +263,6 @@ ALL_WRAPPERS(RESERVED, reserved, uint8_t)
 #endif
 #undef ALL_WRAPPERS
 
-#if _CC_N(USES_V9_PERMISSION_ENCODING) != 0
-// ISAv9 uses a direct 1:1 mapping of bits to permissions with user permissions shifted by a fixed offset
-static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    return ((_cc_addr_t)(_CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS) & _CC_N(UPERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
-           (_CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS) & _CC_N(PERMS_ALL));
-}
-static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
-    _cc_addr_t arch_perms = permissions & _CC_N(PERMS_ALL);
-    _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, arch_perms, HWPERMS);
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
-    return true; // all permissions are representable
-}
-#endif
-
 // These two split helpers exist for backwards compatibility with code that doesn't use the new functions
 static inline _cc_cap_t _cc_N(make_null_derived_cap)(_cc_addr_t addr);
 _CC_DEPRECATED("Use get_all_permissions") static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap) {

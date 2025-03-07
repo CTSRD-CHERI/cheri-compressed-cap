@@ -144,10 +144,10 @@ _CC_STATIC_ASSERT_SAME(CC64_MANTISSA_WIDTH, CC64_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #define CC64_RESERVED_BITS CC64_FIELD_RESERVED_SIZE
 #define CC64_HAS_BASE_TOP_SPECIAL_CASES 0
 #define CC64_USES_V9_CORRECTION_FACTORS 1
-#define CC64_USES_V9_PERMISSION_ENCODING 1
 #define CC64_USES_LEN_MSB 0
 
 #include "cheri_compressed_cap_common.h"
+#include "cheri_compressed_cap_v9_common.h"
 
 // Sanity-check mask is the expected NULL encoding
 _CC_STATIC_ASSERT_SAME(CC64_MEM_XOR_MASK, UINT32_C(0x7c302));
