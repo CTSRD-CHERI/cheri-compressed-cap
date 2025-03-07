@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
+#define _CC_TEST_ENABLE_DEPRECATED // TODO: port away from deprecated API
 #include "../cheri_compressed_cap.h"
 
 #define SAIL_WRAPPER_FORMAT_LOWER 64

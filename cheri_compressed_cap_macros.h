@@ -70,6 +70,12 @@
 #define _CC_STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
 #endif
 
+#ifdef _CC_TEST_ENABLE_DEPRECATED
+#define _CC_DEPRECATED(msg)
+#else
+#define _CC_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#endif
+
 #define _cc_N(name) _CC_CONCAT(_CC_CONCAT(_CC_CONCAT(cc, CC_FORMAT_LOWER), _), name)
 #define _CC_N(name) _CC_CONCAT(_CC_CONCAT(_CC_CONCAT(CC, CC_FORMAT_UPPER), _), name)
 

@@ -104,7 +104,7 @@ static _cc_cap_t from_sail_cap(const lbits* sail_cap) {
 
     // Address including flag bits
     result._cr_cursor = sailgen_CapGetValue(*sail_cap);
-    _cc_N(update_perms)(&result, sailgen_CapGetPermissions(*sail_cap));
+    _cc_N(set_permissions)(&result, sailgen_CapGetPermissions(*sail_cap));
     _cc_N(update_otype)(&result, sailgen_CapGetObjectType(*sail_cap));
     result.cr_tag = sailgen_CapGetTag(*sail_cap);
 

@@ -108,12 +108,12 @@ _CC_STATIC_ASSERT_SAME(CC64_FIELD_RESERVED_SIZE, 0);
 #define CC64_PERM_UNSEAL (1 << 9)
 #define CC64_PERM_ACCESS_SYS_REGS (1 << 10)
 #define CC64_PERM_SETCID (1 << 11)
+#define CC64_PERM_SW_ALL 0
 _CC_STATIC_ASSERT(CC64_PERM_SETCID < CC64_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
 
-#define CC64_PERMS_ALL (0xfff) /* [0...11] */
-#define CC64_UPERMS_ALL (0)    /* [15...18] */
+#define CC64_PERMS_ALL (0xfff)
+#define CC64_UPERMS_ALL (0)
 #define CC64_UPERMS_SHFT (15)
-#define CC64_MAX_UPERM (0)
 #define CC64_ENCODED_INFINITE_PERMS()                                                                                  \
     (_CC_ENCODE_FIELD(CC64_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC64_PERMS_ALL, HWPERMS))
 
