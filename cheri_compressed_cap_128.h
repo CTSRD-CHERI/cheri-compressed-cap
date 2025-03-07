@@ -119,6 +119,7 @@ _CC_STATIC_ASSERT((CC128_HIGHEST_PERM << 1) > CC128_FIELD_HWPERMS_MAX_VALUE, "al
 #define CC128_PERM_SW_ALL (CC128_UPERMS_ALL << CC128_UPERMS_SHFT)
 #define CC128_ENCODED_INFINITE_PERMS()                                                                                 \
     (_CC_ENCODE_FIELD(CC128_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC128_PERMS_ALL, HWPERMS))
+#define CC128_PERMS_MASK (CC128_PERMS_ALL | CC128_PERM_SW_ALL)
 
 // We reserve 16 otypes
 enum _CC_N(OTypes) {

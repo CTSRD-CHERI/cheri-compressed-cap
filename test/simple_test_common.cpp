@@ -1,5 +1,8 @@
 #define _CC_TEST_ENABLE_DEPRECATED
 #include "test_common.cpp"
+#include <catch2/matchers/catch_matchers_exception.hpp>
+
+using Catch::Matchers::Message;
 
 // Due to magic constant XOR aversion (i.e. fields are either entirely
 // inverted or not at all, rather than select bits within them like in
@@ -232,16 +235,27 @@ TEST_CASE("set zero and almighty permissions", "[perms]") {
     TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     CHECK(max_cap.all_permissions() > 1);
     CHECK((max_cap.all_permissions() & _CC_N(PERM_SW_ALL)) == _CC_N(PERM_SW_ALL));
+    CHECK((max_cap.all_permissions() & _CC_N(PERMS_MASK)) == _CC_N(PERMS_MASK));
     // Should be able to clear all permissions
     CHECK(_cc_N(set_permissions)(&max_cap, 0) == true);
     CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
     CHECK((max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS)) == 0);
     CHECK(max_cap.software_permissions() == 0);
-    // Setting all permission bits should be fine (unknown bits are masked off) and return max perms cap.
-    CHECK(_cc_N(set_permissions)(&max_cap, ~(_cc_addr_t)0u) == true);
+    // Setting all permission bits should be fine and return max perms cap.
+    CHECK(_cc_N(set_permissions)(&max_cap, _CC_N(PERMS_MASK)) == true);
     CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
-    CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
-    CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+    CHECK((max_cap.all_permissions() & _CC_N(PERMS_MASK)) == _CC_N(PERMS_MASK));
+}
+
+TEST_CASE("set invalid perms", "[perms]") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+#ifndef NDEBUG
+    // Setting reserved-zero permissions should be rejected
+    CHECK_THROWS_MATCHES(_cc_N(set_permissions)(&max_cap, ~(_cc_addr_t)0), std::invalid_argument,
+                         Message("invalid permissions"));
+#endif
+    // Should not have modified the permissions
+    CHECK((max_cap.all_permissions() & _CC_N(PERMS_MASK)) == _CC_N(PERMS_MASK));
 }
 
 TEST_CASE("test old permissions API", "[perms]") {

@@ -151,10 +151,11 @@ enum {
 _CC_STATIC_ASSERT(CC128M_HIGHEST_PERM < CC128M_FIELD_ALL_PERMS_MAX_VALUE, "permissions not representable?");
 _CC_STATIC_ASSERT((CC128M_HIGHEST_PERM << 1) > CC128M_FIELD_ALL_PERMS_MAX_VALUE, "all permission bits should be used");
 
-#define CC128M_PERMS_ALL UINT64_C(0x3FFFF) /* Includes SW perms */
-#define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_ALL, ALL_PERMS)
-_CC_STATIC_ASSERT_SAME(CC128M_PERMS_ALL, CC128M_FIELD_ALL_PERMS_MAX_VALUE);
-_CC_STATIC_ASSERT_SAME(CC128M_ENCODED_INFINITE_PERMS(), CC128M_PERMS_ALL << 46);
+#define CC128M_PERMS_MASK UINT64_C(0x3FFFF) /* Includes SW perms */
+#define CC128M_PERMS_ALL (CC128M_PERMS_MASK & ~CC128M_UPERMS_ALL)
+#define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_MASK, ALL_PERMS)
+_CC_STATIC_ASSERT_SAME(CC128M_PERMS_MASK, CC128M_FIELD_ALL_PERMS_MAX_VALUE);
+_CC_STATIC_ASSERT_SAME(CC128M_ENCODED_INFINITE_PERMS(), CC128M_PERMS_MASK << 46);
 
 /* Morello calls the special otypes LB, LPB and RB.
  * LPB is "load pair branch". It loads the first two caps pointed to and ccalls them.
@@ -199,6 +200,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     return (_cc_addr_t)_CC_EXTRACT_FIELD(cap->cr_pesbt, ALL_PERMS);
 }
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    _cc_api_requirement((permissions & _CC_N(PERMS_MASK)) == permissions, "invalid permissions");
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, permissions, ALL_PERMS);
     return true; // all permissions are representable
 }

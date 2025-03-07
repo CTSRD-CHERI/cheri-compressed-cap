@@ -118,6 +118,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
 #define CC64R_PERM_ACCESS_SYS_REGS (1 << 16)
 #define CC64R_PERM_EXECUTE (1 << 17)
 #define CC64R_PERM_READ (1 << 18)
+#define CC64R_PERMS_ALL (0x7003f)
 
 #define CC64R_AP_Q_MASK ((uint8_t)(3 << 3))
 #define CC64R_AP_Q0 ((uint8_t)(0 << 3))
@@ -127,6 +128,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
 // The infinite cap has mode = 1 (if hybrid is supported) and is the first value in quadrant 1 (0x8 or 0x9)
 #define CC64R_ENCODED_INFINITE_PERMS()                                                                                 \
     (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), HWPERMS))
+#define CC64R_PERMS_MASK (CC64R_PERMS_ALL | CC64R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
 // However, other extensions (e.g. CHERIoT) define additional otypes beyond this.
@@ -281,6 +283,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
 }
 
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+    _cc_api_requirement((permissions & _CC_N(PERMS_MASK)) == permissions, "invalid permissions");
     uint8_t res = 0;
     bool mode = false;
     bool levels_supported = false;
