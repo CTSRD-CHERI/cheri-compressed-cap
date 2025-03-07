@@ -139,8 +139,11 @@ struct _cc_N(cap) {
     _cc_addr_t cr_base;      /* Capability base addr */
     uint8_t cr_tag;          /* Tag */
     uint8_t cr_bounds_valid; /* Set if bounds decode was given an invalid cap */
-    uint8_t cr_exp;          /* Exponent */
-    uint8_t cr_extra;        /* Additional data stored by the caller */
+#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
+    uint8_t cr_lvbits; /* lvbits for RISC-V Zcherilevel (0 if unsupported/non-RISC-V) */
+#endif
+    uint8_t cr_exp;   /* Exponent */
+    uint8_t cr_extra; /* Additional data stored by the caller */
 #ifdef __cplusplus
     inline _cc_addr_t base() const { return cr_base; }
     inline _cc_addr_t address() const { return _cr_cursor; }
@@ -174,6 +177,9 @@ static inline bool _cc_N(exactly_equal)(const _cc_cap_t* a, const _cc_cap_t* b) 
 static inline bool _cc_N(raw_equal)(const _cc_cap_t* a, const _cc_cap_t* b) {
     return a->_cr_cursor == b->_cr_cursor && a->cr_pesbt == b->cr_pesbt && a->_cr_top == b->_cr_top &&
            a->cr_base == b->cr_base && a->cr_tag == b->cr_tag && a->cr_bounds_valid == b->cr_bounds_valid &&
+#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
+           a->cr_lvbits == b->cr_lvbits &&
+#endif
            a->cr_exp == b->cr_exp && a->cr_extra == b->cr_extra;
 }
 

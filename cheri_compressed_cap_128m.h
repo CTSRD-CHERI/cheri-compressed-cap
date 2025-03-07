@@ -77,6 +77,9 @@
 /* Special otypes are allocated upwards from 0 */
 #define CC128M_SPECIAL_OTYPE_VAL(val) (val##u)
 #define CC128M_SPECIAL_OTYPE_VAL_SIGNED(val) (val##u)
+// Morello always supports exactly one level bit (local/global).
+#define CC128M_MANDATORY_LEVELS 1
+#define CC128M_MAX_LEVELS CC64_MANDATORY_LEVELS
 
 /* Use __uint128 to represent 65 bit length */
 __extension__ typedef unsigned __int128 cc128m_length_t;
