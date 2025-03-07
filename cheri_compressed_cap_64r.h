@@ -72,8 +72,8 @@ typedef int32_t cc64r_saddr_t;
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
     _CC_FIELD(UPERMS, 63, 62),
-    _CC_FIELD(HWPERMS, 61, 57),
-    _CC_FIELD(MODE, 57, 57),      // Only valid if HWPERMS grant execute (quadrant 1)
+    _CC_FIELD(AP_M, 61, 57),      // combined architectural permissions and mode
+    _CC_FIELD(MODE, 57, 57),      // Only valid if AP_M grant execute (quadrant 1)
     _CC_FIELD(FLAGS, 57, 57),     // TODO: remove this field
     _CC_FIELD(RESERVED1, 56, 56), // Actually the CL field, but reserved for now to match sail
     _CC_FIELD(LEVEL, 56, 56),
@@ -128,7 +128,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_UPERMS_MAX_VALUE);
 #define CC64R_AP_Q3 ((uint8_t)(3 << 3))
 // The infinite cap has mode = 1 (if hybrid is supported) and is the first value in quadrant 1 (0x8 or 0x9)
 #define CC64R_ENCODED_INFINITE_PERMS()                                                                                 \
-    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), HWPERMS))
+    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), AP_M))
 #define CC64R_PERMS_MASK (CC64R_PERMS_ALL | CC64R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
@@ -167,7 +167,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS);
-    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     _cc_addr_t res = 0;
 
     // If levels are not supported the encodings with levels are reserved and we return an invalid result.
@@ -364,13 +364,13 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         unsigned new_level = permissions & CC64R_PERM_LEVEL ? 1 : 0;
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
     }
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, HWPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, res, AP_M);
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
     return valid;
 }
 
 static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
-    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
     if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1)
         return (_cc_mode)(raw_perms & 1);
@@ -378,7 +378,7 @@ static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
 }
 static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
     // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
-    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
         _cc_debug_assert(_cc_N(get_all_permissions)(cap) & _CC_N(PERM_EXECUTE));
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);

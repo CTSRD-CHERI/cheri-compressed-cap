@@ -88,8 +88,8 @@ TEST_CASE("bounds encoding exponent 0", "[bounds]") {
      * top == 0x20, base == 0x0
      */
     CHECK(cap.cr_pesbt == 0x01f3f00004080000);
-    cc128r_update_perms(&cap, 0);
-    cc128r_update_uperms(&cap, 0);
+    CHECK(cc128r_set_execution_mode(&cap, CC128R_MODE_CAP));
+    cc128r_set_permissions(&cap, 0);
     CHECK(cap.cr_pesbt == 0x0000000004080000);
 }
 
@@ -109,8 +109,8 @@ TEST_CASE("bounds encoding exponent > 0", "[bounds]") {
      * c_t = 0, c_b = 0
      */
     CHECK(cap.cr_pesbt == 0x01f3f00001334105);
-    cc128r_update_perms(&cap, 0);
-    cc128r_update_uperms(&cap, 0);
+    CHECK(cc128r_set_execution_mode(&cap, CC128R_MODE_CAP));
+    cc128r_set_permissions(&cap, 0);
     CHECK(cap.cr_pesbt == 0x0000000001334105);
 }
 

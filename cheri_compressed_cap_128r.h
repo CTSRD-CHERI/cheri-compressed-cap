@@ -72,9 +72,10 @@ typedef int64_t cc128r_saddr_t;
 enum {
     _CC_FIELD(RESERVED1, 127, 121),
     _CC_FIELD(UPERMS, 120, 117),
-    _CC_FIELD(FLAGS, 115, 116), // TODO: remove this old alias
-    _CC_FIELD(MODE, 115, 116),
-    _CC_FIELD(HWPERMS, 116, 108),
+    _CC_FIELD(FLAGS, 116, 116), // TODO: remove this old alias
+    _CC_FIELD(AP_M, 116, 108),  // Combined architectural permissions and mode
+    _CC_FIELD(MODE, 116, 116),
+    _CC_FIELD(AP, 115, 108),
     _CC_FIELD(LEVEL, 107, 107),
     _CC_FIELD(RESERVED0, 107, 92), // FIXME: Reserved0 should not include level
     _CC_FIELD(OTYPE, 91, 91),
@@ -86,7 +87,7 @@ enum {
     _CC_FIELD(TOP_ENCODED, 89, 78),
     _CC_FIELD(BOTTOM_ENCODED, 77, 64),
 
-    // Top/bottom offsets depending in INTERNAL_EXPONENT flag:
+    // Top/bottom offsets depending on INTERNAL_EXPONENT flag:
     // Without internal exponent:
     _CC_FIELD(EXP_ZERO_TOP, 89, 78),
     _CC_FIELD(EXP_ZERO_BOTTOM, 77, 64),
@@ -120,7 +121,8 @@ enum {
 
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
 // Encoded value is 0b100111111 since SL and EL are not supported in sail yet.
-#define CC128R_ENCODED_INFINITE_PERMS() (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(0x13f, HWPERMS))
+#define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
+    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(0x13f, AP) | _CC_ENCODE_FIELD(1, MODE))
 #define CC128R_PERMS_MASK (CC128R_PERMS_ALL | CC128R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
@@ -157,7 +159,7 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 // The 64-bit format uses one bit per permission but we have to move them to the correct offset in the final result.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS);
-    _cc_addr_t arch_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
+    _cc_addr_t arch_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP);
     _cc_addr_t result = sw_perms << _CC_N(UPERMS_SHFT);
     // See "Encoding of architectural permissions for MXLEN=64" in the spec
     if (arch_perms & _CC_BIT64(0))
@@ -216,7 +218,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         unsigned new_level = permissions & CC128R_PERM_LEVEL ? 1 : 0;
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
     }
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, result, HWPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, result, AP);
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
     return true; // all permissions are representable
 }
