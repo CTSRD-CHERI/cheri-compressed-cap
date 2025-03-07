@@ -186,13 +186,13 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
         // Levels extension not supported -> treat as reserved one-bits.
         result |= CC128R_PERM_LEVEL | CC128R_PERM_STORE_LEVEL | CC128R_PERM_ELEVATE_LEVEL;
     }
-    // Now include the hardcoded one-bits:
-    result |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_SDP_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    result |= _CC_N(PERMS_RESERVED_ONES); // Finally include the hardcoded one-bits
     return result;
 }
 
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
-    _cc_api_requirement((permissions & _CC_N(PERMS_MASK)) == permissions, "invalid permissions");
+    _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
+                        "invalid permissions");
     bool levels_supported = false; // TODO: make this configurable
     // TODO: legalize permissions or reject invalid requests
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);

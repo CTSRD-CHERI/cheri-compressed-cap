@@ -166,7 +166,6 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_riscv_common.h"
 
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, SDP);
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     _cc_addr_t res = 0;
 
@@ -277,14 +276,14 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
         // Levels extension not supported -> treat as reserved one-bits.
         res |= CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_STORE_LEVEL | CC64R_PERM_LEVEL;
     }
-    // Finally, add the software permissions and hardcoded one-bits
-    res |= sw_perms << _CC_N(UPERMS_SHFT);
-    res |= _CC_BITMASK64_RANGE(6 + _CC_N(FIELD_SDP_SIZE), 15) | _CC_BITMASK64_RANGE(19, 23);
+    res |= _CC_EXTRACT_FIELD(cap->cr_pesbt, SDP) << _CC_N(UPERMS_SHFT); // Add the software permissions
+    res |= _CC_N(PERMS_RESERVED_ONES);                                  // Finally include the hardcoded one-bits
     return res;
 }
 
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
-    _cc_api_requirement((permissions & _CC_N(PERMS_MASK)) == permissions, "invalid permissions");
+    _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
+                        "invalid permissions");
     uint8_t res = 0;
     bool mode = false;
     bool levels_supported = false;
