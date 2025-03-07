@@ -1,3 +1,4 @@
+#define _CC_TEST_ENABLE_DEPRECATED
 #include "test_common.cpp"
 
 // Due to magic constant XOR aversion (i.e. fields are either entirely
@@ -230,6 +231,7 @@ TEST_CASE("common permissions for almighty", "[perms]") {
 TEST_CASE("set zero and almighty permissions", "[perms]") {
     TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
     CHECK(max_cap.all_permissions() > 1);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_SW_ALL)) == _CC_N(PERM_SW_ALL));
     // Should be able to clear all permissions
     CHECK(_cc_N(set_permissions)(&max_cap, 0) == true);
     CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
@@ -240,4 +242,38 @@ TEST_CASE("set zero and almighty permissions", "[perms]") {
     CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
     CHECK(max_cap.all_permissions() & _CC_N(PERM_EXECUTE));
     CHECK(max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS));
+}
+
+TEST_CASE("test old permissions API", "[perms]") {
+    TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    _cc_addr_t all_perms = max_cap.all_permissions();
+    _cc_addr_t all_perms_old_api = _cc_N(get_perms)(&max_cap); // ignoring reserved 1 bits
+    CHECK(max_cap.all_permissions() > 1);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_SW_ALL)) == _CC_N(PERM_SW_ALL));
+    CHECK(_cc_N(get_uperms)(&max_cap) == _CC_N(UPERMS_ALL));
+    // Should be able to clear all permissions, but user perms should be unaffected
+    _cc_N(update_perms)(&max_cap, 0);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_EXECUTE)) == 0);
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_ACCESS_SYS_REGS)) == 0);
+    CHECK(_cc_N(get_uperms)(&max_cap) == _CC_N(UPERMS_ALL));
+    CHECK((max_cap.all_permissions() & _CC_N(PERM_SW_ALL)) == _CC_N(PERM_SW_ALL));
+
+    // Now clear SW perms and check it doesn't affect HW ones:
+    max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    _cc_N(update_uperms)(&max_cap, 0);
+    CHECK(max_cap.software_permissions() == 0);
+    CHECK(max_cap.all_permissions() == (all_perms & ~_CC_N(PERM_SW_ALL)));
+    CHECK(_cc_N(get_perms)(&max_cap) == all_perms_old_api);
+    _cc_N(update_uperms)(&max_cap, _CC_N(UPERMS_ALL));
+    CHECK(max_cap.software_permissions() == _CC_N(UPERMS_ALL));
+    CHECK(_cc_N(get_perms)(&max_cap) == all_perms_old_api);
+    if (_CC_N(UPERMS_ALL) != 0) {
+        _cc_N(update_uperms)(&max_cap, 1);
+        CHECK(max_cap.software_permissions() == 1);
+        CHECK(_cc_N(get_perms)(&max_cap) == all_perms_old_api);
+    }
+    // The legacy API returns zero for NULL cap permissions since it does not include reserved one-bits
+    TestAPICC::cap_t null_cap = TestAPICC::make_null_derived_cap(0);
+    CHECK(_cc_N(get_perms)(&null_cap) == 0);
+    CHECK(_cc_N(get_uperms)(&null_cap) == 0);
 }

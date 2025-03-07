@@ -112,11 +112,12 @@ typedef struct _cc_N(cap) _cc_N(cap_t);
 #define _cc_cap_t _cc_N(cap_t)
 static inline uint8_t _cc_N(get_flags)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
-static inline uint32_t _cc_N(get_perms)(const _cc_cap_t* cap);
+static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap);
 static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
-static inline uint32_t _cc_N(get_uperms)(const _cc_cap_t* cap);
+static inline _cc_addr_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 /// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
+static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions);
 
 // In order to allow vector loads and store from memory we can optionally reverse the first two fields.
 struct _cc_N(cap) {
@@ -255,8 +256,6 @@ struct _cc_N(bounds_bits) {
     static inline void _cc_N(update_##FN)(_cc_cap_t * cap, _cc_addr_t value) {                                         \
         cap->cr_pesbt = _cc_N(cap_pesbt_deposit_##FN)(cap->cr_pesbt, value);                                           \
     }
-ALL_WRAPPERS(HWPERMS, perms, uint32_t)
-ALL_WRAPPERS(UPERMS, uperms, uint32_t)
 ALL_WRAPPERS(OTYPE, otype, uint32_t)
 ALL_WRAPPERS(FLAGS, flags, uint8_t)
 #if _CC_N(RESERVED_FIELDS) == 1
@@ -267,17 +266,42 @@ ALL_WRAPPERS(RESERVED, reserved, uint8_t)
 #if _CC_N(USES_V9_PERMISSION_ENCODING) != 0
 // ISAv9 uses a direct 1:1 mapping of bits to permissions with user permissions shifted by a fixed offset
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    return ((_cc_addr_t)(_cc_N(get_uperms)(cap) & _CC_N(PERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
-           (_cc_N(get_perms)(cap) & _CC_N(PERMS_ALL));
+    return ((_cc_addr_t)(_CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS) & _CC_N(UPERMS_ALL)) << _CC_N(UPERMS_SHFT)) |
+           (_CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS) & _CC_N(PERMS_ALL));
 }
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
     _cc_addr_t arch_perms = permissions & _CC_N(PERMS_ALL);
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
-    _cc_N(update_perms)(cap, arch_perms);
-    _cc_N(update_uperms)(cap, sw_perms);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, arch_perms, HWPERMS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, sw_perms, UPERMS);
     return true; // all permissions are representable
 }
 #endif
+
+// These two split helpers exist for backwards compatibility with code that doesn't use the new functions
+static inline _cc_cap_t _cc_N(make_null_derived_cap)(_cc_addr_t addr);
+_CC_DEPRECATED("Use get_all_permissions") static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap) {
+    // We assume that HWPERMS always start at non-zero bit position
+    _CC_STATIC_ASSERT(_CC_N(UPERMS_SHFT) != 0, "Architectural perms expected to start at offset zero");
+    // We have to clear reserved one-bits for the 64r/128r formats (will be elided by compiler for other formats)
+    _cc_cap_t null_cap = _cc_N(make_null_derived_cap)(0);
+    _cc_addr_t reserved_one_bits = _cc_N(get_all_permissions)(&null_cap);
+    _cc_addr_t all_perms_w_reserved = _cc_N(get_all_permissions)(cap);
+    return (all_perms_w_reserved & ~reserved_one_bits) & ~_CC_N(PERM_SW_ALL);
+}
+_CC_DEPRECATED("Use get_all_permissions") static inline _cc_addr_t _cc_N(get_uperms)(const _cc_cap_t* cap) {
+    return (_cc_N(get_all_permissions)(cap) & _CC_N(PERM_SW_ALL)) >> _CC_N(UPERMS_SHFT);
+}
+_CC_DEPRECATED("Use set_permissions") static inline void _cc_N(update_perms)(_cc_cap_t* cap, _cc_addr_t value) {
+    _cc_api_requirement((value & _CC_N(PERMS_ALL)) == value, "invalid permission value");
+    _cc_addr_t current_swperms = (_cc_N(get_all_permissions)(cap) & _CC_N(PERM_SW_ALL));
+    _cc_N(set_permissions)(cap, (value & ~_CC_N(PERM_SW_ALL)) | current_swperms);
+}
+_CC_DEPRECATED("Use set_permissions") static inline void _cc_N(update_uperms)(_cc_cap_t* cap, _cc_addr_t value) {
+    _cc_api_requirement((value & _CC_N(UPERMS_ALL)) == value, "invalid permission value");
+    _cc_addr_t old_arch_perms = _cc_N(get_all_permissions)(cap) & ~_CC_N(PERM_SW_ALL);
+    _cc_N(set_permissions)(cap, ((value << _CC_N(UPERMS_SHFT)) & _CC_N(PERM_SW_ALL)) | old_arch_perms);
+}
 
 /// Extract the bits used for bounds and infer the top two bits of T
 static inline _cc_bounds_bits _cc_N(extract_bounds_bits)(_cc_addr_t pesbt) {

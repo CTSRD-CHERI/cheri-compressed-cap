@@ -92,8 +92,7 @@ enum {
     // Morello HW perms actually 127..116, and 111...100. But seperating the fields is just a headache, and would make
     // other code more complex. Pretend that they are all HW Perms.
     _CC_FIELD(HWPERMS, 127, 110),
-    _CC_FIELD(UPERMS, 111, 112),
-    // Should _CC_FIELD(UPERMS, 115, 112), if that wouldn't cause a double count because of above.
+    _CC_FIELD(UPERMS, 115, 112),
     _CC_FIELD(OTYPE, 109, 95),
     _CC_FIELD(EBT, 94, 64),
 // This is a bit dodgy. This enum only really works for non-address bits.
@@ -129,6 +128,9 @@ enum {
 #define CC128M_PERM_GLOBAL (1 << 0)
 #define CC128M_PERM_EXECUTIVE (1 << 1)
 // Then 4 user types
+#define CC128M_UPERMS_ALL UINT64_C(0xf)
+#define CC128M_UPERMS_SHFT 2
+#define CC128M_PERM_SW_ALL (CC128M_UPERMS_ALL << CC128M_UPERMS_SHFT)
 #define CC128M_PERM_MUTABLE_LOAD (1 << 6)
 #define CC128M_PERM_SETCID (1 << 7)
 #define CC128M_PERM_BRANCH_SEALED_PAIR (1 << 8)
@@ -149,10 +151,7 @@ enum {
 _CC_STATIC_ASSERT(CC128M_HIGHEST_PERM < CC128M_FIELD_HWPERMS_MAX_VALUE, "permissions not representable?");
 _CC_STATIC_ASSERT((CC128M_HIGHEST_PERM << 1) > CC128M_FIELD_HWPERMS_MAX_VALUE, "all permission bits should be used");
 
-#define CC128M_PERMS_ALL UINT64_C(0x3FFFF) /* [0...1,6..17] */
-#define CC128M_UPERMS_ALL UINT64_C(0x0)    /* [15...18] */
-#define CC128M_UPERMS_SHFT UINT64_C(0)
-#define CC128M_MAX_UPERM UINT64_C(3)
+#define CC128M_PERMS_ALL UINT64_C(0x3FFFF) /* Includes SW perms */
 #define CC128M_ENCODED_INFINITE_PERMS() _CC_ENCODE_FIELD(CC128M_PERMS_ALL, HWPERMS)
 _CC_STATIC_ASSERT_SAME(CC128M_PERMS_ALL, CC128M_FIELD_HWPERMS_MAX_VALUE);
 _CC_STATIC_ASSERT_SAME(CC128M_ENCODED_INFINITE_PERMS(), CC128M_PERMS_ALL << 46);

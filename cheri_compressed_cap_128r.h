@@ -109,16 +109,15 @@ enum {
 #define CC128R_PERM_LEVEL (1 << 4)
 #define CC128R_PERM_CAPABILITY (1 << 5)
 // Software permissions start at bit 6
+#define CC128R_UPERMS_ALL (0xf) /* 4 bits */
+#define CC128R_UPERMS_SHFT (6)
+#define CC128R_PERM_SW_ALL (CC128R_UPERMS_ALL << CC128R_UPERMS_SHFT)
 #define CC128R_PERM_ACCESS_SYS_REGS (1 << 16)
 #define CC128R_PERM_EXECUTE (1 << 17)
 #define CC128R_PERM_READ (1 << 18)
 
 #define CC128R_PERMS_ALL (0x13f) /* 0b100111111 since SL and EL are not supported in sail yet. */
-#define CC128R_UPERMS_ALL (0xf)  /* 4 bits */
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_UPERMS_MAX_VALUE);
-#define CC128R_UPERMS_SHFT (6)
-#define CC128R_UPERMS_MEM_SHFT (0)
-#define CC128R_MAX_UPERM (3)
 #define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
     (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC128R_PERMS_ALL, HWPERMS))
 
@@ -156,8 +155,8 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 
 // The 64-bit format uses one bit per permission but we have to move them to the correct offset in the final result.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
-    _cc_addr_t sw_perms = _cc_N(get_uperms)(cap);
-    _cc_addr_t arch_perms = _cc_N(get_perms)(cap);
+    _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, UPERMS);
+    _cc_addr_t arch_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, HWPERMS);
     _cc_addr_t result = sw_perms << _CC_N(UPERMS_SHFT);
     // See "Encoding of architectural permissions for MXLEN=64" in the spec
     if (arch_perms & _CC_BIT64(0))
