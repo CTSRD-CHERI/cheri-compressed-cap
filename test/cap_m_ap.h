@@ -20,10 +20,9 @@ static inline _cc_addr_t compute_supported_permissions(unsigned level_bits) {
 }
 
 static void testCompression(unsigned level_bits, _cc_mode mode, _cc_addr_t permissions, _cc_addr_t expected_encoding,
-                            bool valid_permissions_set) {
+                            bool valid_permissions_set, bool valid_mode = true) {
     // ensure we didn't request unsupported perms:
     const _cc_addr_t supported_permissions = compute_supported_permissions(level_bits);
-    REQUIRE((permissions & supported_permissions) == permissions);
     REQUIRE(level_bits <= 1);
     _cc_cap_t cap = TestAPICC::make_null_derived_cap(0);
     cap.cr_lvbits = level_bits;
@@ -36,6 +35,9 @@ static void testCompression(unsigned level_bits, _cc_mode mode, _cc_addr_t permi
         CHECK(cap.has_permissions(permissions));
     } else {
         CHECK((cap.all_permissions() & supported_permissions) == 0); // Invalid permissions should report 0
+    }
+    if (!valid_mode) {
+        CHECK(_cc_N(get_execution_mode)(&cap) != mode);
     }
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == expected_encoding);
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);
@@ -65,8 +67,12 @@ static void testDecompression(unsigned level_bits, _cc_addr_t ap_m_encoding, _cc
     }
 
 #define TEST_CASE_M_AP_COMP_INVALID(_cr_lvbits, _cr_m, _cr_arch_perm, _cr_ap_m)                                        \
-    TEST_CASE(#_cr_lvbits "-" #_cr_arch_perm "-" #_cr_m " compress", "[compress]") {                                   \
+    TEST_CASE(#_cr_lvbits "-" #_cr_arch_perm "-" #_cr_m " invalid compress", "[compress]") {                           \
         testCompression(_cr_lvbits, (_cc_mode)_cr_m, _cr_arch_perm, _cr_ap_m, false);                                  \
+    }
+#define TEST_CASE_M_AP_COMP_INVALID_MODE(_cr_lvbits, _cr_m, _cr_arch_perm, _cr_ap_m)                                   \
+    TEST_CASE(#_cr_lvbits "-" #_cr_arch_perm "-" #_cr_m " invalid mode compress", "[compress]") {                      \
+        testCompression(_cr_lvbits, (_cc_mode)_cr_m, _cr_arch_perm, _cr_ap_m, true, false);                            \
     }
 
 #define TEST_CASE_M_AP_DECOMP(_cr_lvbits, _cr_ap_m, _cr_m, _cr_arch_perm)                                              \

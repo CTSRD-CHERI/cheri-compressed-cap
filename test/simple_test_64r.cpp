@@ -27,7 +27,15 @@ TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C | CAP_AP_R | CAP_AP_W | CAP_AP_LM, CC64R_
 
 // --- lvbits = 0, invalid permission set ---
 // Invalid permissions must result in "no permissions".
+// Only C is not a valid set of permissions.
 TEST_CASE_M_AP_COMP_INVALID(LVB_0, 0, CAP_AP_C, 0);
+// M must not be set in Q2
+TEST_CASE_M_AP_COMP_INVALID_MODE(LVB_0, 1, CAP_AP_R | CAP_AP_C, CC64R_AP_Q2 | 3);
+// EL, SL are not used for lvbits == 0, but treated as reseved-one bits -> returns valid result
+TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R | CAP_AP_C | CAP_AP_LM | CAP_AP_EL, CC64R_AP_Q3 | 3);
+TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_EL | CAP_AP_SL, CC64R_AP_Q3 | 7);
+// there is no valid combination with ASR and without X
+TEST_CASE_M_AP_COMP_INVALID(LVB_0, 0, CAP_AP_R | CAP_AP_C | CAP_AP_LM | CAP_AP_ASR, 0);
 
 // --- lvbits = 1, valid permission set ---
 TEST_CASE_M_AP_COMP(LVB_1, 0, 0, CC64R_AP_Q0 | 0)

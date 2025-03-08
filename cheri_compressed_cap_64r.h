@@ -336,10 +336,11 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         case CC64R_PERM_READ | CC64R_PERM_WRITE: res |= 6; break;
         default: valid = false;
         }
+    } else if (permissions & CC64R_PERM_ACCESS_SYS_REGS) {
+        valid = false; // ASR requires execute
     } else if ((permissions & (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) ==
                (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) {
         res |= CC64R_AP_Q3;
-
         switch (permissions & (CC64R_PERM_WRITE | maybe_sl)) {
         // 0-2 are reserved
         case 0: res |= 3; break;
