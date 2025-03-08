@@ -7,23 +7,29 @@
  * is a trivial 1:1 mapping. Some spot checks will do, there's no point in
  * checking all combinations.
  */
-
-/* AP compression */
-constexpr _cc_addr_t INT_MODE_ENCODED = _CC_BIT64(_CC_N(FIELD_AP_SIZE));
-TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R, _CC_BIT64(2))
-
+enum {
+    ENC_C = _CC_BIT64(0),
+    ENC_W = _CC_BIT64(1),
+    ENC_R = _CC_BIT64(2),
+    ENC_X = _CC_BIT64(3),
+    ENC_ASR = _CC_BIT64(4),
+    ENC_LM = _CC_BIT64(5),
+    ENC_EL = _CC_BIT64(6),
+    ENC_SL = _CC_BIT64(7),
+    INT_MODE_ENCODED = _CC_BIT64(_CC_N(FIELD_AP_SIZE)),
+};
+// AP compression
+TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_R, ENC_R)
 TEST_CASE_M_AP_COMP(LVB_0, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR,
-                    INT_MODE_ENCODED | _CC_BIT64(4) | _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0))
-
+                    INT_MODE_ENCODED | ENC_X | ENC_R | ENC_W | ENC_C | ENC_ASR)
+// For lvlbits=0, we don't encode SL or EL
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_SL | CAP_AP_EL,
-                    _CC_BIT64(5) | _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0))
+                    ENC_X | ENC_R | ENC_W | ENC_C | ENC_LM)
 
-/* AP decompression */
-
-TEST_CASE_M_AP_DECOMP(LVB_0,
-                      INT_MODE_ENCODED | _CC_BIT64(4) | _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1) | _CC_BIT64(0), 1,
+// AP decompression
+TEST_CASE_M_AP_DECOMP(LVB_0, INT_MODE_ENCODED | ENC_X | ENC_R | ENC_W | ENC_C | ENC_ASR, 1,
                       CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
-TEST_CASE_M_AP_DECOMP(LVB_0, _CC_BIT64(3) | _CC_BIT64(2) | _CC_BIT64(1), 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
+TEST_CASE_M_AP_DECOMP(LVB_0, ENC_X | ENC_R | ENC_W, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
     auto cap = TestAPICC::make_max_perms_cap(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000);
