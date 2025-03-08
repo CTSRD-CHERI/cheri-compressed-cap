@@ -23,7 +23,9 @@ static void testCompression(unsigned level_bits, _cc_mode mode, _cc_addr_t permi
     // ensure we didn't request unsupported perms:
     const _cc_addr_t supported_permissions = compute_supported_permissions(level_bits);
     REQUIRE((permissions & supported_permissions) == permissions);
+    REQUIRE(level_bits <= 1);
     _cc_cap_t cap = TestAPICC::make_null_derived_cap(0);
+    cap.cr_lvbits = level_bits;
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == 0);
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);
     CHECK(_cc_N(set_permissions)(&cap, permissions));
@@ -39,7 +41,9 @@ static void testDecompression(unsigned level_bits, _cc_addr_t ap_m_encoding, _cc
     // ensure we didn't request unsupported perms:
     const _cc_addr_t supported_permissions = compute_supported_permissions(level_bits);
     REQUIRE((expected_permissions & supported_permissions) == expected_permissions);
+    REQUIRE(level_bits <= 1);
     _cc_cap_t cap = TestAPICC::make_null_derived_cap(0);
+    cap.cr_lvbits = level_bits;
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, AP_M) == 0);
     CHECK(_CC_EXTRACT_FIELD(cap.cr_pesbt, SDP) == 0);
     cap.cr_pesbt = _CC_DEPOSIT_FIELD(cap.cr_pesbt, ap_m_encoding, AP_M);
