@@ -27,7 +27,7 @@ TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C | CAP_AP_R | CAP_AP_W | CAP_AP_LM, CC64R_
 
 // --- lvbits = 0, invalid permission set ---
 // Invalid permissions must result in "no permissions".
-// TODO: TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_C, 0);
+TEST_CASE_M_AP_COMP_INVALID(LVB_0, 0, CAP_AP_C, 0);
 
 // --- lvbits = 1, valid permission set ---
 TEST_CASE_M_AP_COMP(LVB_1, 0, 0, CC64R_AP_Q0 | 0)
