@@ -166,6 +166,7 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #define CC64R_HAS_BASE_TOP_SPECIAL_CASES 1
 #define CC64R_USES_V9_CORRECTION_FACTORS 0
 #define CC64R_USES_LEN_MSB 1
+#define CC64R_MAX_LEVEL_BITS 1 // LVLBITS=2 not supported yet
 
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
@@ -194,7 +195,8 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t res = 0;
 
     // If levels are not supported the encodings with levels are reserved and we return an invalid result.
-    bool levels_supported = false; // TODO: make this configurable
+    unsigned level_bits = cap->cr_lvbits;
+    _cc_api_requirement(level_bits <= _CC_N(MAX_LEVEL_BITS), "Invalid number of level bits");
 
     switch (raw_perms & CC64R_AP_Q_MASK) {
     case CC64R_AP_Q0: // Non-capability data read/write
@@ -248,14 +250,14 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
             break;
         // 4, 5 reserved for LVLBITS>1, we don't support this yet
         case 6: // Data & Cap RW (with store local, no EL-permission)
-            if (levels_supported) {
+            if (level_bits > 0) {
                 res |= CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_STORE_LEVEL;
             } else {
                 res = 0; // reserved encoding if levels are not supported
             }
             break;
         case 7: // Data & Cap RW (no store local, no EL-permission)
-            if (levels_supported) {
+            if (level_bits > 0) {
                 res |= CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE;
             } else {
                 res = 0; // reserved encoding if levels are not supported
@@ -276,7 +278,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
             break;
         // 4, 5 reserved for LVLBITS>1, we don't support this yet
         case 6: // Data & Cap RW (with store local)
-            if (levels_supported) {
+            if (level_bits > 0) {
                 res |= CC64R_PERM_WRITE | CC64R_PERM_STORE_LEVEL;
             } else {
                 res = 0; // reserved encoding if levels are not supported
@@ -293,7 +295,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
         break;
     }
 
-    if (levels_supported) {
+    if (level_bits > 0) {
         if (_CC_EXTRACT_FIELD(cap->cr_pesbt, LEVEL))
             res |= CC64R_PERM_LEVEL;
     } else {
@@ -309,12 +311,14 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
     uint8_t res = 0;
-    bool levels_supported = false;
+    unsigned level_bits = cap->cr_lvbits;
+    _cc_api_requirement(level_bits <= _CC_N(MAX_LEVEL_BITS), "Invalid number of level bits");
     bool valid = true;
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
     // TODO: legalize
-    const _cc_addr_t maybe_el = levels_supported ? CC64R_PERM_ELEVATE_LEVEL : 0;
-    if (!levels_supported) {
+    const _cc_addr_t maybe_el = level_bits > 0 ? CC64R_PERM_ELEVATE_LEVEL : 0;
+    const _cc_addr_t maybe_sl = level_bits > 0 ? CC64R_PERM_STORE_LEVEL : 0;
+    if (level_bits == 0) {
         // Levels extension not supported -> clear the level related permissions
         permissions &= ~(CC64R_PERM_STORE_LEVEL | CC64R_PERM_ELEVATE_LEVEL | CC64R_PERM_LEVEL);
     }
@@ -336,7 +340,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
                (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | CC64R_PERM_LOAD_MUTABLE | maybe_el)) {
         res |= CC64R_AP_Q3;
 
-        switch (permissions & (CC64R_PERM_WRITE | CC64R_PERM_STORE_LEVEL)) {
+        switch (permissions & (CC64R_PERM_WRITE | maybe_sl)) {
         // 0-2 are reserved
         case 0: res |= 3; break;
         // 4, 5 reserved for LVLBITS>1, we don't support this yet
@@ -347,7 +351,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     } else if ((permissions & (CC64R_PERM_READ | CC64R_PERM_CAPABILITY | maybe_el)) ==
                (CC64R_PERM_READ | CC64R_PERM_CAPABILITY)) {
         res |= CC64R_AP_Q2;
-        switch (permissions & (CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | CC64R_PERM_STORE_LEVEL)) {
+        switch (permissions & (CC64R_PERM_WRITE | CC64R_PERM_LOAD_MUTABLE | maybe_sl)) {
         // 0-2 are reserved
         case 0: res |= 3; break;
         // 4, 5 reserved for LVLBITS>1, we don't support this yet
@@ -377,7 +381,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     if (!valid) {
         res = 0; // Exact match not found -> set to no permissions
     }
-    if (levels_supported) {
+    if (level_bits > 0) {
         unsigned new_level = permissions & CC64R_PERM_LEVEL ? 1 : 0;
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_level, LEVEL);
     }
