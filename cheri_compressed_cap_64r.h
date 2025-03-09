@@ -183,7 +183,7 @@ static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) 
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
         _cc_debug_assert(_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));
-        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, MODE);
+        cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, (unsigned)new_mode, MODE);
         return true;
     }
     _cc_debug_assert(!_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)));

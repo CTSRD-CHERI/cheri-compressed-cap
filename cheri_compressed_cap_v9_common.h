@@ -19,6 +19,6 @@ static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
 }
 static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
     // Mode can always be set, unlike RISC-V standard it does not depend on execute permission.
-    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, new_mode, FLAGS);
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, (unsigned)new_mode, FLAGS);
     return true;
 }
