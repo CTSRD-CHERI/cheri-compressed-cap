@@ -22,3 +22,4 @@ static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) 
     cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, (unsigned)new_mode, FLAGS);
     return true;
 }
+enum { _CC_N(PERMS_RESERVED_ONES) = 0 };
