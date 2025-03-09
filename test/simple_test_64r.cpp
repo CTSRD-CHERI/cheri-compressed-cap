@@ -128,7 +128,24 @@ TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 6, 0, CAP_AP_LM | CAP_AP_C | CAP_AP_R
 TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 7, 0, CAP_AP_LM | CAP_AP_C | CAP_AP_R | CAP_AP_W | CAP_AP_EL)
 
 // --- lvbits = 1, invalid encoding ---
-// TODO: add test cases
+
+// invalid in Q0 -> no permissions
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q0 | 2, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q0 | 3, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q0 | 6, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q0 | 7, 0, 0)
+// invalid in Q2 -> no permissions
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q2 | 0, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q2 | 1, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q2 | 2, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q2 | 4, 0, 0) // needs LVLBITS=2
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q2 | 5, 0, 0) // needs LVLBITS=2
+// invalid in Q3 -> no permissions
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 0, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 1, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 2, 0, 0)
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 4, 0, 0) // needs LVLBITS=2
+TEST_CASE_M_AP_DECOMP(LVB_1, CC64R_AP_Q3 | 5, 0, 0) // needs LVLBITS=2
 
 TEST_CASE("bounds encoding, internal exponent, T8 = 1", "[bounds]") {
     /* params are base, cursor, top */
