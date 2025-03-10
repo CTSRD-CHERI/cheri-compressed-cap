@@ -25,11 +25,18 @@ TEST_CASE_M_AP_COMP(LVB_0, 1, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP
 // For lvlbits=0, we don't encode SL or EL
 TEST_CASE_M_AP_COMP(LVB_0, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_SL | CAP_AP_EL,
                     ENC_X | ENC_R | ENC_W | ENC_C | ENC_LM)
+// But we do for lvlbits=1
+TEST_CASE_M_AP_COMP(LVB_1, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_LM | CAP_AP_SL | CAP_AP_EL,
+                    ENC_X | ENC_R | ENC_W | ENC_C | ENC_LM | ENC_SL | ENC_EL)
 
 // AP decompression
 TEST_CASE_M_AP_DECOMP(LVB_0, INT_MODE_ENCODED | ENC_X | ENC_R | ENC_W | ENC_C | ENC_ASR, 1,
                       CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR)
 TEST_CASE_M_AP_DECOMP(LVB_0, ENC_X | ENC_R | ENC_W, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W)
+
+TEST_CASE_M_AP_DECOMP(LVB_1, INT_MODE_ENCODED | ENC_X | ENC_R | ENC_W | ENC_C | ENC_ASR | ENC_SL, 1,
+                      CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_C | CAP_AP_ASR | CAP_AP_SL)
+TEST_CASE_M_AP_DECOMP(LVB_1, ENC_X | ENC_R | ENC_W | ENC_EL, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_EL)
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
     auto cap = TestAPICC::make_max_perms_cap(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000);
