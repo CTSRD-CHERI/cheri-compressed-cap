@@ -180,8 +180,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
         result |= CC128R_PERM_ACCESS_SYS_REGS;
     if (arch_perms & _CC_BIT64(5))
         result |= CC128R_PERM_LOAD_MUTABLE;
-    bool levels_supported = false; // TODO: make this configurable
-    if (levels_supported) {
+    if (cap->cr_lvbits > 0) {
         if (arch_perms & _CC_BIT64(6))
             result |= CC128R_PERM_ELEVATE_LEVEL;
         if (arch_perms & _CC_BIT64(7))
@@ -199,7 +198,6 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
-    bool levels_supported = false; // TODO: make this configurable
     // TODO: legalize permissions or reject invalid requests
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
     // See "Encoding of architectural permissions for MXLEN=64" in the spec
@@ -216,7 +214,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         result |= _CC_BIT64(4);
     if (permissions & CC128R_PERM_LOAD_MUTABLE)
         result |= _CC_BIT64(5);
-    if (levels_supported) {
+    if (cap->cr_lvbits > 0) {
         if (permissions & CC128R_PERM_ELEVATE_LEVEL)
             result |= _CC_BIT64(6);
         if (permissions & CC128R_PERM_STORE_LEVEL)
