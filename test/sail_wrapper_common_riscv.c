@@ -34,8 +34,8 @@
 
 #define SAIL_INFINITE_CAP zinfinite_cap
 #define sail_bounds_tuple zoptionzIz8bzCbz9zK
-#define sail_bounds_tuple_base(t) (t).zSomezIz8bzCbz9zK.ztup0
-#define sail_bounds_tuple_top(t) (t).zSomezIz8bzCbz9zK.ztup1
+#define sail_bounds_tuple_base(t) (t).variants.zSomezIz8bzCbz9zK.ztup0
+#define sail_bounds_tuple_top(t) (t).variants.zSomezIz8bzCbz9zK.ztup1
 
 #include "sail_wrapper_common.c"
 
