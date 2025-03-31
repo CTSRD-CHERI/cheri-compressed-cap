@@ -1,10 +1,14 @@
 #include "sail.h"
+#include "sail_config.h"
 #include "rts.h"
 #include "elf.h"
-void (*sail_rts_set_coverage_file)(const char *) = NULL;
 #ifdef __cplusplus
 extern "C" {
 #endif
+void (*sail_rts_set_coverage_file)(const char *) = NULL;
+
+// type abbreviation xlenbits
+typedef uint64_t zxlenbits;
 
 // union option<o>
 enum kind_zoptionzIozK { Kind_zNonezIozK, Kind_zSomezIozK };
@@ -14,7 +18,7 @@ struct zoptionzIozK {
   union {
     struct { unit zNonezIozK; };
     struct { bool zSomezIozK; };
-  };
+  } variants;
 };
 
 static void CREATE(zoptionzIozK)(struct zoptionzIozK *op) {
@@ -33,30 +37,30 @@ static void COPY(zoptionzIozK)(struct zoptionzIozK *rop, struct zoptionzIozK op)
   {};
   rop->kind = op.kind;
   if (op.kind == Kind_zNonezIozK) {
-    rop->zNonezIozK = op.zNonezIozK;
+    rop->variants.zNonezIozK = op.variants.zNonezIozK;
   } else if (op.kind == Kind_zSomezIozK) {
-    rop->zSomezIozK = op.zSomezIozK;
+    rop->variants.zSomezIozK = op.variants.zSomezIozK;
   }
 }
 
 static bool EQUAL(zoptionzIozK)(struct zoptionzIozK op1, struct zoptionzIozK op2) {
   if (op1.kind == Kind_zNonezIozK && op2.kind == Kind_zNonezIozK) {
-    return EQUAL(unit)(op1.zNonezIozK, op2.zNonezIozK);
+    return EQUAL(unit)(op1.variants.zNonezIozK, op2.variants.zNonezIozK);
   } else if (op1.kind == Kind_zSomezIozK && op2.kind == Kind_zSomezIozK) {
-    return EQUAL(bool)(op1.zSomezIozK, op2.zSomezIozK);
+    return EQUAL(bool)(op1.variants.zSomezIozK, op2.variants.zSomezIozK);
   } else return false;
 }
 
 static void sailgen_NonezIozK(struct zoptionzIozK *rop, unit op) {
   {}
   rop->kind = Kind_zNonezIozK;
-  rop->zNonezIozK = op;
+  rop->variants.zNonezIozK = op;
 }
 
 static void sailgen_SomezIozK(struct zoptionzIozK *rop, bool op) {
   {}
   rop->kind = Kind_zSomezIozK;
-  rop->zSomezIozK = op;
+  rop->variants.zSomezIozK = op;
 }
 
 // struct tuple_(%i, %i)
@@ -97,7 +101,7 @@ struct zoptionzIz8izCiz9zK {
   union {
     struct { unit zNonezIz8izCiz9zK; };
     struct { struct ztuple_z8z5izCz0z5iz9 zSomezIz8izCiz9zK; };
-  };
+  } variants;
 };
 
 static void CREATE(zoptionzIz8izCiz9zK)(struct zoptionzIz8izCiz9zK *op) {
@@ -110,45 +114,45 @@ static void RECREATE(zoptionzIz8izCiz9zK)(struct zoptionzIz8izCiz9zK *op) {
 
 static void KILL(zoptionzIz8izCiz9zK)(struct zoptionzIz8izCiz9zK *op) {
   if (op->kind == Kind_zSomezIz8izCiz9zK) {
-    KILL(ztuple_z8z5izCz0z5iz9)(&op->zSomezIz8izCiz9zK);
+    KILL(ztuple_z8z5izCz0z5iz9)(&op->variants.zSomezIz8izCiz9zK);
   }
 }
 
 static void COPY(zoptionzIz8izCiz9zK)(struct zoptionzIz8izCiz9zK *rop, struct zoptionzIz8izCiz9zK op) {
   if (rop->kind == Kind_zSomezIz8izCiz9zK) {
-    KILL(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK);
+    KILL(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK);
   };
   rop->kind = op.kind;
   if (op.kind == Kind_zNonezIz8izCiz9zK) {
-    rop->zNonezIz8izCiz9zK = op.zNonezIz8izCiz9zK;
+    rop->variants.zNonezIz8izCiz9zK = op.variants.zNonezIz8izCiz9zK;
   } else if (op.kind == Kind_zSomezIz8izCiz9zK) {
-    CREATE(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK); COPY(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK, op.zSomezIz8izCiz9zK);
+    CREATE(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK); COPY(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK, op.variants.zSomezIz8izCiz9zK);
   }
 }
 
 static bool EQUAL(zoptionzIz8izCiz9zK)(struct zoptionzIz8izCiz9zK op1, struct zoptionzIz8izCiz9zK op2) {
   if (op1.kind == Kind_zNonezIz8izCiz9zK && op2.kind == Kind_zNonezIz8izCiz9zK) {
-    return EQUAL(unit)(op1.zNonezIz8izCiz9zK, op2.zNonezIz8izCiz9zK);
+    return EQUAL(unit)(op1.variants.zNonezIz8izCiz9zK, op2.variants.zNonezIz8izCiz9zK);
   } else if (op1.kind == Kind_zSomezIz8izCiz9zK && op2.kind == Kind_zSomezIz8izCiz9zK) {
-    return EQUAL(ztuple_z8z5izCz0z5iz9)(op1.zSomezIz8izCiz9zK, op2.zSomezIz8izCiz9zK);
+    return EQUAL(ztuple_z8z5izCz0z5iz9)(op1.variants.zSomezIz8izCiz9zK, op2.variants.zSomezIz8izCiz9zK);
   } else return false;
 }
 
 static void sailgen_NonezIz8izCiz9zK(struct zoptionzIz8izCiz9zK *rop, unit op) {
   if (rop->kind == Kind_zSomezIz8izCiz9zK) {
-    KILL(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK);
+    KILL(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK);
   }
   rop->kind = Kind_zNonezIz8izCiz9zK;
-  rop->zNonezIz8izCiz9zK = op;
+  rop->variants.zNonezIz8izCiz9zK = op;
 }
 
 static void sailgen_SomezIz8izCiz9zK(struct zoptionzIz8izCiz9zK *rop, struct ztuple_z8z5izCz0z5iz9 op) {
   if (rop->kind == Kind_zSomezIz8izCiz9zK) {
-    KILL(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK);
+    KILL(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK);
   }
   rop->kind = Kind_zSomezIz8izCiz9zK;
-  CREATE(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK);
-  COPY(ztuple_z8z5izCz0z5iz9)(&rop->zSomezIz8izCiz9zK, op);
+  CREATE(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK);
+  COPY(ztuple_z8z5izCz0z5iz9)(&rop->variants.zSomezIz8izCiz9zK, op);
 }
 
 // struct tuple_(%bv, %bv)
@@ -189,7 +193,7 @@ struct zoptionzIz8bzCbz9zK {
   union {
     struct { unit zNonezIz8bzCbz9zK; };
     struct { struct ztuple_z8z5bvzCz0z5bvz9 zSomezIz8bzCbz9zK; };
-  };
+  } variants;
 };
 
 static void CREATE(zoptionzIz8bzCbz9zK)(struct zoptionzIz8bzCbz9zK *op) {
@@ -202,45 +206,45 @@ static void RECREATE(zoptionzIz8bzCbz9zK)(struct zoptionzIz8bzCbz9zK *op) {
 
 static void KILL(zoptionzIz8bzCbz9zK)(struct zoptionzIz8bzCbz9zK *op) {
   if (op->kind == Kind_zSomezIz8bzCbz9zK) {
-    KILL(ztuple_z8z5bvzCz0z5bvz9)(&op->zSomezIz8bzCbz9zK);
+    KILL(ztuple_z8z5bvzCz0z5bvz9)(&op->variants.zSomezIz8bzCbz9zK);
   }
 }
 
 static void COPY(zoptionzIz8bzCbz9zK)(struct zoptionzIz8bzCbz9zK *rop, struct zoptionzIz8bzCbz9zK op) {
   if (rop->kind == Kind_zSomezIz8bzCbz9zK) {
-    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK);
+    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK);
   };
   rop->kind = op.kind;
   if (op.kind == Kind_zNonezIz8bzCbz9zK) {
-    rop->zNonezIz8bzCbz9zK = op.zNonezIz8bzCbz9zK;
+    rop->variants.zNonezIz8bzCbz9zK = op.variants.zNonezIz8bzCbz9zK;
   } else if (op.kind == Kind_zSomezIz8bzCbz9zK) {
-    CREATE(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK); COPY(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK, op.zSomezIz8bzCbz9zK);
+    CREATE(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK); COPY(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK, op.variants.zSomezIz8bzCbz9zK);
   }
 }
 
 static bool EQUAL(zoptionzIz8bzCbz9zK)(struct zoptionzIz8bzCbz9zK op1, struct zoptionzIz8bzCbz9zK op2) {
   if (op1.kind == Kind_zNonezIz8bzCbz9zK && op2.kind == Kind_zNonezIz8bzCbz9zK) {
-    return EQUAL(unit)(op1.zNonezIz8bzCbz9zK, op2.zNonezIz8bzCbz9zK);
+    return EQUAL(unit)(op1.variants.zNonezIz8bzCbz9zK, op2.variants.zNonezIz8bzCbz9zK);
   } else if (op1.kind == Kind_zSomezIz8bzCbz9zK && op2.kind == Kind_zSomezIz8bzCbz9zK) {
-    return EQUAL(ztuple_z8z5bvzCz0z5bvz9)(op1.zSomezIz8bzCbz9zK, op2.zSomezIz8bzCbz9zK);
+    return EQUAL(ztuple_z8z5bvzCz0z5bvz9)(op1.variants.zSomezIz8bzCbz9zK, op2.variants.zSomezIz8bzCbz9zK);
   } else return false;
 }
 
 static void sailgen_NonezIz8bzCbz9zK(struct zoptionzIz8bzCbz9zK *rop, unit op) {
   if (rop->kind == Kind_zSomezIz8bzCbz9zK) {
-    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK);
+    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK);
   }
   rop->kind = Kind_zNonezIz8bzCbz9zK;
-  rop->zNonezIz8bzCbz9zK = op;
+  rop->variants.zNonezIz8bzCbz9zK = op;
 }
 
 static void sailgen_SomezIz8bzCbz9zK(struct zoptionzIz8bzCbz9zK *rop, struct ztuple_z8z5bvzCz0z5bvz9 op) {
   if (rop->kind == Kind_zSomezIz8bzCbz9zK) {
-    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK);
+    KILL(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK);
   }
   rop->kind = Kind_zSomezIz8bzCbz9zK;
-  CREATE(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK);
-  COPY(ztuple_z8z5bvzCz0z5bvz9)(&rop->zSomezIz8bzCbz9zK, op);
+  CREATE(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK);
+  COPY(ztuple_z8z5bvzCz0z5bvz9)(&rop->variants.zSomezIz8bzCbz9zK, op);
 }
 
 // union exception
@@ -248,7 +252,7 @@ enum kind_zexception { Kind_z__dummy_exnz3 };
 
 struct zexception {
   enum kind_zexception kind;
-  union {struct { unit z__dummy_exnz3; };};
+  union {struct { unit z__dummy_exnz3; };} variants;
 };
 
 static void CREATE(zexception)(struct zexception *op) {
@@ -267,24 +271,26 @@ static void COPY(zexception)(struct zexception *rop, struct zexception op) {
   {};
   rop->kind = op.kind;
   if (op.kind == Kind_z__dummy_exnz3) {
-    rop->z__dummy_exnz3 = op.z__dummy_exnz3;
+    rop->variants.z__dummy_exnz3 = op.variants.z__dummy_exnz3;
   }
 }
 
 static bool EQUAL(zexception)(struct zexception op1, struct zexception op2) {
   if (op1.kind == Kind_z__dummy_exnz3 && op2.kind == Kind_z__dummy_exnz3) {
-    return EQUAL(unit)(op1.z__dummy_exnz3, op2.z__dummy_exnz3);
+    return EQUAL(unit)(op1.variants.z__dummy_exnz3, op2.variants.z__dummy_exnz3);
   } else return false;
 }
 
 static void sailgen___dummy_exnz3(struct zexception *rop, unit op) {
   {}
   rop->kind = Kind_z__dummy_exnz3;
-  rop->z__dummy_exnz3 = op;
+  rop->variants.z__dummy_exnz3 = op;
 }
 
 struct zexception *current_exception = NULL;
+
 bool have_exception = false;
+
 sail_string *throw_location = NULL;
 
 // enum ExecutionMode
@@ -349,6 +355,15 @@ static bool EQUAL(zCapability)(struct zCapability op1, struct zCapability op2) {
   return EQUAL(fbits)(op1.zB, op2.zB) && EQUAL(mach_int)(op1.zE, op2.zE) && EQUAL(fbits)(op1.zT, op2.zT) && EQUAL(fbits)(op1.zaddress, op2.zaddress) && EQUAL(fbits)(op1.zap_m, op2.zap_m) && EQUAL(bool)(op1.zinternal_exponent, op2.zinternal_exponent) && EQUAL(fbits)(op1.zreserved_0, op2.zreserved_0) && EQUAL(fbits)(op1.zreserved_1, op2.zreserved_1) && EQUAL(fbits)(op1.zsd_perms, op2.zsd_perms) && EQUAL(bool)(op1.zsealed, op2.zsealed) && EQUAL(bool)(op1.ztag, op2.ztag);
 }
 
+// type abbreviation CapLenInt
+typedef sail_int zCapLenInt;
+
+// type abbreviation CapLenBits
+typedef lbits zCapLenBits;
+
+// type abbreviation CapExponent
+typedef int64_t zCapExponent;
+
 // enum CapEx
 enum zCapEx { zCapEx_TagViolation, zCapEx_SealViolation, zCapEx_PermissionViolation, zCapEx_InvalidAddressViolation, zCapEx_LengthViolation };
 
@@ -366,6 +381,12 @@ static bool EQUAL(zCapCheckType)(enum zCapCheckType op1, enum zCapCheckType op2)
 }
 
 static enum zCapCheckType UNDEFINED(zCapCheckType)(unit u) { return zCapCheckType_Inst; }
+
+// type abbreviation CapBits
+typedef lbits zCapBits;
+
+// type abbreviation CapAddrBits
+typedef uint64_t zCapAddrBits;
 
 // enum CPtrCmpOp
 enum zCPtrCmpOp { zCEQ, zCNE, zCLT, zCLE, zCLTU, zCLEU, zCEXEQ, zCNEXEQ };
@@ -407,7 +428,7 @@ struct zoptionzIRArchPermszK {
   union {
     struct { unit zNonezIRArchPermszK; };
     struct { struct zArchPerms zSomezIRArchPermszK; };
-  };
+  } variants;
 };
 
 static void CREATE(zoptionzIRArchPermszK)(struct zoptionzIRArchPermszK *op) {
@@ -426,30 +447,30 @@ static void COPY(zoptionzIRArchPermszK)(struct zoptionzIRArchPermszK *rop, struc
   {};
   rop->kind = op.kind;
   if (op.kind == Kind_zNonezIRArchPermszK) {
-    rop->zNonezIRArchPermszK = op.zNonezIRArchPermszK;
+    rop->variants.zNonezIRArchPermszK = op.variants.zNonezIRArchPermszK;
   } else if (op.kind == Kind_zSomezIRArchPermszK) {
-    rop->zSomezIRArchPermszK = op.zSomezIRArchPermszK;
+    rop->variants.zSomezIRArchPermszK = op.variants.zSomezIRArchPermszK;
   }
 }
 
 static bool EQUAL(zoptionzIRArchPermszK)(struct zoptionzIRArchPermszK op1, struct zoptionzIRArchPermszK op2) {
   if (op1.kind == Kind_zNonezIRArchPermszK && op2.kind == Kind_zNonezIRArchPermszK) {
-    return EQUAL(unit)(op1.zNonezIRArchPermszK, op2.zNonezIRArchPermszK);
+    return EQUAL(unit)(op1.variants.zNonezIRArchPermszK, op2.variants.zNonezIRArchPermszK);
   } else if (op1.kind == Kind_zSomezIRArchPermszK && op2.kind == Kind_zSomezIRArchPermszK) {
-    return EQUAL(zArchPerms)(op1.zSomezIRArchPermszK, op2.zSomezIRArchPermszK);
+    return EQUAL(zArchPerms)(op1.variants.zSomezIRArchPermszK, op2.variants.zSomezIRArchPermszK);
   } else return false;
 }
 
 static void sailgen_NonezIRArchPermszK(struct zoptionzIRArchPermszK *rop, unit op) {
   {}
   rop->kind = Kind_zNonezIRArchPermszK;
-  rop->zNonezIRArchPermszK = op;
+  rop->variants.zNonezIRArchPermszK = op;
 }
 
 static void sailgen_SomezIRArchPermszK(struct zoptionzIRArchPermszK *rop, struct zArchPerms op) {
   {}
   rop->kind = Kind_zSomezIRArchPermszK;
-  rop->zSomezIRArchPermszK = op;
+  rop->variants.zSomezIRArchPermszK = op;
 }
 
 // struct tuple_(%struct zArchPerms, %enum zExecutionMode)
@@ -475,7 +496,7 @@ struct zoptionzIz8RArchPermszCEExecutionModez5z9zK {
   union {
     struct { unit zNonezIz8RArchPermszCEExecutionModez5z9zK; };
     struct { struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 zSomezIz8RArchPermszCEExecutionModez5z9zK; };
-  };
+  } variants;
 };
 
 static void CREATE(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK *op) {
@@ -494,75 +515,31 @@ static void COPY(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(struct zoptionzIz8
   {};
   rop->kind = op.kind;
   if (op.kind == Kind_zNonezIz8RArchPermszCEExecutionModez5z9zK) {
-    rop->zNonezIz8RArchPermszCEExecutionModez5z9zK = op.zNonezIz8RArchPermszCEExecutionModez5z9zK;
+    rop->variants.zNonezIz8RArchPermszCEExecutionModez5z9zK = op.variants.zNonezIz8RArchPermszCEExecutionModez5z9zK;
   } else if (op.kind == Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK) {
-    rop->zSomezIz8RArchPermszCEExecutionModez5z9zK = op.zSomezIz8RArchPermszCEExecutionModez5z9zK;
+    rop->variants.zSomezIz8RArchPermszCEExecutionModez5z9zK = op.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK;
   }
 }
 
 static bool EQUAL(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK op1, struct zoptionzIz8RArchPermszCEExecutionModez5z9zK op2) {
   if (op1.kind == Kind_zNonezIz8RArchPermszCEExecutionModez5z9zK && op2.kind == Kind_zNonezIz8RArchPermszCEExecutionModez5z9zK) {
-    return EQUAL(unit)(op1.zNonezIz8RArchPermszCEExecutionModez5z9zK, op2.zNonezIz8RArchPermszCEExecutionModez5z9zK);
+    return EQUAL(unit)(op1.variants.zNonezIz8RArchPermszCEExecutionModez5z9zK, op2.variants.zNonezIz8RArchPermszCEExecutionModez5z9zK);
   } else if (op1.kind == Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK && op2.kind == Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK) {
-    return EQUAL(ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9)(op1.zSomezIz8RArchPermszCEExecutionModez5z9zK, op2.zSomezIz8RArchPermszCEExecutionModez5z9zK);
+    return EQUAL(ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9)(op1.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK, op2.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK);
   } else return false;
 }
 
 static void sailgen_NonezIz8RArchPermszCEExecutionModez5z9zK(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK *rop, unit op) {
   {}
   rop->kind = Kind_zNonezIz8RArchPermszCEExecutionModez5z9zK;
-  rop->zNonezIz8RArchPermszCEExecutionModez5z9zK = op;
+  rop->variants.zNonezIz8RArchPermszCEExecutionModez5z9zK = op;
 }
 
 static void sailgen_SomezIz8RArchPermszCEExecutionModez5z9zK(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK *rop, struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 op) {
   {}
   rop->kind = Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK;
-  rop->zSomezIz8RArchPermszCEExecutionModez5z9zK = op;
+  rop->variants.zSomezIz8RArchPermszCEExecutionModez5z9zK = op;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 static bool sailgen_neq_int(sail_int, sail_int);
 
@@ -574,37 +551,12 @@ static bool sailgen_neq_int(sail_int zx, sail_int zy)
   bool zgaz30;
   zgaz30 = eq_int(zx, zy);
   zcbz30 = not(zgaz30);
-
 end_function_1: ;
   return zcbz30;
 end_block_exception_2: ;
 
   return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 static bool sailgen_neq_bits(lbits zx, lbits zy)
 {
@@ -614,41 +566,12 @@ static bool sailgen_neq_bits(lbits zx, lbits zy)
   bool zgaz31;
   zgaz31 = eq_bits(zx, zy);
   zcbz31 = not(zgaz31);
-
 end_function_4: ;
   return zcbz31;
 end_block_exception_5: ;
 
   return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 static void sailgen_sail_ones(lbits *rop, sail_int);
 
@@ -678,14 +601,6 @@ static void finish_sailgen_sail_ones(void)
 {    KILL(lbits)(&zghz30);
 }
 
-
-
-
-
-
-
-
-
 static bool sailgen_neq_anythingzItzK(fbits, fbits);
 
 static bool sailgen_neq_anythingzItzK(fbits zx, fbits zy)
@@ -694,9 +609,8 @@ static bool sailgen_neq_anythingzItzK(fbits zx, fbits zy)
 
   bool zcbz33;
   bool zgaz33;
-  zgaz33 = eq_fbits(zx, zy);
+  zgaz33 = eq_fbits(zy, zx);
   zcbz33 = not(zgaz33);
-
 end_function_10: ;
   return zcbz33;
 end_block_exception_11: ;
@@ -714,15 +628,12 @@ static fbits sailgen_not_bit(fbits zb)
   bool zgaz34;
   zgaz34 = eq_bit(zb, UINT64_C(1));
   if (zgaz34) {  zcbz34 = UINT64_C(0);  } else {  zcbz34 = UINT64_C(1);  }
-
 end_function_13: ;
   return zcbz34;
 end_block_exception_14: ;
 
   return UINT64_C(0);
 }
-
-
 
 static bool sailgen_not(bool zb)
 {
@@ -736,8 +647,6 @@ end_block_exception_17: ;
 
   return false;
 }
-
-
 
 static void sailgen_zzero_extend(lbits *rop, sail_int, lbits);
 
@@ -797,10 +706,7 @@ static uint64_t sailgen_bool_bits_forwards(bool zargz3)
     zp0z3 = zargz3;
     bool zgsz32;
     zgsz32 = eq_bool(zp0z3, true);
-    if (!(zgsz32)) {
-
-      goto case_30;
-    }
+    if (!(zgsz32)) {  goto case_30;  }
     zcbz39 = UINT64_C(0b1);
     goto finish_match_28;
   }
@@ -810,10 +716,7 @@ case_30: ;
     zuz30 = zargz3;
     bool zgsz31;
     zgsz31 = eq_bool(zuz30, false);
-    if (!(zgsz31)) {
-
-      goto case_29;
-    }
+    if (!(zgsz31)) {  goto case_29;  }
     zcbz39 = UINT64_C(0b0);
     goto finish_match_28;
   }
@@ -838,10 +741,7 @@ static uint64_t sailgen_bool_bits_forwards_infallible(bool zargz3)
     zp0z3 = zargz3;
     bool zgsz35;
     zgsz35 = eq_bool(zp0z3, true);
-    if (!(zgsz35)) {
-
-      goto case_35;
-    }
+    if (!(zgsz35)) {  goto case_35;  }
     zcbz310 = UINT64_C(0b1);
     goto finish_match_33;
   }
@@ -851,10 +751,7 @@ case_35: ;
     zuz31 = zargz3;
     bool zgsz34;
     zgsz34 = eq_bool(zuz31, false);
-    if (!(zgsz34)) {
-
-      goto case_34;
-    }
+    if (!(zgsz34)) {  goto case_34;  }
     zcbz310 = UINT64_C(0b0);
     goto finish_match_33;
   }
@@ -877,10 +774,7 @@ static bool sailgen_bool_bits_backwards(uint64_t zargz3)
     zb__0 = zargz3;
     bool zgsz38;
     zgsz38 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz38)) {
-
-      goto case_41;
-    }
+    if (!(zgsz38)) {  goto case_41;  }
     zcbz311 = true;
     goto finish_match_39;
   }
@@ -910,10 +804,7 @@ static bool sailgen_bool_bits_backwards_infallible(uint64_t zargz3)
     zb__0 = zargz3;
     bool zgsz311;
     zgsz311 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz311)) {
-
-      goto case_46;
-    }
+    if (!(zgsz311)) {  goto case_46;  }
     zcbz312 = true;
     goto finish_match_44;
   }
@@ -941,10 +832,7 @@ static bool sailgen_bool_bits_backwards_matches(uint64_t zargz3)
     zb__0 = zargz3;
     bool zgsz315;
     zgsz315 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz315)) {
-
-      goto case_53;
-    }
+    if (!(zgsz315)) {  goto case_53;  }
     zcbz313 = true;
     goto finish_match_50;
   }
@@ -954,10 +842,7 @@ case_53: ;
     zb__1 = zargz3;
     bool zgsz314;
     zgsz314 = (zb__1 == UINT64_C(0b0));
-    if (!(zgsz314)) {
-
-      goto case_52;
-    }
+    if (!(zgsz314)) {  goto case_52;  }
     zcbz313 = true;
     goto finish_match_50;
   }
@@ -1077,8 +962,6 @@ static void finish_sailgen_z8operatorz0zK_uz9(void)
   KILL(sail_int)(&zghz34);
 }
 
-
-
 static int64_t zlog2_xlen_bytes;
 static void create_letbind_0(void) {
 
@@ -1086,7 +969,6 @@ static void create_letbind_0(void) {
   int64_t zgsz316;
   zgsz316 = INT64_C(3);
   zlog2_xlen_bytes = zgsz316;
-
 let_end_65: ;
 }
 static void kill_letbind_0(void) {
@@ -1099,7 +981,6 @@ static void create_letbind_1(void) {
   int64_t zgsz317;
   zgsz317 = INT64_C(8);
   zflen_bytes = zgsz317;
-
 let_end_66: ;
 }
 static void kill_letbind_1(void) {
@@ -1112,7 +993,6 @@ static void create_letbind_2(void) {
   int64_t zgsz318;
   zgsz318 = INT64_C(64);
   zflen = zgsz318;
-
 let_end_67: ;
 }
 static void kill_letbind_2(void) {
@@ -1125,7 +1005,6 @@ static void create_letbind_3(void) {
   int64_t zgsz319;
   zgsz319 = INT64_C(8);
   zxlen_bytes = zgsz319;
-
 let_end_68: ;
 }
 static void kill_letbind_3(void) {
@@ -1138,7 +1017,6 @@ static void create_letbind_4(void) {
   int64_t zgsz320;
   zgsz320 = INT64_C(64);
   zxlen = zgsz320;
-
 let_end_69: ;
 }
 static void kill_letbind_4(void) {
@@ -1180,8 +1058,6 @@ static void finish_sailgen_MAX(void)
   KILL(sail_int)(&zghz37);
   KILL(sail_int)(&zghz36);
 }
-
-
 
 static uint64_t sailgen_execution_mode_encdec_forwards(enum zExecutionMode);
 
@@ -1251,10 +1127,7 @@ static enum zExecutionMode sailgen_execution_mode_encdec_backwards(uint64_t zarg
     zb__0 = zargz3;
     bool zgsz329;
     zgsz329 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz329)) {
-
-      goto case_87;
-    }
+    if (!(zgsz329)) {  goto case_87;  }
     zcbz320 = zIntPtrMode;
     goto finish_match_85;
   }
@@ -1284,10 +1157,7 @@ static enum zExecutionMode sailgen_execution_mode_encdec_backwards_infallible(ui
     zb__0 = zargz3;
     bool zgsz332;
     zgsz332 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz332)) {
-
-      goto case_92;
-    }
+    if (!(zgsz332)) {  goto case_92;  }
     zcbz321 = zIntPtrMode;
     goto finish_match_90;
   }
@@ -1315,10 +1185,7 @@ static bool sailgen_execution_mode_encdec_backwards_matches(uint64_t zargz3)
     zb__0 = zargz3;
     bool zgsz336;
     zgsz336 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz336)) {
-
-      goto case_99;
-    }
+    if (!(zgsz336)) {  goto case_99;  }
     zcbz322 = true;
     goto finish_match_96;
   }
@@ -1328,10 +1195,7 @@ case_99: ;
     zb__1 = zargz3;
     bool zgsz335;
     zgsz335 = (zb__1 == UINT64_C(0b0));
-    if (!(zgsz335)) {
-
-      goto case_98;
-    }
+    if (!(zgsz335)) {  goto case_98;  }
     zcbz322 = true;
     goto finish_match_96;
   }
@@ -1362,9 +1226,7 @@ static void create_letbind_5(void) {
   zgsz337.zW = false;
   zgsz337.zX = false;
   zgsz338 = zgsz337;
-
   znull_perms = zgsz338;
-
 let_end_102: ;
 }
 static void kill_letbind_5(void) {
@@ -1377,7 +1239,6 @@ static void create_letbind_6(void) {
   int64_t zgsz339;
   zgsz339 = INT64_C(4);
   zlog2_cap_sizze = zgsz339;
-
 let_end_103: ;
 }
 static void kill_letbind_6(void) {
@@ -1390,7 +1251,6 @@ static void create_letbind_7(void) {
   int64_t zgsz340;
   zgsz340 = INT64_C(4);
   zcap_sd_perms_width = zgsz340;
-
 let_end_104: ;
 }
 static void kill_letbind_7(void) {
@@ -1403,7 +1263,6 @@ static void create_letbind_8(void) {
   int64_t zgsz341;
   zgsz341 = INT64_C(7);
   zcap_reserved_1_width = zgsz341;
-
 let_end_105: ;
 }
 static void kill_letbind_8(void) {
@@ -1416,7 +1275,6 @@ static void create_letbind_9(void) {
   int64_t zgsz342;
   zgsz342 = INT64_C(16);
   zcap_reserved_0_width = zgsz342;
-
 let_end_106: ;
 }
 static void kill_letbind_9(void) {
@@ -1429,7 +1287,6 @@ static void create_letbind_10(void) {
   int64_t zgsz343;
   zgsz343 = INT64_C(14);
   zcap_mantissa_width = zgsz343;
-
 let_end_107: ;
 }
 static void kill_letbind_10(void) {
@@ -1442,7 +1299,6 @@ static void create_letbind_11(void) {
   int64_t zgsz344;
   zgsz344 = INT64_C(6);
   zcap_E_width = zgsz344;
-
 let_end_108: ;
 }
 static void kill_letbind_11(void) {
@@ -1455,7 +1311,6 @@ static void create_letbind_12(void) {
   int64_t zgsz345;
   zgsz345 = INT64_C(9);
   zcap_AP_M_width = zgsz345;
-
 let_end_109: ;
 }
 static void kill_letbind_12(void) {
@@ -1468,7 +1323,6 @@ static void create_letbind_13(void) {
   bool zgsz346;
   zgsz346 = false;
   zcap_use_L8 = zgsz346;
-
 let_end_110: ;
 }
 static void kill_letbind_13(void) {
@@ -1511,7 +1365,6 @@ static uint64_t sailgen__get_EncMetadata_AP_M(struct zEncMetadata zv)
   uint64_t zgaz310;
   zgaz310 = zv.zbits;
   zcbz324 = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz310 >> INT64_C(44)));
-
 end_function_115: ;
   return zcbz324;
 end_block_exception_116: ;
@@ -1563,7 +1416,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_AP_M(struct zEncMetadata 
   }
   zghz39 = zv;
   zghz39.zbits = zgaz312;
-
 end_function_118: ;
   return zghz39;
 end_block_exception_119: ;
@@ -1580,7 +1432,6 @@ static void finish_sailgen__update_EncMetadata_AP_M(void)
   KILL(sail_int)(&zghz312);
   KILL(sail_int)(&zghz311);
   KILL(lbits)(&zghz310);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_BE(struct zEncMetadata);
@@ -1593,7 +1444,6 @@ static uint64_t sailgen__get_EncMetadata_BE(struct zEncMetadata zv)
   uint64_t zgaz313;
   zgaz313 = zv.zbits;
   zcbz326 = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz313 >> INT64_C(0)));
-
 end_function_121: ;
   return zcbz326;
 end_block_exception_122: ;
@@ -1645,7 +1495,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_BE(struct zEncMetadata zv
   }
   zghz315 = zv;
   zghz315.zbits = zgaz315;
-
 end_function_124: ;
   return zghz315;
 end_block_exception_125: ;
@@ -1662,7 +1511,6 @@ static void finish_sailgen__update_EncMetadata_BE(void)
   KILL(sail_int)(&zghz318);
   KILL(sail_int)(&zghz317);
   KILL(lbits)(&zghz316);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_Bm(struct zEncMetadata);
@@ -1675,7 +1523,6 @@ static uint64_t sailgen__get_EncMetadata_Bm(struct zEncMetadata zv)
   uint64_t zgaz316;
   zgaz316 = zv.zbits;
   zcbz328 = (safe_rshift(UINT64_MAX, 64 - 11) & (zgaz316 >> INT64_C(3)));
-
 end_function_127: ;
   return zcbz328;
 end_block_exception_128: ;
@@ -1727,7 +1574,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_Bm(struct zEncMetadata zv
   }
   zghz321 = zv;
   zghz321.zbits = zgaz318;
-
 end_function_130: ;
   return zghz321;
 end_block_exception_131: ;
@@ -1744,7 +1590,6 @@ static void finish_sailgen__update_EncMetadata_Bm(void)
   KILL(sail_int)(&zghz324);
   KILL(sail_int)(&zghz323);
   KILL(lbits)(&zghz322);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_CT(struct zEncMetadata);
@@ -1757,7 +1602,6 @@ static uint64_t sailgen__get_EncMetadata_CT(struct zEncMetadata zv)
   uint64_t zgaz319;
   zgaz319 = zv.zbits;
   zcbz330 = (safe_rshift(UINT64_MAX, 64 - 1) & (zgaz319 >> INT64_C(27)));
-
 end_function_133: ;
   return zcbz330;
 end_block_exception_134: ;
@@ -1809,7 +1653,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_CT(struct zEncMetadata zv
   }
   zghz327 = zv;
   zghz327.zbits = zgaz321;
-
 end_function_136: ;
   return zghz327;
 end_block_exception_137: ;
@@ -1826,7 +1669,6 @@ static void finish_sailgen__update_EncMetadata_CT(void)
   KILL(sail_int)(&zghz330);
   KILL(sail_int)(&zghz329);
   KILL(lbits)(&zghz328);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_EF(struct zEncMetadata);
@@ -1839,7 +1681,6 @@ static uint64_t sailgen__get_EncMetadata_EF(struct zEncMetadata zv)
   uint64_t zgaz322;
   zgaz322 = zv.zbits;
   zcbz332 = (safe_rshift(UINT64_MAX, 64 - 1) & (zgaz322 >> INT64_C(26)));
-
 end_function_139: ;
   return zcbz332;
 end_block_exception_140: ;
@@ -1891,7 +1732,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_EF(struct zEncMetadata zv
   }
   zghz333 = zv;
   zghz333.zbits = zgaz324;
-
 end_function_142: ;
   return zghz333;
 end_block_exception_143: ;
@@ -1908,7 +1748,6 @@ static void finish_sailgen__update_EncMetadata_EF(void)
   KILL(sail_int)(&zghz336);
   KILL(sail_int)(&zghz335);
   KILL(lbits)(&zghz334);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_SDP(struct zEncMetadata);
@@ -1921,7 +1760,6 @@ static uint64_t sailgen__get_EncMetadata_SDP(struct zEncMetadata zv)
   uint64_t zgaz325;
   zgaz325 = zv.zbits;
   zcbz334 = (safe_rshift(UINT64_MAX, 64 - 4) & (zgaz325 >> INT64_C(53)));
-
 end_function_145: ;
   return zcbz334;
 end_block_exception_146: ;
@@ -1973,7 +1811,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_SDP(struct zEncMetadata z
   }
   zghz339 = zv;
   zghz339.zbits = zgaz327;
-
 end_function_148: ;
   return zghz339;
 end_block_exception_149: ;
@@ -1990,7 +1827,6 @@ static void finish_sailgen__update_EncMetadata_SDP(void)
   KILL(sail_int)(&zghz342);
   KILL(sail_int)(&zghz341);
   KILL(lbits)(&zghz340);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_TE(struct zEncMetadata);
@@ -2003,7 +1839,6 @@ static uint64_t sailgen__get_EncMetadata_TE(struct zEncMetadata zv)
   uint64_t zgaz328;
   zgaz328 = zv.zbits;
   zcbz336 = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz328 >> INT64_C(14)));
-
 end_function_151: ;
   return zcbz336;
 end_block_exception_152: ;
@@ -2055,7 +1890,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_TE(struct zEncMetadata zv
   }
   zghz345 = zv;
   zghz345.zbits = zgaz330;
-
 end_function_154: ;
   return zghz345;
 end_block_exception_155: ;
@@ -2072,7 +1906,6 @@ static void finish_sailgen__update_EncMetadata_TE(void)
   KILL(sail_int)(&zghz348);
   KILL(sail_int)(&zghz347);
   KILL(lbits)(&zghz346);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_Tm(struct zEncMetadata);
@@ -2085,7 +1918,6 @@ static uint64_t sailgen__get_EncMetadata_Tm(struct zEncMetadata zv)
   uint64_t zgaz331;
   zgaz331 = zv.zbits;
   zcbz338 = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz331 >> INT64_C(17)));
-
 end_function_157: ;
   return zcbz338;
 end_block_exception_158: ;
@@ -2137,7 +1969,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_Tm(struct zEncMetadata zv
   }
   zghz351 = zv;
   zghz351.zbits = zgaz333;
-
 end_function_160: ;
   return zghz351;
 end_block_exception_161: ;
@@ -2154,7 +1985,6 @@ static void finish_sailgen__update_EncMetadata_Tm(void)
   KILL(sail_int)(&zghz354);
   KILL(sail_int)(&zghz353);
   KILL(lbits)(&zghz352);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_reserved_0(struct zEncMetadata);
@@ -2167,7 +1997,6 @@ static uint64_t sailgen__get_EncMetadata_reserved_0(struct zEncMetadata zv)
   uint64_t zgaz334;
   zgaz334 = zv.zbits;
   zcbz340 = (safe_rshift(UINT64_MAX, 64 - 16) & (zgaz334 >> INT64_C(28)));
-
 end_function_163: ;
   return zcbz340;
 end_block_exception_164: ;
@@ -2219,7 +2048,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_reserved_0(struct zEncMet
   }
   zghz357 = zv;
   zghz357.zbits = zgaz336;
-
 end_function_166: ;
   return zghz357;
 end_block_exception_167: ;
@@ -2236,7 +2064,6 @@ static void finish_sailgen__update_EncMetadata_reserved_0(void)
   KILL(sail_int)(&zghz360);
   KILL(sail_int)(&zghz359);
   KILL(lbits)(&zghz358);
-
 }
 
 static uint64_t sailgen__get_EncMetadata_reserved_1(struct zEncMetadata);
@@ -2249,7 +2076,6 @@ static uint64_t sailgen__get_EncMetadata_reserved_1(struct zEncMetadata zv)
   uint64_t zgaz337;
   zgaz337 = zv.zbits;
   zcbz342 = (safe_rshift(UINT64_MAX, 64 - 7) & (zgaz337 >> INT64_C(57)));
-
 end_function_169: ;
   return zcbz342;
 end_block_exception_170: ;
@@ -2301,7 +2127,6 @@ static struct zEncMetadata sailgen__update_EncMetadata_reserved_1(struct zEncMet
   }
   zghz363 = zv;
   zghz363.zbits = zgaz339;
-
 end_function_172: ;
   return zghz363;
 end_block_exception_173: ;
@@ -2318,7 +2143,6 @@ static void finish_sailgen__update_EncMetadata_reserved_1(void)
   KILL(sail_int)(&zghz366);
   KILL(sail_int)(&zghz365);
   KILL(lbits)(&zghz364);
-
 }
 
 static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailgen_ap_m_encdec_forwards(uint64_t);
@@ -2332,8 +2156,6 @@ struct zArchPerms zghz369;
 static void startup_sailgen_ap_m_encdec_forwards(void)
 {
 }
-
-
 
 // struct tuple_(%enum zExecutionMode, %bool, %bool, %bool, %bool, %bool, %bool)
 struct ztuple_z8z5enumz0zzExecutionModezCz0z5boolzCz0z5boolzCz0z5boolzCz0z5boolzCz0z5boolzCz0z5boolz9 {
@@ -2441,10 +2263,7 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
       } else {  zgsz366 = false;  }
       bool zgsz381;
       zgsz381 = zgsz366;
-      if (!(zgsz381)) {
-
-        goto case_177;
-      }
+      if (!(zgsz381)) {  goto case_177;  }
       uint64_t zmapping0z3shadowz31;
       zmapping0z3shadowz31 = (safe_rshift(UINT64_MAX, 64 - 1) & (zv__0 >> INT64_C(8)));
       uint64_t zmapping6z3shadowz32;
@@ -2552,15 +2371,7 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
         } else {  zgsz377 = false;  }
         bool zgsz380;
         zgsz380 = zgsz377;
-        if (!(zgsz380)) {
-
-
-
-
-
-
-          goto case_180;
-        }
+        if (!(zgsz380)) {  goto case_180;  }
         struct zArchPerms zghz369;
         zghz369.zASR = zASR;
         zghz369.zC = zC;
@@ -2596,16 +2407,14 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
   struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 zgsz382;
   {
     if (zgaz364.kind != Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK) goto case_182;
-    zgsz382 = zgaz364.zSomezIz8RArchPermszCEExecutionModez5z9zK;
+    zgsz382 = zgaz364.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK;
     goto finish_match_181;
   }
 case_182: ;
   sail_match_failure("ap_m_encdec_forwards");
 finish_match_181: ;
   zcbz344 = zgsz382;
-
   KILL(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(&zgaz364);
-
 end_function_183: ;
   return zcbz344;
 end_block_exception_184: ;
@@ -2627,8 +2436,6 @@ struct zArchPerms zghz370;
 static void startup_sailgen_ap_m_encdec_forwards_infallible(void)
 {
 }
-
-
 
 static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailgen_ap_m_encdec_forwards_infallible(uint64_t zargz3)
 {
@@ -2711,10 +2518,7 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
       } else {  zgsz392 = false;  }
       bool zgsz3107;
       zgsz3107 = zgsz392;
-      if (!(zgsz3107)) {
-
-        goto case_187;
-      }
+      if (!(zgsz3107)) {  goto case_187;  }
       uint64_t zmapping0z3shadowz31;
       zmapping0z3shadowz31 = (safe_rshift(UINT64_MAX, 64 - 1) & (zv__0 >> INT64_C(8)));
       uint64_t zmapping6z3shadowz32;
@@ -2822,15 +2626,7 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
         } else {  zgsz3103 = false;  }
         bool zgsz3106;
         zgsz3106 = zgsz3103;
-        if (!(zgsz3106)) {
-
-
-
-
-
-
-          goto case_190;
-        }
+        if (!(zgsz3106)) {  goto case_190;  }
         struct zArchPerms zghz370;
         zghz370.zASR = zASR;
         zghz370.zC = zC;
@@ -2866,16 +2662,14 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
   struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 zgsz3108;
   {
     if (zgaz364.kind != Kind_zSomezIz8RArchPermszCEExecutionModez5z9zK) goto case_192;
-    zgsz3108 = zgaz364.zSomezIz8RArchPermszCEExecutionModez5z9zK;
+    zgsz3108 = zgaz364.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK;
     goto finish_match_191;
   }
 case_192: ;
   sail_match_failure("ap_m_encdec_forwards_infallible");
 finish_match_191: ;
   zcbz345 = zgsz3108;
-
   KILL(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(&zgaz364);
-
 end_function_193: ;
   return zcbz345;
 end_block_exception_194: ;
@@ -2960,15 +2754,7 @@ static uint64_t sailgen_ap_m_encdec_backwards(struct ztuple_z8z5structz0zzArchPe
     } else {  zgsz3118 = false;  }
     bool zgsz3119;
     zgsz3119 = zgsz3118;
-    if (!(zgsz3119)) {
-
-
-
-
-
-
-      goto case_197;
-    }
+    if (!(zgsz3119)) {  goto case_197;  }
     uint64_t zgaz376;
     zgaz376 = sailgen_execution_mode_encdec_forwards(zM);
     uint64_t zgaz377;
@@ -3092,15 +2878,7 @@ static uint64_t sailgen_ap_m_encdec_backwards_infallible(struct ztuple_z8z5struc
     } else {  zgsz3128 = false;  }
     bool zgsz3129;
     zgsz3129 = zgsz3128;
-    if (!(zgsz3129)) {
-
-
-
-
-
-
-      goto case_201;
-    }
+    if (!(zgsz3129)) {  goto case_201;  }
     uint64_t zgaz376;
     zgaz376 = sailgen_execution_mode_encdec_forwards(zM);
     uint64_t zgaz377;
@@ -3232,10 +3010,7 @@ static bool sailgen_ap_m_encdec_forwards_matches(uint64_t zargz3)
       } else {  zgsz3138 = false;  }
       bool zgsz3151;
       zgsz3151 = zgsz3138;
-      if (!(zgsz3151)) {
-
-        goto case_207;
-      }
+      if (!(zgsz3151)) {  goto case_207;  }
       uint64_t zmapping0z3shadowz310;
       zmapping0z3shadowz310 = (safe_rshift(UINT64_MAX, 64 - 1) & (zv__2 >> INT64_C(8)));
       uint64_t zmapping6z3shadowz311;
@@ -3343,15 +3118,7 @@ static bool sailgen_ap_m_encdec_forwards_matches(uint64_t zargz3)
         } else {  zgsz3149 = false;  }
         bool zgsz3150;
         zgsz3150 = zgsz3149;
-        if (!(zgsz3150)) {
-
-
-
-
-
-
-          goto case_210;
-        }
+        if (!(zgsz3150)) {  goto case_210;  }
         sailgen_SomezIozK(&zgsz3140, true);
         goto finish_match_208;
       }
@@ -3377,7 +3144,7 @@ static bool sailgen_ap_m_encdec_forwards_matches(uint64_t zargz3)
   bool zgsz3152;
   {
     if (zgaz3110.kind != Kind_zSomezIozK) goto case_215;
-    zgsz3152 = zgaz3110.zSomezIozK;
+    zgsz3152 = zgaz3110.variants.zSomezIozK;
     goto finish_match_211;
   }
 case_215: ;
@@ -3398,9 +3165,7 @@ case_215: ;
 case_212: ;
 finish_match_211: ;
   zcbz348 = zgsz3152;
-
   KILL(zoptionzIozK)(&zgaz3110);
-
 end_function_216: ;
   return zcbz348;
 end_block_exception_217: ;
@@ -3415,7 +3180,6 @@ static void create_letbind_14(void) {
   uint64_t zgsz3157;
   zgsz3157 = UINT64_C(0b000000000);
   znull_ap_m = zgsz3157;
-
 let_end_218: ;
 }
 static void kill_letbind_14(void) {
@@ -3428,7 +3192,6 @@ static void create_letbind_15(void) {
   uint64_t zgsz3158;
   zgsz3158 = UINT64_C(0b100111111);
   zinfinite_ap_m = zgsz3158;
-
 let_end_219: ;
 }
 static void kill_letbind_15(void) {
@@ -3507,7 +3270,6 @@ static struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 sailge
   }
   zcbz349.ztup0 = zghz373;
   zcbz349.ztup1 = zmodeshadowz320;
-
 end_function_221: ;
   return zcbz349;
 end_block_exception_222: ;
@@ -3520,12 +3282,6 @@ end_block_exception_222: ;
 
 static void finish_sailgen_legalizzePermsAndMode(void)
 {
-
-
-
-
-
-
 }
 
 static uint64_t sailgen_getMetadataL8(struct zEncMetadata);
@@ -3582,8 +3338,6 @@ static uint64_t sailgen_getMetadataInternalExponent(struct zEncMetadata zmeta)
   uint64_t zgaz3117;
   zgaz3117 = sailgen__get_EncMetadata_BE(zmeta);
   zcbz352 = (zgaz3116 << 3) | zgaz3117;
-
-
 end_function_230: ;
   return zcbz352;
 end_block_exception_231: ;
@@ -3598,7 +3352,6 @@ static void create_letbind_16(void) {
   int64_t zgsz3164;
   zgsz3164 = INT64_C(16);
   zcap_sizze = zgsz3164;
-
 let_end_232: ;
 }
 static void kill_letbind_16(void) {
@@ -3611,7 +3364,6 @@ static void create_letbind_17(void) {
   int64_t zgsz3165;
   zgsz3165 = INT64_C(64);
   zcap_addr_width = zgsz3165;
-
 let_end_233: ;
 }
 static void kill_letbind_17(void) {
@@ -3624,7 +3376,6 @@ static void create_letbind_18(void) {
   int64_t zgsz3166;
   zgsz3166 = INT64_C(65);
   zcap_len_width = zgsz3166;
-
 let_end_234: ;
 }
 static void kill_letbind_18(void) {
@@ -3637,11 +3388,11 @@ static void create_letbind_19(void) {    CREATE(sail_int)(&zcap_max_addr);
   sail_int zgsz3167;
   CREATE(sail_int)(&zgsz3167);
   {
-    sail_int zgsz3368;
-    CREATE(sail_int)(&zgsz3368);
-    CONVERT_OF(sail_int, mach_int)(&zgsz3368, zcap_addr_width);
-    sailgen_MAX(&zgsz3167, zgsz3368);
-    KILL(sail_int)(&zgsz3368);
+    sail_int zgsz3366;
+    CREATE(sail_int)(&zgsz3366);
+    CONVERT_OF(sail_int, mach_int)(&zgsz3366, zcap_addr_width);
+    sailgen_MAX(&zgsz3167, zgsz3366);
+    KILL(sail_int)(&zgsz3366);
   }
   COPY(sail_int)(&zcap_max_addr, zgsz3167);
   KILL(sail_int)(&zgsz3167);
@@ -3657,7 +3408,6 @@ static void create_letbind_20(void) {
   int64_t zgsz3168;
   zgsz3168 = INT64_C(3);
   zcap_xe_width = zgsz3168;
-
 let_end_236: ;
 }
 static void kill_letbind_20(void) {
@@ -3670,7 +3420,6 @@ static void create_letbind_21(void) {
   int64_t zgsz3169;
   zgsz3169 = INT64_C(52);
   zcap_max_E = zgsz3169;
-
 let_end_237: ;
 }
 static void kill_letbind_21(void) {
@@ -3683,7 +3432,6 @@ static void create_letbind_22(void) {
   int64_t zgsz3170;
   zgsz3170 = INT64_C(-11);
   zcap_min_E = zgsz3170;
-
 let_end_238: ;
 }
 static void kill_letbind_22(void) {
@@ -3703,10 +3451,7 @@ static uint64_t sailgen_internal_exponent_encdec_forwards(bool zargz3)
     zp0z3 = zargz3;
     bool zgsz3173;
     zgsz3173 = eq_bool(zp0z3, false);
-    if (!(zgsz3173)) {
-
-      goto case_242;
-    }
+    if (!(zgsz3173)) {  goto case_242;  }
     zcbz353 = UINT64_C(0b1);
     goto finish_match_240;
   }
@@ -3716,10 +3461,7 @@ case_242: ;
     zuz32 = zargz3;
     bool zgsz3172;
     zgsz3172 = eq_bool(zuz32, true);
-    if (!(zgsz3172)) {
-
-      goto case_241;
-    }
+    if (!(zgsz3172)) {  goto case_241;  }
     zcbz353 = UINT64_C(0b0);
     goto finish_match_240;
   }
@@ -3744,10 +3486,7 @@ static uint64_t sailgen_internal_exponent_encdec_forwards_infallible(bool zargz3
     zp0z3 = zargz3;
     bool zgsz3176;
     zgsz3176 = eq_bool(zp0z3, false);
-    if (!(zgsz3176)) {
-
-      goto case_247;
-    }
+    if (!(zgsz3176)) {  goto case_247;  }
     zcbz354 = UINT64_C(0b1);
     goto finish_match_245;
   }
@@ -3757,10 +3496,7 @@ case_247: ;
     zuz33 = zargz3;
     bool zgsz3175;
     zgsz3175 = eq_bool(zuz33, true);
-    if (!(zgsz3175)) {
-
-      goto case_246;
-    }
+    if (!(zgsz3175)) {  goto case_246;  }
     zcbz354 = UINT64_C(0b0);
     goto finish_match_245;
   }
@@ -3783,10 +3519,7 @@ static bool sailgen_internal_exponent_encdec_backwards(uint64_t zargz3)
     zb__0 = zargz3;
     bool zgsz3179;
     zgsz3179 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz3179)) {
-
-      goto case_253;
-    }
+    if (!(zgsz3179)) {  goto case_253;  }
     zcbz355 = false;
     goto finish_match_251;
   }
@@ -3816,10 +3549,7 @@ static bool sailgen_internal_exponent_encdec_backwards_infallible(uint64_t zargz
     zb__0 = zargz3;
     bool zgsz3182;
     zgsz3182 = (zb__0 == UINT64_C(0b1));
-    if (!(zgsz3182)) {
-
-      goto case_258;
-    }
+    if (!(zgsz3182)) {  goto case_258;  }
     zcbz356 = false;
     goto finish_match_256;
   }
@@ -3876,9 +3606,7 @@ end_block_exception_263: ;
 
 
 static void finish_sailgen_undefined_Capability(void)
-{
-  KILL(sail_int)(&zghz379);
-
+{    KILL(sail_int)(&zghz379);
 }
 
 static struct zCapability sailgen_bitsToCap(bool, lbits);
@@ -4082,17 +3810,13 @@ static struct zCapability sailgen_bitsToCap(bool ztag, lbits zcap_bits)
     {
       uint64_t zgaz3135;
       zgaz3135 = sailgen__get_EncMetadata_Tm(zghz381);
-      sbits zgsz3187;
-      zgsz3187 = CONVERT_OF(sbits, fbits)((zgaz3135 << 3) | zT_low, UINT64_C(12) , true);
-      zT = zgsz3187;
+      zT = CONVERT_OF(sbits, fbits)((zgaz3135 << 3) | zT_low, UINT64_C(12) , true);
     }
     sbits zB;
     {
       uint64_t zgaz3134;
       zgaz3134 = sailgen__get_EncMetadata_Bm(zghz381);
-      sbits zgsz3188;
-      zgsz3188 = CONVERT_OF(sbits, fbits)((zgaz3134 << 3) | zB_low, UINT64_C(14) , true);
-      zB = zgsz3188;
+      zB = CONVERT_OF(sbits, fbits)((zgaz3134 << 3) | zB_low, UINT64_C(14) , true);
     }
     uint64_t zLCout;
     {
@@ -4248,7 +3972,6 @@ static struct zCapability sailgen_bitsToCap(bool ztag, lbits zcap_bits)
 case_266: ;
   sail_match_failure("bitsToCap");
 finish_match_265: ;
-
 end_function_267: ;
   return zghz380;
 end_block_exception_268: ;
@@ -4305,9 +4028,6 @@ static void finish_sailgen_bitsToCap(void)
   KILL(lbits)(&zghz385);
   KILL(sail_int)(&zghz384);
   KILL(sail_int)(&zghz383);
-
-
-
 }
 
 static struct zEncMetadata sailgen_capToMetadataBits(struct zCapability);
@@ -4508,11 +4228,11 @@ static struct zEncMetadata sailgen_capToMetadataBits(struct zCapability zcap)
         }
         zgaz3152 = (safe_rshift(UINT64_MAX, 64 - 3) & (zE >> INT64_C(0)));
       }
-      struct ztuple_z8z5bitzCz0z5bv3zCz0z5bv3z9 zgsz3192;
-      zgsz3192.ztup0 = zgaz3150;
-      zgsz3192.ztup1 = zgaz3151;
-      zgsz3192.ztup2 = zgaz3152;
-      zgaz3163 = zgsz3192;
+      struct ztuple_z8z5bitzCz0z5bv3zCz0z5bv3z9 zgsz3190;
+      zgsz3190.ztup0 = zgaz3150;
+      zgsz3190.ztup1 = zgaz3151;
+      zgsz3190.ztup2 = zgaz3152;
+      zgaz3163 = zgsz3190;
     } else {
       fbits zgaz3160;
       {
@@ -4558,11 +4278,11 @@ static struct zEncMetadata sailgen_capToMetadataBits(struct zCapability zcap)
         }
         zgaz3162 = (safe_rshift(UINT64_MAX, 64 - 3) & (zgaz3158 >> INT64_C(0)));
       }
-      struct ztuple_z8z5bitzCz0z5bv3zCz0z5bv3z9 zgsz3191;
-      zgsz3191.ztup0 = zgaz3160;
-      zgsz3191.ztup1 = zgaz3161;
-      zgsz3191.ztup2 = zgaz3162;
-      zgaz3163 = zgsz3191;
+      struct ztuple_z8z5bitzCz0z5bv3zCz0z5bv3z9 zgsz3189;
+      zgsz3189.ztup0 = zgaz3160;
+      zgsz3189.ztup1 = zgaz3161;
+      zgsz3189.ztup2 = zgaz3162;
+      zgaz3163 = zgsz3189;
     }
   }
   {
@@ -4595,90 +4315,88 @@ static struct zEncMetadata sailgen_capToMetadataBits(struct zCapability zcap)
                       struct zEncMetadata zghz3144;
                       {
                         uint64_t zgaz3164;
-                        zgaz3164 = zcap.zreserved_0;
+                        zgaz3164 = zcap.zsd_perms;
                         struct zEncMetadata zghz3145;
                         zghz3145.zbits = UINT64_C(0x0000000000000000);
-                        zghz3144 = sailgen__update_EncMetadata_reserved_0(zghz3145, zgaz3164);
+                        zghz3144 = sailgen__update_EncMetadata_SDP(zghz3145, zgaz3164);
                       }
                       uint64_t zgaz3166;
-                      zgaz3166 = zcap.zreserved_1;
-                      zghz3143 = sailgen__update_EncMetadata_reserved_1(zghz3144, zgaz3166);
+                      zgaz3166 = zcap.zap_m;
+                      zghz3143 = sailgen__update_EncMetadata_AP_M(zghz3144, zgaz3166);
                     }
-                    zghz3142 = sailgen__update_EncMetadata_BE(zghz3143, zBE);
+                    uint64_t zgaz3169;
+                    {
+                      bool zgaz3167;
+                      zgaz3167 = zcap.zsealed;
+                      zgaz3169 = sailgen_bool_bits_forwards(zgaz3167);
+                    }
+                    zghz3142 = sailgen__update_EncMetadata_CT(zghz3143, zgaz3169);
                   }
-                  zghz3138 = sailgen__update_EncMetadata_TE(zghz3142, zTE);
+                  uint64_t zgaz3172;
+                  {
+                    bool zgaz3170;
+                    zgaz3170 = zcap.zinternal_exponent;
+                    zgaz3172 = sailgen_internal_exponent_encdec_forwards(zgaz3170);
+                  }
+                  zghz3138 = sailgen__update_EncMetadata_EF(zghz3142, zgaz3172);
                 }
-                uint64_t zgaz3172;
+                uint64_t zgaz3176;
                 {
-                  uint64_t zgaz3169;
-                  zgaz3169 = zcap.zB;
-                  int64_t zgaz3170;
+                  uint64_t zgaz3173;
+                  zgaz3173 = zcap.zT;
+                  int64_t zgaz3174;
                   {
                     RECREATE(sail_int)(&zghz3139);
                     CONVERT_OF(sail_int, mach_int)(&zghz3139, zMW);
                     RECREATE(sail_int)(&zghz3140);
-                    CONVERT_OF(sail_int, mach_int)(&zghz3140, INT64_C(1));
+                    CONVERT_OF(sail_int, mach_int)(&zghz3140, INT64_C(3));
                     RECREATE(sail_int)(&zghz3141);
                     sub_int(&zghz3141, zghz3139, zghz3140);
-                    zgaz3170 = CONVERT_OF(mach_int, sail_int)(zghz3141);
+                    zgaz3174 = CONVERT_OF(mach_int, sail_int)(zghz3141);
                   }
-                  zgaz3172 = (safe_rshift(UINT64_MAX, 64 - 11) & (zgaz3169 >> zcap_xe_width));
+                  zgaz3176 = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz3173 >> zcap_xe_width));
                 }
-                zghz3134 = sailgen__update_EncMetadata_Bm(zghz3138, zgaz3172);
+                zghz3134 = sailgen__update_EncMetadata_Tm(zghz3138, zgaz3176);
               }
-              uint64_t zgaz3176;
+              uint64_t zgaz3180;
               {
-                uint64_t zgaz3173;
-                zgaz3173 = zcap.zT;
-                int64_t zgaz3174;
+                uint64_t zgaz3177;
+                zgaz3177 = zcap.zB;
+                int64_t zgaz3178;
                 {
                   RECREATE(sail_int)(&zghz3135);
                   CONVERT_OF(sail_int, mach_int)(&zghz3135, zMW);
                   RECREATE(sail_int)(&zghz3136);
-                  CONVERT_OF(sail_int, mach_int)(&zghz3136, INT64_C(3));
+                  CONVERT_OF(sail_int, mach_int)(&zghz3136, INT64_C(1));
                   RECREATE(sail_int)(&zghz3137);
                   sub_int(&zghz3137, zghz3135, zghz3136);
-                  zgaz3174 = CONVERT_OF(mach_int, sail_int)(zghz3137);
+                  zgaz3178 = CONVERT_OF(mach_int, sail_int)(zghz3137);
                 }
-                zgaz3176 = (safe_rshift(UINT64_MAX, 64 - 9) & (zgaz3173 >> zcap_xe_width));
+                zgaz3180 = (safe_rshift(UINT64_MAX, 64 - 11) & (zgaz3177 >> zcap_xe_width));
               }
-              zghz3133 = sailgen__update_EncMetadata_Tm(zghz3134, zgaz3176);
+              zghz3133 = sailgen__update_EncMetadata_Bm(zghz3134, zgaz3180);
             }
-            uint64_t zgaz3179;
-            {
-              bool zgaz3177;
-              zgaz3177 = zcap.zinternal_exponent;
-              zgaz3179 = sailgen_internal_exponent_encdec_forwards(zgaz3177);
-            }
-            zghz3132 = sailgen__update_EncMetadata_EF(zghz3133, zgaz3179);
+            zghz3132 = sailgen__update_EncMetadata_TE(zghz3133, zTE);
           }
-          uint64_t zgaz3182;
-          {
-            bool zgaz3180;
-            zgaz3180 = zcap.zsealed;
-            zgaz3182 = sailgen_bool_bits_forwards(zgaz3180);
-          }
-          zghz3131 = sailgen__update_EncMetadata_CT(zghz3132, zgaz3182);
+          zghz3131 = sailgen__update_EncMetadata_BE(zghz3132, zBE);
         }
         uint64_t zgaz3184;
-        zgaz3184 = zcap.zap_m;
-        zghz3130 = sailgen__update_EncMetadata_AP_M(zghz3131, zgaz3184);
+        zgaz3184 = zcap.zreserved_1;
+        zghz3130 = sailgen__update_EncMetadata_reserved_1(zghz3131, zgaz3184);
       }
       uint64_t zgaz3186;
-      zgaz3186 = zcap.zsd_perms;
-      zghz3129 = sailgen__update_EncMetadata_SDP(zghz3130, zgaz3186);
+      zgaz3186 = zcap.zreserved_0;
+      zghz3129 = sailgen__update_EncMetadata_reserved_0(zghz3130, zgaz3186);
     }
-    uint64_t zgsz3195;
-    zgsz3195 = UINT64_C(0b0);
-    zgsz3195 = update_fbits(zgsz3195, INT64_C(0), zL8);
-    zghz3128 = sailgen_setMetadataL8(zghz3129, zgsz3195);
+    uint64_t zgsz3193;
+    zgsz3193 = UINT64_C(0b0);
+    zgsz3193 = update_fbits(zgsz3193, INT64_C(0), zL8);
+    zghz3128 = sailgen_setMetadataL8(zghz3129, zgsz3193);
     goto finish_match_270;
   }
 case_271: ;
   sail_match_failure("capToMetadataBits");
 finish_match_270: ;
-
-
 end_function_272: ;
   return zghz3128;
 end_block_exception_273: ;
@@ -4714,82 +4432,67 @@ static void finish_sailgen_capToMetadataBits(void)
   KILL(sail_int)(&zghz3148);
   KILL(sail_int)(&zghz3147);
   KILL(sail_int)(&zghz3146);
-
-
-
-
   KILL(sail_int)(&zghz3141);
   KILL(sail_int)(&zghz3140);
   KILL(sail_int)(&zghz3139);
-
   KILL(sail_int)(&zghz3137);
   KILL(sail_int)(&zghz3136);
   KILL(sail_int)(&zghz3135);
-
-
-
-
-
-
-
 }
 
 static struct zCapability znull_cap;
 static void create_letbind_23(void) {
 
 
-  struct zCapability zgsz3198;
+  struct zCapability zgsz3196;
   uint64_t zgaz3191;
   {
     uint64_t zgaz3190;
     {
       int64_t zgaz3189;
       {
-        sail_int zgsz3446;
-        CREATE(sail_int)(&zgsz3446);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3446, zcap_mantissa_width);
-        sail_int zgsz3447;
-        CREATE(sail_int)(&zgsz3447);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3447, INT64_C(2));
-        sail_int zgsz3448;
-        CREATE(sail_int)(&zgsz3448);
-        sub_int(&zgsz3448, zgsz3446, zgsz3447);
-        zgaz3189 = CONVERT_OF(mach_int, sail_int)(zgsz3448);
-        KILL(sail_int)(&zgsz3448);
-        KILL(sail_int)(&zgsz3447);
-        KILL(sail_int)(&zgsz3446);
-      }
-      {
         sail_int zgsz3444;
         CREATE(sail_int)(&zgsz3444);
-        CONVERT_OF(sail_int, mach_int)(&zgsz3444, zgaz3189);
-        lbits zgsz3445;
-        CREATE(lbits)(&zgsz3445);
-        sailgen_zzeros_implicit(&zgsz3445, zgsz3444);
-        zgaz3190 = CONVERT_OF(fbits, lbits)(zgsz3445, true);
-        KILL(lbits)(&zgsz3445);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3444, zcap_mantissa_width);
+        sail_int zgsz3445;
+        CREATE(sail_int)(&zgsz3445);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3445, INT64_C(2));
+        sail_int zgsz3446;
+        CREATE(sail_int)(&zgsz3446);
+        sub_int(&zgsz3446, zgsz3444, zgsz3445);
+        zgaz3189 = CONVERT_OF(mach_int, sail_int)(zgsz3446);
+        KILL(sail_int)(&zgsz3446);
+        KILL(sail_int)(&zgsz3445);
         KILL(sail_int)(&zgsz3444);
+      }
+      {
+        sail_int zgsz3442;
+        CREATE(sail_int)(&zgsz3442);
+        CONVERT_OF(sail_int, mach_int)(&zgsz3442, zgaz3189);
+        lbits zgsz3443;
+        CREATE(lbits)(&zgsz3443);
+        sailgen_zzeros_implicit(&zgsz3443, zgsz3442);
+        zgaz3190 = CONVERT_OF(fbits, lbits)(zgsz3443, true);
+        KILL(lbits)(&zgsz3443);
+        KILL(sail_int)(&zgsz3442);
       }
     }
     zgaz3191 = (UINT64_C(0b01) << 12) | zgaz3190;
   }
-  struct zCapability zgsz3197;
-  zgsz3197.zB = UINT64_C(0b00000000000000);
-  zgsz3197.zE = zcap_max_E;
-  zgsz3197.zT = zgaz3191;
-  zgsz3197.zaddress = UINT64_C(0x0000000000000000);
-  zgsz3197.zap_m = znull_ap_m;
-  zgsz3197.zinternal_exponent = true;
-  zgsz3197.zreserved_0 = UINT64_C(0x0000);
-  zgsz3197.zreserved_1 = UINT64_C(0b0000000);
-  zgsz3197.zsd_perms = UINT64_C(0x0);
-  zgsz3197.zsealed = false;
-  zgsz3197.ztag = false;
-  zgsz3198 = zgsz3197;
-
-
-  znull_cap = zgsz3198;
-
+  struct zCapability zgsz3195;
+  zgsz3195.zB = UINT64_C(0b00000000000000);
+  zgsz3195.zE = zcap_max_E;
+  zgsz3195.zT = zgaz3191;
+  zgsz3195.zaddress = UINT64_C(0x0000000000000000);
+  zgsz3195.zap_m = znull_ap_m;
+  zgsz3195.zinternal_exponent = true;
+  zgsz3195.zreserved_0 = UINT64_C(0x0000);
+  zgsz3195.zreserved_1 = UINT64_C(0b0000000);
+  zgsz3195.zsd_perms = UINT64_C(0x0);
+  zgsz3195.zsealed = false;
+  zgsz3195.ztag = false;
+  zgsz3196 = zgsz3195;
+  znull_cap = zgsz3196;
 let_end_274: ;
 }
 static void kill_letbind_23(void) {
@@ -4799,16 +4502,14 @@ static struct zCapability zinfinite_cap;
 static void create_letbind_24(void) {
 
 
-  struct zCapability zgsz3200;
-  struct zCapability zgsz3199;
-  zgsz3199 = znull_cap;
-  zgsz3199.zap_m = zinfinite_ap_m;
-  zgsz3199.zsd_perms = UINT64_C(0xF);
-  zgsz3199.ztag = true;
-  zgsz3200 = zgsz3199;
-
-  zinfinite_cap = zgsz3200;
-
+  struct zCapability zgsz3198;
+  struct zCapability zgsz3197;
+  zgsz3197 = znull_cap;
+  zgsz3197.zap_m = zinfinite_ap_m;
+  zgsz3197.zsd_perms = UINT64_C(0xF);
+  zgsz3197.ztag = true;
+  zgsz3198 = zgsz3197;
+  zinfinite_cap = zgsz3198;
 let_end_275: ;
 }
 static void kill_letbind_24(void) {
@@ -4844,7 +4545,7 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
   bool zcbz360;
   bool zgaz3206;
   zgaz3206 = zcap.zinternal_exponent;
-  bool zgsz3207;
+  bool zgsz3205;
   if (zgaz3206) {
     int64_t zMW;
     zMW = zcap_mantissa_width;
@@ -4858,7 +4559,7 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
           zgaz3195 = zcap.zE;
           zgaz3198 = (zgaz3195 == zcap_max_E);
         }
-        bool zgsz3201;
+        bool zgsz3199;
         if (zgaz3198) {
           uint64_t zgaz3196;
           zgaz3196 = zcap.zB;
@@ -4870,12 +4571,12 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
             sailgen_zzeros_implicit(&zghz3177, zghz3176);
             zgaz3197 = CONVERT_OF(fbits, lbits)(zghz3177, true);
           }
-          zgsz3201 = (zgaz3196 != zgaz3197);
-        } else {  zgsz3201 = false;  }
-        zgaz3205 = zgsz3201;
+          zgsz3199 = (zgaz3196 != zgaz3197);
+        } else {  zgsz3199 = false;  }
+        zgaz3205 = zgsz3199;
       }
-      bool zgsz3203;
-      if (zgaz3205) {  zgsz3203 = true;  } else {
+      bool zgsz3201;
+      if (zgaz3205) {  zgsz3201 = true;  } else {
         bool zgaz3204;
         {
           int64_t zgaz3199;
@@ -4892,7 +4593,7 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
           }
           zgaz3204 = (zgaz3199 == zgaz3200);
         }
-        bool zgsz3202;
+        bool zgsz3200;
         if (zgaz3204) {
           fbits zgaz3203;
           {
@@ -4910,11 +4611,11 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
             }
             zgaz3203 = (UINT64_C(1) & (zgaz3201 >> zgaz3202));
           }
-          zgsz3202 = sailgen_neq_anythingzItzK(zgaz3203, UINT64_C(0));
-        } else {  zgsz3202 = false;  }
-        zgsz3203 = zgsz3202;
+          zgsz3200 = sailgen_neq_anythingzItzK(zgaz3203, UINT64_C(0));
+        } else {  zgsz3200 = false;  }
+        zgsz3201 = zgsz3200;
       }
-      zmalformedMSB = zgsz3203;
+      zmalformedMSB = zgsz3201;
     }
     bool zmalformedLSB;
     {
@@ -4924,24 +4625,23 @@ static bool sailgen_boundsMalformed(struct zCapability zcap)
         zgaz3192 = zcap.zE;
         zgaz3194 = (zgaz3192 < INT64_C(0));
       }
-      bool zgsz3205;
-      if (zgaz3194) {  zgsz3205 = true;  } else {
-        bool zgsz3204;
+      bool zgsz3203;
+      if (zgaz3194) {  zgsz3203 = true;  } else {
+        bool zgsz3202;
         if (zcap_use_L8) {
           int64_t zgaz3193;
           zgaz3193 = zcap.zE;
-          zgsz3204 = (zgaz3193 == INT64_C(0));
-        } else {  zgsz3204 = false;  }
-        zgsz3205 = zgsz3204;
+          zgsz3202 = (zgaz3193 == INT64_C(0));
+        } else {  zgsz3202 = false;  }
+        zgsz3203 = zgsz3202;
       }
-      zmalformedLSB = zgsz3205;
+      zmalformedLSB = zgsz3203;
     }
-    bool zgsz3206;
-    if (zmalformedMSB) {  zgsz3206 = true;  } else {  zgsz3206 = zmalformedLSB;  }
-    zgsz3207 = zgsz3206;
-  } else {  zgsz3207 = false;  }
-  zcbz360 = zgsz3207;
-
+    bool zgsz3204;
+    if (zmalformedMSB) {  zgsz3204 = true;  } else {  zgsz3204 = zmalformedLSB;  }
+    zgsz3205 = zgsz3204;
+  } else {  zgsz3205 = false;  }
+  zcbz360 = zgsz3205;
 end_function_277: ;
   return zcbz360;
 end_block_exception_278: ;
@@ -5116,8 +4816,6 @@ static void startup_sailgen_getCapBoundsBits(void)
   CREATE(lbits)(&zghz3250);
 }
 
-
-
 // struct tuple_(%bv64, %bv)
 struct ztuple_z8z5bv64zCz0z5bvz9 {
   uint64_t ztup0;
@@ -5152,7 +4850,7 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
   {
     bool zgaz3207;
     zgaz3207 = sailgen_boundsMalformed(zc);
-    unit zgsz3208;
+    unit zgsz3206;
     if (zgaz3207) {
       __label__ cleanup_281, end_cleanup_282;
 
@@ -5168,15 +4866,15 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
       KILL(zoptionzIz8bzCbz9zK)(&zgaz3208);
       goto end_function_280;
     end_cleanup_282: ;
-    } else {  zgsz3208 = UNIT;  }
+    } else {  zgsz3206 = UNIT;  }
   }
   int64_t zE;
   zE = zc.zE;
   {
     bool zgaz3209;
     zgaz3209 = (zE >= INT64_C(0));
-    unit zgsz3209;
-    zgsz3209 = sail_assert(zgaz3209, "Cap is malformed if E<0");
+    unit zgsz3207;
+    zgsz3207 = sail_assert(zgaz3209, "Cap is malformed if E<0");
   }
   uint64_t za;
   za = zc.zaddress;
@@ -5468,7 +5166,7 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
         }
         zgaz3212 = (zE < zgaz3210);
       }
-      bool zgsz3211;
+      bool zgsz3209;
       if (zgaz3212) {
         uint64_t zgaz3211;
         zgaz3211 = ((ztop2 - zbase2) & UINT64_C(0b11));
@@ -5477,12 +5175,12 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
           CONVERT_OF(lbits, fbits)(&zghz3188, zgaz3211, UINT64_C(2) , true);
           RECREATE(lbits)(&zghz3189);
           CONVERT_OF(lbits, fbits)(&zghz3189, UINT64_C(0b01), UINT64_C(2) , true);
-          zgsz3211 = sailgen_z8operatorz0zK_uz9(zghz3188, zghz3189);
+          zgsz3209 = sailgen_z8operatorz0zK_uz9(zghz3188, zghz3189);
         }
-      } else {  zgsz3211 = false;  }
-      zgaz3213 = zgsz3211;
+      } else {  zgsz3209 = false;  }
+      zgaz3213 = zgsz3209;
     }
-    unit zgsz3212;
+    unit zgsz3210;
     if (zgaz3213) {
       fbits zgaz3215;
       {
@@ -5499,8 +5197,8 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
         CONVERT_OF(sail_int, mach_int)(&zghz3186, zcap_addr_width);
         update_lbits(&zghz3179, zghz3179, zghz3186, zgaz3215);
       }
-      zgsz3212 = UNIT;
-    } else {  zgsz3212 = UNIT;  }
+      zgsz3210 = UNIT;
+    } else {  zgsz3210 = UNIT;  }
   }
   uint64_t zbaseshadowz323;
   {
@@ -5524,34 +5222,21 @@ static void sailgen_getCapBoundsBits(struct zoptionzIz8bzCbz9zK *zcbz361, struct
       zbaseshadowz323 = CONVERT_OF(fbits, lbits)(zghz3182, true);
     }
   }
-  struct ztuple_z8z5bv64zCz0z5bvz9 zgsz3213;
-  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz3213);
-  zgsz3213.ztup0 = zbaseshadowz323;
-  COPY(lbits)(&((&zgsz3213)->ztup1), zghz3179);
+  struct ztuple_z8z5bv64zCz0z5bvz9 zgsz3211;
+  CREATE(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz3211);
+  zgsz3211.ztup0 = zbaseshadowz323;
+  COPY(lbits)(&((&zgsz3211)->ztup1), zghz3179);
   {
-    struct ztuple_z8z5bvzCz0z5bvz9 zgsz3518;
-    CREATE(ztuple_z8z5bvzCz0z5bvz9)(&zgsz3518);
+    struct ztuple_z8z5bvzCz0z5bvz9 zgsz3516;
+    CREATE(ztuple_z8z5bvzCz0z5bvz9)(&zgsz3516);
     /* conversions */
-    CONVERT_OF(lbits, fbits)(&((&zgsz3518)->ztup0), zgsz3213.ztup0, UINT64_C(64) , true);
-    COPY(lbits)(&((&zgsz3518)->ztup1), zgsz3213.ztup1);
+    CONVERT_OF(lbits, fbits)(&((&zgsz3516)->ztup0), zgsz3211.ztup0, UINT64_C(64) , true);
+    COPY(lbits)(&((&zgsz3516)->ztup1), zgsz3211.ztup1);
     /* end conversions */
-    sailgen_SomezIz8bzCbz9zK((*(&zcbz361)), zgsz3518);
-    KILL(ztuple_z8z5bvzCz0z5bvz9)(&zgsz3518);
+    sailgen_SomezIz8bzCbz9zK((*(&zcbz361)), zgsz3516);
+    KILL(ztuple_z8z5bvzCz0z5bvz9)(&zgsz3516);
   }
-  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz3213);
-
-
-
-
-
-
-
-
-
-
-
-
-
+  KILL(ztuple_z8z5bv64zCz0z5bvz9)(&zgsz3211);
 end_function_280: ;
   goto end_function_401;
 end_block_exception_283: ;
@@ -5653,8 +5338,6 @@ static void startup_sailgen_getCapBounds(void)
   CREATE(lbits)(&zghz3254);
 }
 
-
-
 static void sailgen_getCapBounds(struct zoptionzIz8izCiz9zK *zcbz362, struct zCapability zcap)
 {
   __label__ case_287, case_286, finish_match_285, end_function_288, end_block_exception_289, end_function_400;
@@ -5662,20 +5345,20 @@ static void sailgen_getCapBounds(struct zoptionzIz8izCiz9zK *zcbz362, struct zCa
   struct zoptionzIz8bzCbz9zK zgaz3242;
   CREATE(zoptionzIz8bzCbz9zK)(&zgaz3242);
   sailgen_getCapBoundsBits(&zgaz3242, zcap);
-  struct zoptionzIz8izCiz9zK zgsz3214;
-  CREATE(zoptionzIz8izCiz9zK)(&zgsz3214);
+  struct zoptionzIz8izCiz9zK zgsz3212;
+  CREATE(zoptionzIz8izCiz9zK)(&zgsz3212);
   {
     if (zgaz3242.kind != Kind_zNonezIz8bzCbz9zK) goto case_287;
-    sailgen_NonezIz8izCiz9zK(&zgsz3214, UNIT);
+    sailgen_NonezIz8izCiz9zK(&zgsz3212, UNIT);
     goto finish_match_285;
   }
 case_287: ;
   {
     /* complete */
     uint64_t zbase;
-    zbase = CONVERT_OF(fbits, lbits)(zgaz3242.zSomezIz8bzCbz9zK.ztup0, true);
+    zbase = CONVERT_OF(fbits, lbits)(zgaz3242.variants.zSomezIz8bzCbz9zK.ztup0, true);
     RECREATE(lbits)(&zghz3251);
-    COPY(lbits)(&zghz3251, zgaz3242.zSomezIz8bzCbz9zK.ztup1);
+    COPY(lbits)(&zghz3251, zgaz3242.variants.zSomezIz8bzCbz9zK.ztup1);
     struct ztuple_z8z5izCz0z5iz9 zgaz3245;
     CREATE(ztuple_z8z5izCz0z5iz9)(&zgaz3245);
     {
@@ -5690,14 +5373,14 @@ case_287: ;
       COPY(sail_int)(&((&zgaz3245)->ztup0), zghz3252);
       COPY(sail_int)(&((&zgaz3245)->ztup1), zghz3253);
     }
-    sailgen_SomezIz8izCiz9zK(&zgsz3214, zgaz3245);
+    sailgen_SomezIz8izCiz9zK(&zgsz3212, zgaz3245);
     KILL(ztuple_z8z5izCz0z5iz9)(&zgaz3245);
     goto finish_match_285;
   }
 case_286: ;
 finish_match_285: ;
-  COPY(zoptionzIz8izCiz9zK)((*(&zcbz362)), zgsz3214);
-  KILL(zoptionzIz8izCiz9zK)(&zgsz3214);
+  COPY(zoptionzIz8izCiz9zK)((*(&zcbz362)), zgsz3212);
+  KILL(zoptionzIz8izCiz9zK)(&zgsz3212);
   KILL(zoptionzIz8bzCbz9zK)(&zgaz3242);
 end_function_288: ;
   goto end_function_400;
@@ -5969,11 +5652,11 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
       CONVERT_OF(sail_int, mach_int)(&zghz3322, INT64_C(0));
       zgaz3280 = sailgen_neq_int(zghz3321, zghz3322);
     }
-    bool zgsz3219;
-    if (zgaz3280) {  zgsz3219 = true;  } else {
+    bool zgsz3217;
+    if (zgaz3280) {  zgsz3217 = true;  } else {
       bool zgaz3279;
       zgaz3279 = not(zcap_use_L8);
-      bool zgsz3218;
+      bool zgsz3216;
       if (zgaz3279) {
         fbits zgaz3278;
         {
@@ -5993,11 +5676,11 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             zgaz3278 = bitvector_access(zghz3256, zghz3317);
           }
         }
-        zgsz3218 = eq_bit(zgaz3278, UINT64_C(1));
-      } else {  zgsz3218 = false;  }
-      zgsz3219 = zgsz3218;
+        zgsz3216 = eq_bit(zgaz3278, UINT64_C(1));
+      } else {  zgsz3216 = false;  }
+      zgsz3217 = zgsz3216;
     }
-    zie = zgsz3219;
+    zie = zgsz3217;
   }
   uint64_t zBbits;
   {
@@ -6024,7 +5707,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
   bool zincE;
   zincE = false;
   {
-    unit zgsz3220;
+    unit zgsz3218;
     if (zie) {
       uint64_t zB_ie;
       {
@@ -6121,8 +5804,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(lbits, fbits)(&zghz3291, UINT64_C(0b0), UINT64_C(1) , true);
         append_64(&zghz3291, zghz3291, UINT64_C(0x0000000000000000));
         zlostSignificantBase = neq_bits(zghz3290, zghz3291);
-        unit zgsz3225;
-        zgsz3225 = UNIT;
+        unit zgsz3223;
+        zgsz3223 = UNIT;
       }
       {
         RECREATE(lbits)(&zghz3288);
@@ -6131,11 +5814,11 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         CONVERT_OF(lbits, fbits)(&zghz3289, UINT64_C(0b0), UINT64_C(1) , true);
         append_64(&zghz3289, zghz3289, UINT64_C(0x0000000000000000));
         zlostSignificantTop = neq_bits(zghz3288, zghz3289);
-        unit zgsz3224;
-        zgsz3224 = UNIT;
+        unit zgsz3222;
+        zgsz3222 = UNIT;
       }
       {
-        unit zgsz3223;
+        unit zgsz3221;
         if (zlostSignificantTop) {
           {
             RECREATE(lbits)(&zghz3285);
@@ -6146,8 +5829,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             add_bits_int(&zghz3287, zghz3285, zghz3286);
             zT_ie = CONVERT_OF(fbits, lbits)(zghz3287, true);
           }
-          zgsz3223 = UNIT;
-        } else {  zgsz3223 = UNIT;  }
+          zgsz3221 = UNIT;
+        } else {  zgsz3221 = UNIT;  }
       }
       uint64_t zlen_ie;
       zlen_ie = ((zT_ie - zB_ie) & UINT64_C(0b11111111111));
@@ -6174,34 +5857,34 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           }
           zgaz3251 = eq_bit(zgaz3250, UINT64_C(1));
         }
-        unit zgsz3227;
+        unit zgsz3225;
         if (zgaz3251) {
           {
             zincE = true;
-            unit zgsz3233;
-            zgsz3233 = UNIT;
-          }
-          {
-            bool zgsz3228;
-            if (zlostSignificantBase) {  zgsz3228 = true;  } else {
-              fbits zgaz3252;
-              zgaz3252 = (UINT64_C(1) & (zB_ie >> INT64_C(0)));
-              zgsz3228 = eq_bit(zgaz3252, UINT64_C(1));
-            }
-            zlostSignificantBase = zgsz3228;
-            unit zgsz3232;
-            zgsz3232 = UNIT;
-          }
-          {
-            bool zgsz3229;
-            if (zlostSignificantTop) {  zgsz3229 = true;  } else {
-              fbits zgaz3253;
-              zgaz3253 = (UINT64_C(1) & (zT_ie >> INT64_C(0)));
-              zgsz3229 = eq_bit(zgaz3253, UINT64_C(1));
-            }
-            zlostSignificantTop = zgsz3229;
             unit zgsz3231;
             zgsz3231 = UNIT;
+          }
+          {
+            bool zgsz3226;
+            if (zlostSignificantBase) {  zgsz3226 = true;  } else {
+              fbits zgaz3252;
+              zgaz3252 = (UINT64_C(1) & (zB_ie >> INT64_C(0)));
+              zgsz3226 = eq_bit(zgaz3252, UINT64_C(1));
+            }
+            zlostSignificantBase = zgsz3226;
+            unit zgsz3230;
+            zgsz3230 = UNIT;
+          }
+          {
+            bool zgsz3227;
+            if (zlostSignificantTop) {  zgsz3227 = true;  } else {
+              fbits zgaz3253;
+              zgaz3253 = (UINT64_C(1) & (zT_ie >> INT64_C(0)));
+              zgsz3227 = eq_bit(zgaz3253, UINT64_C(1));
+            }
+            zlostSignificantTop = zgsz3227;
+            unit zgsz3229;
+            zgsz3229 = UNIT;
           }
           {
             uint64_t zgaz3256;
@@ -6241,8 +5924,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
               sail_truncate(&zghz3275, zghz3273, zghz3274);
               zB_ie = CONVERT_OF(fbits, lbits)(zghz3275, true);
             }
-            unit zgsz3230;
-            zgsz3230 = UNIT;
+            unit zgsz3228;
+            zgsz3228 = UNIT;
           }
           int64_t zincT;
           if (zlostSignificantTop) {  zincT = INT64_C(1);  } else {  zincT = INT64_C(0);  }
@@ -6289,8 +5972,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
             add_bits_int(&zghz3265, zghz3263, zghz3264);
             zT_ie = CONVERT_OF(fbits, lbits)(zghz3265, true);
           }
-          zgsz3227 = UNIT;
-        } else {  zgsz3227 = UNIT;  }
+          zgsz3225 = UNIT;
+        } else {  zgsz3225 = UNIT;  }
       }
       {
         uint64_t zgaz3263;
@@ -6302,8 +5985,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
           zgaz3263 = CONVERT_OF(fbits, lbits)(zghz3262, true);
         }
         zBbits = (zB_ie << 3) | zgaz3263;
-        unit zgsz3226;
-        zgsz3226 = UNIT;
+        unit zgsz3224;
+        zgsz3224 = UNIT;
       }
       uint64_t zgaz3264;
       {
@@ -6314,8 +5997,8 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
         zgaz3264 = CONVERT_OF(fbits, lbits)(zghz3260, true);
       }
       zTbits = (zT_ie << 3) | zgaz3264;
-      zgsz3220 = UNIT;
-    } else {  zgsz3220 = UNIT;  }
+      zgsz3218 = UNIT;
+    } else {  zgsz3218 = UNIT;  }
   }
   struct zCapability zghz3257;
   {
@@ -6345,14 +6028,6 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapBounds(s
   }
   zcbz363.ztup0 = zexact;
   zcbz363.ztup1 = zghz3257;
-
-
-
-
-
-
-
-
 end_function_291: ;
   return zcbz363;
 end_block_exception_292: ;
@@ -6443,7 +6118,6 @@ static void finish_sailgen_setCapBounds(void)
   KILL(lbits)(&zghz3260);
   KILL(sail_int)(&zghz3259);
   KILL(lbits)(&zghz3258);
-
   KILL(lbits)(&zghz3256);
   KILL(lbits)(&zghz3255);
 }
@@ -6477,7 +6151,6 @@ static bool sailgen_permsMalformed(struct zCapability zcap)
     zgaz3285 = sailgen_ap_m_encdec_forwards_matches(zgaz3284);
   }
   zcbz365 = not(zgaz3285);
-
 end_function_297: ;
   return zcbz365;
 end_block_exception_298: ;
@@ -6486,7 +6159,6 @@ end_block_exception_298: ;
 }
 
 static void sailgen_getCapPermsAndMode(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK *rop, struct zCapability);
-
 
 static void sailgen_getCapPermsAndMode(struct zoptionzIz8RArchPermszCEExecutionModez5z9zK *zcbz366, struct zCapability zcap)
 {
@@ -6503,7 +6175,6 @@ static void sailgen_getCapPermsAndMode(struct zoptionzIz8RArchPermszCEExecutionM
     }
     sailgen_SomezIz8RArchPermszCEExecutionModez5z9zK((*(&zcbz366)), zgaz3288);
   }
-
 end_function_300: ;
   goto end_function_399;
 end_block_exception_301: ;
@@ -6522,15 +6193,15 @@ static void startup_sailgen_setCapPermsAndMode(void)
 
 }
 
-static struct zCapability sailgen_setCapPermsAndMode(struct zCapability zcap, struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 zgsz3237)
+static struct zCapability sailgen_setCapPermsAndMode(struct zCapability zcap, struct ztuple_z8z5structz0zzArchPermszCz0z5enumz0zzExecutionModez9 zgsz3235)
 {
   __label__ fundef_fail_302, fundef_body_303, end_function_304, end_block_exception_305;
 
   struct zCapability zghz3336;
   struct zArchPerms zghz3337;
-  zghz3337 = zgsz3237.ztup0;
+  zghz3337 = zgsz3235.ztup0;
   enum zExecutionMode zmode;
-  zmode = zgsz3237.ztup1;
+  zmode = zgsz3235.ztup1;
   goto fundef_body_303;
 fundef_fail_302: ;
   sail_match_failure("setCapPermsAndMode");
@@ -6543,7 +6214,6 @@ fundef_body_303: ;
   }
   zghz3336 = zcap;
   zghz3336.zap_m = zgaz3290;
-
 end_function_304: ;
   return zghz3336;
 end_block_exception_305: ;
@@ -6555,8 +6225,6 @@ end_block_exception_305: ;
 
 static void finish_sailgen_setCapPermsAndMode(void)
 {
-
-
 }
 
 static void sailgen_getArchPerms(struct zoptionzIRArchPermszK *rop, struct zCapability);
@@ -6574,25 +6242,25 @@ static void sailgen_getArchPerms(struct zoptionzIRArchPermszK *zcbz368, struct z
   struct zoptionzIz8RArchPermszCEExecutionModez5z9zK zgaz3291;
   CREATE(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(&zgaz3291);
   sailgen_getCapPermsAndMode(&zgaz3291, zcap);
-  struct zoptionzIRArchPermszK zgsz3239;
-  CREATE(zoptionzIRArchPermszK)(&zgsz3239);
+  struct zoptionzIRArchPermszK zgsz3237;
+  CREATE(zoptionzIRArchPermszK)(&zgsz3237);
   {
     if (zgaz3291.kind != Kind_zNonezIz8RArchPermszCEExecutionModez5z9zK) goto case_309;
-    sailgen_NonezIRArchPermszK(&zgsz3239, UNIT);
+    sailgen_NonezIRArchPermszK(&zgsz3237, UNIT);
     goto finish_match_307;
   }
 case_309: ;
   {
     /* complete */
     struct zArchPerms zghz3338;
-    zghz3338 = zgaz3291.zSomezIz8RArchPermszCEExecutionModez5z9zK.ztup0;
-    sailgen_SomezIRArchPermszK(&zgsz3239, zghz3338);
+    zghz3338 = zgaz3291.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK.ztup0;
+    sailgen_SomezIRArchPermszK(&zgsz3237, zghz3338);
     goto finish_match_307;
   }
 case_308: ;
 finish_match_307: ;
-  COPY(zoptionzIRArchPermszK)((*(&zcbz368)), zgsz3239);
-  KILL(zoptionzIRArchPermszK)(&zgsz3239);
+  COPY(zoptionzIRArchPermszK)((*(&zcbz368)), zgsz3237);
+  KILL(zoptionzIRArchPermszK)(&zgsz3237);
   KILL(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(&zgaz3291);
 end_function_310: ;
   goto end_function_398;
@@ -6635,7 +6303,7 @@ case_315: ;
   {
     /* complete */
     struct zArchPerms zghz3340;
-    zghz3340 = zgaz3292.zSomezIRArchPermszK;
+    zghz3340 = zgaz3292.variants.zSomezIRArchPermszK;
     zghz3339 = zghz3340;
     goto finish_match_313;
   }
@@ -6653,8 +6321,6 @@ end_block_exception_317: ;
 
 static void finish_sailgen_getArchPermsLegalizzed(void)
 {
-
-
 }
 
 static enum zExecutionMode sailgen_getCapMode(struct zCapability);
@@ -6676,7 +6342,7 @@ case_321: ;
   {
     /* complete */
     enum zExecutionMode zmode;
-    zmode = zgaz3293.zSomezIz8RArchPermszCEExecutionModez5z9zK.ztup1;
+    zmode = zgaz3293.variants.zSomezIz8RArchPermszCEExecutionModez5z9zK.ztup1;
     zcbz370 = zmode;
     goto finish_match_319;
   }
@@ -6720,14 +6386,14 @@ case_327: ;
   {
     /* complete */
     RECREATE(sail_int)(&zghz3342);
-    COPY(sail_int)(&zghz3342, zgaz3294.zSomezIz8izCiz9zK.ztup0);
+    COPY(sail_int)(&zghz3342, zgaz3294.variants.zSomezIz8izCiz9zK.ztup0);
     RECREATE(sail_int)(&zghz3343);
-    COPY(sail_int)(&zghz3343, zgaz3294.zSomezIz8izCiz9zK.ztup1);
+    COPY(sail_int)(&zghz3343, zgaz3294.variants.zSomezIz8izCiz9zK.ztup1);
     {
       bool zgaz3295;
       zgaz3295 = gteq(zghz3343, zghz3342);
-      unit zgsz3249;
-      zgsz3249 = sail_assert(zgaz3295, "src/cheri_cap_common.sail:433.42-433.43");
+      unit zgsz3247;
+      zgsz3247 = sail_assert(zgaz3295, "src/cheri_cap_common.sail:433.42-433.43");
     }
     sub_int(&zghz3341, zghz3343, zghz3342);
     goto finish_match_325;
@@ -6792,18 +6458,18 @@ case_333: ;
   {
     /* complete */
     RECREATE(sail_int)(&zghz3345);
-    COPY(sail_int)(&zghz3345, zgaz3296.zSomezIz8izCiz9zK.ztup0);
+    COPY(sail_int)(&zghz3345, zgaz3296.variants.zSomezIz8izCiz9zK.ztup0);
     RECREATE(sail_int)(&zghz3346);
-    COPY(sail_int)(&zghz3346, zgaz3296.zSomezIz8izCiz9zK.ztup1);
+    COPY(sail_int)(&zghz3346, zgaz3296.variants.zSomezIz8izCiz9zK.ztup1);
     bool zgaz3298;
     zgaz3298 = gteq(zghz3344, zghz3345);
-    bool zgsz3253;
+    bool zgsz3251;
     if (zgaz3298) {
       RECREATE(sail_int)(&zghz3347);
       add_int(&zghz3347, zghz3344, zsizze);
-      zgsz3253 = lteq(zghz3347, zghz3346);
-    } else {  zgsz3253 = false;  }
-    zcbz372 = zgsz3253;
+      zgsz3251 = lteq(zghz3347, zghz3346);
+    } else {  zgsz3251 = false;  }
+    zcbz372 = zgsz3251;
     goto finish_match_331;
   }
 case_332: ;
@@ -6840,14 +6506,13 @@ static bool sailgen_capReservedValid(struct zCapability zcap)
     zgaz3299 = zcap.zreserved_0;
     zgaz3301 = (zgaz3299 == UINT64_C(0x0000));
   }
-  bool zgsz3256;
+  bool zgsz3254;
   if (zgaz3301) {
     uint64_t zgaz3300;
     zgaz3300 = zcap.zreserved_1;
-    zgsz3256 = (zgaz3300 == UINT64_C(0b0000000));
-  } else {  zgsz3256 = false;  }
-  zcbz373 = zgsz3256;
-
+    zgsz3254 = (zgaz3300 == UINT64_C(0b0000000));
+  } else {  zgsz3254 = false;  }
+  zcbz373 = zgsz3254;
 end_function_337: ;
   return zcbz373;
 end_block_exception_338: ;
@@ -6872,13 +6537,12 @@ static struct zCapability sailgen_clearTagIf(struct zCapability zcap, bool zcond
   {
     bool zgaz3302;
     zgaz3302 = zcap.ztag;
-    bool zgsz3257;
-    if (zgaz3302) {  zgsz3257 = not(zcond);  } else {  zgsz3257 = false;  }
-    zgaz3303 = zgsz3257;
+    bool zgsz3255;
+    if (zgaz3302) {  zgsz3255 = not(zcond);  } else {  zgsz3255 = false;  }
+    zgaz3303 = zgsz3255;
   }
   zghz3349 = zcap;
   zghz3349.ztag = zgaz3303;
-
 end_function_340: ;
   return zghz3349;
 end_block_exception_341: ;
@@ -6896,10 +6560,9 @@ static bool zsys_legalizze_malformed_permission_on_load;
 static void create_letbind_25(void) {
 
 
-  bool zgsz3259;
-  zgsz3259 = false;
-  zsys_legalizze_malformed_permission_on_load = zgsz3259;
-
+  bool zgsz3257;
+  zgsz3257 = false;
+  zsys_legalizze_malformed_permission_on_load = zgsz3257;
 let_end_342: ;
 }
 static void kill_letbind_25(void) {
@@ -6919,9 +6582,6 @@ static void startup_sailgen_capBoundsEqual(void)
   CREATE(sail_int)(&zghz3352);
   CREATE(sail_int)(&zghz3353);
 }
-
-
-
 
 // struct tuple_(%union zoptionzIz8izCiz9zK, %union zoptionzIz8izCiz9zK)
 struct ztuple_z8z5unionz0zzoptionzzIzz8izzCizz9zzKzCz0z5unionz0zzoptionzzIzz8izzCizz9zzKz9 {
@@ -6988,18 +6648,18 @@ case_346: ;
     /* complete */
     /* complete */
     RECREATE(sail_int)(&zghz3350);
-    COPY(sail_int)(&zghz3350, zgaz3306.ztup0.zSomezIz8izCiz9zK.ztup0);
+    COPY(sail_int)(&zghz3350, zgaz3306.ztup0.variants.zSomezIz8izCiz9zK.ztup0);
     RECREATE(sail_int)(&zghz3351);
-    COPY(sail_int)(&zghz3351, zgaz3306.ztup0.zSomezIz8izCiz9zK.ztup1);
+    COPY(sail_int)(&zghz3351, zgaz3306.ztup0.variants.zSomezIz8izCiz9zK.ztup1);
     RECREATE(sail_int)(&zghz3352);
-    COPY(sail_int)(&zghz3352, zgaz3306.ztup1.zSomezIz8izCiz9zK.ztup0);
+    COPY(sail_int)(&zghz3352, zgaz3306.ztup1.variants.zSomezIz8izCiz9zK.ztup0);
     RECREATE(sail_int)(&zghz3353);
-    COPY(sail_int)(&zghz3353, zgaz3306.ztup1.zSomezIz8izCiz9zK.ztup1);
+    COPY(sail_int)(&zghz3353, zgaz3306.ztup1.variants.zSomezIz8izCiz9zK.ztup1);
     bool zgaz3307;
     zgaz3307 = eq_int(zghz3350, zghz3352);
-    bool zgsz3262;
-    if (zgaz3307) {  zgsz3262 = eq_int(zghz3351, zghz3353);  } else {  zgsz3262 = false;  }
-    zcbz375 = zgsz3262;
+    bool zgsz3260;
+    if (zgaz3307) {  zgsz3260 = eq_int(zghz3351, zghz3353);  } else {  zgsz3260 = false;  }
+    zcbz375 = zgsz3260;
     goto finish_match_344;
   }
 case_345: ;
@@ -7044,7 +6704,6 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_setCapAddr(str
   zrepresentable = sailgen_capBoundsEqual(zc, zghz3354);
   zcbz376.ztup0 = zrepresentable;
   zcbz376.ztup1 = zghz3354;
-
 end_function_351: ;
   return zcbz376;
 end_block_exception_352: ;
@@ -7090,7 +6749,6 @@ static void startup_sailgen_capToString(void)
   CREATE(lbits)(&zghz3366);
 }
 
-
 // struct tuple_(%string, %bool)
 struct ztuple_z8z5stringzCz0z5boolz9 {
   sail_string ztup0;
@@ -7117,7 +6775,6 @@ static void KILL(ztuple_z8z5stringzCz0z5boolz9)(struct ztuple_z8z5stringzCz0z5bo
 static bool EQUAL(ztuple_z8z5stringzCz0z5boolz9)(struct ztuple_z8z5stringzCz0z5boolz9 op1, struct ztuple_z8z5stringzCz0z5boolz9 op2) {
   return EQUAL(sail_string)(op1.ztup0, op2.ztup0) && EQUAL(bool)(op1.ztup1, op2.ztup1);
 }
-
 
 // struct tuple_(%string, %string, %bool)
 struct ztuple_z8z5stringzCz0z5stringzCz0z5boolz9 {
@@ -7165,22 +6822,22 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
     sailgen_getCapBoundsBits(&zgaz3308, zcap);
     {
       if (zgaz3308.kind != Kind_zNonezIz8bzCbz9zK) goto case_356;
-      struct ztuple_z8z5stringzCz0z5stringzCz0z5boolz9 zgsz3271;
-      CREATE(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3271);
-      COPY(sail_string)(&((&zgsz3271)->ztup0), "0 (malformed)");
-      COPY(sail_string)(&((&zgsz3271)->ztup1), "0 (malformed)");
-      zgsz3271.ztup2 = true;
-      COPY(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgaz3313, zgsz3271);
-      KILL(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3271);
+      struct ztuple_z8z5stringzCz0z5stringzCz0z5boolz9 zgsz3269;
+      CREATE(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3269);
+      COPY(sail_string)(&((&zgsz3269)->ztup0), "0 (malformed)");
+      COPY(sail_string)(&((&zgsz3269)->ztup1), "0 (malformed)");
+      zgsz3269.ztup2 = true;
+      COPY(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgaz3313, zgsz3269);
+      KILL(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3269);
       goto finish_match_354;
     }
   case_356: ;
     {
       /* complete */
       uint64_t zbase;
-      zbase = CONVERT_OF(fbits, lbits)(zgaz3308.zSomezIz8bzCbz9zK.ztup0, true);
+      zbase = CONVERT_OF(fbits, lbits)(zgaz3308.variants.zSomezIz8bzCbz9zK.ztup0, true);
       RECREATE(lbits)(&zghz3363);
-      COPY(lbits)(&zghz3363, zgaz3308.zSomezIz8bzCbz9zK.ztup1);
+      COPY(lbits)(&zghz3363, zgaz3308.variants.zSomezIz8bzCbz9zK.ztup1);
       sail_string zgaz3311;
       CREATE(sail_string)(&zgaz3311);
       {
@@ -7203,13 +6860,13 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
         }
         string_of_lbits(&zgaz3312, zghz3364);
       }
-      struct ztuple_z8z5stringzCz0z5stringzCz0z5boolz9 zgsz3269;
-      CREATE(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3269);
-      COPY(sail_string)(&((&zgsz3269)->ztup0), zgaz3311);
-      COPY(sail_string)(&((&zgsz3269)->ztup1), zgaz3312);
-      zgsz3269.ztup2 = false;
-      COPY(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgaz3313, zgsz3269);
-      KILL(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3269);
+      struct ztuple_z8z5stringzCz0z5stringzCz0z5boolz9 zgsz3267;
+      CREATE(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3267);
+      COPY(sail_string)(&((&zgsz3267)->ztup0), zgaz3311);
+      COPY(sail_string)(&((&zgsz3267)->ztup1), zgaz3312);
+      zgsz3267.ztup2 = false;
+      COPY(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgaz3313, zgsz3267);
+      KILL(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgsz3267);
       KILL(sail_string)(&zgaz3312);
       KILL(sail_string)(&zgaz3311);
       goto finish_match_354;
@@ -7218,8 +6875,8 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
   finish_match_354: ;
     KILL(zoptionzIz8bzCbz9zK)(&zgaz3308);
   }
-  sail_string zgsz3273;
-  CREATE(sail_string)(&zgsz3273);
+  sail_string zgsz3271;
+  CREATE(sail_string)(&zgsz3271);
   {
     __label__ case_363, finish_match_362;
 
@@ -7258,19 +6915,19 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
       sailgen_getArchPerms(&zgaz3314, zcap);
       {
         if (zgaz3314.kind != Kind_zNonezIRArchPermszK) goto case_361;
-        struct ztuple_z8z5stringzCz0z5boolz9 zgsz3277;
-        CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3277);
-        COPY(sail_string)(&((&zgsz3277)->ztup0), "(malformed)");
-        zgsz3277.ztup1 = true;
-        COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3332, zgsz3277);
-        KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3277);
+        struct ztuple_z8z5stringzCz0z5boolz9 zgsz3275;
+        CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3275);
+        COPY(sail_string)(&((&zgsz3275)->ztup0), "(malformed)");
+        zgsz3275.ztup1 = true;
+        COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3332, zgsz3275);
+        KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3275);
         goto finish_match_359;
       }
     case_361: ;
       {
         /* complete */
         struct zArchPerms zghz3359;
-        zghz3359 = zgaz3314.zSomezIRArchPermszK;
+        zghz3359 = zgaz3314.variants.zSomezIRArchPermszK;
         sail_string zgaz3331;
         CREATE(sail_string)(&zgaz3331);
         {
@@ -7350,12 +7007,12 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
           KILL(sail_string)(&zgaz3330);
           KILL(sail_string)(&zgaz3329);
         }
-        struct ztuple_z8z5stringzCz0z5boolz9 zgsz3275;
-        CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3275);
-        COPY(sail_string)(&((&zgsz3275)->ztup0), zgaz3331);
-        zgsz3275.ztup1 = false;
-        COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3332, zgsz3275);
-        KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3275);
+        struct ztuple_z8z5stringzCz0z5boolz9 zgsz3273;
+        CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3273);
+        COPY(sail_string)(&((&zgsz3273)->ztup0), zgaz3331);
+        zgsz3273.ztup1 = false;
+        COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3332, zgsz3273);
+        KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3273);
         KILL(sail_string)(&zgaz3331);
         goto finish_match_359;
       }
@@ -7363,8 +7020,8 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
     finish_match_359: ;
       KILL(zoptionzIRArchPermszK)(&zgaz3314);
     }
-    sail_string zgsz3279;
-    CREATE(sail_string)(&zgsz3279);
+    sail_string zgsz3277;
+    CREATE(sail_string)(&zgsz3277);
     {
       __label__ case_365, finish_match_364;
 
@@ -7383,23 +7040,23 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
           zgaz3334 = not(zgaz3333);
         }
         if (zgaz3334) {
-          struct ztuple_z8z5stringzCz0z5boolz9 zgsz3281;
-          CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3281);
-          COPY(sail_string)(&((&zgsz3281)->ztup0), " (has non-zero reserved bits)");
-          zgsz3281.ztup1 = true;
-          COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3335, zgsz3281);
-          KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3281);
+          struct ztuple_z8z5stringzCz0z5boolz9 zgsz3279;
+          CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3279);
+          COPY(sail_string)(&((&zgsz3279)->ztup0), " (has non-zero reserved bits)");
+          zgsz3279.ztup1 = true;
+          COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3335, zgsz3279);
+          KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3279);
         } else {
-          struct ztuple_z8z5stringzCz0z5boolz9 zgsz3280;
-          CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3280);
-          COPY(sail_string)(&((&zgsz3280)->ztup0), "");
-          zgsz3280.ztup1 = false;
-          COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3335, zgsz3280);
-          KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3280);
+          struct ztuple_z8z5stringzCz0z5boolz9 zgsz3278;
+          CREATE(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3278);
+          COPY(sail_string)(&((&zgsz3278)->ztup0), "");
+          zgsz3278.ztup1 = false;
+          COPY(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3335, zgsz3278);
+          KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgsz3278);
         }
       }
-      sail_string zgsz3282;
-      CREATE(sail_string)(&zgsz3282);
+      sail_string zgsz3280;
+      CREATE(sail_string)(&zgsz3280);
       {
         sail_string zres_str;
         CREATE(sail_string)(&zres_str);
@@ -7412,9 +7069,9 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
           bool zgaz3363;
           {
             if (zbounds_malformed) {  zgaz3363 = true;  } else {
-              bool zgsz3283;
-              if (zperms_malformed) {  zgsz3283 = true;  } else {  zgsz3283 = zreserved_malformed;  }
-              zgaz3363 = zgsz3283;
+              bool zgsz3281;
+              if (zperms_malformed) {  zgsz3281 = true;  } else {  zgsz3281 = zreserved_malformed;  }
+              zgaz3363 = zgsz3281;
             }
           }
           if (zgaz3363) {
@@ -7605,7 +7262,7 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
           KILL(sail_string)(&zgaz3360);
           KILL(sail_string)(&zgaz3359);
         }
-        concat_str(&zgsz3282, "t:", zgaz3361);
+        concat_str(&zgsz3280, "t:", zgaz3361);
         KILL(sail_string)(&zgaz3361);
         KILL(sail_string)(&zcheri_mode);
         KILL(sail_string)(&zraw_str);
@@ -7615,8 +7272,8 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
     case_365: ;
       sail_match_failure("capToString");
     finish_match_364: ;
-      COPY(sail_string)(&zgsz3279, zgsz3282);
-      KILL(sail_string)(&zgsz3282);
+      COPY(sail_string)(&zgsz3277, zgsz3280);
+      KILL(sail_string)(&zgsz3280);
       KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3335);
       KILL(sail_string)(&zarch_perms_str);
       goto finish_match_362;
@@ -7624,8 +7281,8 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
   case_363: ;
     sail_match_failure("capToString");
   finish_match_362: ;
-    COPY(sail_string)(&zgsz3273, zgsz3279);
-    KILL(sail_string)(&zgsz3279);
+    COPY(sail_string)(&zgsz3271, zgsz3277);
+    KILL(sail_string)(&zgsz3277);
     KILL(ztuple_z8z5stringzCz0z5boolz9)(&zgaz3332);
     KILL(sail_string)(&zlen_str);
     KILL(sail_string)(&ztop_str);
@@ -7635,8 +7292,8 @@ static void sailgen_capToString(sail_string *zcbz377, struct zCapability zcap)
 case_358: ;
   sail_match_failure("capToString");
 finish_match_357: ;
-  COPY(sail_string)((*(&zcbz377)), zgsz3273);
-  KILL(sail_string)(&zgsz3273);
+  COPY(sail_string)((*(&zcbz377)), zgsz3271);
+  KILL(sail_string)(&zgsz3271);
   KILL(ztuple_z8z5stringzCz0z5stringzCz0z5boolz9)(&zgaz3313);
 end_function_369: ;
   goto end_function_396;
@@ -7656,8 +7313,6 @@ static void finish_sailgen_capToString(void)
   KILL(sail_int)(&zghz3362);
   KILL(sail_int)(&zghz3361);
   KILL(lbits)(&zghz3360);
-
-
   KILL(lbits)(&zghz3357);
   KILL(lbits)(&zghz3356);
   KILL(lbits)(&zghz3355);
@@ -7718,8 +7373,8 @@ static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t zlen)
       {
         bool zgaz3373;
         zgaz3373 = (ze >= INT64_C(0));
-        unit zgsz3293;
-        zgsz3293 = sail_assert(zgaz3373, "src/cheri_cap_common.sail:623.17-623.18");
+        unit zgsz3291;
+        zgsz3291 = sail_assert(zgaz3373, "src/cheri_cap_common.sail:623.17-623.18");
       }
       uint64_t zgaz3376;
       {
@@ -7752,7 +7407,6 @@ static uint64_t sailgen_getRepresentableAlignmentMask(uint64_t zlen)
 case_373: ;
   sail_match_failure("getRepresentableAlignmentMask");
 finish_match_372: ;
-
 end_function_374: ;
   return zcbz378;
 end_block_exception_375: ;
@@ -7772,7 +7426,6 @@ static void finish_sailgen_getRepresentableAlignmentMask(void)
   KILL(lbits)(&zghz3370);
   KILL(lbits)(&zghz3369);
   KILL(sail_int)(&zghz3368);
-
 }
 
 static uint64_t sailgen_getRepresentableLength(uint64_t);
@@ -7791,8 +7444,6 @@ static uint64_t sailgen_getRepresentableLength(uint64_t zlen)
     zgaz3378 = ((zlen + zgaz3377) & UINT64_C(0xFFFFFFFFFFFFFFFF));
   }
   zcbz379 = (zgaz3378 & zm);
-
-
 end_function_377: ;
   return zcbz379;
 end_block_exception_378: ;
@@ -7850,7 +7501,7 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(s
   }
   struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3379;
   zgaz3379 = sailgen_setCapBounds(zinput, znewBase, zghz3376);
-  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz3294;
+  struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz3292;
   {
     __label__ case_383, finish_match_382;
 
@@ -7867,29 +7518,29 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(s
         }
         zgaz3386 = not(zgaz3382);
       }
-      bool zgsz3298;
-      if (zgaz3386) {  zgsz3298 = true;  } else {
+      bool zgsz3296;
+      if (zgaz3386) {  zgsz3296 = true;  } else {
         bool zgaz3385;
         zgaz3385 = sailgen_boundsMalformed(zghz3377);
-        bool zgsz3297;
-        if (zgaz3385) {  zgsz3297 = true;  } else {
+        bool zgsz3295;
+        if (zgaz3385) {  zgsz3295 = true;  } else {
           bool zgaz3384;
           {
             bool zgaz3383;
             zgaz3383 = sailgen_capReservedValid(zghz3377);
             zgaz3384 = not(zgaz3383);
           }
-          bool zgsz3296;
-          if (zgaz3384) {  zgsz3296 = true;  } else {  zgsz3296 = sailgen_capIsSealed(zghz3377);  }
-          zgsz3297 = zgsz3296;
+          bool zgsz3294;
+          if (zgaz3384) {  zgsz3294 = true;  } else {  zgsz3294 = sailgen_capIsSealed(zghz3377);  }
+          zgsz3295 = zgsz3294;
         }
-        zgsz3298 = zgsz3297;
+        zgsz3296 = zgsz3295;
       }
-      zcond = zgsz3298;
+      zcond = zgsz3296;
     }
     struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3380;
     zgaz3380 = sailgen_setCapBounds(zinput, znewBase, zghz3376);
-    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz3299;
+    struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgsz3297;
     {
       bool zexactshadowz324;
       zexactshadowz324 = zgaz3380.ztup0;
@@ -7897,24 +7548,20 @@ static struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 sailgen_doCSetBounds(s
       zghz3378 = zgaz3380.ztup1;
       struct zCapability zghz3379;
       zghz3379 = sailgen_clearTagIf(zghz3378, zcond);
-      zgsz3299.ztup0 = zexactshadowz324;
-      zgsz3299.ztup1 = zghz3379;
+      zgsz3297.ztup0 = zexactshadowz324;
+      zgsz3297.ztup1 = zghz3379;
       goto finish_match_382;
     }
   case_383: ;
     sail_match_failure("doCSetBounds");
   finish_match_382: ;
-    zgsz3294 = zgsz3299;
+    zgsz3292 = zgsz3297;
     goto finish_match_380;
   }
 case_381: ;
   sail_match_failure("doCSetBounds");
 finish_match_380: ;
-  zcbz380 = zgsz3294;
-
-
-
-
+  zcbz380 = zgsz3292;
 end_function_384: ;
   return zcbz380;
 end_block_exception_385: ;
@@ -7931,9 +7578,6 @@ static void finish_sailgen_doCSetBounds(void)
   KILL(sail_int)(&zghz3382);
   KILL(lbits)(&zghz3381);
   KILL(sail_int)(&zghz3380);
-
-
-
   KILL(lbits)(&zghz3376);
 }
 
@@ -7971,18 +7615,15 @@ static void startup_sailgen_main(void)
   CREATE(lbits)(&zghz3392);
 }
 
-
-
-
-static unit sailgen_main(unit zgsz3303)
+static unit sailgen_main(unit zgsz3301)
 {
   __label__ case_388, finish_match_387, end_function_391, end_block_exception_392;
 
   unit zcbz381;
   {
     zTestCap = znull_cap;
-    unit zgsz3304;
-    zgsz3304 = UNIT;
+    unit zgsz3302;
+    zgsz3302 = UNIT;
   }
   struct zCapability zghz3384;
   {
@@ -8006,7 +7647,7 @@ static unit sailgen_main(unit zgsz3303)
   }
   struct ztuple_z8z5boolzCz0z5structz0zzCapabilityz9 zgaz3389;
   zgaz3389 = sailgen_doCSetBounds(zTestCap, zTestLen);
-  unit zgsz3305;
+  unit zgsz3303;
   {
     __label__ case_390, finish_match_389;
 
@@ -8049,7 +7690,7 @@ static unit sailgen_main(unit zgsz3303)
       zlen = sailgen_getRepresentableLength(zTestAddr);
       uint64_t zmask;
       zmask = sailgen_getRepresentableAlignmentMask(zTestAddr);
-      zgsz3305 = UNIT;
+      zgsz3303 = UNIT;
       KILL(zoptionzIz8RArchPermszCEExecutionModez5z9zK)(&zperms_mode);
       KILL(sail_string)(&zcap_str);
       KILL(zoptionzIz8izCiz9zK)(&zbounds);
@@ -8063,10 +7704,7 @@ static unit sailgen_main(unit zgsz3303)
 case_388: ;
   sail_match_failure("main");
 finish_match_387: ;
-  zcbz381 = zgsz3305;
-
-
-
+  zcbz381 = zgsz3303;
 end_function_391: ;
   return zcbz381;
 end_block_exception_392: ;
@@ -8081,12 +7719,6 @@ static void finish_sailgen_main(void)
   KILL(lbits)(&zghz3392);
   KILL(lbits)(&zghz3391);
   KILL(lbits)(&zghz3390);
-
-
-
-
-
-
 }
 
 static unit sailgen_initializze_registers(unit);
@@ -8102,7 +7734,7 @@ static void startup_sailgen_initializze_registers(void)
   CREATE(sail_int)(&zghz3395);
 }
 
-static unit sailgen_initializze_registers(unit zgsz3310)
+static unit sailgen_initializze_registers(unit zgsz3308)
 {
   __label__ end_function_394, end_block_exception_395;
 
@@ -8123,13 +7755,13 @@ static unit sailgen_initializze_registers(unit zgsz3310)
     zghz3394.zsealed = false;
     zghz3394.ztag = false;
     zTestCap = zghz3394;
-    unit zgsz3314;
-    zgsz3314 = UNIT;
+    unit zgsz3312;
+    zgsz3312 = UNIT;
   }
   {
     zTestAddr = UINT64_C(0x0000000000000000);
-    unit zgsz3313;
-    zgsz3313 = UNIT;
+    unit zgsz3311;
+    zgsz3311 = UNIT;
   }
   RECREATE(lbits)(&zghz3393);
   CONVERT_OF(lbits, fbits)(&zghz3393, UINT64_C(0b0), UINT64_C(1) , true);
@@ -8148,9 +7780,10 @@ end_block_exception_395: ;
 static void finish_sailgen_initializze_registers(void)
 {
   KILL(sail_int)(&zghz3395);
-
   KILL(lbits)(&zghz3393);
 }
+
+
 
 static void model_init(void)
 {
@@ -8231,6 +7864,7 @@ static void model_init(void)
 
 static void model_fini(void)
 {
+  KILL(lbits)(&zTestLen);
   kill_letbind_25();
   kill_letbind_24();
   kill_letbind_23();
@@ -8257,7 +7891,6 @@ static void model_fini(void)
   kill_letbind_2();
   kill_letbind_1();
   kill_letbind_0();
-  KILL(lbits)(&zTestLen);
   finish_sailgen_sail_ones();
   finish_sailgen_to_bits();
   finish_sailgen_z8operatorz0zI_uz9();
@@ -8319,6 +7952,24 @@ static int model_main(int argc, char *argv[])
   model_fini();
   model_pre_exit();
   return EXIT_SUCCESS;
+}
+
+unit (*const SAIL_TESTS[])(unit) = {
+  NULL
+};
+
+const char* const SAIL_TEST_NAMES[] = {
+};
+
+static void model_test(void)
+{
+  for (size_t i = 0; SAIL_TESTS[i] != NULL; ++i) {
+    model_init();
+    printf("Testing %s\n", SAIL_TEST_NAMES[i]);
+    SAIL_TESTS[i](UNIT);
+    printf("Pass\n");
+    model_fini();
+  }
 }
 
 
