@@ -114,7 +114,7 @@ typedef struct _cc_N(cap) _cc_N(cap_t);
 static inline uint8_t _cc_N(get_flags)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap);
-static inline uint8_t _cc_N(get_reserved)(const _cc_cap_t* cap);
+static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 /// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
@@ -168,7 +168,7 @@ struct _cc_N(cap) {
     inline uint32_t permissions() const { return _cc_N(get_perms)(this); }
     inline uint32_t type() const { return _cc_N(get_otype)(this); }
     inline bool is_sealed() const { return type() != _CC_N(OTYPE_UNSEALED); }
-    inline uint8_t reserved_bits() const { return _cc_N(get_reserved)(this); }
+    inline _cc_addr_t reserved_bits() const { return _cc_N(get_reserved)(this); }
     inline uint8_t flags() const { return _cc_N(get_flags)(this); }
     inline bool operator==(const _cc_N(cap) & other) const;
 #endif
@@ -278,10 +278,12 @@ struct _cc_N(bounds_bits) {
     }
 ALL_WRAPPERS(OTYPE, otype, uint32_t)
 ALL_WRAPPERS(FLAGS, flags, uint8_t)
-#if _CC_N(RESERVED_FIELDS) == 1
-ALL_WRAPPERS(RESERVED, reserved, uint8_t)
-#endif
 #undef ALL_WRAPPERS
+#if _CC_N(RESERVED_FIELDS) == 1
+static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
+    return cap->cr_pesbt & _CC_N(FIELD_RESERVED_MASK64);
+}
+#endif
 
 // These two split helpers exist for backwards compatibility with code that doesn't use the new functions
 static inline _cc_cap_t _cc_N(make_null_derived_cap)(_cc_addr_t addr);
@@ -965,7 +967,8 @@ static inline bool _cc_N(checked_setbounds)(_cc_cap_t* cap, _cc_length_t req_len
 }
 
 // Common code shared between all architectures, no support for mode and levels
-static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
+static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top,
+                                                          _cc_maybe_unused uint8_t lvbits) {
     _cc_cap_t creg;
     memset(&creg, 0, sizeof(creg));
     assert(base <= top && "Invalid arguments");
@@ -976,6 +979,10 @@ static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_a
     creg.cr_pesbt = _CC_N(ENCODED_INFINITE_PERMS)() | _CC_ENCODE_FIELD(_CC_N(OTYPE_UNSEALED), OTYPE);
     creg.cr_tag = true;
     creg.cr_exp = _CC_N(RESET_EXP);
+    _cc_debug_assert(lvbits <= _CC_N(MAX_LEVELS) && "We only support local-global levels.");
+#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
+    creg.cr_lvbits = lvbits;
+#endif
     bool exact_input = false;
     _cc_N(update_ebt)(&creg, _cc_N(compute_ebt)(creg.cr_base, creg._cr_top, NULL, &exact_input));
     assert(exact_input && "Invalid arguments");
@@ -988,23 +995,17 @@ static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_a
 // The CL field and SL, EL perms depend on lvbits (number of Zcherilevels or 0 if unsupported)
 static inline _cc_cap_t _cc_N(make_max_perms_cap_ext)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top,
                                                       _cc_mode mode, uint8_t lvbits) {
-    _cc_cap_t creg = _cc_N(_make_max_perms_cap_common)(base, cursor, top);
-    _cc_debug_assert(lvbits <= _CC_N(MAX_LEVELS) && "We only support local-global levels.");
-#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
-    creg.cr_lvbits = lvbits;
-#else
-    (void)lvbits;
-#endif
+    _cc_cap_t creg = _cc_N(_make_max_perms_cap_common)(base, cursor, top, lvbits);
     bool mode_valid = _cc_N(set_execution_mode(&creg, mode));
     assert(mode_valid && "Could not set mode on max perms cap");
     return creg;
 }
 static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
-    return _cc_N(make_max_perms_cap_ext)(base, cursor, top, _CC_N(MODE_INT), /*lvbits*/ 0);
+    return _cc_N(make_max_perms_cap_ext)(base, cursor, top, _CC_N(MODE_INT), _CC_N(MANDATORY_LEVELS));
 }
 #else
 static inline _cc_cap_t _cc_N(make_max_perms_cap)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top) {
-    return _cc_N(_make_max_perms_cap_common)(base, cursor, top);
+    return _cc_N(_make_max_perms_cap_common)(base, cursor, top, _CC_N(MANDATORY_LEVELS));
 }
 #endif
 

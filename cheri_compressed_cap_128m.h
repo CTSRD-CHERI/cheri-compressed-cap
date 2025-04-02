@@ -209,10 +209,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     return true; // all permissions are representable
 }
 
-static inline uint8_t cc128m_get_reserved(const cc128m_cap_t* cap) {
-    (void)cap;
-    return 0;
-}
+static inline _cc_addr_t cc128m_get_reserved(_cc_maybe_unused const cc128m_cap_t* cap) { return 0; }
 
 static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds, _cc_addr_t* base_out,
                                                          _cc_length_t* top_out, bool* valid) {
