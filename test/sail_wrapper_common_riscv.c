@@ -81,8 +81,9 @@ static struct zCapability cap_t_to_sail_cap(const _cc_cap_t* c) {
     struct zCapability result;
     result = znull_cap;
     result.ztag = c->cr_tag;
-    result.zreserved_0 = _CC_EXTRACT_FIELD(c->cr_pesbt, RESERVED0);
-    result.zreserved_1 = _CC_EXTRACT_FIELD(c->cr_pesbt, RESERVED1);
+    // TODO: remove this once we have sail with level support
+    result.zreserved_0 = _CC_EXTRACT_FIELD(c->cr_pesbt, RESERVED0_NO_LEVELS);
+    result.zreserved_1 = _CC_EXTRACT_FIELD(c->cr_pesbt, RESERVED1_NO_LEVELS);
     result.zaddress = c->_cr_cursor;
     result.zsealed = _cc_N(get_otype)(c) != 0;
     result.zsd_perms = _cc_N(get_uperms)(c);

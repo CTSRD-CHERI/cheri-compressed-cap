@@ -262,7 +262,7 @@ TEST_CASE("Malformed bounds L8", "[bounds]") {
     CHECK(cap.base() == 0);                       // this previously reported base=0x0000000c58e0a0
     CHECK(cap.top() == 0);                        // This previously reported top=0x0000000000c58e1d8
     CHECK((int64_t)cap.offset() == input_cursor); // Previously reported 0xffffffffffffff40
-    CHECK(cap.reserved_bits() == 5);
+    CHECK(cap.reserved_bits() == 0xa00000);
     CHECK(cap.type() == CC64R_OTYPE_SENTRY);
 }
 
