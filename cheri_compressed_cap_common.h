@@ -178,13 +178,18 @@ static inline bool _cc_N(exactly_equal)(const _cc_cap_t* a, const _cc_cap_t* b) 
     return a->cr_tag == b->cr_tag && a->_cr_cursor == b->_cr_cursor && a->cr_pesbt == b->cr_pesbt;
 }
 
+static inline uint8_t _cc_N(get_lvbits)(_cc_maybe_unused const _cc_cap_t* cap) {
+#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
+    return cap->cr_lvbits;
+#else
+    return _CC_N(MANDATORY_LEVELS);
+#endif
+}
+
 static inline bool _cc_N(raw_equal)(const _cc_cap_t* a, const _cc_cap_t* b) {
     return a->_cr_cursor == b->_cr_cursor && a->cr_pesbt == b->cr_pesbt && a->_cr_top == b->_cr_top &&
            a->cr_base == b->cr_base && a->cr_tag == b->cr_tag && a->cr_bounds_valid == b->cr_bounds_valid &&
-#if _CC_N(MANDATORY_LEVELS) != _CC_N(MAX_LEVELS)
-           a->cr_lvbits == b->cr_lvbits &&
-#endif
-           a->cr_exp == b->cr_exp && a->cr_extra == b->cr_extra;
+           _cc_N(get_lvbits)(a) == _cc_N(get_lvbits)(b) && a->cr_exp == b->cr_exp && a->cr_extra == b->cr_extra;
 }
 
 /* Returns the index of the most significant bit set in x */
