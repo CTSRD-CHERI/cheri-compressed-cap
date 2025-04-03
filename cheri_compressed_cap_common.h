@@ -1080,6 +1080,14 @@ public:
     static inline cap_t make_max_perms_cap(addr_t base, addr_t cursor, length_t top) {
         return _cc_N(make_max_perms_cap)(base, cursor, top);
     }
+#ifndef CC_IS_MORELLO
+    static inline constexpr _cc_mode MODE_INT = _CC_N(MODE_INT);
+    static inline constexpr _cc_mode MODE_CAP = _CC_N(MODE_CAP);
+    static inline cap_t make_max_perms_cap_ext(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top, _cc_mode mode,
+                                               uint8_t lvbits) {
+        return _cc_N(make_max_perms_cap_ext)(base, cursor, top, mode, lvbits);
+    }
+#endif
     static inline cap_t make_null_derived_cap(addr_t addr) { return _cc_N(make_null_derived_cap)(addr); }
     static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
     static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }

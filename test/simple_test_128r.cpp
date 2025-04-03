@@ -39,7 +39,8 @@ TEST_CASE_M_AP_DECOMP(LVB_1, INT_MODE_ENCODED | ENC_X | ENC_R | ENC_W | ENC_C | 
 TEST_CASE_M_AP_DECOMP(LVB_1, ENC_X | ENC_R | ENC_W | ENC_EL, 0, CAP_AP_X | CAP_AP_R | CAP_AP_W | CAP_AP_EL)
 
 TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
-    auto cap = TestAPICC::make_max_perms_cap(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000);
+    auto cap = TestAPICC::make_max_perms_cap_ext(0xffff002d01ffc000, 0xffff002d02013ff6, 0xffff002d027fc000,
+                                                 TestAPICC::MODE_INT, /*lvbits=*/0);
     CHECK(cap.cr_pesbt == 0x1f3f00003ff7ff9);
     CHECK(!TestAPICC::sail_precise_is_representable(cap, 0));
     CHECK(!TestAPICC::fast_is_representable_new_addr(cap, 0));
@@ -94,7 +95,7 @@ TEST_CASE("Malformed bounds return zero", "[bounds]") {
 
 TEST_CASE("bounds encoding exponent 0", "[bounds]") {
     /* params are base, cursor, top */
-    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap(0x0, 0x10, 0x20);
+    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap_ext(0x0, 0x10, 0x20, TestAPICC::MODE_INT, /*lvbits=*/0);
 
     /*
      * EF == 1 -> exponent 0
@@ -111,7 +112,7 @@ TEST_CASE("bounds encoding exponent 0", "[bounds]") {
 }
 
 TEST_CASE("bounds encoding exponent > 0", "[bounds]") {
-    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap(0x8000, 0x41DF, 0xA6400);
+    _cc_cap_t cap = CompressedCapCC::make_max_perms_cap_ext(0x8000, 0x41DF, 0xA6400, TestAPICC::MODE_INT, /*lvbits=*/0);
 
     /*
      * EF == 0 -> internal exponent
