@@ -804,7 +804,10 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
     if (cap->_cr_top == _CC_MAX_TOP && cap->cr_base == 0) {
         return true; // 1 << 65 is always representable
     }
-
+#if _CC_N(USES_V9_CORRECTION_FACTORS) == 0
+    // The fast representability check only applies to the ISAv9 bounds formats, use the full check for RISC-V.
+    return _cc_N(precise_is_representable_new_addr(cap, new_addr));
+#else
     _cc_bounds_bits bounds = _cc_N(extract_bounds_bits)(cap->cr_pesbt);
     // For Morello this computation uses the sig-extended bounds value.
     _cc_addr_t inc = _cc_N(cap_bounds_address)(new_addr - cap->_cr_cursor);
@@ -836,6 +839,7 @@ static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr
         inLimits = false;
     }
     return inLimits || bounds.E >= _CC_MAX_EXPONENT - 2;
+#endif
 }
 
 /* @return whether the operation was able to set precise bounds precise or not */

@@ -146,3 +146,26 @@ TEST_CASE("max perms value", "[perms]") {
     CHECK(cap.all_permissions() & CC128R_PERM_STORE_LEVEL);
     CHECK(cap.all_permissions() & CC128R_PERM_WRITE);
 }
+
+TEST_CASE("No longer using fast rep check", "[repr]") {
+    // The fast representability check is completely wrong for CC128R and is no longer used.
+    // These values were found via fuzzing: fast succeeds, precise fails:
+    const _cc_addr_t pesbt = 0x00000000002323;
+    const _cc_addr_t cursor = 0x2323232323230000;
+    const _cc_addr_t new_addr = 0x2b2333232323232b;
+    auto cap = TestAPICC::decompress_raw(pesbt, cursor, true);
+    auto sail_cap = TestAPICC::sail_decode_raw(pesbt, cursor, true);
+    CHECK(cap == sail_cap);
+    CHECK(cap.cr_bounds_valid);
+    CHECK(cap.base() == 0xc640000000000000);
+    CHECK(cap.top() == _CC_MAX_TOP);
+    CHECK(cap.cr_exp == 49);
+    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, new_addr));
+    // The sail API always uses the precise check even in the sail_fast_is_representable
+    CHECK(!TestAPICC::sail_precise_is_representable(cap, new_addr));
+    CHECK(!cc128r_is_representable_with_addr(&cap, new_addr, true));
+    CHECK(!cc128r_is_representable_with_addr(&cap, new_addr, false));
+    // TODO: should not expose the fast rep check for cc128r, for now just have it be the same as precise
+    CHECK(!TestAPICC::fast_is_representable_new_addr(cap, new_addr));
+    CHECK(!TestAPICC::sail_fast_is_representable(cap, new_addr));
+}

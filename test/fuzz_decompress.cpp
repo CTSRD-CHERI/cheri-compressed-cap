@@ -137,7 +137,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     if (!compare_caps("DECODE FROM MEM", result, sail_result)) {
         abort();
     }
+    if (!(_cc_N(reserved_bits_valid(&result)) && result.cr_bounds_valid))
+        return 0; // only valid for now.
+
     const _cc_cap_t tagged_result = make_tagged_cap(result);
+
+    fuzz_representable(result, random_base);
+    fuzz_representable(tagged_result, random_base);
+    return 0;
 
 #ifndef TEST_CC_IS_MORELLO
     check_crrl_and_cram(pesbt);
