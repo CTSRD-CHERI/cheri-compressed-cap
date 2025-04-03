@@ -37,6 +37,10 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsometimes-uninitialized"
 #pragma clang diagnostic ignored "-Wstrict-prototypes"
+#pragma clang diagnostic ignored "-Wzero-length-array"
+#if __has_warning("-Wc23-extensions")
+#pragma clang diagnostic ignored "-Wc23-extensions"
+#endif
 #ifdef HAVE_UNUSED_BUT_SET_VARIABLE
 #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #endif
