@@ -173,6 +173,7 @@ _cc_addr_t _cc_sail(null_pesbt)(void) { return _compress_sailcap_raw(znull_cap);
 _cc_addr_t _cc_sail(reset_pesbt)(void) { return _compress_sailcap_raw(SAIL_INFINITE_CAP); }
 
 bool _cc_sail(setbounds)(_cc_cap_t* cap, _cc_length_t req_len) {
+    assert(_cc_N(get_lvbits)(cap) == 1 && "Sail API assumes hardcoded lvlbits");
     struct zCapability sailcap = cap_t_to_sail_cap(cap);
     sail_cap_bits sail_req_len;
     CREATE(sail_cap_bits)(&sail_req_len);

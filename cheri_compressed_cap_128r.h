@@ -76,7 +76,6 @@ typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 0, _CC_N(MODE_INT) = 1 } _CC_N(Mode
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
     _CC_FIELD(RESERVED1, 127, 121),
-    _CC_FIELD(RESERVED1_NO_LEVELS, 127, 121),
     _CC_FIELD(SDP, 120, 117),
     _CC_FIELD(FLAGS, 116, 116), // TODO: remove this old alias
     _CC_FIELD(AP_M, 116, 108),  // Combined architectural permissions and mode
@@ -84,7 +83,6 @@ enum {
     _CC_FIELD(AP, 115, 108),
     _CC_FIELD(LEVEL, 107, 107),
     _CC_FIELD(RESERVED0, 106, 92),
-    _CC_FIELD(RESERVED0_NO_LEVELS, 107, 92),
     _CC_FIELD(OTYPE, 91, 91),
     _CC_FIELD(EBT, 90, 64),
 
@@ -128,8 +126,9 @@ enum {
 
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_SDP_MAX_VALUE);
 // Encoded value is 0b100111111 since SL and EL are not supported in sail yet.
-#define CC128R_ENCODED_INFINITE_PERMS()                                                                                \
-    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD(0x13f, AP) | _CC_ENCODE_FIELD(1, MODE))
+#define CC128R_ENCODED_INFINITE_PERMS(lvbits)                                                                          \
+    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD(lvbits == 0 ? 0x13f : 0x1ff, AP) |                    \
+     _CC_ENCODE_FIELD(_CC_BITMASK64(lvbits), LEVEL) | _CC_ENCODE_FIELD(1, MODE))
 #define CC128R_PERMS_MASK (CC128R_PERMS_ALL | CC128R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
