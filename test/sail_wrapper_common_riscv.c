@@ -106,11 +106,11 @@ static _cc_cap_t sail_cap_to_cap_t(const struct zCapability* sail) {
     c._cr_cursor = sail->zaddress;
     set_top_base_from_sail(sail, &c);
     c.cr_tag = sail->ztag;
-    if (sailgen_boundsMalformed(*sail)) {
+    c.cr_bounds_valid = !sailgen_boundsMalformed(*sail);
+    if (!c.cr_bounds_valid) {
         assert(!sail->ztag && "Input cannot be tagged with malformed bounds");
     }
     c.cr_exp = sail->zE;
-    c.cr_bounds_valid = !sailgen_boundsMalformed(*sail);
     c.cr_pesbt = _compress_sailcap_raw(*sail);
     // sail currently always has lvbits == 1
     c.cr_lvbits = 1;
