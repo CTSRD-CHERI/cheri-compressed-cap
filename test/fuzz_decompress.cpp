@@ -86,16 +86,23 @@ void fuzz_setbounds(const _cc_cap_t& input_cap, _cc_addr_t req_len) {
 }
 
 void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
+    bool cc_full_rep = TestAPICC::precise_is_representable_new_addr(input_cap, new_addr);
     bool cc_fast_rep = TestAPICC::fast_is_representable_new_addr(input_cap, new_addr);
+    bool sail_full_rep = TestAPICC::sail_precise_is_representable(input_cap, new_addr);
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(input_cap, new_addr);
+    // The fast rep check can have false negatives but should never return true if the precise check fails
+    if (cc_fast_rep && !cc_full_rep) {
+        fprintf(stderr, "Fast rep check passed when full check failed for addr %#016" PRIx64 " \nInput was:\n",
+                (uint64_t)new_addr);
+        dump_cap_fields(input_cap);
+        abort();
+    }
     if (cc_fast_rep != sail_fast_rep) {
         fprintf(stderr, "Fast rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
                 sail_fast_rep, cc_fast_rep, (uint64_t)new_addr);
         dump_cap_fields(input_cap);
         abort();
     }
-    bool cc_full_rep = TestAPICC::precise_is_representable_new_addr(input_cap, new_addr);
-    bool sail_full_rep = TestAPICC::sail_precise_is_representable(input_cap, new_addr);
     if (cc_full_rep != sail_full_rep) {
         fprintf(stderr, "Precise rep check differs for sail (%d) vs cclib (%d) for addr %#016" PRIx64 " \nInput was:\n",
                 sail_full_rep, cc_full_rep, (uint64_t)new_addr);
