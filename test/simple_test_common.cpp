@@ -42,7 +42,7 @@ TEST_CASE("Compressed NULL cap encodes to zeroes", "[nullcap]") {
     CHECK_FIELD(decompressed, software_permissions, 0);
     CHECK_FIELD(decompressed, permissions, 0);
     CHECK((decompressed.cr_pesbt & _CC_N(FIELD_EBT_MASK64)) == (_CC_N(NULL_PESBT) & _CC_N(FIELD_EBT_MASK64)));
-    CHECK(_cc_N(get_reserved)(&decompressed) == 0); // reserved bits
+    CHECK(_cc_N(reserved_bits_valid)(&decompressed)); // reserved bits
     CHECK(decompressed.length() == _CC_N(NULL_LENGTH));
     CHECK(decompressed.top() == _CC_N(NULL_TOP));
     CHECK_FIELD(decompressed, type, _CC_N(OTYPE_UNSEALED));

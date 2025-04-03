@@ -115,6 +115,7 @@ static inline uint8_t _cc_N(get_flags)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap);
+static inline bool _cc_N(reserved_bits_valid)(const _cc_cap_t* cap) { return _cc_N(get_reserved)(cap) == 0; }
 static inline _cc_addr_t _cc_N(get_uperms)(const _cc_cap_t* cap);
 /// Returns the combined permissions in the format specified by GCPERM/CGetPerm.
 static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap);
@@ -509,7 +510,7 @@ static inline void _cc_N(decompress_raw_ext)(_cc_addr_t pesbt, _cc_addr_t cursor
         _cc_debug_assert(cdp->_cr_top <= _CC_N(MAX_TOP));
         _cc_debug_assert(cdp->cr_base <= cdp->_cr_top);
 #endif
-        _cc_debug_assert(_cc_N(get_reserved)(cdp) == 0);
+        _cc_debug_assert(_cc_N(reserved_bits_valid)(cdp));
     }
 }
 
@@ -550,7 +551,7 @@ static inline void _cc_N(update_ebt)(_cc_cap_t* csp, _cc_addr_t new_ebt) {
  * cap_set_decompressed_X will set fields and keep pesbt in sync.
  */
 static inline _cc_addr_t _cc_N(compress_raw)(const _cc_cap_t* csp) {
-    _cc_debug_assert((!csp->cr_tag || _cc_N(get_reserved)(csp) == 0) &&
+    _cc_debug_assert((!csp->cr_tag || _cc_N(reserved_bits_valid)(csp)) &&
                      "Unknown reserved bits set it tagged capability");
     _cc_debug_assert(_cc_N(pesbt_is_correct)(csp) && "capability bounds were modified without updating pesbt");
     return csp->cr_pesbt;
@@ -905,7 +906,7 @@ static inline bool _cc_N(setbounds_impl)(_cc_cap_t* cap, _cc_length_t req_len, _
         // See https://github.com/CTSRD-CHERI/sail-cheri-riscv/pull/36 for a decoding change that guarantees
         // this invariant for any input.
         _cc_debug_assert(new_top >= new_base);
-        _cc_debug_assert(_cc_N(get_reserved)(cap) == 0 && "Unknown reserved bits set in tagged capability");
+        _cc_debug_assert(_cc_N(reserved_bits_valid)(cap) && "Unknown reserved bits set in tagged capability");
         _cc_debug_assert(new_base >= cap->cr_base && "Cannot reduce base on tagged capabilities");
         _cc_debug_assert(new_top <= cap->_cr_top && "Cannot increase top on tagged capabilities");
     }
