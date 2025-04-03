@@ -1068,9 +1068,9 @@ public:
     using bounds_bits = _cc_bounds_bits;
 
     static inline addr_t compress_raw(const cap_t& csp) { return _cc_N(compress_raw)(&csp); }
-    static inline cap_t decompress_raw(addr_t pesbt, addr_t cursor, bool tag) {
+    static inline cap_t decompress_raw(addr_t pesbt, addr_t cursor, bool tag, uint8_t lvbits = _CC_N(MAX_LEVELS)) {
         cap_t result;
-        _cc_N(decompress_raw)(pesbt, cursor, tag, &result);
+        _cc_N(decompress_raw_ext)(pesbt, cursor, tag, lvbits, &result);
         return result;
     }
     static inline addr_t compress_mem(const cap_t& csp) { return _cc_N(compress_mem)(&csp); }
@@ -1088,12 +1088,14 @@ public:
 #ifndef CC_IS_MORELLO
     static inline constexpr _cc_mode MODE_INT = _CC_N(MODE_INT);
     static inline constexpr _cc_mode MODE_CAP = _CC_N(MODE_CAP);
-    static inline cap_t make_max_perms_cap_ext(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top, _cc_mode mode,
-                                               uint8_t lvbits) {
+    static inline cap_t make_max_perms_cap(addr_t base, addr_t cursor, length_t top, _cc_mode mode,
+                                           uint8_t lvbits = _CC_N(MAX_LEVELS)) {
         return _cc_N(make_max_perms_cap_ext)(base, cursor, top, mode, lvbits);
     }
 #endif
-    static inline cap_t make_null_derived_cap(addr_t addr) { return _cc_N(make_null_derived_cap)(addr); }
+    static inline cap_t make_null_derived_cap(addr_t addr, uint8_t lvbits = _CC_N(MAX_LEVELS)) {
+        return _cc_N(make_null_derived_cap_ext)(addr, lvbits);
+    }
     static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
     static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }
     static inline bool fast_is_representable_new_addr(const cap_t& cap, addr_t new_addr) {
