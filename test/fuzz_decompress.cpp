@@ -116,7 +116,7 @@ void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
 /// correctly by detagging.
 _cc_cap_t make_tagged_cap(const _cc_cap_t& c) {
     _cc_cap_t result = c;
-    result.cr_tag = c.reserved_bits() == 0;
+    result.cr_tag = c.reserved_bits() == 0 && c.cr_bounds_valid;
     return result;
 }
 
