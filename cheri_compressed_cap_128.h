@@ -121,7 +121,7 @@ _CC_STATIC_ASSERT((CC128_HIGHEST_PERM << 1) > CC128_FIELD_HWPERMS_MAX_VALUE, "al
 #define CC128_UPERMS_SHFT (15)
 #define CC128_UPERMS_MEM_SHFT (12)
 #define CC128_PERM_SW_ALL (CC128_UPERMS_ALL << CC128_UPERMS_SHFT)
-#define CC128_ENCODED_INFINITE_PERMS()                                                                                 \
+#define CC128_ENCODED_INFINITE_PERMS(lvbits)                                                                           \
     (_CC_ENCODE_FIELD(CC128_UPERMS_ALL, UPERMS) | _CC_ENCODE_FIELD(CC128_PERMS_ALL, HWPERMS))
 #define CC128_PERMS_MASK (CC128_PERMS_ALL | CC128_PERM_SW_ALL)
 

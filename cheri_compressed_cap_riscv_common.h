@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BSD-2-Clause
 
 static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
+    _cc_addr_t reserved = cap->cr_pesbt & (_CC_N(FIELD_RESERVED0_MASK64) | _CC_N(FIELD_RESERVED1_MASK64));
     if (cap->cr_lvbits == 0) {
-        return cap->cr_pesbt & (_CC_N(FIELD_RESERVED0_NO_LEVELS_MASK64) | _CC_N(FIELD_RESERVED1_NO_LEVELS_MASK64));
-    } else {
-        return cap->cr_pesbt & (_CC_N(FIELD_RESERVED0_MASK64) | _CC_N(FIELD_RESERVED1_MASK64));
+        reserved |= cap->cr_pesbt & _CC_N(FIELD_LEVEL_MASK64);
     }
+    return reserved;
 }
 
 static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {

@@ -77,14 +77,12 @@ typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 0, _CC_N(MODE_INT) = 1 } _CC_N(Mode
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
     _CC_FIELD(SDP, 63, 62),
-    _CC_FIELD(AP_M, 61, 57),                // combined architectural permissions and mode
-    _CC_FIELD(MODE, 57, 57),                // Only valid if AP_M grant execute (quadrant 1)
-    _CC_FIELD(FLAGS, 57, 57),               // TODO: remove this field
-    _CC_FIELD(RESERVED1, 56, 56),           // Actually the CL field, but reserved for now to match sail
-    _CC_FIELD(RESERVED1_NO_LEVELS, 56, 56), // Actually the CL field, but reserved for now to match sail
+    _CC_FIELD(AP_M, 61, 57),  // combined architectural permissions and mode
+    _CC_FIELD(MODE, 57, 57),  // Only valid if AP_M grant execute (quadrant 1)
+    _CC_FIELD(FLAGS, 57, 57), // TODO: remove this field
     _CC_FIELD(LEVEL, 56, 56),
-    _CC_FIELD(RESERVED0, 55, 53),
-    _CC_FIELD(RESERVED0_NO_LEVELS, 55, 53),
+    _CC_FIELD(RESERVED1, 55, 55),
+    _CC_FIELD(RESERVED0, 54, 53),
     _CC_FIELD(OTYPE, 52, 52),
     _CC_FIELD(EBT, 51, 32),
 
@@ -134,8 +132,9 @@ _CC_STATIC_ASSERT_SAME(CC64R_UPERMS_ALL, CC64R_FIELD_SDP_MAX_VALUE);
 #define CC64R_AP_Q2 ((uint8_t)(2 << 3))
 #define CC64R_AP_Q3 ((uint8_t)(3 << 3))
 // The infinite cap has mode = 1 (if hybrid is supported) and is the first value in quadrant 1 (0x8 or 0x9)
-#define CC64R_ENCODED_INFINITE_PERMS()                                                                                 \
-    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), AP_M))
+#define CC64R_ENCODED_INFINITE_PERMS(lvbits)                                                                           \
+    (_CC_ENCODE_FIELD(CC64R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD((CC64R_AP_Q1 | 1), AP_M) |                             \
+     _CC_ENCODE_FIELD(_CC_BITMASK64(lvbits), LEVEL))
 #define CC64R_PERMS_MASK (CC64R_PERMS_ALL | CC64R_PERM_SW_ALL)
 
 // Currently, only one type (sentry) is defined.
