@@ -363,3 +363,19 @@ TEST_CASE("removing ASR should not affect mode", "[perms]") {
 }
 
 #endif
+
+TEST_CASE("get level from max perms", "[perms]") {
+    const TestAPICC::cap_t max_cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(max_cap.level() == _CC_N(MAX_LEVEL_VALUE));
+    const TestAPICC::cap_t null_cap = TestAPICC::make_null_derived_cap(0);
+    CHECK(null_cap.level() == 0);
+}
+
+#if _CC_N(MAX_LEVELS) != _CC_N(MANDATORY_LEVELS)
+TEST_CASE("get level from max perms (no levels)", "[perms]") {
+    const TestAPICC::cap_t max_cap_no_levels = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP, TestAPICC::MODE_INT, 0);
+    CHECK(max_cap_no_levels.level() == 1); // When levels are not supported always report 1
+    const TestAPICC::cap_t null_cap_no_levels = TestAPICC::make_null_derived_cap(0, 0);
+    CHECK(null_cap_no_levels.level() == 1);
+}
+#endif

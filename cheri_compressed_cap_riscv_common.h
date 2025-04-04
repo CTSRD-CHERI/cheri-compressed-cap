@@ -7,6 +7,10 @@ static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
     }
     return reserved;
 }
+static inline uint32_t _cc_N(get_level)(const _cc_cap_t* cap) {
+    // With lvbits==0 we always report global.
+    return cap->cr_lvbits == 0 ? 1 : _CC_EXTRACT_FIELD(cap->cr_pesbt, LEVEL);
+}
 
 static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
     // The spec defines this check as checking for E < 0, but since we store it as an unsigned number, we compare it to
