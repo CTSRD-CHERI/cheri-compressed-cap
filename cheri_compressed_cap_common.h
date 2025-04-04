@@ -289,9 +289,22 @@ static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
 }
 #endif
 
+static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_otype)(cp) != _CC_N(OTYPE_UNSEALED); }
+
 #if _CC_N(MANDATORY_LEVELS) == _CC_N(MAX_LEVELS) && _CC_N(MANDATORY_LEVELS) == 1
 static inline uint32_t _cc_N(get_level)(const _cc_cap_t* cap) {
     return _cc_N(get_all_permissions)(cap) & _CC_N(PERM_GLOBAL) ? 1 : 0;
+}
+static inline void _cc_N(update_level)(_cc_cap_t* cap, uint8_t level) {
+    _cc_api_requirement(level <= _CC_N(MAX_LEVEL_VALUE), "invalid level");
+    _cc_api_requirement(!cap->cr_tag || !_cc_N(is_cap_sealed)(cap), "cannot update level on sealed caps");
+    _cc_addr_t perms = _cc_N(get_all_permissions)(cap);
+    if (level)
+        perms |= _CC_N(PERM_GLOBAL);
+    else
+        perms &= ~_CC_N(PERM_GLOBAL);
+    _cc_maybe_unused bool ok = _cc_N(set_permissions)(cap, perms);
+    _cc_debug_assert(ok && "failed to update level");
 }
 #endif
 
@@ -532,8 +545,6 @@ static inline void _cc_N(decompress_raw)(_cc_addr_t pesbt, _cc_addr_t cursor, bo
 static inline void _cc_N(decompress_mem)(uint64_t pesbt, uint64_t cursor, bool tag, _cc_cap_t* cdp) {
     _cc_N(decompress_raw_ext)(pesbt ^ _CC_N(MEM_XOR_MASK), cursor, tag, _CC_N(MAX_LEVELS), cdp);
 }
-
-static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_otype)(cp) != _CC_N(OTYPE_UNSEALED); }
 
 /// Check that the expanded bounds match the compressed cr_pesbt value.
 static inline bool _cc_N(pesbt_is_correct)(const _cc_cap_t* csp) {
