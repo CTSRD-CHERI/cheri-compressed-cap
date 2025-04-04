@@ -64,6 +64,7 @@ enum {
     // We mask on store/load so this invisibly keeps null 0 whatever we choose it to be.
     _CC_N(MEM_XOR_MASK) = _CC_N(NULL_PESBT),
     _CC_N(NULL_XOR_MASK) __attribute__((deprecated("Use _MEM_XOR_MASK instead"))) = _CC_N(MEM_XOR_MASK),
+    _CC_N(MAX_LEVEL_VALUE) = _CC_BITMASK64(_CC_N(MAX_LEVELS)),
 };
 #pragma GCC diagnostic pop
 
@@ -113,6 +114,7 @@ typedef struct _cc_N(cap) _cc_N(cap_t);
 #define _cc_cap_t _cc_N(cap_t)
 static inline uint8_t _cc_N(get_flags)(const _cc_cap_t* cap);
 static inline uint32_t _cc_N(get_otype)(const _cc_cap_t* cap);
+static inline uint32_t _cc_N(get_level)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_perms)(const _cc_cap_t* cap);
 static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap);
 static inline bool _cc_N(reserved_bits_valid)(const _cc_cap_t* cap) { return _cc_N(get_reserved)(cap) == 0; }
@@ -168,6 +170,7 @@ struct _cc_N(cap) {
     inline uint32_t has_permissions(_cc_addr_t perms) const { return _cc_N(has_permissions)(this, perms); }
     inline uint32_t permissions() const { return _cc_N(get_perms)(this); }
     inline uint32_t type() const { return _cc_N(get_otype)(this); }
+    inline uint32_t level() const { return _cc_N(get_level)(this); }
     inline bool is_sealed() const { return type() != _CC_N(OTYPE_UNSEALED); }
     inline _cc_addr_t reserved_bits() const { return _cc_N(get_reserved)(this); }
     inline uint8_t flags() const { return _cc_N(get_flags)(this); }
@@ -283,6 +286,12 @@ ALL_WRAPPERS(FLAGS, flags, uint8_t)
 #if _CC_N(RESERVED_FIELDS) == 1
 static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
     return cap->cr_pesbt & _CC_N(FIELD_RESERVED_MASK64);
+}
+#endif
+
+#if _CC_N(MANDATORY_LEVELS) == _CC_N(MAX_LEVELS) && _CC_N(MANDATORY_LEVELS) == 1
+static inline uint32_t _cc_N(get_level)(const _cc_cap_t* cap) {
+    return _cc_N(get_all_permissions)(cap) & _CC_N(PERM_GLOBAL) ? 1 : 0;
 }
 #endif
 
