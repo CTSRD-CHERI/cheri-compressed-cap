@@ -371,7 +371,7 @@ TEST_CASE("get level from max perms", "[perms]") {
     CHECK(null_cap.level() == 0);
 }
 
-#if _CC_N(MAX_LEVELS) != _CC_N(MANDATORY_LEVELS)
+#if _CC_N(MAX_LEVEL_BITS) != _CC_N(MANDATORY_LEVEL_BITS)
 TEST_CASE("get level from max perms (no levels)", "[perms]") {
     const TestAPICC::cap_t max_cap_no_levels = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP, TestAPICC::MODE_INT, 0);
     CHECK(max_cap_no_levels.level() == 1); // When levels are not supported always report 1
@@ -390,7 +390,7 @@ TEST_CASE("Update level", "[perms]") {
 #ifndef NDEBUG
     // Setting reserved-zero permissions should be rejected
     CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap, 7), std::invalid_argument, Message("invalid level"));
-#if _CC_N(MAX_LEVELS) == _CC_N(MANDATORY_LEVELS)
+#if _CC_N(MAX_LEVEL_BITS) == _CC_N(MANDATORY_LEVEL_BITS)
     // For RISC-V we can update the level on sealed caps, for V9 and morello this is not possible
     _cc_N(update_otype)(&cap, _CC_N(OTYPE_SENTRY));
     CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap, 0), std::invalid_argument,
@@ -400,7 +400,7 @@ TEST_CASE("Update level", "[perms]") {
 }
 
 TEST_CASE("Update level using set_perms API", "[perms]") {
-#if _CC_N(MAX_LEVELS) == _CC_N(MANDATORY_LEVELS)
+#if _CC_N(MAX_LEVEL_BITS) == _CC_N(MANDATORY_LEVEL_BITS)
     _cc_addr_t level_perm = _CC_N(PERM_GLOBAL);
 #else
     _cc_addr_t level_perm = _CC_N(PERM_LEVEL);
@@ -414,7 +414,7 @@ TEST_CASE("Update level using set_perms API", "[perms]") {
     CHECK((cap.permissions() & level_perm) == 0);
 }
 
-#if _CC_N(MAX_LEVELS) != _CC_N(MANDATORY_LEVELS)
+#if _CC_N(MAX_LEVEL_BITS) != _CC_N(MANDATORY_LEVEL_BITS)
 TEST_CASE("update level (no levels)", "[perms]") {
     TestAPICC::cap_t cap_no_levels = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP, TestAPICC::MODE_INT, 0);
     CHECK(_cc_N(get_lvbits)(&cap_no_levels) == 0);

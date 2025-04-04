@@ -55,8 +55,8 @@
 #define CC64_SPECIAL_OTYPE_VAL(subtract) (CC64_MAX_REPRESENTABLE_OTYPE - subtract##u)
 #define CC64_SPECIAL_OTYPE_VAL_SIGNED(subtract) (((int64_t)-1) - subtract##u)
 // ISAv9 always supports exactly one level bit (local/global).
-#define CC64_MANDATORY_LEVELS 1
-#define CC64_MAX_LEVELS CC64_MANDATORY_LEVELS
+#define CC64_MANDATORY_LEVEL_BITS 1
+#define CC64_MAX_LEVEL_BITS CC64_MANDATORY_LEVEL_BITS
 
 /* Use uint64_t to represent 33 bit length */
 typedef uint64_t cc64_length_t;
