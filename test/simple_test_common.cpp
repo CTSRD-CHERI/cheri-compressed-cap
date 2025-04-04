@@ -399,6 +399,21 @@ TEST_CASE("Update level", "[perms]") {
 #endif
 }
 
+TEST_CASE("Update level using set_perms API", "[perms]") {
+#if _CC_N(MAX_LEVELS) == _CC_N(MANDATORY_LEVELS)
+    _cc_addr_t level_perm = _CC_N(PERM_GLOBAL);
+#else
+    _cc_addr_t level_perm = _CC_N(PERM_LEVEL);
+#endif
+    // CHECK that we can change the level use the permissions API as well
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(cap.level() == _CC_N(MAX_LEVEL_VALUE));
+    CHECK((cap.permissions() & level_perm) != 0);
+    _cc_N(set_permissions)(&cap, cap.permissions() & ~level_perm);
+    CHECK(cap.level() == 0);
+    CHECK((cap.permissions() & level_perm) == 0);
+}
+
 #if _CC_N(MAX_LEVELS) != _CC_N(MANDATORY_LEVELS)
 TEST_CASE("update level (no levels)", "[perms]") {
     TestAPICC::cap_t cap_no_levels = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP, TestAPICC::MODE_INT, 0);
