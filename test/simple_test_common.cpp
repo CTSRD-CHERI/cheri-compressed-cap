@@ -379,3 +379,39 @@ TEST_CASE("get level from max perms (no levels)", "[perms]") {
     CHECK(null_cap_no_levels.level() == 1);
 }
 #endif
+
+TEST_CASE("Update level", "[perms]") {
+    TestAPICC::cap_t cap = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP);
+    CHECK(cap.level() == _CC_N(MAX_LEVEL_VALUE));
+    _cc_N(update_level)(&cap, 0);
+    CHECK(cap.level() == 0);
+    _cc_N(update_level)(&cap, 1);
+    CHECK(cap.level() == 1);
+#ifndef NDEBUG
+    // Setting reserved-zero permissions should be rejected
+    CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap, 7), std::invalid_argument, Message("invalid level"));
+#if _CC_N(MAX_LEVELS) == _CC_N(MANDATORY_LEVELS)
+    // For RISC-V we can update the level on sealed caps, for V9 and morello this is not possible
+    _cc_N(update_otype)(&cap, _CC_N(OTYPE_SENTRY));
+    CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap, 0), std::invalid_argument,
+                         Message("cannot update level on sealed caps"));
+#endif
+#endif
+}
+
+#if _CC_N(MAX_LEVELS) != _CC_N(MANDATORY_LEVELS)
+TEST_CASE("update level (no levels)", "[perms]") {
+    TestAPICC::cap_t cap_no_levels = TestAPICC::make_max_perms_cap(0, 0, _CC_MAX_TOP, TestAPICC::MODE_INT, 0);
+    CHECK(_cc_N(get_lvbits)(&cap_no_levels) == 0);
+    CHECK(cap_no_levels.level() == 1); // When levels are not supported always report 1
+    // No-op change to level is ok
+    _cc_N(update_level)(&cap_no_levels, 1);
+    CHECK(cap_no_levels.level() == 1);
+#ifndef NDEBUG
+    // Setting level to a value other than 1 should be rejected
+    CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap_no_levels, 0), std::invalid_argument,
+                         Message("cannot change level when levels are reserved"));
+    CHECK_THROWS_MATCHES(_cc_N(update_level)(&cap_no_levels, 2), std::invalid_argument, Message("invalid level"));
+#endif
+}
+#endif

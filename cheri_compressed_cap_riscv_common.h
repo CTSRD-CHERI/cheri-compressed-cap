@@ -11,6 +11,14 @@ static inline uint32_t _cc_N(get_level)(const _cc_cap_t* cap) {
     // With lvbits==0 we always report global.
     return cap->cr_lvbits == 0 ? 1 : _CC_EXTRACT_FIELD(cap->cr_pesbt, LEVEL);
 }
+static inline void _cc_N(update_level)(_cc_cap_t* cap, uint8_t level) {
+    _cc_api_requirement(level <= _CC_N(MAX_LEVEL_VALUE), "invalid level");
+    if (cap->cr_lvbits == 0) {
+        _cc_api_requirement(level == 1, "cannot change level when levels are reserved");
+        return;
+    }
+    cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, level, LEVEL);
+}
 
 static inline bool _cc_N(bounds_malformed)(_cc_bounds_bits bounds) {
     // The spec defines this check as checking for E < 0, but since we store it as an unsigned number, we compare it to
