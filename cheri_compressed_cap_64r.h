@@ -60,9 +60,9 @@
 #define CC64R_SPECIAL_OTYPE_VAL(val) (val##u)
 #define CC64R_SPECIAL_OTYPE_VAL_SIGNED(val) (val##u)
 // Levels support depend on Zcherilevels extension. When not supported we have zero level bits.
-#define CC64R_MANDATORY_LEVELS 0
+#define CC64R_MANDATORY_LEVEL_BITS 0
 // The encoding allows for up to two levels, but the current implementation is limited to one level bit.
-#define CC64R_MAX_LEVELS 1
+#define CC64R_MAX_LEVEL_BITS 1
 
 /* Use uint64_t to represent 33 bit length */
 typedef uint64_t cc64r_length_t;
