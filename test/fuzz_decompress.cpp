@@ -91,7 +91,10 @@ void fuzz_representable(const _cc_cap_t& input_cap, _cc_addr_t new_addr) {
     bool sail_full_rep = TestAPICC::sail_precise_is_representable(input_cap, new_addr);
     bool sail_fast_rep = TestAPICC::sail_fast_is_representable(input_cap, new_addr);
     // The fast rep check can have false negatives but should never return true if the precise check fails
-    if (cc_fast_rep && !cc_full_rep) {
+    // The is_representable_with_addr API performs additional checks beyond the basic check for Morello
+    bool fast_ok = _cc_N(is_representable_with_addr)(&input_cap, new_addr, false);
+    bool precise_ok = _cc_N(is_representable_with_addr)(&input_cap, new_addr, true);
+    if (fast_ok && !precise_ok) {
         fprintf(stderr, "Fast rep check passed when full check failed for addr %#016" PRIx64 " \nInput was:\n",
                 (uint64_t)new_addr);
         dump_cap_fields(input_cap);
