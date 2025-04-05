@@ -43,9 +43,9 @@ TEST_CASE("Reprentability with TOP>MAX_TOP", "[representable]") {
                                              TestAPICC::MODE_INT, /*lvbits=*/0);
     CHECK(cap.cr_pesbt == 0x1f3f00003ff7ff9);
     CHECK(!TestAPICC::sail_precise_is_representable(cap, 0));
-    CHECK(!TestAPICC::fast_is_representable_new_addr(cap, 0));
+    CHECK(!_cc_N(_fast_is_representable_new_addr)(&cap, 0));
     // The following line used to assert with cdp->_cr_top <= ((cc128_length_t)1u << 64)
-    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, 0));
+    CHECK(!_cc_N(_precise_is_representable_new_addr)(&cap, 0));
     // Decode a new capability with the same pesbt value and check that the bounds differ (and are > MAX_TOP)
     const _cc_cap_t cap2 = TestAPICC::decompress_raw(cap.cr_pesbt, 0, false);
     CHECK(cap2.base() != cap.base());
@@ -160,12 +160,12 @@ TEST_CASE("No longer using fast rep check", "[repr]") {
     CHECK(cap.base() == 0xc640000000000000);
     CHECK(cap.top() == _CC_MAX_TOP);
     CHECK(cap.cr_exp == 49);
-    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, new_addr));
+    CHECK(!_cc_N(_precise_is_representable_new_addr)(&cap, new_addr));
     // The sail API always uses the precise check even in the sail_fast_is_representable
     CHECK(!TestAPICC::sail_precise_is_representable(cap, new_addr));
     CHECK(!cc128r_is_representable_with_addr(&cap, new_addr, true));
     CHECK(!cc128r_is_representable_with_addr(&cap, new_addr, false));
     // TODO: should not expose the fast rep check for cc128r, for now just have it be the same as precise
-    CHECK(!TestAPICC::fast_is_representable_new_addr(cap, new_addr));
+    CHECK(!_cc_N(_fast_is_representable_new_addr)(&cap, new_addr));
     CHECK(!TestAPICC::sail_fast_is_representable(cap, new_addr));
 }
