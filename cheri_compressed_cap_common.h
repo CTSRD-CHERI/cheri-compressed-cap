@@ -283,11 +283,6 @@ struct _cc_N(bounds_bits) {
 ALL_WRAPPERS(OTYPE, otype, uint32_t)
 ALL_WRAPPERS(FLAGS, flags, uint8_t)
 #undef ALL_WRAPPERS
-#if _CC_N(RESERVED_FIELDS) == 1
-static inline _cc_addr_t _cc_N(get_reserved)(const _cc_cap_t* cap) {
-    return cap->cr_pesbt & _CC_N(FIELD_RESERVED_MASK64);
-}
-#endif
 
 static inline bool _cc_N(is_cap_sealed)(const _cc_cap_t* cp) { return _cc_N(get_otype)(cp) != _CC_N(OTYPE_UNSEALED); }
 
