@@ -77,7 +77,7 @@ TEST_CASE("Invalid exponent caps should never be representable", "[fuzz]") {
     CHECK(!cap.cr_bounds_valid);
     // The precise check should also fail:
     CHECK(!TestAPICC::sail_precise_is_representable(cap, 0));
-    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, 0));
+    CHECK(!_cc_N(_precise_is_representable_new_addr)(&cap, 0));
     CHECK(!cc128m_is_representable_with_addr(&cap, 0, /*precise_representable_check=*/true));
     // Calling cc128m_is_representable_with_addr should fail since it checks the exponent validity in addition to the
     // doing the fast representability check.
