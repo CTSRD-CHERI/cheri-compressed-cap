@@ -77,9 +77,23 @@ TEST_CASE("Invalid exponent caps should never be representable", "[fuzz]") {
     CHECK(!cap.cr_bounds_valid);
     // The precise check should also fail:
     CHECK(!TestAPICC::sail_precise_is_representable(cap, 0));
-    CHECK(!TestAPICC::precise_is_representable_new_addr(cap, 0));
+    CHECK(!_cc_N(_precise_is_representable_new_addr)(&cap, 0));
     CHECK(!cc128m_is_representable_with_addr(&cap, 0, /*precise_representable_check=*/true));
     // Calling cc128m_is_representable_with_addr should fail since it checks the exponent validity in addition to the
     // doing the fast representability check.
     CHECK(!cc128m_is_representable_with_addr(&cap, 0, /*precise_representable_check=*/false));
+}
+
+TEST_CASE("Invalid exponent caps should never be representable 2", "[fuzz]") {
+    // For Morello the representability check should always fail if the input had an invalid exponent.
+    // NB: calling the fast representability check directly succeeds since it does not take this into account, but the
+    // overall check for IncOffset/SetAddr should fail.
+    _cc_addr_t new_addr = 0x909090909090ff16;
+    auto cap = checkFastRepCheckSucceeds(
+        /*pesbt=*/0x300000000223ff, /*addr=*/0xff2b55feff39ffff, /*expected_base=*/0x23f80000000000,
+        /*expected_top=*/0x00080000000000000, new_addr, /*set_addr_should_retain_tag=*/false);
+    CHECK(cap.cr_exp == 40);
+    CHECK(!cc128m_is_representable_with_addr(&cap, new_addr, /*precise_representable_check=*/false));
+    CHECK(!cc128m_is_representable_with_addr(&cap, new_addr, /*precise_representable_check=*/true));
+    CHECK(false);
 }
