@@ -575,7 +575,7 @@ static inline _cc_addr_t _cc_N(compress_mem)(const _cc_cap_t* csp) {
     return _cc_N(compress_raw)(csp) ^ _CC_N(MEM_XOR_MASK);
 }
 
-static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr);
+static bool _cc_N(_fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr);
 
 /// Check that a capability is representable by compressing and recompressing
 static inline bool _cc_N(is_representable_cap_exact)(const _cc_cap_t* cap) {
@@ -739,7 +739,7 @@ static inline uint32_t _cc_N(compute_ebt)(_cc_addr_t req_base, _cc_length_t req_
            _CC_ENCODE_FIELD(bot_ie, EXP_NONZERO_BOTTOM);
 }
 
-static inline bool _cc_N(precise_is_representable_new_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
+static inline bool _cc_N(_precise_is_representable_new_addr)(const _cc_cap_t* oldcap, _cc_addr_t new_cursor) {
     // If the decoded bounds are the same with an updated cursor then the capability is representable.
     _cc_cap_t newcap = *oldcap;
     newcap._cr_cursor = new_cursor;
@@ -794,9 +794,9 @@ static inline bool _cc_N(is_representable_with_addr)(const _cc_cap_t* cap, _cc_a
         return true;
     }
     if (precise_representable_check) {
-        return _cc_N(precise_is_representable_new_addr)(cap, new_addr);
+        return _cc_N(_precise_is_representable_new_addr)(cap, new_addr);
     } else {
-        return _cc_N(fast_is_representable_new_addr)(cap, new_addr);
+        return _cc_N(_fast_is_representable_new_addr)(cap, new_addr);
     }
 }
 
@@ -815,13 +815,13 @@ static inline void _cc_N(set_addr)(_cc_cap_t* cap, _cc_addr_t new_addr) {
     }
 }
 
-static bool _cc_N(fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
+static bool _cc_N(_fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_addr_t new_addr) {
     if (cap->_cr_top == _CC_MAX_TOP && cap->cr_base == 0) {
         return true; // 1 << 65 is always representable
     }
 #if _CC_N(USES_V9_CORRECTION_FACTORS) == 0
     // The fast representability check only applies to the ISAv9 bounds formats, use the full check for RISC-V.
-    return _cc_N(precise_is_representable_new_addr(cap, new_addr));
+    return _cc_N(_precise_is_representable_new_addr(cap, new_addr));
 #else
     _cc_bounds_bits bounds = _cc_N(extract_bounds_bits)(cap->cr_pesbt);
     // For Morello this computation uses the sig-extended bounds value.
@@ -1119,11 +1119,8 @@ public:
     }
     static inline addr_t representable_length(addr_t len) { return _cc_N(get_representable_length)(len); }
     static inline addr_t representable_mask(addr_t len) { return _cc_N(get_alignment_mask)(len); }
-    static inline bool fast_is_representable_new_addr(const cap_t& cap, addr_t new_addr) {
-        return _cc_N(fast_is_representable_new_addr)(&cap, new_addr);
-    }
-    static inline bool precise_is_representable_new_addr(const cap_t& cap, addr_t new_addr) {
-        return _cc_N(precise_is_representable_new_addr)(&cap, new_addr);
+    static inline bool is_representable_with_addr(const cap_t& cap, addr_t new_addr, bool precise_check) {
+        return _cc_N(is_representable_with_addr)(&cap, new_addr, precise_check);
     }
 };
 #define CompressedCapCC _CC_CONCAT(CompressedCap, CC_FORMAT_LOWER)
