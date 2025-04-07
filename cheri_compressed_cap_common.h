@@ -524,9 +524,9 @@ static inline void _cc_N(decompress_raw_ext)(_cc_addr_t pesbt, _cc_addr_t cursor
         // Morello is perfectly happy using settag to create capabilities with length greater than 2^64.
         _cc_debug_assert(cdp->_cr_top <= _CC_N(MAX_TOP));
         _cc_debug_assert(cdp->cr_base <= cdp->_cr_top);
+        _cc_debug_assert(cdp->cr_bounds_valid);
 #endif
         _cc_debug_assert(_cc_N(reserved_bits_valid)(cdp));
-        _cc_debug_assert(cdp->cr_bounds_valid);
     }
 }
 
@@ -565,8 +565,11 @@ static inline void _cc_N(update_ebt)(_cc_cap_t* csp, _cc_addr_t new_ebt) {
  * cap_set_decompressed_X will set fields and keep pesbt in sync.
  */
 static inline _cc_addr_t _cc_N(compress_raw)(const _cc_cap_t* csp) {
+#ifndef CC_IS_MORELLO
+    // Morello allows setting the tag on capabilities with malformed bounds so we can't use this assert there.
     _cc_debug_assert((!csp->cr_tag || (csp->cr_bounds_valid && _cc_N(reserved_bits_valid)(csp))) &&
                      "Malformed bounds or unknown reserved bits in tagged capability");
+#endif
     _cc_debug_assert(_cc_N(pesbt_is_correct)(csp) && "capability bounds were modified without updating pesbt");
     return csp->cr_pesbt;
 }
