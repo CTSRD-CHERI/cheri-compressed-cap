@@ -824,7 +824,7 @@ static bool _cc_N(_fast_is_representable_new_addr)(const _cc_cap_t* cap, _cc_add
     }
 #if _CC_N(USES_V9_CORRECTION_FACTORS) == 0
     // The fast representability check only applies to the ISAv9 bounds formats, use the full check for RISC-V.
-    return _cc_N(_precise_is_representable_new_addr(cap, new_addr));
+    return _cc_N(_precise_is_representable_new_addr)(cap, new_addr);
 #else
     _cc_bounds_bits bounds = _cc_N(extract_bounds_bits)(cap->cr_pesbt);
     // For Morello this computation uses the sig-extended bounds value.
