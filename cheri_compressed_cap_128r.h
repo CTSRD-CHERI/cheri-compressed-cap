@@ -63,11 +63,6 @@
 // The encoding allows for many levels, but the current implementation is limited to one level bit.
 #define CC128R_MAX_LEVEL_BITS 1
 
-/* Use __uint128 to represent 65 bit length */
-__extension__ typedef unsigned __int128 cc128r_length_t;
-__extension__ typedef signed __int128 cc128r_offset_t;
-typedef uint64_t cc128r_addr_t;
-typedef int64_t cc128r_saddr_t;
 #include "cheri_compressed_cap_macros.h"
 typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 0, _CC_N(MODE_INT) = 1 } _CC_N(Mode);
 

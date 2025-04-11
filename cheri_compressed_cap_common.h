@@ -85,6 +85,20 @@ enum {
 #define _CC_MAX_TOP _CC_N(MAX_TOP)
 #define _CC_CURSOR_MASK _CC_N(CURSOR_MASK)
 
+#if _CC_ADDR_WIDTH == 64
+typedef uint64_t _cc_N(addr_t);
+typedef int64_t _cc_N(saddr_t);
+/* Use __uint128 to represent 65 bit length */
+__extension__ typedef unsigned __int128 _cc_N(length_t);
+__extension__ typedef signed __int128 _cc_N(offset_t);
+#elif _CC_ADDR_WIDTH == 32
+typedef uint32_t _cc_N(addr_t);
+typedef int32_t _cc_N(saddr_t);
+/* Use uint64_t to represent 33 bit length */
+typedef uint64_t _cc_N(length_t);
+typedef int64_t _cc_N(offset_t);
+#endif
+
 #if _CC_N(USES_LEN_MSB) == 0
 enum { _CC_N(FIELD_LEN_MSB_SIZE) = 0 };
 #endif
