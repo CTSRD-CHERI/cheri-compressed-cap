@@ -1033,7 +1033,7 @@ static inline _cc_cap_t _cc_N(_make_max_perms_cap_common)(_cc_addr_t base, _cc_a
 static inline _cc_cap_t _cc_N(make_max_perms_cap_ext)(_cc_addr_t base, _cc_addr_t cursor, _cc_length_t top,
                                                       _cc_mode mode, uint8_t lvbits) {
     _cc_cap_t creg = _cc_N(_make_max_perms_cap_common)(base, cursor, top, lvbits);
-    bool mode_valid = _cc_N(set_execution_mode(&creg, mode));
+    _cc_maybe_unused bool mode_valid = _cc_N(set_execution_mode(&creg, mode));
     assert(mode_valid && "Could not set mode on max perms cap");
     return creg;
 }
