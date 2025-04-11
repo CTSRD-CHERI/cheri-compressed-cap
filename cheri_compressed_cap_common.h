@@ -35,8 +35,6 @@
  * SUCH DAMAGE.
  */
 
-#include <stdbool.h>
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
@@ -88,15 +86,24 @@ enum {
 #if _CC_ADDR_WIDTH == 64
 typedef uint64_t _cc_N(addr_t);
 typedef int64_t _cc_N(saddr_t);
+#elif _CC_ADDR_WIDTH == 32
+typedef uint32_t _cc_N(addr_t);
+typedef int32_t _cc_N(saddr_t);
+#endif
+
+#if _CC_USE_BITINT == 1
+__extension__ typedef unsigned _BitInt(_CC_LEN_WIDTH) _cc_N(length_t);
+__extension__ typedef signed _BitInt(_CC_LEN_WIDTH) _cc_N(offset_t);
+#else
+#if _CC_ADDR_WIDTH == 64
 /* Use __uint128 to represent 65 bit length */
 __extension__ typedef unsigned __int128 _cc_N(length_t);
 __extension__ typedef signed __int128 _cc_N(offset_t);
 #elif _CC_ADDR_WIDTH == 32
-typedef uint32_t _cc_N(addr_t);
-typedef int32_t _cc_N(saddr_t);
 /* Use uint64_t to represent 33 bit length */
 typedef uint64_t _cc_N(length_t);
 typedef int64_t _cc_N(offset_t);
+#endif
 #endif
 
 #if _CC_N(USES_LEN_MSB) == 0
@@ -413,6 +420,14 @@ static inline _cc_addr_t _cc_N(cap_bounds_address)(_cc_addr_t addr) {
     return cursor;
 }
 
+static inline _cc_length_t _cc_N(_mask_overflowed_length_bits)(_cc_length_t value) {
+#if _CC_USE_BITINT == 1
+    return value; // already sized appropriately
+#else
+    return value & (((_cc_length_t)1 << _CC_LEN_WIDTH) - 1);
+#endif
+}
+
 #if _CC_N(HAS_BASE_TOP_SPECIAL_CASES) != 0
 static inline bool _cc_N(compute_base_top_special_cases)(_cc_bounds_bits bounds, _cc_addr_t* base_out,
                                                          _cc_length_t* top_out, bool* valid);
@@ -470,14 +485,14 @@ static inline bool _cc_N(compute_base_top)(_cc_bounds_bits bounds, _cc_addr_t cu
     base <<= _CC_MANTISSA_WIDTH;
     base |= bounds.B;
     base <<= E;
-    base &= ((_cc_length_t)1 << _CC_LEN_WIDTH) - 1;
+    base = _cc_N(_mask_overflowed_length_bits)(base);            // truncate to max bitwidth
     _cc_debug_assert((_cc_addr_t)(base >> _CC_ADDR_WIDTH) <= 1); // max 65/33 bits
     // top  : truncate((a_top + correction_top)  @ c.T @ zeros(E), cap_len_width);
     _cc_length_t top = (_cc_addr_t)((int64_t)a_top + correction_top);
     top <<= _CC_MANTISSA_WIDTH;
     top |= bounds.T;
     top <<= E;
-    top &= ((_cc_length_t)1 << _CC_LEN_WIDTH) - 1;
+    top = _cc_N(_mask_overflowed_length_bits)(top);             // truncate to max bitwidth
     _cc_debug_assert((_cc_addr_t)(top >> _CC_ADDR_WIDTH) <= 1); // max 65 bits
 
     /* If the base and top are more than an address space away from each other,
