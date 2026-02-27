@@ -334,6 +334,14 @@ TEST_CASE("test mode API", "[perms]") {
             CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
         }
     }
+    if (!is_isa_v9) {
+        // For the RISC-V standard version, clearing PERM_EXECUTE will enter MODE_CAP
+        auto cap = max_cap;
+        CHECK(_cc_N(set_execution_mode)(&cap, _CC_N(MODE_INT)));
+        CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_INT));
+        CHECK(_cc_N(set_permissions)(&cap, _CC_N(PERMS_MASK) & ~_CC_N(PERM_EXECUTE)) == false);
+        CHECK(_cc_N(get_execution_mode)(&cap) == _CC_N(MODE_CAP));
+    }
 }
 
 TEST_CASE("removing ASR should not throw", "[perms]") {
