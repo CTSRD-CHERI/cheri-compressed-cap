@@ -125,9 +125,9 @@ enum {
 #define CC128R_PERMS_ALL (0x7003f)
 
 _CC_STATIC_ASSERT_SAME(CC128R_UPERMS_ALL, CC128R_FIELD_SDP_MAX_VALUE);
-// Encoded value is 0b100111111 since SL and EL are not supported in sail yet.
+// Encoded value is 0b00111111 since SL and EL are not supported in sail yet.
 #define CC128R_ENCODED_INFINITE_PERMS(lvbits)                                                                          \
-    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD(lvbits == 0 ? 0x13f : 0x1ff, AP) |                    \
+    (_CC_ENCODE_FIELD(CC128R_UPERMS_ALL, SDP) | _CC_ENCODE_FIELD(lvbits == 0 ? 0x3f : 0xff, AP) |                      \
      _CC_ENCODE_FIELD(_CC_BITMASK64(lvbits), LEVEL) | _CC_ENCODE_FIELD(1, MODE))
 #define CC128R_PERMS_MASK (CC128R_PERMS_ALL | CC128R_PERM_SW_ALL)
 
@@ -198,7 +198,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
 static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
-    // TODO: legalize permissions or reject invalid requests
+    // TODO: legalize the remaining permission dependencies or reject invalid requests
     _cc_addr_t sw_perms = (permissions >> _CC_N(UPERMS_SHFT)) & _CC_N(UPERMS_ALL);
     _cc_mode mode = (_cc_mode)_CC_EXTRACT_FIELD(cap->cr_pesbt, MODE);
     // See "Encoding of architectural permissions for MXLEN=64" in the spec
@@ -229,7 +229,7 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
         cap->cr_pesbt = _CC_DEPOSIT_FIELD(cap->cr_pesbt, (unsigned)_CC_N(MODE_CAP), MODE);
         return false;
     }
-    return true; // all permissions are representable
+    return true;
 }
 
 static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
