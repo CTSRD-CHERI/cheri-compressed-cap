@@ -75,12 +75,21 @@ typedef enum _CC_N(Mode) { _CC_N(MODE_CAP) = 0, _CC_N(MODE_INT) = 1 } _CC_N(Mode
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 enum {
+#if CC_NEED_RVY_VERSION >= 909
+    _CC_FIELD(SDP, 127, 124),
+    _CC_FIELD(RESERVED1, 123, 117),
+    _CC_FIELD(AP_M, 116, 108), // Combined architectural permissions and mode
+    _CC_FIELD(AP, 116, 109),
+    _CC_FIELD(MODE, 108, 108),
+    _CC_FIELD(FLAGS, 108, 108), // TODO: remove this old alias
+#else
     _CC_FIELD(RESERVED1, 127, 121),
     _CC_FIELD(SDP, 120, 117),
     _CC_FIELD(FLAGS, 116, 116), // TODO: remove this old alias
     _CC_FIELD(AP_M, 116, 108),  // Combined architectural permissions and mode
     _CC_FIELD(MODE, 116, 116),
     _CC_FIELD(AP, 115, 108),
+#endif
     _CC_FIELD(LEVEL, 107, 107),
     _CC_FIELD(RESERVED0, 106, 92),
     _CC_FIELD(OTYPE, 91, 91),
