@@ -136,4 +136,14 @@ template <size_t a, size_t b> static constexpr bool check_same() {
 #define _CC_STATIC_ASSERT_SAME(a, b) _Static_assert((a) == (b), "")
 #endif
 
+#ifndef _CC_USE_BITINT
+#define _CC_USE_BITINT 0
+#elif _CC_USE_BITINT
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L) || (defined(__clang__) && __clang_major__ > 14) ||      \
+    (defined(__BITINT_MAXWIDTH__) && !defined(__cplusplus))
+// _BitInt supported
+#else
+#error "Compiler is too old to support _BitInt"
+#endif
+#endif // _CC_USE_BITINT
 #endif // _CC_CONCAT
