@@ -167,7 +167,7 @@ _CC_STATIC_ASSERT_SAME(CC128R_MANTISSA_WIDTH, CC128R_FIELD_EXP_ZERO_BOTTOM_SIZE)
 #include "cheri_compressed_cap_riscv_common.h"
 
 // The 64-bit format uses one bit per permission but we have to move them to the correct offset in the final result.
-static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+_CCDEF _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t sw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, SDP);
     _cc_addr_t arch_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP);
     _cc_addr_t result = sw_perms << _CC_N(UPERMS_SHFT);
@@ -199,7 +199,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     return result;
 }
 
-static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+_CCDEF bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
     // TODO: legalize the remaining permission dependencies or reject invalid requests
@@ -236,11 +236,11 @@ static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions
     return true;
 }
 
-static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
+_CCDEF _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
     return (_cc_mode)_CC_EXTRACT_FIELD(cap->cr_pesbt, MODE);
 }
 
-static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
+_CCDEF bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
     // While mode could always be set, the spec requires execute permission.
     if (!_cc_N(has_permissions)(cap, _CC_N(PERM_EXECUTE)))
         return false;

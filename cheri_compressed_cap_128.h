@@ -162,21 +162,21 @@ _CC_STATIC_ASSERT_SAME(CC128_MANTISSA_WIDTH, CC128_FIELD_EXP_ZERO_BOTTOM_SIZE);
 // Sanity-check mask is the expected NULL encoding
 _CC_STATIC_ASSERT_SAME(CC128_MEM_XOR_MASK, UINT64_C(0x00001ffffc018004));
 
-__attribute__((deprecated("Use cc128_compress_raw"))) static inline uint64_t
+__attribute__((deprecated("Use cc128_compress_raw"))) _CCDEF uint64_t
 compress_128cap_without_xor(const cc128_cap_t* csp) {
     return cc128_compress_raw(csp);
 }
 
-__attribute__((deprecated("Use cc128_compress_mem"))) static inline uint64_t compress_128cap(const cc128_cap_t* csp) {
+__attribute__((deprecated("Use cc128_compress_mem"))) _CCDEF uint64_t compress_128cap(const cc128_cap_t* csp) {
     return cc128_compress_mem(csp);
 }
 
-__attribute__((deprecated("Use cc128_decompress_raw"))) static inline void
+__attribute__((deprecated("Use cc128_decompress_raw"))) _CCDEF void
 decompress_128cap_already_xored(uint64_t pesbt, uint64_t cursor, cc128_cap_t* cdp) {
     cc128_decompress_raw(pesbt, cursor, cdp->cr_tag, cdp);
 }
 
-__attribute__((deprecated("Use cc128_decompress_mem"))) static inline void
+__attribute__((deprecated("Use cc128_decompress_mem"))) _CCDEF void
 decompress_128cap(uint64_t pesbt, uint64_t cursor, _cc_cap_t* cdp) {
     cc128_decompress_mem(pesbt, cursor, cdp->cr_tag, cdp);
 }

@@ -166,14 +166,14 @@ _CC_STATIC_ASSERT_SAME(CC64R_MANTISSA_WIDTH, CC64R_FIELD_EXP_ZERO_BOTTOM_SIZE);
 #include "cheri_compressed_cap_common.h"
 #include "cheri_compressed_cap_riscv_common.h"
 
-static inline _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
+_CCDEF _cc_mode _cc_N(get_execution_mode)(const _cc_cap_t* cap) {
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
     if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1)
         return (_cc_mode)(raw_perms & 1);
     return (_cc_mode)0;
 }
-static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
+_CCDEF bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) {
     // Mode is only encodable quandrant 1 (executable caps), where it is stored as the LSB
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     if ((raw_perms & CC64R_AP_Q_MASK) == CC64R_AP_Q1) {
@@ -185,7 +185,7 @@ static inline bool _cc_N(set_execution_mode)(_cc_cap_t* cap, _cc_mode new_mode) 
     return false;
 }
 
-static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
+_CCDEF _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     _cc_addr_t raw_perms = _CC_EXTRACT_FIELD(cap->cr_pesbt, AP_M);
     _cc_addr_t res = 0;
 
@@ -306,7 +306,7 @@ static inline _cc_addr_t _cc_N(get_all_permissions)(const _cc_cap_t* cap) {
     return res;
 }
 
-static inline bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
+_CCDEF bool _cc_N(set_permissions)(_cc_cap_t* cap, _cc_addr_t permissions) {
     _cc_api_requirement((permissions & (_CC_N(PERMS_MASK) | _CC_N(PERMS_RESERVED_ONES))) == permissions,
                         "invalid permissions");
     uint8_t res = 0;

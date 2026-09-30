@@ -1,0 +1,6 @@
+[build]
+# The Rust library interfaces with C, and makes decisions
+# for that interface that are always worth documenting,
+# but it doesn't expose those C functions/struct fields directly to other crates.
+# Use --document-private-items so it always documents those fields anyway.
+rustdocflags = ["--document-private-items"]
